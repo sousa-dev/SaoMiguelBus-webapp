@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 
+    Journey Template 
+    http://www.templatemo.com/tm-511-journey
+    -->
+    <!-- load stylesheets -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">  <!-- Google web font "Open Sans" -->
+    <link rel="stylesheet" href="static/font-awesome-4.7.0/css/font-awesome.min.css">                <!-- Font Awesome -->
+    <link rel="stylesheet" href="static/css/bootstrap.min.css">                                      <!-- Bootstrap style -->
+    <link rel="stylesheet" type="text/css" href="static/css/datepicker.css"/>
+    <link rel="stylesheet" type="text/css" href="static/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="static/slick/slick-theme.css"/>
+    <link rel="stylesheet" href="static/css/templatemo-style.css">                                   <!-- Templatemo style -->
+
+    {% block head %}{% endblock %}
+    </head>
+    <body>
+        <div class="tm-main-content" id="home">
+            <div class="tm-top-bar-bg"></div>    
+            <div class="tm-top-bar" id="tm-top-bar">
+                <div class="container">
+                    <div class="row">
+                        <nav class="navbar navbar-expand-lg narbar-light">
+                            <a class="navbar-brand mr-auto" href="#">
+                                <img src="static/img/logo-playstore.png" alt="SaoMiguelBus Logo">
+                                São Miguel Bus
+                            </a>
+                            <button type="button" id="nav-toggle" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                            <div id="mainNav" class="collapse navbar-collapse tm-bg-white">
+                                <ul class="navbar-nav ml-auto">
+                                  <li class="nav-item">
+                                    <a class="nav-link active" href="#home">Home <span class="sr-only">(current)</span></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#contact">Contact</a>
+                                </li>
+                            </ul>
+                        </div>                            
+                    </nav>
+                </div> <!-- row -->
+            </div> <!-- container -->
+        </div> <!-- .tm-top-bar -->
+
+        {% block body %}{% endblock %}
+
+        <div class="tm-container-outer tm-position-relative" id="contact">
+            <section class="contact py-5" id="contact">
+                <div class="container">
+                <div class="row">
+                    
+                    <div class="col-lg-5 mr-lg-5 col-12">
+                    <div class="google-map w-100">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d201744.92890198727!2d-25.635057728071235!3d37.80727282800227!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xb5cd77250e697c3%3A0xae4f6f26c3f63890!2sS%C3%A3o%20Miguel%20Island!5e0!3m2!1sen!2spt!4v1645534242199!5m2!1sen!2spt"  width="400" height="300" frameborder="0" style="border:0" allowfullscreen></iframe>
+                    </div>
+        
+                    <div class="contact-info d-flex justify-content-between align-items-center py-4 px-lg-5">
+                        <div class="contact-info-item">
+                            <h3 class="mb-3 text-white">Say hello</h3>
+                            <p class="footer-text mb-0"><a href="https://wa.link/tboeew" target="_blank"><span class="iconify" data-icon="uil:whatsapp"></span> +351 968 378 315</a></p>
+                            <p><a title="Mail" href="mailto:sousadev@yahoo.com">sousadev@yahoo.com</a></p>
+                        </div>
+        
+                        <ul class="social-links">
+                            <li><a href="https://www.linkedin.com/in/henriquecsousa/" target="_blank" title="LinkedIn"><span class="iconify" data-icon="uil:linkedin"></span></a></li>
+                            <li><a href="https://www.instagram.com/sousadev/" target="_blank" title="Instagram"><span class="iconify" data-icon="uil:instagram"></span></a></li>
+                            <li><a href="https://www.twitter.com/sousadev/" target="_blank" title="Twitter"><span class="iconify" data-icon="uil:twitter" ></span></a></li>
+                            <li><a href="https://www.github.com/sousaua/" target="_blank" title="GitHub"><span class="iconify" data-icon="uil:github" ></span></a></li>
+                        </ul>
+                    </div>
+                    </div>
+            <div id="google-map"></div>
+            <form action="index.html" method="post" class="tm-contact-form">
+                <div class="form-group tm-name-container">
+                    <input type="text" id="contact_name" name="contact_name" class="form-control" placeholder="Name"  required/>
+                </div>
+                <div class="form-group tm-email-container">
+                    <input type="email" id="contact_email" name="contact_email" class="form-control" placeholder="Email"  required/>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="contact_subject" name="contact_subject" class="form-control" placeholder="Subject"  required/>
+                </div>
+                <div class="form-group">
+                    <textarea id="contact_message" name="contact_message" class="form-control" rows="9" placeholder="Message" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary tm-btn-primary tm-btn-send text-uppercase">Send Message Now</button>
+            </form>
+        </div> <!-- .tm-container-outer -->
+
+        <footer class="tm-container-outer">
+            <p class="mb-0">Copyright © <span class="tm-current-year">2022</span> Sousa Dev
+                
+            . Designed by <a rel="nofollow" href="https://templatemo.com/" target="_blank">Template Mo</a></p>
+        </footer>
+    </div>
+        <!-- load JS files -->
+        <script src="js/jquery-1.11.3.min.js"></script>             <!-- jQuery (https://jquery.com/download/) -->
+        <script src="js/popper.min.js"></script>                    <!-- https://popper.js.org/ -->       
+        <script src="js/bootstrap.min.js"></script>                 <!-- https://getbootstrap.com/ -->
+        <script src="js/datepicker.min.js"></script>                <!-- https://github.com/qodesmith/datepicker -->
+        <script src="js/jquery.singlePageNav.min.js"></script>      <!-- Single Page Nav (https://github.com/ChrisWojcik/single-page-nav) -->
+        <script src="slick/slick.min.js"></script>                  <!-- http://kenwheeler.github.io/slick/ -->
+        <script src="js/jquery.scrollTo.min.js"></script>           <!-- https://github.com/flesler/jquery.scrollTo -->
+        <script src="https://code.iconify.design/2/2.1.2/iconify.min.js"></script>
+    </body>
+</html>
