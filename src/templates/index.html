@@ -63,6 +63,13 @@
         </div>     <!-- .tm-container-outer -->                 
     </section>
 
+    {% if routes|length > 0 %}
+        {% for route in routes %}
+            {{route.origin}} - {{route.destination}}
+            {{route.stops}}
+        {% endfor %}
+    {% endif %}
+
     <section class="p-5 tm-container-outer tm-bg-gray">            
         <div class="container">
             <div class="row">
