@@ -40,8 +40,9 @@ def index():
     origin = request.args.get('origin')
     destination = request.args.get('destination')
     day = int(request.args.get('day'))
-    time = request.args.get('time')
-    response = requests.get('https://saomiguelbus-api.herokuapp.com/api/v1/route?origin=' + origin + '&destination=' + destination + '&day=' + DAYS[day] + '&time=' + time)
+    time = str(request.args.get('time').replace(":", "h"))
+    URL = 'https://saomiguelbus-api.herokuapp.com/api/v1/route?origin=' + origin + '&destination=' + destination + '&day=' + DAYS[day] + '&start=' + time
+    response = requests.get(URL)
     #TODO: check status code
     if response.status_code == 200:
         response_routes = json.loads(response.text)
