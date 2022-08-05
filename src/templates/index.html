@@ -75,12 +75,14 @@
 
     {% if routes|length > 0 %}
         {% for route in routes %}
-        <div class="angry-grid">
-            <div id="item-0">{{route.origin}}</div>
-            <div id="item-1">{{route.destination}}</div>
-            <div id="item-2">{{route.start}}</div>
-            <div id="item-3">{{route.route}}</div>
-          </div>
+        <a href="/route/{{ route.id }}">
+            <div class="angry-grid">
+                <div id="item-0">{{route.origin}}</div>
+                <div id="item-1">{{route.destination}}</div>
+                <div id="item-2">{{route.start}}</div>
+                <div id="item-3">{{route.route}}</div>
+            </div>
+        </a>
         {% endfor %}
     {% endif %}
 

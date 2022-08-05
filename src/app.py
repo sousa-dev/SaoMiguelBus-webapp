@@ -51,5 +51,10 @@ def index():
     routes.sort(key=lambda route: route.start)
     return render_template('index.html', routes=routes)
 
+@app.route('/route/<routeid>')
+def get_route(routeid):
+    #TODO: Get routeid from html page
+    return render_template('index.html', stops=STOPS)
+    
 if __name__ == '__main__':
    app.run()
