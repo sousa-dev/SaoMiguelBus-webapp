@@ -47,7 +47,7 @@ def index():
         response_routes = json.loads(response.text)
         for route in response_routes:
             routes.append(Route(route['id'], route['route'], route['origin'], route['destination'], route['start'], route['end'], route['stops'], route['type_of_day'], route['information']))
-    print(routes)
+    routes.sort(key=lambda route: route.start)
     return render_template('index.html', routes=routes)
 
 if __name__ == '__main__':
