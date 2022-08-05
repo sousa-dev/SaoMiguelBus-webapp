@@ -710,4 +710,56 @@ footer p { color: white; }
   .social-links .uil:hover {
     color: #75c7a4;
   }
+
+  .angry-grid {
+    display: grid; 
+ 
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    
+    gap: 0px;
+    height: 100%;
+    
+ }
+   
+ #item-0 {
+ 
+    background-color: #9D9DD6; 
+    grid-row-start: 1;
+    grid-column-start: 1;
+ 
+    grid-row-end: 2;
+    grid-column-end: 4;
+    
+ }
+ #item-1 {
+ 
+    background-color: #5775B8; 
+    grid-row-start: 2;
+    grid-column-start: 1;
+ 
+    grid-row-end: 3;
+    grid-column-end: 4;
+    
+ }
+ #item-2 {
+ 
+    background-color: #5EBD87; 
+    grid-row-start: 2;
+    grid-column-start: 4;
+ 
+    grid-row-end: 3;
+    grid-column-end: 6;
+    
+ }
+ #item-3 {
+ 
+    background-color: #CD959B; 
+    grid-row-start: 1;
+    grid-column-start: 4;
+ 
+    grid-row-end: 2;
+    grid-column-end: 6;
+    
+ }
   

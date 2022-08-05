@@ -24,9 +24,14 @@ DAYS = {
     3: "SUNDAY",
     }
 
+STOPS = []
+
 @app.route("/")
 def home():
-    return render_template('index.html')
+    response = requests.get('https://saomiguelbus-api.herokuapp.com/api/v1/stops')
+    if response.status_code == 200:
+        STOPS = json.loads(response.text)
+    return render_template('index.html', stops=STOPS)
 
 @app.route("/index.html")
 def index():

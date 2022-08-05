@@ -25,12 +25,22 @@
                     <form action="index.html" method="get" class="tm-search-form tm-section-pad-2">
                         <div class="form-row tm-search-form-row">                                
                             <div class="form-group tm-form-group tm-form-group-pad tm-form-group-1">
-                                <label for="origin">From</label>
-                                <input name="origin" type="text" class="form-control" id="origin" placeholder="Type your origin...">
+                                <label for="origin-choice">From</label>
+                                <input name="origin" list="origin-stops" class="form-control" id="origin" placeholder="Type your origin...">
+                                <datalist name="origin" id="origin-stops">
+                                    {% for stop in stops %}
+                                    <option value="{{stop.name}}"></option>
+                                    {% endfor %}
+                                </datalist>
                             </div>
                             <div class="form-group tm-form-group tm-form-group-pad tm-form-group-1">
                                 <label for="destination">To</label>
-                                <input name="destination" type="text" class="form-control" id="destination" placeholder="Type your destination...">
+                                <input name="destination" list="destination-stops" type="text" class="form-control" id="destination" placeholder="Type your destination...">
+                                <datalist name="destination" id="destination-stops">
+                                    {% for stop in stops %}
+                                    <option value="{{stop.name}}"></option>
+                                    {% endfor %}
+                                </datalist>
                             </div>
                             <div class="form-group tm-form-group tm-form-group-1">                                    
                                 <div class="form-group tm-form-group tm-form-group-pad tm-form-group-2">
@@ -65,8 +75,12 @@
 
     {% if routes|length > 0 %}
         {% for route in routes %}
-            {{route.origin}} - {{route.destination}}
-            {{route.stops}}
+        <div class="angry-grid">
+            <div id="item-0">{{route.origin}}</div>
+            <div id="item-1">{{route.destination}}</div>
+            <div id="item-2">{{route.type_of_day}}</div>
+            <div id="item-3">{{route.start}}</div>
+          </div>
         {% endfor %}
     {% endif %}
 
