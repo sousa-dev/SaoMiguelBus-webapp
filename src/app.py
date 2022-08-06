@@ -49,7 +49,7 @@ def index():
         for route in response_routes:
             routes.append(Route(route['id'], route['route'], route['origin'], route['destination'], route['start'], route['end'], route['stops'], route['type_of_day'], route['information']))
     routes.sort(key=lambda route: route.start)
-    return render_template('index.html', routes=routes)
+    return render_template('index.html', routes=routes, origin=origin, destination=destination, day=day, time=time.replace("h", ":"))
 
 @app.route('/route/<routeid>')
 def get_route(routeid):

@@ -26,7 +26,7 @@
                         <div class="form-row tm-search-form-row">                                
                             <div class="form-group tm-form-group tm-form-group-pad tm-form-group-1">
                                 <label for="origin-choice">From</label><i style="color: grey; font-style: italic">*</i>
-                                <input name="origin" list="origin-stops" class="form-control" id="origin" placeholder="Type your origin..." required>
+                                <input name="origin" value="{{origin}}" list="origin-stops" class="form-control" id="origin" placeholder="Type your origin..." required>
                                 <datalist name="origin" id="origin-stops">
                                     {% for stop in stops %}
                                     <option value="{{stop.name}}"></option>
@@ -35,7 +35,7 @@
                             </div>
                             <div class="form-group tm-form-group tm-form-group-pad tm-form-group-1">
                                 <label for="destination">To</label><i style="color: grey; font-style: italic">*</i>
-                                <input name="destination" list="destination-stops" type="text" class="form-control" id="destination" placeholder="Type your destination..." required>
+                                <input name="destination" value="{{destination}}" list="destination-stops" type="text" class="form-control" id="destination" placeholder="Type your destination..." required>
                                 <datalist name="destination" id="destination-stops">
                                     {% for stop in stops %}
                                     <option value="{{stop.name}}"></option>
@@ -45,17 +45,31 @@
                             <div class="form-group tm-form-group tm-form-group-1">                                    
                                 <div class="form-group tm-form-group tm-form-group-pad tm-form-group-2">
                                     <label for="day">Day of the Week</label><i style="color: grey; font-style: italic">*</i>
+                                    {% if day == 3 %}
+                                    <select name="day" class="form-control tm-select" id="day">
+                                        <option value="1" selected>Weekday</option>
+                                        <option value="2">Saturday</option>
+                                        <option value="3" selected>Sunday/Holiday</option>
+                                    </select>  
+                                    {% elif  day == 2 %}
+                                    <select name="day" class="form-control tm-select" id="day">
+                                        <option value="1">Weekday</option>
+                                        <option value="2" selected>Saturday</option>
+                                        <option value="3">Sunday/Holiday</option>
+                                    </select>  
+                                    {% else %}
                                     <select name="day" class="form-control tm-select" id="day">
                                         <option value="1" selected>Weekday</option>
                                         <option value="2">Saturday</option>
                                         <option value="3">Sunday/Holiday</option>
-                                    </select>                                        
+                                    </select>  
+                                    {% endif %}                                      
                                 </div>
                             </div>
                             <div class="form-group tm-form-group tm-form-group-1">                                    
                                 <div class="form-group tm-form-group tm-form-group-pad tm-form-group-2">
                                     <label for="time">What time?</label> <i style="color: grey; font-style: italic">Optional</i>
-                                    <input class="form-control tm-select" type="time" id="time" name="time">                                   
+                                    <input class="form-control tm-select" value="{{time}}" type="time" id="time" name="time">                                   
                                 </div>
                             </div>
                         </div> <!-- form-row -->
