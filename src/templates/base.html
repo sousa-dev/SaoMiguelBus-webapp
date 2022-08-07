@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf-8">
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- 
@@ -9,6 +9,7 @@
     http://www.templatemo.com/tm-511-journey
     -->
     <!-- load stylesheets -->
+    <link rel="icon" type="image/x-icon" href="static/img/logo-playstore.png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">  <!-- Google web font "Open Sans" -->
     <link rel="stylesheet" href="static/font-awesome-4.7.0/css/font-awesome.min.css">                <!-- Font Awesome -->
     <link rel="stylesheet" href="static/css/bootstrap.min.css">                                      <!-- Bootstrap style -->
@@ -39,6 +40,12 @@
                                     <a class="nav-link active" href="#home">Home <span class="sr-only">(current)</span></a>
                                 </li>
                                 <li class="nav-item">
+                                    <a class="nav-link" href="#search">Search</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#download">Download</a>
+                                </li>
+                                <li class="nav-item">
                                     <a class="nav-link" href="#contact">Contact</a>
                                 </li>
                             </ul>
@@ -49,6 +56,17 @@
         </div> <!-- .tm-top-bar -->
 
         {% block body %}{% endblock %}
+
+        <section class="p-5 tm-container-outer tm-bg-gray">            
+            <div class="container" id="download">
+                <div class="row">
+                    <div class="col-xs-12 mx-auto tm-about-text-wrap text-center">                        
+                        <h2 class="text-uppercase mb-4">Download São Miguel Bus <strong>APP</strong></h2>
+                        <a target="_blank" href="https://play.google.com/store/apps/details?id=com.hsousa_apps.Autocarros&hl=pt_PT&gl=US"><img src="static/img/Google-play.png" alt="Download on Play Store"></img></a>                              
+                    </div>
+                </div>
+            </div>            
+        </section>
 
         <div class="tm-container-outer tm-position-relative" id="contact">
             <section class="contact py-5" id="contact">

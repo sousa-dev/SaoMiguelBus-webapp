@@ -16,11 +16,11 @@
                             <h1 class="text-uppercase tm-banner-title">Search a Bus</h1>
                             <img src="static/img/dots-3.png" alt="Dots">
                             <p class="tm-banner-subtitle">Find the best bus for you.</p>
-                            <a href="javascript:void(0)" class="tm-down-arrow-link"><i class="fa fa-2x fa-angle-down tm-down-arrow"></i></a>       
+                            <a href="#download" class="tm-down-arrow-link"><i class="fa fa-2x fa-angle-down tm-down-arrow"></i></a>       
                         </div>    
                     </div>  <!-- col-xs-12 -->                      
                 </div> <!-- row -->
-                <div class="row tm-banner-row" id="tm-section-search">
+                <div class="row tm-banner-row" id="tm-section-search" id="search">
 
                     <form action="index.html" method="get" class="tm-search-form tm-section-pad-2">
                         <div class="form-row tm-search-form-row">                                
@@ -89,28 +89,16 @@
 
     {% if routes|length > 0 %}
         {% for route in routes %}
-        <a href="/route/{{ route.id }}">
-            <div class="angry-grid">
-                <div id="item-0">{{route.origin}}</div>
-                <div id="item-1">{{route.destination}}</div>
-                <div id="item-2">{{route.start}}</div>
-                <div id="item-3">{{route.route}}</div>
-            </div>
-        </a>
-        {% endfor %}
-    {% endif %}
-
-    <section class="p-5 tm-container-outer tm-bg-gray">            
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12 mx-auto tm-about-text-wrap text-center">                        
-                    <h2 class="text-uppercase mb-4">Your <strong>Journey</strong> is our priority</h2>
-                    <p class="mb-4">Nullam auctor, sapien sit amet lacinia euismod, lorem magna lobortis massa, in tincidunt mi metus quis lectus. Duis nec lobortis velit. Vivamus id magna vulputate, tempor ante eget, tempus augue. Maecenas ultricies neque magna.</p>
-                    <a href="#" class="text-uppercase btn-primary tm-btn">Continue explore</a>                              
+            <div class="card w-75 center">
+                <div class="card-body">
+                    <h5 class="card-title">{{route.route}}</h5>
+                    <p class="card-text">{{route.origin}}</h5>
+                    <p class="card-text">{{route.destination}}</h5>
+                    <p class="card-text">{{route.start}}</h5>
+                    <a href="/route/{{ route.id }}"" class="btn btn-primary">Details</a>
                 </div>
             </div>
-        </div>            
-    </section>
-
+        {% endfor %}
+    {% endif %}
 </div> <!-- .main-content -->
 {% endblock %}
