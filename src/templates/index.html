@@ -76,7 +76,8 @@
                         <div class="form-row tm-search-form-row">
                             <div class="form-group tm-form-group tm-form-group-pad tm-form-group-1">
                                 <label for="btnSubmit">&nbsp;</label>
-                                <button class="btn btn-primary tm-btn tm-btn-search text-uppercase" id="btnSubmit">Search for a Bus</button>
+                                <button class="btn btn-primary tm-btn tm-btn-search text-uppercase" id="btnSubmit">Search for a Bus</button>                             
+                                <text style="color: grey; font-style: italic; text-align: right;">Only direct routes are displayed</text>
                             </div>
                         </div>                              
                     </form>                             
@@ -86,6 +87,17 @@
             </div>  <!-- .container -->                   
         </div>     <!-- .tm-container-outer -->                 
     </section>
+    {% if nRoutes == 0 %}
+    <section class="tm-section tm-section-pad-2 tm-section-2">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12">
+                    <h3 class="text-uppercase tm-section-title">No direct routes found from <b>{{origin}}</b> to <b>{{destination}}</b></h3>
+                    <p class="tm-section-subtitle">Please be careful with the spelling. Choose on Stop from the Options displayed</p>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 
     {% if routes|length > 0 %}
         {% for route in routes %}
@@ -95,8 +107,16 @@
                     <p class="card-text">{{route.origin}}</h5>
                     <p class="card-text">{{route.destination}}</h5>
                     <p class="card-text">{{route.start}}</h5>
-                    <a href="/route/{{ route.id }}"" class="btn btn-primary">Details</a>
                 </div>
+                <input class="spoilerbutton" type="button" value="Details" onclick="this.value=this.value=='Details'?'Hide':'Details';">
+                <div class="spoiler"><div>
+                    {% for stop, time in route.stops.items() %}
+                        <b>{{stop}}</b>: {{time}} <br />
+                    {% endfor %}
+                </div></div>
+                {% if route.information|length > 0 %}
+                    <text style="color: red">{{route.information}}</text>
+                {% endif %}
             </div>
         {% endfor %}
     {% endif %}

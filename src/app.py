@@ -24,14 +24,25 @@ DAYS = {
     3: "SUNDAY",
     }
 
-STOPS = []
+
+def translate_website(lang):
+    #TODO: Return dict with translations
+    pass
+
+def get_stops():
+    response = requests.get('https://saomiguelbus-api.herokuapp.com/api/v1/stops')
+    return json.loads(response.text) if response.status_code == 200 else []
+
+def get_routes(origin, destination, day, time):
+        URL = 'https://saomiguelbus-api.herokuapp.com/api/v1/route?origin=' + origin + '&destination=' + destination + '&day=' + DAYS[day] + '&start=' + time
+        response = requests.get(URL)
+        return json.loads(response.text) if response.status_code == 200 else []
+
+
 
 @app.route("/")
 def home():
-    response = requests.get('https://saomiguelbus-api.herokuapp.com/api/v1/stops')
-    if response.status_code == 200:
-        STOPS = json.loads(response.text)
-    return render_template('index.html', stops=STOPS)
+    return render_template('index.html', stops=get_stops())
 
 @app.route("/index.html")
 def index():
@@ -41,20 +52,13 @@ def index():
     destination = request.args.get('destination')
     day = int(request.args.get('day'))
     time = str(request.args.get('time').replace(":", "h"))
-    URL = 'https://saomiguelbus-api.herokuapp.com/api/v1/route?origin=' + origin + '&destination=' + destination + '&day=' + DAYS[day] + '&start=' + time
-    response = requests.get(URL)
-    #TODO: check status code
-    if response.status_code == 200:
-        response_routes = json.loads(response.text)
-        for route in response_routes:
-            routes.append(Route(route['id'], route['route'], route['origin'], route['destination'], route['start'], route['end'], route['stops'], route['type_of_day'], route['information']))
-    routes.sort(key=lambda route: route.start)
-    return render_template('index.html', routes=routes, origin=origin, destination=destination, day=day, time=time.replace("h", ":"))
 
-@app.route('/route/<routeid>')
-def get_route(routeid):
-    #TODO: Get routeid from html page
-    return render_template('index.html', stops=STOPS)
+    response_routes = get_routes(origin, destination, day, time)
+    for route in response_routes:
+        information = json.loads(route['information'].replace("'", "\""))["en"] if route["information"] != "None" else ""
+        routes.append(Route(route['id'], route['route'], route['origin'], route['destination'], route['start'], route['end'], json.loads(route['stops'].replace("'", "\"")), route['type_of_day'], information))
+    routes.sort(key=lambda route: route.start)
+    return render_template('index.html', stops=get_stops(), routes=routes, nRoutes=len(routes), origin=origin, destination=destination, day=day, time=time.replace("h", ":"))
     
 if __name__ == '__main__':
    app.run()

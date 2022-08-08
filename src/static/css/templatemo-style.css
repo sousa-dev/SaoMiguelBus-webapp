@@ -768,4 +768,24 @@ footer p { color: white; }
     grid-column-end: 6;
     
  }
+ .spoilerbutton {
+    display:block;
+    margin: 5px 0;
+}
+.spoiler {
+    overflow:hidden;
+    background: #f5f5f5;
+}
+.spoiler > div {
+    -webkit-transition: all 0.2s ease;
+    -moz-transition: margin 0.2s ease;
+    -o-transition: all 0.2s ease;
+    transition: margin 0.2s ease;
+}
+.spoilerbutton[value="Details"] + .spoiler > div {
+    margin-top:-100%;
+}
+.spoilerbutton[value="Hide"] + .spoiler > div {
+    padding:5px;
+}
   
