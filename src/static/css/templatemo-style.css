@@ -788,4 +788,51 @@ footer p { color: white; }
 .spoilerbutton[value="Hide"] + .spoiler > div {
     padding:5px;
 }
+.custom-sel a {
+    text-decoration: none;
+    text-transform: uppercase;
+    margin: 0;
+    padding: 10px;
+    text-align: left;
+    font-family: Raleway;
+    color: #546e7a;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 24px;
+    display: block;
+}
+
+.custom-sel a:hover {
+    text-decoration: none;
+    background-color: #EDF0F2;
+    color: #ffffff;
+}
+
+.custom-sel a.selected {
+    background-color: transparent;
+}
+
+.custom-sel a.selected:hover {
+    background-color: transparent;
+    color: #546e7a;
+}
+
+.hidden {
+    display: none;
+}
+
+.lightblue {
+    color:#03a9f4;
+    margin-left: -4px;
+}
+
+.show-sel {
+    background-color: #ffffff;
+    box-shadow: -5px 0px 65px 0px rgba(0, 0, 0, 0.18);
+}
+
+.custom-sel {
+    margin: 30px;
+    display: inline-block;
+}
   

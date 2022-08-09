@@ -29,7 +29,7 @@
                         <nav class="navbar navbar-expand-lg narbar-light">
                             <a class="navbar-brand mr-auto" href="{{ url_for('home') }}">
                                 <img src="static/img/logo-playstore.png" alt="SaoMiguelBus Logo">
-                                São Miguel Bus
+                                {{ attr.website_title }}
                             </a>
                             <button type="button" id="nav-toggle" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#mainNav" aria-expanded="false" aria-label="Toggle navigation">
                                 <span class="navbar-toggler-icon"></span>
@@ -40,15 +40,25 @@
                                     <a class="nav-link active" href="#home">Home <span class="sr-only">(current)</span></a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#search">Search</a>
+                                    <a class="nav-link" href="#search">{{ attr.Search_menu }}</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="#download">Download</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#contact">Contact</a>
-                                </li>
+                                    <a class="nav-link" href="#contact">{{ attr.Contact }}</a>
+                                </li>                               
                             </ul>
+                            <select onchange="this.options[this.selectedIndex].value && (window.location.href = '?lang='.concat(this.options[this.selectedIndex].value));" name="language" class="custom-select" id="language">
+                                {% if lang == 'en' %}
+                                <option value="pt">🇵🇹 PT</option>
+                                <option value="en" selected>🇬🇧 ENG</option>
+                                {% else %}
+                                <option value="pt" selected>🇵🇹 PT</option>
+                                <option value="en">🇬🇧 ENG</option>
+                                {% endif %}
+
+                            </select>     
                         </div>                            
                     </nav>
                 </div> <!-- row -->

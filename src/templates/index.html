@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<title>Sao Miguel Bus</title>
+<title>{{ attr.website_title }}</title>
 {% endblock %}
 
 {% block body %}
@@ -13,9 +13,9 @@
                 <div class="row tm-banner-row tm-banner-row-header">
                     <div class="col-xs-12">
                         <div class="tm-banner-header">
-                            <h1 class="text-uppercase tm-banner-title">Search a Bus</h1>
+                            <h1 class="text-uppercase tm-banner-title">{{ attr.title }}</h1>
                             <img src="static/img/dots-3.png" alt="Dots">
-                            <p class="tm-banner-subtitle">Find the best bus for you.</p>
+                            <p class="tm-banner-subtitle">{{ attr.subtitle }}</p>
                             <a href="#download" class="tm-down-arrow-link"><i class="fa fa-2x fa-angle-down tm-down-arrow"></i></a>       
                         </div>    
                     </div>  <!-- col-xs-12 -->                      
@@ -25,8 +25,8 @@
                     <form action="index.html" method="get" class="tm-search-form tm-section-pad-2">
                         <div class="form-row tm-search-form-row">                                
                             <div class="form-group tm-form-group tm-form-group-pad tm-form-group-1">
-                                <label for="origin-choice">From</label><i style="color: grey; font-style: italic">*</i>
-                                <input name="origin" value="{{origin}}" list="origin-stops" class="form-control" id="origin" placeholder="Type your origin..." required>
+                                <label for="origin-choice">{{ attr.From }}</label><i style="color: grey; font-style: italic">*</i>
+                                <input name="origin" value="{{origin}}" list="origin-stops" class="form-control" id="origin" placeholder="{{ attr.From_placeholder }}" required>
                                 <datalist name="origin" id="origin-stops">
                                     {% for stop in stops %}
                                     <option value="{{stop.name}}"></option>
@@ -34,8 +34,8 @@
                                 </datalist>
                             </div>
                             <div class="form-group tm-form-group tm-form-group-pad tm-form-group-1">
-                                <label for="destination">To</label><i style="color: grey; font-style: italic">*</i>
-                                <input name="destination" value="{{destination}}" list="destination-stops" type="text" class="form-control" id="destination" placeholder="Type your destination..." required>
+                                <label for="destination">{{ attr.To }}</label><i style="color: grey; font-style: italic">*</i>
+                                <input name="destination" value="{{destination}}" list="destination-stops" type="text" class="form-control" id="destination" placeholder="{{ attr.To_placeholder }}" required>
                                 <datalist name="destination" id="destination-stops">
                                     {% for stop in stops %}
                                     <option value="{{stop.name}}"></option>
@@ -44,31 +44,31 @@
                             </div>
                             <div class="form-group tm-form-group tm-form-group-1">                                    
                                 <div class="form-group tm-form-group tm-form-group-pad tm-form-group-2">
-                                    <label for="day">Day of the Week</label><i style="color: grey; font-style: italic">*</i>
+                                    <label for="day">{{ attr.Day }}</label><i style="color: grey; font-style: italic">*</i>
                                     {% if day == 3 %}
                                     <select name="day" class="form-control tm-select" id="day">
-                                        <option value="1" selected>Weekday</option>
-                                        <option value="2">Saturday</option>
-                                        <option value="3" selected>Sunday/Holiday</option>
+                                        <option value="1">{{ attr.Weekday }}</option>
+                                        <option value="2">{{ attr.Saturday }}</option>
+                                        <option value="3" selected>{{ attr.Sunday }}</option>
                                     </select>  
                                     {% elif  day == 2 %}
                                     <select name="day" class="form-control tm-select" id="day">
-                                        <option value="1">Weekday</option>
-                                        <option value="2" selected>Saturday</option>
-                                        <option value="3">Sunday/Holiday</option>
+                                        <option value="1">{{ attr.Weekday }}</option>
+                                        <option value="2" selected>{{ attr.Saturday }}</option>
+                                        <option value="3">{{ attr.Sunday }}</option>
                                     </select>  
                                     {% else %}
                                     <select name="day" class="form-control tm-select" id="day">
-                                        <option value="1" selected>Weekday</option>
-                                        <option value="2">Saturday</option>
-                                        <option value="3">Sunday/Holiday</option>
+                                        <option value="1" selected>{{ attr.Weekday }}</option>
+                                        <option value="2">{{ attr.Saturday }}</option>
+                                        <option value="3">{{ attr.Sunday }}</option>
                                     </select>  
                                     {% endif %}                                      
                                 </div>
                             </div>
                             <div class="form-group tm-form-group tm-form-group-1">                                    
                                 <div class="form-group tm-form-group tm-form-group-pad tm-form-group-2">
-                                    <label for="time">What time?</label> <i style="color: grey; font-style: italic">Optional</i>
+                                    <label for="time">{{ attr.Time }}</label> <i style="color: grey; font-style: italic">{{ attr.Optional }}</i>
                                     <input class="form-control tm-select" value="{{time}}" type="time" id="time" name="time">                                   
                                 </div>
                             </div>
@@ -76,8 +76,8 @@
                         <div class="form-row tm-search-form-row">
                             <div class="form-group tm-form-group tm-form-group-pad tm-form-group-1">
                                 <label for="btnSubmit">&nbsp;</label>
-                                <button class="btn btn-primary tm-btn tm-btn-search text-uppercase" id="btnSubmit">Search for a Bus</button>                             
-                                <text style="color: grey; font-style: italic; text-align: right;">Only direct routes are displayed</text>
+                                <button class="btn btn-primary tm-btn tm-btn-search text-uppercase" id="btnSubmit">{{ attr.Search }}</button>                             
+                                <text style="color: grey; font-style: italic; text-align: right;">{{ attr.warning }}</text>
                             </div>
                         </div>                              
                     </form>                             
@@ -92,8 +92,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-xs-12">
-                    <h3 class="text-uppercase tm-section-title">No direct routes found from <b>{{origin}}</b> to <b>{{destination}}</b></h3>
-                    <p class="tm-section-subtitle">Please be careful with the spelling. Choose on Stop from the Options displayed</p>
+                    <h3 class="text-uppercase tm-section-title">{{ attr.No_routes1 }} <b>{{origin}}</b> {{ attr.No_routes2 }} <b>{{destination}}</b></h3>
+                    <p class="tm-section-subtitle">{{ attr.No_routes_subtitle }}</p>
                 </div>
             </div>
         </div>
