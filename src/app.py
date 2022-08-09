@@ -86,8 +86,10 @@ def get_routes(origin, destination, day, time):
 
 @app.route("/")
 def home():
-    session['lang'] = request.args.get('lang', default = "pt")
-    return render_template('index.html', stops=get_stops(), attr = LANGS[session['lang']], lang = session['lang'])
+    change_lang = request.args.get('lang', '')
+    if change_lang != '':
+        session['lang'] = change_lang
+    return render_template('index.html', stops=get_stops(), attr = LANGS[session.get('lang', 'pt')], lang = session.get('lang', 'pt'))
 
 @app.route("/index.html")
 def index():
