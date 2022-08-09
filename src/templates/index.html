@@ -108,7 +108,9 @@
                     <p class="card-text">{{route.destination}}</h5>
                     <p class="card-text">{{route.start}}</h5>
                 </div>
-                <input class="spoilerbutton" type="button" value="Details" onclick="this.value=this.value=='Details'?'Hide':'Details';">
+                <input class="spoilerbutton btn btn-primary tm-btn tm-btn-search text-uppercase" type="button" value="Details" onclick="this.value=this.value=='Details'?'Hide':'Details';">
+                
+
                 <div class="spoiler"><div>
                     {% for stop, time in route.stops.items() %}
                         <b>{{stop}}</b>: {{time}} <br />

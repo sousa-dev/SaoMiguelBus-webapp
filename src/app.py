@@ -112,6 +112,10 @@ def index():
         routes.append(Route(route['id'], route['route'], route['origin'], route['destination'], route['start'], route['end'], json.loads(route['stops'].replace("'", "\"")), route['type_of_day'], information))
     routes.sort(key=lambda route: route.start)
     return render_template('index.html', stops=get_stops(), routes=routes, nRoutes=len(routes), origin=origin, destination=destination, day=day, time=time.replace("h", ":"), attr = LANGS[lang], lang = lang)
-    
+
+@app.errorhandler(Exception)
+def page_not_found(e):
+    return render_template('error.html') 
+
 if __name__ == '__main__':
     app.run()
