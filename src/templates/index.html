@@ -101,21 +101,40 @@
 
     {% if routes|length > 0 %}
         {% for route in routes %}
-            <div class="card w-75 center">
-                <div class="card-body">
-                    <h5 class="card-title">{{route.route}}</h5>
-                    <p class="card-text">{{route.origin}}</h5>
-                    <p class="card-text">{{route.destination}}</h5>
-                    <p class="card-text">{{route.start}}</h5>
+            <div class="container card w-100 center" style="margin-top: 30px; border-radius: 8px;">
+                <div class="row">
+                    <div class="col-sm">
+                        <h5 class="card-title" style="font-weight: bold;margin-left: 10px;">{{route.route}}</h5>
+                    </div>
+                    <div class="col-sm">
+                        <input class="spoilerbutton btn btn-primary tm-btn tm-btn-search text-uppercase" style="width: fit-content; float: right; font-weight: bold; font-size: 14px; border-radius: 8px;" type="button" value="+" onclick="this.value=this.value=='+'?'-':'+';">
+                        <div class="spoiler">
+                            <div>
+                                {% for stop, time in route.stops.items() %}
+                                    <b>{{stop}}</b>: {{time}} <br />
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <input class="spoilerbutton btn btn-primary tm-btn tm-btn-search text-uppercase" type="button" value="Details" onclick="this.value=this.value=='Details'?'Hide':'Details';">
-                
-
-                <div class="spoiler"><div>
-                    {% for stop, time in route.stops.items() %}
-                        <b>{{stop}}</b>: {{time}} <br />
-                    {% endfor %}
-                </div></div>
+                <div class="row">
+                    <div class="col-sm">
+                        <p class="card-text" style="font-size: 20px; margin-left: 10px">{{route.origin}}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm">
+                        <p class="card-text" style="font-size: 20px; font-weight: bold">&#8595</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm">
+                        <p class="card-text" style="font-size: 20px; margin-left: 10px">{{route.destination}}</p>
+                    </div>
+                    <div class="col-sm">
+                        <p class="card-text" style="float:right; font-weight:bold; font-size: 20px">{{route.start}}</h5>
+                    </div>
+                </div>
                 {% if route.information|length > 0 %}
                     <text style="color: red">{{route.information}}</text>
                 {% endif %}

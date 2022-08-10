@@ -782,10 +782,10 @@ footer p { color: white; }
     -o-transition: all 0.2s ease;
     transition: margin 0.2s ease;
 }
-.spoilerbutton[value="Details"] + .spoiler > div {
+.spoilerbutton[value="+"] + .spoiler > div {
     margin-top:-100%;
 }
-.spoilerbutton[value="Hide"] + .spoiler > div {
+.spoilerbutton[value="-"] + .spoiler > div {
     padding:5px;
 }
 .custom-sel a {
