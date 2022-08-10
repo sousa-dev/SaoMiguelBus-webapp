@@ -141,6 +141,12 @@ p:last-child { margin-bottom: 0; }
     border: 3px solid green;
     padding: 10px;
   }
+
+  .center-center {
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+  }
 .tm-banner-row { 
     position: relative;
     z-index: 100;
@@ -227,7 +233,26 @@ label { font-weight: 700; }
     display: inline-block;
     float: right;
 }
-
+.dot {
+    height: 70px;
+    width: 70px;
+    background-color: #218732;
+    border-radius: 50%;
+    display: inline-block;
+  }
+.triangle_down {
+    position: relative;
+    top: -5px;
+    content: "";
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    border-right: 0.2em solid black;
+    border-top: 0.2em solid black;
+    transform: rotate(135deg);
+    margin-right: 0.5em;
+    margin-left: 1.0em;
+  }
 .tm-slideshow-section {
     display: -webkit-box;
     display: -webkit-flex;
