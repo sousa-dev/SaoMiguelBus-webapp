@@ -888,3 +888,6 @@ footer p { color: white; }
     -webkit-transform: rotate(45deg);
   }
   
+.google-map iframe {
+  width: 100%;
+}

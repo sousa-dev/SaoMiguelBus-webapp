@@ -48,6 +48,11 @@ LANGS = {
         'No_routes_subtitle': 'Please be careful with the spelling. Choose one Stop from the options displayed.',
         'Search_menu': 'Search',
         'Contact': 'Contact',
+        'contact_name': 'Name',
+        'contact_email': 'Email',
+        'contact_subject': 'Subject',
+        'contact_message': 'Message',
+        'contact_button': 'Send Message Now'
     },
     'pt': {
         'website_title': 'Autocarros São Miguel',
@@ -70,6 +75,11 @@ LANGS = {
         'No_routes_subtitle': 'Verifica se as paragens estão corretamente escritas ou escolhe uma das opções apresentadas.',
         'Search_menu': 'Pesquisar',
         'Contact': 'Contatar',
+        'contact_name': 'Nome',
+        'contact_email': 'Email',
+        'contact_subject': 'Assunto',
+        'contact_message': 'Mensagem',
+        'contact_button': 'Enviar Mensagem'
     }
 }
 

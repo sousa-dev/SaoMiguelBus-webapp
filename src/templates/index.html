@@ -49,7 +49,7 @@ http://www.templatemo.com/tm-511-journey
                                     <a class="nav-link active" href="#top">Home <span class="sr-only">(current)</span></a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#tm-section-2">{{ attr.Search_menu }}</a>
+                                    <a class="nav-link" href="#tm-section-search">{{ attr.Search_menu }}</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="#tm-section-3">Download</a>
@@ -218,7 +218,7 @@ http://www.templatemo.com/tm-511-journey
             </div>
 
             <div class="tm-container-outer" id="tm-section-3">
-                <section class="p-5 tm-container-outer tm-bg-gray">            
+                <section class="p-5 tm-container-outer">            
                     <div class="container">
                         <div class="row">
                             <div class="col-xs-12 mx-auto tm-about-text-wrap text-center">                        
@@ -231,8 +231,7 @@ http://www.templatemo.com/tm-511-journey
             </div>
 
             <div class="tm-container-outer tm-position-relative" id="tm-section-4">
-                <section class="contact py-5" id="contact">
-                    <div class="container">
+                <div class="container">
                     <div class="row">
                         
                         <div class="col-lg-5 mr-lg-5 col-12">
@@ -253,24 +252,26 @@ http://www.templatemo.com/tm-511-journey
                                 <li><a href="https://www.twitter.com/sousadev/" target="_blank" title="Twitter"><span class="iconify" data-icon="uil:twitter" ></span></a></li>
                                 <li><a href="https://www.github.com/sousaua/" target="_blank" title="GitHub"><span class="iconify" data-icon="uil:github" ></span></a></li>
                             </ul>
-                        </div>
-                        </div>
+                    </div>
+                </div>
                 <div id="google-map"></div>
-                <form action="index.html" method="post" class="tm-contact-form">
-                    <div class="form-group tm-name-container">
-                        <input type="text" id="contact_name" name="contact_name" class="form-control" placeholder="Name"  required/>
-                    </div>
-                    <div class="form-group tm-email-container">
-                        <input type="email" id="contact_email" name="contact_email" class="form-control" placeholder="Email"  required/>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" id="contact_subject" name="contact_subject" class="form-control" placeholder="Subject"  required/>
-                    </div>
-                    <div class="form-group">
-                        <textarea id="contact_message" name="contact_message" class="form-control" rows="9" placeholder="Message" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary tm-btn-primary tm-btn-send text-uppercase">Send Message Now</button>
-                </form>
+                <div class="container">
+                    <form action="https://formsubmit.co/sousadev@yahoo.com" method="post" class="tm-contact-form">
+                        <div class="form-group tm-name-container">
+                            <input type="text" id="contact_name" name="contact_name" class="form-control" placeholder="{{attr.contact_name}}"  required/>
+                        </div>
+                        <div class="form-group tm-email-container">
+                            <input type="email" id="contact_email" name="contact_email" class="form-control" placeholder="{{attr.contact_email}}"  required/>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="contact_subject" name="contact_subject" class="form-control" placeholder="{{attr.contact_subject}}"  required/>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="contact_message" name="contact_message" class="form-control" rows="9" placeholder="{{attr.contact_message}}" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary tm-btn-primary tm-btn-send text-uppercase">{{attr.contact_button}}</button>
+                    </form>
+                </div> <!-- .tm-container-outer -->
             </div> <!-- .tm-container-outer -->
 
         <footer class="tm-container-outer">
