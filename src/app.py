@@ -50,7 +50,7 @@ LANGS = {
         'Contact': 'Contact',
     },
     'pt': {
-        'website_title': 'São Miguel Bus',
+        'website_title': 'Autocarros São Miguel',
         'title': 'Procura um Autocarro',
         'subtitle': 'Encontra a melhor rota para ti.',
         'From': 'Partida',
