@@ -17,6 +17,7 @@ class Route():
         self.stops = stops
         self.type_of_day = type_of_day
         self.information = information
+        self.stop_time = self.stops[origin]
 
 DAYS = {
     1: "WEEKDAY",
@@ -119,7 +120,9 @@ def index():
     response_routes = get_routes(origin, destination, day, time)
     for route in response_routes:
         information = json.loads(route['information'].replace("'", "\""))["en"] if route["information"] != "None" else ""
-        routes.append(Route(route['id'], route['route'], route['origin'], route['destination'], route['start'], route['end'], json.loads(route['stops'].replace("'", "\"")), route['type_of_day'], information))
+        stops = json.loads(route['stops'].replace("'", "\""))
+        if origin in stops and destination in stops:
+            routes.append(Route(route['id'], route['route'], route['origin'], route['destination'], route['start'], route['end'], stops, route['type_of_day'], information))
     routes.sort(key=lambda route: route.start)
     return render_template('index.html', stops=get_stops(), routes=routes, nRoutes=len(routes), origin=origin, destination=destination, day=day, time=time.replace("h", ":"), attr = LANGS[lang], lang = lang)
 
