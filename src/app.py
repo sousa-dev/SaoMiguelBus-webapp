@@ -1,4 +1,5 @@
 from flask import *
+from flask_talisman import Talisman
 import requests
 import json
 import secrets
@@ -130,5 +131,8 @@ def index():
 def page_not_found(e):
     return render_template('error.html') 
 
+
+Talisman(app, content_security_policy=None)
+
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=False)
