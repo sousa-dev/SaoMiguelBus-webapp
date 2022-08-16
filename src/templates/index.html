@@ -256,21 +256,21 @@ http://www.templatemo.com/tm-511-journey
                 </div>
                 <div id="google-map"></div>
                 <div class="container">
-                    <form action="https://formsubmit.co/sousadev@yahoo.com" method="post" class="tm-contact-form">
-                        <div class="form-group tm-name-container">
-                            <input type="text" id="contact_name" name="contact_name" class="form-control" placeholder="{{attr.contact_name}}"  required/>
-                        </div>
-                        <div class="form-group tm-email-container">
-                            <input type="email" id="contact_email" name="contact_email" class="form-control" placeholder="{{attr.contact_email}}"  required/>
-                        </div>
-                        <div class="form-group">
-                            <input type="text" id="contact_subject" name="contact_subject" class="form-control" placeholder="{{attr.contact_subject}}"  required/>
-                        </div>
-                        <div class="form-group">
-                            <textarea id="contact_message" name="contact_message" class="form-control" rows="9" placeholder="{{attr.contact_message}}" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary tm-btn-primary tm-btn-send text-uppercase">{{attr.contact_button}}</button>
-                    </form>
+                        <form action="https://formsubmit.co/sousadev@yahoo.com" method="post" class="tm-contact-form">
+                            <div class="form-group tm-name-container">
+                                <input type="text" id="contact_name" name="contact_name" class="form-control" placeholder="{{attr.contact_name}}"  required/>
+                            </div>
+                            <div class="form-group tm-email-container">
+                                <input type="email" id="contact_email" name="contact_email" class="form-control" placeholder="{{attr.contact_email}}"  required/>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" id="contact_subject" name="contact_subject" class="form-control" placeholder="{{attr.contact_subject}}"  required/>
+                            </div>
+                            <div class="form-group">
+                                <textarea id="contact_message" name="contact_message" class="form-control" rows="9" placeholder="{{attr.contact_message}}" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary tm-btn-primary tm-btn-send text-uppercase">{{attr.contact_button}}</button>
+                        </form>
                 </div> <!-- .tm-container-outer -->
             </div> <!-- .tm-container-outer -->
 
@@ -283,6 +283,13 @@ http://www.templatemo.com/tm-511-journey
     </div> <!-- .main-content -->
 
     <!-- load JS files -->
+    {% if anchor %}
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                document.location.hash = '#{{ anchor }}';
+            });
+        </script>
+    {% endif %}
     <script src="static/js/jquery-1.11.3.min.js"></script>             <!-- jQuery (https://jquery.com/download/) -->
     <script src="static/js/popper.min.js"></script>                    <!-- https://popper.js.org/ -->       
     <script src="static/js/bootstrap.min.js"></script>                 <!-- https://getbootstrap.com/ -->
