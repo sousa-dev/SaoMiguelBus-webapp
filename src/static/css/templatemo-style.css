@@ -753,6 +753,15 @@ footer p { color: white; }
     height: 100%;
     
  }
+
+ .change-button {
+    background-color: transparent;
+    background-repeat: no-repeat;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    outline: none;
+}
    
  #item-0 {
  

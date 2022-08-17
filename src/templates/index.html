@@ -94,14 +94,19 @@ http://www.templatemo.com/tm-511-journey
                             <form action="index.html" method="get" class="tm-search-form tm-section-pad-2">
                                 <div class="form-row tm-search-form-row">                                
                                     <div class="form-group tm-form-group tm-form-group-pad tm-form-group-1">
-                                        <label for="inputCity">{{ attr.From }}</label> <i style="color: grey; font-style: italic">*</i>
+                                        <label for="origin">{{ attr.From }}</label> <i style="color: grey; font-style: italic">*</i>
                                         <input name="origin" value="{{origin}}" list="origin-stops" class="form-control" id="origin" placeholder="{{ attr.From_placeholder }}" required>
                                         <datalist name="origin" id="origin-stops">
                                             {% for stop in stops %}
                                             <option value="{{stop.name}}"></option>
                                             {% endfor %}
                                         </datalist>
-                                    </div>
+                                    </div>            
+                                    {% if routes|length > 0 %}
+                                        <div class="form-group tm-form-group tm-form-group-pad tm-form-group-1">
+                                            <button id = "change" class="change-button form-control" style="font-size:24px; outline: none"><i class="fa fa-exchange"></i></button>
+                                        </div>
+                                    {% endif %}
                                     <div class="form-group tm-form-group tm-form-group-pad tm-form-group-1">
                                         <label for="destination">{{ attr.To }}</label><i style="color: grey; font-style: italic">*</i>
                                         <input name="destination" value="{{destination}}" list="destination-stops" type="text" class="form-control" id="destination" placeholder="{{ attr.To_placeholder }}" required>
@@ -297,6 +302,11 @@ http://www.templatemo.com/tm-511-journey
             document.addEventListener("DOMContentLoaded", function() {
                 document.location.hash = '#{{ anchor }}';
             });
+            document.getElementById('change').onclick = function() {
+                var tmp = document.getElementById('origin').value;
+                document.getElementById('origin').value = document.getElementById('destination').value;
+                document.getElementById('destination').value = tmp;
+            };
         </script>
     {% endif %}
     <script src="static/js/jquery-1.11.3.min.js"></script>             <!-- jQuery (https://jquery.com/download/) -->
