@@ -57,7 +57,7 @@ LANGS = {
         'contact_button': 'Send Message Now',
         'support': "Support the",
         'support_bold': "Developer",
-        'route_warning': 'Information from public information made available by the bus companies',
+        'route_warning': 'Information taken from public sources provided by bus companies',
         'info_warning': "This website is not affiliated with any company or organization. The present schedule was taken from public documents made available by the bus companies. Some routes/hours may be outdated!",
     },
     'pt': {
