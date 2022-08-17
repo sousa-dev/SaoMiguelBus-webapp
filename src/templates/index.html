@@ -169,44 +169,49 @@ http://www.templatemo.com/tm-511-journey
                     {% for route in routes %}
                         <div class="container card w-100 center" style="margin-top: 30px; border-radius: 8px; padding: 10px;">
                             <div class="row">
-                                <div class="col-sm">
+                                <div class="col">
                                 </div>
-                                <div class="col-sm">
+                                <div class="col">
                                     <p class="card-text center-center" style="font-size: 20px; margin-left: 10px; width: 100%; text-align: center">{{route.origin}}</p>
                                 </div>
-                                <div class="col-sm">
+                                <div class="col">
                                     <p class="card-text" style="float:right; font-weight:bold; font-size: 20px; text-align: center; margin: auto; padding:10px">{{route.stop_time}}</h5>
                                 </div>
                             </div>
             
                             <div class="row">
-                                <div class="col-sm" style="margin: auto">
+                                <div class="col" style="margin: auto">
                                     <span class="" style="margin: auto">                        
-                                        <h5 class="card-title" style="font-weight: bold;margin-left: 10px; color: black; ">{{route.route}}</h5>
+                                        <h5 class="card-title" style="font-weight: bold; margin-left: 10px; color: black; ">{{route.route}}</h5>
                                     </span>
                                 </div>
-                                <div class="col-sm">
-                                    <p class="card-text center-center fa fa-2x fa-angle-down tm-down-arrow" style="font-size: 20px; font-weight: bold; width: 100%; text-align: center"></p>
+                                <div class="col">
+                                    <p class="card-text center-center" style="font-size: 20px; font-weight: bold; width: 100%; text-align: center">&#8595</p>
                                 </div>
-                                <div class="col-sm">
+                                <div class="col">
                                 </div>
                             </div>
             
                             <div class="row">
-                                <div class="col-sm">
+                                <div class="col">
                                 </div>
-                                <div class="col-sm">
+                                <div class="col">
                                     <p class="card-text center-center" style="font-size: 20px; margin-left: 10px; width: 100%; text-align: center">{{route.destination}}</p>
                                 </div>
-                                <div class="col-sm">
-                                    <input class="spoilerbutton btn btn-primary tm-btn tm-btn-search text-uppercase" style="width: fit-content; float: right; font-weight: bold; font-size: 14px; border-radius: 8px;" type="button" value="+" onclick="this.value=this.value=='+'?'-':'+';">
+                                <div class="col">                   
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col">                   
+                                <input class="spoilerbutton" style="width: fit-content; height: fit-content; float: right; font-weight: bold; font-size: 20px; border-radius: 8px; border:0px;background-color: #218732; color: white" type="button" value="+" onclick="this.value=this.value=='+'?'-':'+';">
                                     <div class="spoiler">
                                         <div>
                                             {% for stop, time in route.stops.items() %}
                                                 <b>{{stop}}</b>: {{time}} <br />
                                             {% endfor %}
                                         </div>
-                                    </div>                   
+                                    </div>
                                 </div>
                             </div>
                             {% if route.information|length > 0 %}
