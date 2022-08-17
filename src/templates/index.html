@@ -167,6 +167,15 @@ http://www.templatemo.com/tm-511-journey
                 {% endif %}
             
                 {% if routes|length > 0 %}
+                    <div class="col-md-12">
+                        <div class="info">
+                        <i class="icon-info-sign"></i>
+                    
+                        <span class="extra-info" style="float: right; padding-top:5px">
+                            *{{attr.route_warning}}
+                        </span>
+                        </div>
+                    </div>
                     {% for route in routes %}
                         <div class="container card w-100 center" style="margin-top: 30px; border-radius: 8px; padding: 10px;">
                             <div class="row">
@@ -222,7 +231,18 @@ http://www.templatemo.com/tm-511-journey
                     {% endfor %}
                 {% endif %}
             </div>
-
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8246676797736648"
+            crossorigin="anonymous"></script>
+            <!-- Lado Esquerdo -->
+            <ins class="adsbygoogle"
+                    style="display:block"
+                    data-ad-client="ca-pub-8246676797736648"
+                    data-ad-slot="5950119383"
+                    data-ad-format="auto"
+                    data-full-width-responsive="true"></ins>
+            <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
             <div class="tm-container-outer" id="tm-section-3">
                 <section class="p-5 tm-container-outer">            
                     <div class="container">
@@ -236,11 +256,10 @@ http://www.templatemo.com/tm-511-journey
                 </section>
             </div>
 
-            <div class="tm-container-outer tm-position-relative" id="tm-section-4">
+            <div class="tm-container-outer" id="tm-section-4">
                 <div class="container">
-                    <div class="row">
-                        
-                        <div class="col-lg-5 mr-lg-5 col-12">
+                    <div class="row" style="height: fit-content;">
+                        <div class="col" style="height: fit-content;">
                         <div class="google-map w-100">
                             <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d201744.92890198727!2d-25.635057728071235!3d37.80727282800227!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xb5cd77250e697c3%3A0xae4f6f26c3f63890!2sS%C3%A3o%20Miguel%20Island!5e0!3m2!1sen!2spt!4v1645534242199!5m2!1sen!2spt"  width="400" height="300" frameborder="0" style="border:0" allowfullscreen></iframe>
                         </div>
@@ -252,7 +271,7 @@ http://www.templatemo.com/tm-511-journey
                                 <p><a title="Mail" href="mailto:sousadev@yahoo.com">sousadev@yahoo.com</a></p>
                             </div>
             
-                            <ul class="social-links">
+                            <ul class="social-links" style="list-style-type: none;">
                                 <li><a href="https://www.linkedin.com/in/henriquecsousa/" target="_blank" title="LinkedIn"><span class="iconify" data-icon="uil:linkedin"></span></a></li>
                                 <li><a href="https://www.instagram.com/sousadev/" target="_blank" title="Instagram"><span class="iconify" data-icon="uil:instagram"></span></a></li>
                                 <li><a href="https://www.twitter.com/sousadev/" target="_blank" title="Twitter"><span class="iconify" data-icon="uil:twitter" ></span></a></li>
@@ -260,32 +279,28 @@ http://www.templatemo.com/tm-511-journey
                             </ul>
                     </div>
                 </div>
-                <div id="google-map"></div>
-                <div class="container">
-                        <form action="https://formsubmit.co/sousadev@yahoo.com" method="post" class="tm-contact-form">
-                            <div class="form-group tm-name-container">
-                                <input type="text" id="contact_name" name="contact_name" class="form-control" placeholder="{{attr.contact_name}}"  required/>
-                            </div>
-                            <div class="form-group tm-email-container">
-                                <input type="email" id="contact_email" name="contact_email" class="form-control" placeholder="{{attr.contact_email}}"  required/>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" id="contact_subject" name="contact_subject" class="form-control" placeholder="{{attr.contact_subject}}"  required/>
-                            </div>
-                            <div class="form-group">
-                                <textarea id="contact_message" name="contact_message" class="form-control" rows="9" placeholder="{{attr.contact_message}}" required></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary tm-btn-primary tm-btn-send text-uppercase">{{attr.contact_button}}</button>
-                        </form>
-                </div> <!-- .tm-container-outer -->
             </div> <!-- .tm-container-outer -->
 
+        <div class="tm-container-outer" id="sponsor">
+            <section class="p-5 tm-container-outer">            
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xs-12 mx-auto tm-about-text-wrap text-center">                        
+                            <h2 class="text-uppercase mb-4">{{attr.support}} <strong>{{attr.support_bold}}</strong></h2>
+                            <a target="_blank" href="https://www.patreon.com/sousadev" style="padding-right:5px"><img style="width:40%" src="static/img/patreon-badge.png" alt="Become a Patron"></img></a>        
+                            <a target="_blank" href="https://www.paypal.me/wiky" style="padding-left:5px"><img style="width:30%" src="static/img/paypal-donate.png" alt="Donate via Paypal"></img></a>                                                    
+                        </div>
+                    </div>
+                </div>            
+            </section>
+        </div>
+        </div>
+        <p style="text-align:center; font-style:italic">{{attr.info_warning}}</p>
         <footer class="tm-container-outer">
-            <p class="mb-0">Copyright © <span class="tm-current-year">2022</span> Sousa Dev
+            <p class="mb-0">Copyright © <span class="tm-current-year">2022</span> <a target="_blank" href="https://www.sousadev.com">Sousa Dev</a>
                 
             . Designed by <a rel="nofollow" href="https://templatemo.com/" target="_blank">Template Mo</a></p>
         </footer>
-        </div>
     </div> <!-- .main-content -->
 
     <!-- load JS files -->

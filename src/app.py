@@ -54,7 +54,11 @@ LANGS = {
         'contact_email': 'Email',
         'contact_subject': 'Subject',
         'contact_message': 'Message',
-        'contact_button': 'Send Message Now'
+        'contact_button': 'Send Message Now',
+        'support': "Support the",
+        'support_bold': "Developer",
+        'route_warning': 'Information from public information made available by the bus companies',
+        'info_warning': "This website is not affiliated with any company or organization. The present schedule was taken from public documents made available by the bus companies. Some routes/hours may be outdated!",
     },
     'pt': {
         'website_title': 'Autocarros São Miguel',
@@ -81,7 +85,11 @@ LANGS = {
         'contact_email': 'Email',
         'contact_subject': 'Assunto',
         'contact_message': 'Mensagem',
-        'contact_button': 'Enviar Mensagem'
+        'contact_button': 'Enviar Mensagem',
+        'support': "Apoia o",
+        'support_bold': "Criador",
+        'route_warning': 'Informação retirada de fontes públicas disponibilizadas pelas empresas de autocarros',
+        "info_warning": "Este site não é afiliado a nenhuma empresa ou organização. O horário usado foi retirado de documentos públicos disponibilizados pelas empresas de autocarros. Alguns horários podem estar desatualizados!"
     }
 }
 
