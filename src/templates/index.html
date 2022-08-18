@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Horários dos Autocarros da Ilha de São Miguel. Pesquisa por autocarros de todas as companhias que operam na ilha e encontra a melhor solução para ti. São Miguel Island Bus Schedule. Search and find the best bus for your trip.">
 
     <title>{{ attr.website_title }}</title>
 <!-- 
@@ -93,14 +94,15 @@ http://www.templatemo.com/tm-511-journey
                             <form action="index.html" method="get" class="tm-search-form tm-section-pad-2">
                                 <div class="form-row tm-search-form-row">                                
                                     <div class="form-group tm-form-group tm-form-group-pad tm-form-group-1">
-                                        <label for="inputCity">{{ attr.From }}</label> <i style="color: grey; font-style: italic">*</i>
+                                        <label for="origin">{{ attr.From }}</label> <i style="color: grey; font-style: italic">*</i>
                                         <input name="origin" value="{{origin}}" list="origin-stops" class="form-control" id="origin" placeholder="{{ attr.From_placeholder }}" required>
                                         <datalist name="origin" id="origin-stops">
                                             {% for stop in stops %}
                                             <option value="{{stop.name}}"></option>
                                             {% endfor %}
                                         </datalist>
-                                    </div>
+                                        <!--<a id = "change" class="change-button form-control" style="font-size:16px; outline: none; text-align: right"><i class="fa fa-exchange"></i></a>-->
+                                    </div>   
                                     <div class="form-group tm-form-group tm-form-group-pad tm-form-group-1">
                                         <label for="destination">{{ attr.To }}</label><i style="color: grey; font-style: italic">*</i>
                                         <input name="destination" value="{{destination}}" list="destination-stops" type="text" class="form-control" id="destination" placeholder="{{ attr.To_placeholder }}" required>
@@ -166,47 +168,61 @@ http://www.templatemo.com/tm-511-journey
                 {% endif %}
             
                 {% if routes|length > 0 %}
+                    <div class="col-md-12">
+                        <div class="info">
+                        <i class="icon-info-sign"></i>
+                    
+                        <span class="extra-info" style="float: right; padding-top:5px">
+                            *{{attr.route_warning}}
+                        </span>
+                        </div>
+                    </div>
                     {% for route in routes %}
                         <div class="container card w-100 center" style="margin-top: 30px; border-radius: 8px; padding: 10px;">
                             <div class="row">
-                                <div class="col-sm">
+                                <div class="col">
                                 </div>
-                                <div class="col-sm">
+                                <div class="col">
                                     <p class="card-text center-center" style="font-size: 20px; margin-left: 10px; width: 100%; text-align: center">{{route.origin}}</p>
                                 </div>
-                                <div class="col-sm">
-                                    <p class="card-text" style="float:right; font-weight:bold; font-size: 20px; text-align: center; margin: auto; padding:10px">{{route.start}}</h5>
+                                <div class="col">
+                                    <p class="card-text" style="float:right; font-weight:bold; font-size: 20px; text-align: center; margin: auto; padding:10px">{{route.stop_time}}</h5>
                                 </div>
                             </div>
             
                             <div class="row">
-                                <div class="col-sm" style="margin: auto">
+                                <div class="col" style="margin: auto">
                                     <span class="" style="margin: auto">                        
-                                        <h5 class="card-title" style="font-weight: bold;margin-left: 10px; color: black; ">{{route.route}}</h5>
+                                        <h5 class="card-title" style="font-weight: bold; margin-left: 10px; color: black; ">{{route.route}}</h5>
                                     </span>
                                 </div>
-                                <div class="col-sm">
-                                    <p class="card-text center-center fa fa-2x fa-angle-down tm-down-arrow" style="font-size: 20px; font-weight: bold; width: 100%; text-align: center"></p>
+                                <div class="col">
+                                    <p class="card-text center-center" style="font-size: 20px; font-weight: bold; width: 100%; text-align: center">&#8595</p>
                                 </div>
-                                <div class="col-sm">
+                                <div class="col">
                                 </div>
                             </div>
             
                             <div class="row">
-                                <div class="col-sm">
+                                <div class="col">
                                 </div>
-                                <div class="col-sm">
+                                <div class="col">
                                     <p class="card-text center-center" style="font-size: 20px; margin-left: 10px; width: 100%; text-align: center">{{route.destination}}</p>
                                 </div>
-                                <div class="col-sm">
-                                    <input class="spoilerbutton btn btn-primary tm-btn tm-btn-search text-uppercase" style="width: fit-content; float: right; font-weight: bold; font-size: 14px; border-radius: 8px;" type="button" value="+" onclick="this.value=this.value=='+'?'-':'+';">
+                                <div class="col">                   
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col">                   
+                                <input class="spoilerbutton" style="width: fit-content; height: fit-content; float: right; font-weight: bold; font-size: 20px; border-radius: 8px; border:0px;background-color: #218732; color: white" type="button" value="+" onclick="this.value=this.value=='+'?'-':'+';">
                                     <div class="spoiler">
                                         <div>
                                             {% for stop, time in route.stops.items() %}
                                                 <b>{{stop}}</b>: {{time}} <br />
                                             {% endfor %}
                                         </div>
-                                    </div>                   
+                                    </div>
                                 </div>
                             </div>
                             {% if route.information|length > 0 %}
@@ -216,7 +232,6 @@ http://www.templatemo.com/tm-511-journey
                     {% endfor %}
                 {% endif %}
             </div>
-
             <div class="tm-container-outer" id="tm-section-3">
                 <section class="p-5 tm-container-outer">            
                     <div class="container">
@@ -230,11 +245,10 @@ http://www.templatemo.com/tm-511-journey
                 </section>
             </div>
 
-            <div class="tm-container-outer tm-position-relative" id="tm-section-4">
+            <div class="tm-container-outer" id="tm-section-4">
                 <div class="container">
-                    <div class="row">
-                        
-                        <div class="col-lg-5 mr-lg-5 col-12">
+                    <div class="row" style="height: fit-content;">
+                        <div class="col" style="height: fit-content;">
                         <div class="google-map w-100">
                             <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d201744.92890198727!2d-25.635057728071235!3d37.80727282800227!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xb5cd77250e697c3%3A0xae4f6f26c3f63890!2sS%C3%A3o%20Miguel%20Island!5e0!3m2!1sen!2spt!4v1645534242199!5m2!1sen!2spt"  width="400" height="300" frameborder="0" style="border:0" allowfullscreen></iframe>
                         </div>
@@ -246,7 +260,7 @@ http://www.templatemo.com/tm-511-journey
                                 <p><a title="Mail" href="mailto:sousadev@yahoo.com">sousadev@yahoo.com</a></p>
                             </div>
             
-                            <ul class="social-links">
+                            <ul class="social-links" style="list-style-type: none;">
                                 <li><a href="https://www.linkedin.com/in/henriquecsousa/" target="_blank" title="LinkedIn"><span class="iconify" data-icon="uil:linkedin"></span></a></li>
                                 <li><a href="https://www.instagram.com/sousadev/" target="_blank" title="Instagram"><span class="iconify" data-icon="uil:instagram"></span></a></li>
                                 <li><a href="https://www.twitter.com/sousadev/" target="_blank" title="Twitter"><span class="iconify" data-icon="uil:twitter" ></span></a></li>
@@ -254,35 +268,46 @@ http://www.templatemo.com/tm-511-journey
                             </ul>
                     </div>
                 </div>
-                <div id="google-map"></div>
-                <div class="container">
-                    <form action="https://formsubmit.co/sousadev@yahoo.com" method="post" class="tm-contact-form">
-                        <div class="form-group tm-name-container">
-                            <input type="text" id="contact_name" name="contact_name" class="form-control" placeholder="{{attr.contact_name}}"  required/>
-                        </div>
-                        <div class="form-group tm-email-container">
-                            <input type="email" id="contact_email" name="contact_email" class="form-control" placeholder="{{attr.contact_email}}"  required/>
-                        </div>
-                        <div class="form-group">
-                            <input type="text" id="contact_subject" name="contact_subject" class="form-control" placeholder="{{attr.contact_subject}}"  required/>
-                        </div>
-                        <div class="form-group">
-                            <textarea id="contact_message" name="contact_message" class="form-control" rows="9" placeholder="{{attr.contact_message}}" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary tm-btn-primary tm-btn-send text-uppercase">{{attr.contact_button}}</button>
-                    </form>
-                </div> <!-- .tm-container-outer -->
             </div> <!-- .tm-container-outer -->
 
+        <div class="tm-container-outer" id="sponsor">
+            <section class="p-5 tm-container-outer">            
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xs-12 mx-auto tm-about-text-wrap text-center">                        
+                            <h2 class="text-uppercase mb-4">{{attr.support}} <strong>{{attr.support_bold}}</strong></h2>
+                            <a target="_blank" href="https://www.patreon.com/sousadev" style="padding-right:5px"><img style="width:40%" src="static/img/patreon-badge.png" alt="Become a Patron"></img></a>        
+                            <a target="_blank" href="https://www.paypal.me/wiky" style="padding-left:5px"><img style="width:30%" src="static/img/paypal-donate.png" alt="Donate via Paypal"></img></a>                                                    
+                        </div>
+                    </div>
+                </div>            
+            </section>
+        </div>
+        </div>
+        <p style="text-align:center; font-style:italic">{{attr.info_warning}}</p>
         <footer class="tm-container-outer">
-            <p class="mb-0">Copyright © <span class="tm-current-year">2022</span> Sousa Dev
+            <p class="mb-0">Copyright © <span class="tm-current-year">2022</span> <a target="_blank" href="https://www.sousadev.com">Sousa Dev</a>
                 
             . Designed by <a rel="nofollow" href="https://templatemo.com/" target="_blank">Template Mo</a></p>
         </footer>
-        </div>
     </div> <!-- .main-content -->
 
     <!-- load JS files -->
+    {% if anchor %}
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                document.location.hash = '#{{ anchor }}';
+            });
+        </script>
+    {% endif %}
+    <!--
+    <script>
+        document.getElementById('change').onclick = function() {
+            var tmp = document.getElementById('origin').value;
+            document.getElementById('origin').value = document.getElementById('destination').value;
+            document.getElementById('destination').value = tmp;
+        };
+    </script>-->
     <script src="static/js/jquery-1.11.3.min.js"></script>             <!-- jQuery (https://jquery.com/download/) -->
     <script src="static/js/popper.min.js"></script>                    <!-- https://popper.js.org/ -->       
     <script src="static/js/bootstrap.min.js"></script>                 <!-- https://getbootstrap.com/ -->

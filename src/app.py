@@ -1,4 +1,5 @@
 from flask import *
+from flask_talisman import Talisman
 import requests
 import json
 import secrets
@@ -17,6 +18,7 @@ class Route():
         self.stops = stops
         self.type_of_day = type_of_day
         self.information = information
+        self.stop_time = self.stops[origin]
 
 DAYS = {
     1: "WEEKDAY",
@@ -52,7 +54,11 @@ LANGS = {
         'contact_email': 'Email',
         'contact_subject': 'Subject',
         'contact_message': 'Message',
-        'contact_button': 'Send Message Now'
+        'contact_button': 'Send Message Now',
+        'support': "Support the",
+        'support_bold': "Developer",
+        'route_warning': 'Information taken from public sources provided by bus companies',
+        'info_warning': "This website is not affiliated with any company or organization. The present schedule was taken from public documents made available by the bus companies. Some routes/hours may be outdated!",
     },
     'pt': {
         'website_title': 'Autocarros São Miguel',
@@ -79,7 +85,11 @@ LANGS = {
         'contact_email': 'Email',
         'contact_subject': 'Assunto',
         'contact_message': 'Mensagem',
-        'contact_button': 'Enviar Mensagem'
+        'contact_button': 'Enviar Mensagem',
+        'support': "Apoia o",
+        'support_bold': "Criador",
+        'route_warning': 'Informação retirada de fontes públicas disponibilizadas pelas empresas de autocarros',
+        "info_warning": "Este site não é afiliado a nenhuma empresa ou organização. O horário usado foi retirado de documentos públicos disponibilizados pelas empresas de autocarros. Alguns horários podem estar desatualizados!"
     }
 }
 
@@ -119,13 +129,18 @@ def index():
     response_routes = get_routes(origin, destination, day, time)
     for route in response_routes:
         information = json.loads(route['information'].replace("'", "\""))["en"] if route["information"] != "None" else ""
-        routes.append(Route(route['id'], route['route'], route['origin'], route['destination'], route['start'], route['end'], json.loads(route['stops'].replace("'", "\"")), route['type_of_day'], information))
-    routes.sort(key=lambda route: route.start)
-    return render_template('index.html', stops=get_stops(), routes=routes, nRoutes=len(routes), origin=origin, destination=destination, day=day, time=time.replace("h", ":"), attr = LANGS[lang], lang = lang)
+        stops = json.loads(route['stops'].replace("'", "\""))
+        if origin in stops and destination in stops:
+            routes.append(Route(route['id'], route['route'], route['origin'], route['destination'], route['start'], route['end'], stops, route['type_of_day'], information))
+    routes.sort(key=lambda route: route.stop_time)
+    return render_template('index.html', stops=get_stops(), routes=routes, nRoutes=len(routes), origin=origin, destination=destination, day=day, time=time.replace("h", ":"), attr = LANGS[lang], lang = lang, anchor='tm-section-search')
 
 @app.errorhandler(Exception)
 def page_not_found(e):
     return render_template('error.html') 
 
+
+Talisman(app, content_security_policy=None)
+
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=False)
