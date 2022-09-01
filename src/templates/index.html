@@ -255,25 +255,76 @@ http://www.templatemo.com/tm-511-journey
 
             <div class="tm-container-outer" id="tm-section-4">
                 <div class="container">
-                    <div class="row" style="height: fit-content;">
-                        <div class="col" style="height: fit-content;">
-                        <div class="google-map w-100">
-                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d201744.92890198727!2d-25.635057728071235!3d37.80727282800227!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xb5cd77250e697c3%3A0xae4f6f26c3f63890!2sS%C3%A3o%20Miguel%20Island!5e0!3m2!1sen!2spt!4v1645534242199!5m2!1sen!2spt"  width="400" height="300" frameborder="0" style="border:0" allowfullscreen></iframe>
-                        </div>
-            
-                        <div class="contact-info d-flex justify-content-between align-items-center py-4 px-lg-5">
-                            <div class="contact-info-item">
-                                <h3 class="mb-3 text-white">Say hello</h3>
-                                <p class="footer-text mb-0"><a href="https://wa.link/tboeew" target="_blank"><span class="iconify" data-icon="uil:whatsapp"></span> +351 968 378 315</a></p>
-                                <p><a title="Mail" href="mailto:sousadev@yahoo.com">sousadev@yahoo.com</a></p>
+                    <div class="row justify-content-center">
+                        <div class="col-md-12">
+                            <div class="wrapper">
+                                <div class="row no-gutters">
+                                    <div class="col-lg-8 col-md-7 order-md-last d-flex align-items-stretch">
+                                        <div class="contact-wrap w-100 p-md-5 p-4">
+                                            <h3 class="mb-4">{{attr.contact_title}}</h3>
+                                            <p class="mb-4">{{attr.contact_subtitle}}</p>
+                                            <div id="form-message-warning" class="mb-4"></div> 
+                                      <div id="form-message-success" class="mb-4">
+                                      </div>
+                                            <form action="https://formsubmit.co/sousadev@yahoo.com" method="POST" id="contactForm" name="contactForm" class="contactForm">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label class="label" for="name">{{attr.contact_name}}</label>
+                                                            <input type="text" class="form-control" name="name" id="name" placeholder="{{attr.contact_name}}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6"> 
+                                                        <div class="form-group">
+                                                            <label class="label" for="email">Email</label>
+                                                            <input type="email" class="form-control" name="email" id="email" placeholder="Email">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label class="label" for="subject">{{attr.contact_subject}}</label>
+                                                            <input type="text" class="form-control" name="subject" id="subject" placeholder="{{attr.contact_subject}}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label class="label" for="#">{{attr.contact_message}}</label>
+                                                            <textarea name="message" class="form-control" id="message" cols="30" rows="4" placeholder="{{attr.contact_message}}"></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <input type="submit" value="{{attr.contact_button}}" class="btn btn-primary">
+                                                            <div class="submitting"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-5 d-flex align-items-stretch">
+                                        <div class="contact-info w-100 p-md-5 p-4">
+                                            <h3 class="mb-3 text-white">{{attr.card_title}}</h3>
+                                            <div class="contact-info-item">
+                                                <p class="footer-text mb-0"><a href="https://wa.link/tboeew" target="_blank"><span class="iconify" data-icon="uil:whatsapp"></span> +351 968 378 315</a></p>
+                                                <p><a title="Mail" href="mailto:sousadev@yahoo.com">sousadev@yahoo.com</a></p>
+
+                                                <ul class="social-links">
+                                                <li><a href="https://www.linkedin.com/in/henriquecsousa/" target="_blank" title="LinkedIn"><span class="iconify" data-icon="uil:linkedin"></span>   LinkedIn</a></li>
+                                                <li><a href="https://www.instagram.com/sousadev/" target="_blank" title="Instagram"><span class="iconify" data-icon="uil:instagram"></span> Instagram</a></li>
+                                                <li><a href="https://www.twitter.com/sousadev/" target="_blank" title="Twitter"><span class="iconify" data-icon="uil:twitter" ></span>  Twitter</a></li>
+                                                <li><a href="https://www.github.com/sousaua/" target="_blank" title="GitHub"><span class="iconify" data-icon="uil:github" ></span>  GitHub</a></li>
+                                                </ul>
+
+                                                <div class="google-map w-100" style="height: auto">
+                                                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d201744.92890198727!2d-25.635057728071235!3d37.80727282800227!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xb5cd77250e697c3%3A0xae4f6f26c3f63890!2sS%C3%A3o%20Miguel%20Island!5e0!3m2!1sen!2spt!4v1645534242199!5m2!1sen!2spt" width="400" height="300" frameborder="0" style="border:0" allowfullscreen=""></iframe>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-            
-                            <ul class="social-links" style="list-style-type: none;">
-                                <li><a href="https://www.linkedin.com/in/henriquecsousa/" target="_blank" title="LinkedIn"><span class="iconify" data-icon="uil:linkedin"></span></a></li>
-                                <li><a href="https://www.instagram.com/sousadev/" target="_blank" title="Instagram"><span class="iconify" data-icon="uil:instagram"></span></a></li>
-                                <li><a href="https://www.twitter.com/sousadev/" target="_blank" title="Twitter"><span class="iconify" data-icon="uil:twitter" ></span></a></li>
-                                <li><a href="https://www.github.com/sousaua/" target="_blank" title="GitHub"><span class="iconify" data-icon="uil:github" ></span></a></li>
-                            </ul>
+                        </div>
                     </div>
                 </div>
             </div> <!-- .tm-container-outer -->
@@ -288,11 +339,12 @@ http://www.templatemo.com/tm-511-journey
                             <a target="_blank" href="https://www.paypal.me/wiky" style="padding-left:5px"><img style="width:30%" src="static/img/paypal-donate.png" alt="Donate via Paypal"></img></a>                                                    
                         </div>
                     </div>
-                </div>            
+                </div>
+                <p style="text-align:center; font-style:italic">{{attr.info_warning}}</p>
+            
             </section>
         </div>
         </div>
-        <p style="text-align:center; font-style:italic">{{attr.info_warning}}</p>
         <footer class="tm-container-outer">
             <p class="mb-0">Copyright © <span class="tm-current-year">2022</span> <a target="_blank" href="https://www.sousadev.com">Sousa Dev</a>
                 
@@ -325,88 +377,6 @@ http://www.templatemo.com/tm-511-journey
     <script src="static/slick/slick.min.js"></script>                  <!-- http://kenwheeler.github.io/slick/ -->
     <script src="static/js/jquery.scrollTo.min.js"></script>           <!-- https://github.com/flesler/jquery.scrollTo -->
     <script src="https://code.iconify.design/2/2.1.2/iconify.min.js"></script>
-
-    <script> 
-        /* Google Maps
-        ------------------------------------------------*/
-        var map = '';
-        var center;
-
-        function initialize() {
-            var mapOptions = {
-                zoom: 16,
-                center: new google.maps.LatLng(37.769725, -122.462154),
-                scrollwheel: false
-            };
-
-            map = new google.maps.Map(document.getElementById('google-map'),  mapOptions);
-
-            google.maps.event.addDomListener(map, 'idle', function() {
-              calculateCenter();
-          });
-
-            google.maps.event.addDomListener(window, 'resize', function() {
-              map.setCenter(center);
-          });
-        }
-
-        function calculateCenter() {
-            center = map.getCenter();
-        }
-
-        function loadGoogleMap(){
-            var script = document.createElement('script');
-            script.type = 'text/javascript';
-            script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyDVWt4rJfibfsEDvcuaChUaZRS5NXey1Cs&v=3.exp&sensor=false&' + 'callback=initialize';
-            document.body.appendChild(script);
-        } 
-
-        /* DOM is ready
-        ------------------------------------------------*/
-        $(function(){
-
-            // Change top navbar on scroll
-            $(window).on("scroll", function() {
-                if($(window).scrollTop() > 100) {
-                    $(".tm-top-bar").addClass("active");
-                } else {                    
-                 $(".tm-top-bar").removeClass("active");
-                }
-            });
-
-            // Smooth scroll to search form
-            $('.tm-down-arrow-link').click(function(){
-                $.scrollTo('#tm-section-search', 300, {easing:'linear'});
-            });
-
-            // Date Picker in Search form
-            var pickerCheckIn = datepicker('#inputCheckIn');
-            var pickerCheckOut = datepicker('#inputCheckOut');
-
-            // Update nav links on scroll
-            $('#tm-top-bar').singlePageNav({
-                currentClass:'active',
-                offset: 60
-            });
-
-            // Close navbar after clicked
-            $('.nav-link').click(function(){
-                $('#mainNav').removeClass('show');
-            });
-
-            // Slick Carousel
-            $('.tm-slideshow').slick({
-                infinite: true,
-                arrows: true,
-                slidesToShow: 1,
-                slidesToScroll: 1
-            });
-
-            loadGoogleMap();                                       // Google Map                
-            $('.tm-current-year').text(new Date().getFullYear());  // Update year in copyright           
-        });
-
-    </script>             
 
 </body>
 </html>
