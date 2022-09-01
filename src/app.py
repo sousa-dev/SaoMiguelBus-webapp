@@ -134,7 +134,7 @@ def index():
 
     response_routes = get_routes(origin, destination, day, time)
     for route in response_routes:
-        information = json.loads(route['information'].replace("'", "\""))["en"] if route["information"] != "None" else ""
+        information = json.loads(route['information'].replace("'", "\""))[lang] if route["information"] != "None" else ""
         stops = json.loads(route['stops'].replace("'", "\""))
         if origin in stops and destination in stops:
             routes.append(Route(route['id'], route['route'], route['origin'], route['destination'], route['start'], route['end'], stops, route['type_of_day'], information))
