@@ -189,8 +189,12 @@ label { font-weight: 700; }
 .tm-form-group { float: left; }
 .tm-form-group-pad { padding: 0 8px; }
 .tm-form-group-1 { width: 50%; }
+.tm-form-form-1 { width: 45%; }
 .tm-form-group-2 { width: 50%; }
+.tm-form-form-2 { width: 10%; }
 .tm-form-group-3 { width: 25%; }
+.tm-form-form-3 { width: 45%; }
+
 .form-control { border-radius: 0; }
 
 .tm-btn {
