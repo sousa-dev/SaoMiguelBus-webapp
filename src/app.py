@@ -110,12 +110,26 @@ def format_stops(origin, destination):
 
 
 def get_stops():
-    response = requests.get('https://saomiguelbus-api.herokuapp.com/api/v1/stops')
+    try:
+        response = requests.get('https://saomiguelbus-api.herokuapp.com/api/v1/stops')
+    except Exception as e:
+        print(e)
+        return None
     return json.loads(response.text) if response.status_code == 200 else []
 
 def get_routes(origin, destination, day, time):
         URL = 'https://saomiguelbus-api.herokuapp.com/api/v1/route?origin=' + origin + '&destination=' + destination + '&day=' + DAYS[day] + '&start=' + time
-        response = requests.get(URL)
+        try:
+            response = requests.get(URL)
+        except Exception as e:
+            print(e)
+            return []
+        try:
+            post = requests.post(f"https://saomiguelbus-api.herokuapp.com/api/v1/stat?request=get_route&origin={origin}&destination={destination}&time={time}&language={session.get('lang', 'pt')}&platform=web&day={DAYS[day]}")
+            print(post.status_code)
+            print(f"https://saomiguelbus-api.herokuapp.com/api/v1/stat?request=get_route&origin={origin}&destination={destination}&time={time}&language={session.get('lang', 'pt')}&platform=web&day={DAYS[day]}")
+        except Exception as e:
+            print(e)
         return json.loads(response.text) if response.status_code == 200 else []
 
 
