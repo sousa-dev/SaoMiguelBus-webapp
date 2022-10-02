@@ -99,6 +99,16 @@ LANGS = {
     }
 }
 
+def format_stops(origin, destination):
+    new_origin = ""
+    for word in origin.split():
+        new_origin += " " + word.capitalize() if word.lower() != "do" and word.lower() != "da" and word.lower() != "de" and word.lower() != "dos" and word.lower() != "das" else " " + word.lower()
+    new_destination = ""
+    for word in destination.split():
+        new_destination += " " + word.capitalize() if word.lower() != "do" and word.lower() != "da" and word.lower() != "de" and word.lower() != "dos" and word.lower() != "das" else " " + word.lower()
+    return new_origin.strip(), new_destination.strip()
+
+
 def get_stops():
     response = requests.get('https://saomiguelbus-api.herokuapp.com/api/v1/stops')
     return json.loads(response.text) if response.status_code == 200 else []
@@ -132,6 +142,7 @@ def index():
     day = int(request.args.get('day', default = 1))
     time = str(request.args.get('time', default = "00:00").replace(":", "h"))
 
+    origin, destination = format_stops(origin, destination)
     response_routes = get_routes(origin, destination, day, time)
     for route in response_routes:
         information = json.loads(route['information'].replace("'", "\""))[lang] if route["information"] != "None" else ""
@@ -143,6 +154,7 @@ def index():
 
 @app.errorhandler(Exception)
 def page_not_found(e):
+    print(e)
     return render_template('error.html') 
 
 Talisman(app, content_security_policy=None)
