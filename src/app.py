@@ -171,7 +171,7 @@ def page_not_found(e):
     print(e)
     return render_template('error.html') 
 
-Talisman(app, content_security_policy=None)
+#Talisman(app, content_security_policy=None)
 
 if __name__ == '__main__':
     app.run(debug=False)
