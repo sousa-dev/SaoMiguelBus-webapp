@@ -1,5 +1,5 @@
 from flask import *
-from flask_talisman import Talisman
+#from flask_talisman import Talisman
 import requests
 import json
 import secrets
