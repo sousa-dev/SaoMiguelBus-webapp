@@ -166,6 +166,12 @@ def index():
     routes.sort(key=lambda route: route.stop_time)
     return render_template('index.html', stops=get_stops(), routes=routes, nRoutes=len(routes), origin=origin, destination=destination, day=day, time=time.replace("h", ":"), attr = LANGS[lang], lang = lang, anchor='tm-section-search')
 
+@app.route("/sw.js")
+def propellerads():
+    resp = make_response(render_template('sw.js'))
+    resp.mimetype = 'text/plain'
+    return resp 
+
 @app.errorhandler(Exception)
 def page_not_found(e):
     print(e)
@@ -174,4 +180,4 @@ def page_not_found(e):
 #Talisman(app, content_security_policy=None)
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(host='0.0.0.0', port=80, debug=False)
