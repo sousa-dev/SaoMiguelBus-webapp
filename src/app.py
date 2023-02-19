@@ -118,7 +118,7 @@ def get_stops():
     return json.loads(response.text) if response.status_code == 200 else []
 
 def get_routes(origin, destination, day, time):
-        URL = 'https://saomiguelbus-api.herokuapp.com/api/v1/route?origin=' + origin + '&destination=' + destination + '&day=' + DAYS[day] + '&start=' + time
+        URL = 'https://saomiguelbus-api.herokuapp.com/api/v1/route?origin=' + origin.replace('ç', 'c') + '&destination=' + destination.replace('ç', 'c') + '&day=' + DAYS[day] + '&start=' + time
         try:
             response = requests.get(URL)
         except Exception as e:
@@ -180,4 +180,4 @@ def page_not_found(e):
 #Talisman(app, content_security_policy=None)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80, debug=False)
+    app.run(host='0.0.0.0', port=8080, debug=False)
