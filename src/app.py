@@ -153,13 +153,12 @@ def get_routes(origin, destination, day, time):
         except Exception as e:
             print(e)
             return []
-        # try:
-        #     #TODO: change this later
-        #     #post = requests.post(f"https://saomiguelbus-api.herokuapp.com/api/v1/stat?request=get_route&origin={origin}&destination={destination}&time={time}&language={session.get('lang', 'pt')}&platform=web&day={DAYS[day]}")
-        #     #print(post.status_code)
-        #     #print(f"https://saomiguelbus-api.herokuapp.com/api/v1/stat?request=get_route&origin={origin}&destination={destination}&time={time}&language={session.get('lang', 'pt')}&platform=web&day={DAYS[day]}")
-        # except Exception as e:
-        #     print(e)
+        try:
+            post = requests.post(f"https://saomiguelbus-api.herokuapp.com/api/v1/stat?request=get_route&origin={origin}&destination={destination}&time={time}&language={session.get('lang', 'pt')}&platform=web&day={DAYS[day]}")
+            print(post.status_code)
+            print(f"https://saomiguelbus-api.herokuapp.com/api/v1/stat?request=get_route&origin={origin}&destination={destination}&time={time}&language={session.get('lang', 'pt')}&platform=web&day={DAYS[day]}")
+        except Exception as e:
+            print(e)
         json_response = json.loads(response.text)
         if (origin in ['Lomba do Loução', 'Ponta Garça'] or destination in ['Lomba do Loução', 'Ponta Garça']):
             print("Retrieving data from local database...")
