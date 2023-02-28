@@ -1,5 +1,5 @@
 from flask import *
-from flask_talisman import Talisman
+#from flask_talisman import Talisman
 import requests
 import json
 import secrets
@@ -111,14 +111,16 @@ def format_stops(origin, destination):
 
 def get_stops():
     try:
-        response = requests.get('https://saomiguelbus-api.herokuapp.com/api/v1/stops')
+        response = requests.get('https://api.saomiguelbus.com/api/v1/stops')
     except Exception as e:
         print(e)
         return None
     return json.loads(response.text) if response.status_code == 200 else []
 
 def get_routes(origin, destination, day, time):
-        URL = 'https://saomiguelbus-api.herokuapp.com/api/v1/route?origin=' + origin + '&destination=' + destination + '&day=' + DAYS[day] + '&start=' + time
+        url_origin = origin
+        url_destination = destination
+        URL = 'https://api.saomiguelbus.com/api/v1/route?origin=' + url_origin + '&destination=' + url_destination + '&day=' + DAYS[day] + '&start=' + time
         try:
             response = requests.get(URL)
         except Exception as e:
@@ -126,11 +128,32 @@ def get_routes(origin, destination, day, time):
             return []
         try:
             post = requests.post(f"https://saomiguelbus-api.herokuapp.com/api/v1/stat?request=get_route&origin={origin}&destination={destination}&time={time}&language={session.get('lang', 'pt')}&platform=web&day={DAYS[day]}")
-            print(post.status_code)
-            print(f"https://saomiguelbus-api.herokuapp.com/api/v1/stat?request=get_route&origin={origin}&destination={destination}&time={time}&language={session.get('lang', 'pt')}&platform=web&day={DAYS[day]}")
         except Exception as e:
             print(e)
-        return json.loads(response.text) if response.status_code == 200 else []
+
+        json_response = json.loads(response.text)
+        if json_response == []:
+            print("Retrieving data from all routes...")
+            routes = []
+            try:
+                response = requests.get("https://api.saomiguelbus.com/api/v1/routes")
+            except Exception as e:
+                print(e)
+                return []
+            for route in json.loads(response.text):
+                route['origin'] = origin
+                route['destination'] = destination
+                route['start'] = "00h00"
+                route['end'] = "00h00"
+                if route["type_of_day"] != DAYS[day] or route["disabled"] == True:
+                    continue
+                route_stops = route['stops']
+                if origin in route_stops and destination in route_stops:
+                    if route_stops.index(origin) < route_stops.index(destination):
+                        routes.append(route)
+            return routes
+
+        return json_response if response.status_code == 200 else []
 
 
 
@@ -166,12 +189,18 @@ def index():
     routes.sort(key=lambda route: route.stop_time)
     return render_template('index.html', stops=get_stops(), routes=routes, nRoutes=len(routes), origin=origin, destination=destination, day=day, time=time.replace("h", ":"), attr = LANGS[lang], lang = lang, anchor='tm-section-search')
 
+@app.route("/sw.js")
+def propellerads():
+    resp = make_response(render_template('sw.js'))
+    resp.mimetype = 'text/plain'
+    return resp 
+
 @app.errorhandler(Exception)
 def page_not_found(e):
     print(e)
     return render_template('error.html') 
 
-Talisman(app, content_security_policy=None)
+#Talisman(app, content_security_policy=None)
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(host='0.0.0.0', port=80, debug=False)
