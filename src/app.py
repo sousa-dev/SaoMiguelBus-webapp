@@ -189,6 +189,11 @@ def index():
     routes.sort(key=lambda route: route.stop_time)
     return render_template('index.html', stops=get_stops(), routes=routes, nRoutes=len(routes), origin=origin, destination=destination, day=day, time=time.replace("h", ":"), attr = LANGS[lang], lang = lang, anchor='tm-section-search')
 
+@app.route("/anunciar")
+def anunciar():
+    
+    return render_template('anunciar.html')
+
 @app.route("/sw.js")
 def propellerads():
     resp = make_response(render_template('sw.js'))

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Anunciar | Formulár</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/icon" href="static/assets/images/favicon.ico" />
+    <!-- Font Awesome -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="static/assets/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Slick slider -->
+    <link href="static/assets/css/slick.css" rel="stylesheet">
+    <!-- Theme color -->
+    <link id="switcher" href="static/assets/css/theme-color/green-theme.css" rel="stylesheet">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <!-- Main Style -->
+    <link href="static/assets/css/style.css" rel="stylesheet">
+
+    <!-- Fonts -->
+
+    <!-- Open Sans for body font -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600,700,800" rel="stylesheet">
+    <!-- Lato for Title -->
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Start Contact -->
+    <section id="mu-contact">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="mu-contact-area">
+
+                        <div class="mu-heading-area">
+                            <h2 class="mu-heading-title">Anunciar em São Miguel Bus</h2>
+                            <span class="mu-header-dot"></span>
+                            <p>
+                                Preencha o fomulário abaixo para confirmar o seu pedido de anúncio.
+                            </p>
+                        </div>
+
+
+
+                        <!-- Start Contact Content -->
+                        <div class="mu-contact-content">
+
+                            <div id="form-messages"></div>
+                            <form action="https://formsubmit.co/sousadev@yahoo.com" method="POST" id="contactForm"
+                                name="contactForm" class="contactForm">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="entity">Entidade
+                                                <span style="color:#999; font-size: 0.7em; margin-left: 5px; font-style: italic;">*</span>
+                                            </label>
+                                            <input type="text" class="form-control" id="entity" name="entity" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="duration">Duração do anúncio
+                                                <span style="color:#999; font-size: 0.7em; margin-left: 5px; font-style: italic;">*</span>
+                                            </label>
+                                            <select class="form-control custom-select" id="duration" name="duration"
+                                                required>
+                                                <option value="">Selecione a duração</option>
+                                                <option value="1semana">1 semana</option>
+                                                <option value="15dias">15 dias</option>
+                                                <option value="1mes">1 mês</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="action">Ação ao clicar no anúncio
+                                                <span style="color:#999; font-size: 0.7em; margin-left: 5px; font-style: italic;">Recomendado</span>
+                                            </label>
+                                            <select class="form-control" id="action" name="action">
+                                                <option value="">Selecione uma ação</option>
+                                                <option value="website">Abrir website</option>
+                                                <option value="direcoes">Obter direções para</option>
+                                                <option value="ligar">Ligar para</option>
+                                                <option value="sms">Enviar SMS para</option>
+                                                <option value="email">Enviar email para</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="target">URL / Telemóvel / Email</label>
+                                            <input type="text" class="form-control" id="target" name="target">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="NIF">NIF
+                                                <span style="color:#999; font-size: 0.7em; margin-left: 5px; font-style: italic;">Recomendado</span>
+                                            </label>
+                                            <input type="text" class="form-control" id="NIF" name="NIF">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="empresa">Nome da Empresa</label>
+                                            <input type="text" class="form-control" id="empresa" name="empresa">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="details">Detalhes
+                                                <span style="color:#999; font-size: 0.7em; margin-left: 5px; font-style: italic;">Opcional</span>
+                                            </label>
+                                            <textarea type="text" rows="3" class="form-control" id="details" name="details" required></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="advertise_on">Anunciar em (Selecionar abaixo)
+                                                <span style="color:#999; font-size: 0.7em; margin-left: 5px; font-style: italic;">*</span>
+                                            </label>
+                                            <input type="text" class="form-control" id="advertise_on"
+                                                name="advertise_on" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <input type="submit" value="ENVIAR" class="mu-send-msg-btn">
+                                            <div class="submitting"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <div id="item-selector" class="row"></div>
+                        </div>
+                        <!-- End Contact Content -->
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Contact -->
+
+    </main>
+
+    <!-- End main content -->
+
+    <!-- Start footer -->
+    <footer id="mu-footer" role="contentinfo">
+        <div class="container">
+            <div class="mu-footer-area">
+                <div class="mu-social-media">
+                    <a target="_blank" href="https://twitter.com/sousadev"><i class="fa fa-twitter"></i></a>
+                    <a target="_blank" href="https://instagram.com/sousadev"><i class="fa fa-instagram"></i></a>
+                    <a target="_blank" href="https://linkedin.com/in/henriquecsousa"><i class="fa fa-linkedin"></i></a>
+                    <a target="_blank" href="https://www.patreon.com/sousadev"><i class="fa fa-money"></i></a>
+                </div>
+                <p class="mu-copyright">&copy; Copyright <a rel="nofollow" target="_blank"
+                        href="https://sousadev.com">Sousa
+                        Dev</a>. All rights reserved.</p>
+            </div>
+        </div </footer>
+        <!-- End footer -->
+
+
+
+        <script>
+            var data = [{ "id": 100, "name": "Página Inicial", "stops": [] }, { "id": 4, "name": "São Vicente", "stops": ["São Vicente - Atafona", "São Vicente - Igreja"] }, { "id": 5, "name": "Fenais Da Luz", "stops": ["Fenais da Luz - Bairro", "Fenais da Luz - Igreja", "Farropo", "Batalha"] }, { "id": 6, "name": "Ponta Delgada", "stops": ["Ponta Delgada - Hospital", "Ponta Delgada", "Ponta Delgada - Ramalho", "Av Principe Mónaco", "Caminho da Levada", "Laranjeiras"] }, { "id": 7, "name": "Ribeira Grande", "stops": ["Ribeira Grande", "Ribeirinha", "Gramas", "Santa Bárbara - Ribeira Grande"] }, { "id": 8, "name": "Pico Da Pedra", "stops": ["Calhetas", "Pico da Pedra"] }, { "id": 9, "name": "Sete Cidades", "stops": ["Sete Cidades - Igreja", "Lomba do Vasco", "Varzea", "Sete Cidades - Ponte"] }, { "id": 10, "name": "Mosteiros", "stops": ["Mosteiros - Banda de Além", "Mosteiros - Igreja", "Mosteiros - Ramal"] }, { "id": 13, "name": "São Roque", "stops": ["Praia do Pópulo", "Livramento", "Belém", "Santa Rita", "Moviarte", "Caldeirão", "São Roque"] }, { "id": 14, "name": "Lagoa", "stops": ["Cabouco", "Remédios da Lagoa", "Lagoa"] }, { "id": 15, "name": "Caloura", "stops": ["Ribeira Chã", "Água de Pau"] }, { "id": 17, "name": "Povoação", "stops": ["Agua Retorta", "Faial da Terra", "Lomba do Alcaide", "Lomba do Loução", "Lomba do Botão", "Lomba do Pomar", "Lomba do Carro", "Povoação"] }, { "id": 18, "name": "Fajã De Baixo", "stops": ["Fajã de Baixo"] }, { "id": 19, "name": "Fajã De Cima", "stops": ["Fajã de Cima", "Largo da Fonte"] }, { "id": 20, "name": "Ribeira Quente", "stops": ["Ribeira Quente"] }, { "id": 21, "name": "Rabo De Peixe", "stops": ["Rabo de Peixe"] }, { "id": 22, "name": "Porto Formoso", "stops": ["São Brás", "Maia - Escola", "Maia - Largo S.António", "Gorreana", "Lomba da Maia", "Porto Formoso"] }, { "id": 24, "name": "Nordeste", "stops": ["Lomba da Cruz", "Lomba da Pedreira", "Vila do Nordeste", "Lomba da Fazenda"] }, { "id": 25, "name": "Furnas", "stops": ["Furnas - Caldeiras", "Furnas", "Furnas - Águas Quentes"] }, { "id": 16, "name": "Vila Franca", "stops": ["Caminho Novo", "Ponta Garça", "Ribeira das Tainhas", "Ribeira Seca", "Pico do Fogo", "Vila Franca"] }, { "id": 3, "name": "Santo António", "stops": ["Santa Bárbara - Ramal", "Santa Bárbara - Cavalo Branco", "Santo António - Cruz", "Santo António - Moagem", "Santo António - Igreja", "Ramal Cruz"] }, { "id": 1, "name": "Bretanha", "stops": ["Ajuda - Igreja", "Ajuda - Ramal", "Remédios", "Remédios - Igreja", "João Bom", "Canada da Cova"] }, { "id": 11, "name": "Ginetes", "stops": ["Candelária - Socorro", "Candelária - Centro", "Feteiras - Biscoito", "Feteiras - Igreja", "Ginetes - Igreja"] }, { "id": 12, "name": "Arrifes", "stops": ["Relva - Canto da Pia", "Covoada", "Quartel", "Bom Despacho", "Arribanas", "Milagres", "Grotinha", "Relva - Igreja", "Covoada - Encruzilhada"] }, { "id": 2, "name": "Capelas", "stops": ["Teatro Novo", "Grota do Morro", "Capelas - Rossio", "Capelas - Navio"] }, { "id": 23, "name": "Nordestino", "stops": ["Lomba de S.Pedro", "Salga", "Lomba da Achadinha", "Achada", "Algarvia", "Santo António Nordestinho", "São Pedro Nordestinho", "Fenais da Ajuda"] }];
+
+            var itemSelector = document.getElementById("item-selector");
+            itemSelector.classList.add("row");
+
+            // Get the advertise_on input field
+            var advertiseOnInput = document.querySelector("#advertise_on");
+
+
+            // Loop through the data array and create a checkbox for each item name
+            for (var i = 0; i < data.length; i++) {
+                var item = data[i];
+                var checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.id = item.id;
+                checkbox.name = "items[]";
+                checkbox.value = item.id;
+                var label = document.createElement("label");
+                label.textContent = item.name;
+                label.setAttribute("for", item.id);
+                var checkboxDiv = document.createElement("div");
+                checkboxDiv.classList.add("form-check", "col-md-4");
+                checkboxDiv.appendChild(checkbox);
+                checkboxDiv.appendChild(label);
+                itemSelector.appendChild(checkboxDiv);
+
+                // Add event listener to each checkbox
+                checkbox.addEventListener("change", function () {
+                    // Get the selected items
+                    var selectedItems = document.querySelectorAll("#item-selector input[type='checkbox']:checked");
+
+                    // Set the value of the advertise_on input field to the selected items
+                    var advertiseOnValue = "";
+                    for (var i = 0; i < selectedItems.length; i++) {
+                        advertiseOnValue += selectedItems[i].nextSibling.textContent + ", ";
+                    }
+                    advertiseOnInput.value = advertiseOnValue.slice(0, -2);
+                });
+            }
+        </script>
+        <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <!-- Bootstrap -->
+        <script src="assets/js/bootstrap.min.js"></script>
+        <!-- Slick slider -->
+        <script type="text/javascript" src="assets/js/slick.min.js"></script>
+        <!-- Counter js -->
+        <script type="text/javascript" src="assets/js/counter.js"></script>
+        <!-- Ajax contact form  -->
+        <script type="text/javascript" src="assets/js/app.js"></script>
+
+        <script>
+            // Calculate the start and end dates
+            var startDate = moment();
+            var endDate = moment().add(1, 'month');
+
+            // Initialize the date range picker with the start and end dates
+            $('#date-range').daterangepicker({
+                opens: 'left',
+                locale: {
+                    format: 'YYYY-MM-DD'
+                },
+                startDate: startDate,
+                endDate: endDate
+            });
+        </script>
+
+        <!-- Custom js -->
+        <script type="text/javascript" src="assets/js/custom.js"></script>
+
+
+</body>
+
+</html>
