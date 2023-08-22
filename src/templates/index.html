@@ -167,6 +167,18 @@ http://www.templatemo.com/tm-511-journey
                     </div>  <!-- .container -->                   
                 </div>     <!-- .tm-container-outer -->                 
             </section>
+
+            <!-- add banner --> 
+            <div class="tm-container-outer" id="tm-section-2">
+                <div class="row justify-content-center">
+                    <div class="col-sm-8 col-md-6 col-lg-8">
+                        <div class="ad-banner text-center p-3">
+                            <a href="{{ ad.target }}" target="_blank"><img src="{{ ad.image }}" alt="{{ ad.entity }}" class="img-fluid"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             
             <div class="tm-container-outer" id="tm-section-2">
                 {% if nRoutes == 0 %}
