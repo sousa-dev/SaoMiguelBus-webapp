@@ -155,14 +155,30 @@ def get_routes(origin, destination, day, time):
 
         return json_response if response.status_code == 200 else []
 
-
+def get_custom_ad(on = "home"):
+    adImage = None
+    adTarget = None
+    try:
+        response = requests.get(f"https://api.saomiguelbus.com/api/v1/ad?on={on}&platform=web")
+        json_response = json.loads(response.text)
+        adID = json_response['id']
+        adImage = json_response['media']
+        adAction = json_response['action']
+        adTarget = json_response['target']
+        adEntity = json_response['entity']
+        if adAction == "open":
+            adTarget = adTarget
+    except Exception as e:
+        print(e)
+        return None
+    return {"id": adID, "image": adImage, "target": adTarget, "entity": adEntity}
 
 @app.route("/")
 def home():
     change_lang = request.args.get('lang', '')
     if change_lang != '':
         session['lang'] = change_lang
-    return render_template('index.html', stops=get_stops(), attr = LANGS[session.get('lang', 'pt')], lang = session.get('lang', 'pt'))
+    return render_template('index.html', stops=get_stops(), attr = LANGS[session.get('lang', 'pt')], lang = session.get('lang', 'pt'), ad=get_custom_ad("home"))
 
 @app.route("/index.html")
 def index():
@@ -187,7 +203,7 @@ def index():
         if origin in stops and destination in stops:
             routes.append(Route(route['id'], route['route'], route['origin'], route['destination'], route['start'], route['end'], stops, route['type_of_day'], information))
     routes.sort(key=lambda route: route.stop_time)
-    return render_template('index.html', stops=get_stops(), routes=routes, nRoutes=len(routes), origin=origin, destination=destination, day=day, time=time.replace("h", ":"), attr = LANGS[lang], lang = lang, anchor='tm-section-search')
+    return render_template('index.html', stops=get_stops(), routes=routes, nRoutes=len(routes), origin=origin, destination=destination, day=day, time=time.replace("h", ":"), attr = LANGS[lang], lang = lang, anchor='tm-section-search')#, ad=get_custom_ad())
 
 @app.route("/sw.js")
 def propellerads():
