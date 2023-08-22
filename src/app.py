@@ -203,7 +203,7 @@ def index():
         if origin in stops and destination in stops:
             routes.append(Route(route['id'], route['route'], route['origin'], route['destination'], route['start'], route['end'], stops, route['type_of_day'], information))
     routes.sort(key=lambda route: route.stop_time)
-    return render_template('index.html', stops=get_stops(), routes=routes, nRoutes=len(routes), origin=origin, destination=destination, day=day, time=time.replace("h", ":"), attr = LANGS[lang], lang = lang, anchor='tm-section-search', ad=get_custom_ad())
+    return render_template('index.html', stops=get_stops(), routes=routes, nRoutes=len(routes), origin=origin, destination=destination, day=day, time=time.replace("h", ":"), attr = LANGS[lang], lang = lang, anchor='tm-section-search')#, ad=get_custom_ad())
 
 @app.route("/sw.js")
 def propellerads():
