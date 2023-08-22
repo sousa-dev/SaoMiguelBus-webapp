@@ -171,9 +171,9 @@ http://www.templatemo.com/tm-511-journey
             <!-- add banner --> 
             <div class="tm-container-outer" id="tm-section-2">
                 <div class="row justify-content-center">
-                    <div class="col-sm-8 col-md-6 col-lg-8">
+                    <div class="col-sm-8 col-md-6 col-lg-6">
                         <div class="ad-banner text-center p-3">
-                            <a href="{{ ad.target }}" target="_blank"><img src="{{ ad.image }}" alt="{{ ad.entity }}" class="img-fluid"></a>
+                            <a href="{{ ad.target }}" target="_blank"><img src="{{ ad.image }}" alt="{{ ad.entity }}" class="img-fluid" id="ad-image" data-id="{{ ad.id }}"></a>
                         </div>
                     </div>
                 </div>
@@ -378,6 +378,24 @@ http://www.templatemo.com/tm-511-journey
             });
         </script>
     {% endif %}
+
+    <script>
+        const adImage = document.getElementById("ad-image");
+        adImage.addEventListener("click", function() {
+            const adId = adImage.getAttribute("data-id");
+            const URL = "https://saomiguelbus-api.herokuapp.com/api/v1/ad/click?id="+ adId
+            console.log(URL);
+            fetch(URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error(error));
+        });
+    </script>
     
     <script>
         document.getElementById('change').onclick = function() {

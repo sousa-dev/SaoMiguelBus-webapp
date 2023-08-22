@@ -161,22 +161,20 @@ def get_custom_ad(on = "home"):
     try:
         response = requests.get(f"https://api.saomiguelbus.com/api/v1/ad?on={on}&platform=web")
         json_response = json.loads(response.text)
-        print("Custom Ad: " + str(json_response))
+        adID = json_response['id']
         adImage = json_response['media']
         adAction = json_response['action']
         adTarget = json_response['target']
         adEntity = json_response['entity']
         if adAction == "open":
             adTarget = adTarget
-        print("Ad: ", adImage, adTarget, adEntity)
     except Exception as e:
         print(e)
         return None
-    return {"image": adImage, "target": adTarget, "entity": adEntity}
+    return {"id": adID, "image": adImage, "target": adTarget, "entity": adEntity}
 
 @app.route("/")
 def home():
-    print("Ad: ", ad)
     change_lang = request.args.get('lang', '')
     if change_lang != '':
         session['lang'] = change_lang
