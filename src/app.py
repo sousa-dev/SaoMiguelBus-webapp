@@ -212,7 +212,7 @@ def ad_click():
         response = requests.post(url)
     except Exception as e:
         print(e)
-    return redirect(request.form['target'])
+    return response.text
 
 
 @app.route("/sw.js")
