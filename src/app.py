@@ -205,6 +205,16 @@ def index():
     routes.sort(key=lambda route: route.stop_time)
     return render_template('index.html', stops=get_stops(), routes=routes, nRoutes=len(routes), origin=origin, destination=destination, day=day, time=time.replace("h", ":"), attr = LANGS[lang], lang = lang, anchor='tm-section-search')#, ad=get_custom_ad())
 
+@app.route('/click', methods=['POST'])
+def ad_click():
+    url = "https://saomiguelbus-api.herokuapp.com/api/v1/ad/click?id=" + request.form['id']
+    try:
+        response = requests.post(url)
+    except Exception as e:
+        print(e)
+    return redirect(request.form['target'])
+
+
 @app.route("/sw.js")
 def propellerads():
     resp = make_response(render_template('sw.js'))
