@@ -214,6 +214,12 @@ def ad_click():
         print(e)
     return response.text
 
+@app.route("/app")
+@app.route("/aplicacao")
+@app.route("/aplicação")
+@app.route("/android")
+def redirect_to_app():
+    return redirect("https://play.google.com/store/apps/details?id=com.hsousa_apps.Autocarros")
 
 @app.route("/sw.js")
 def propellerads():
