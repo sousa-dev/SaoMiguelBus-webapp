@@ -124,11 +124,12 @@ def get_routes(origin, destination, day, time):
         try:
             response = requests.get(URL)
         except Exception as e:
-            print(e)
+            print("ERROR on get_routes(): ", e)
             return []
         try:
             post = requests.post(f"https://saomiguelbus-api.herokuapp.com/api/v1/stat?request=get_route&origin={origin}&destination={destination}&time={time}&language={session.get('lang', 'pt')}&platform=web&day={DAYS[day]}")
         except Exception as e:
+            print("ERROR on get_routes() POST: ", e)
             print(e)
 
         json_response = json.loads(response.text)
@@ -138,6 +139,7 @@ def get_routes(origin, destination, day, time):
             try:
                 response = requests.get("https://api.saomiguelbus.com/api/v1/routes")
             except Exception as e:
+                print("ERROR on get_routes() json: ", e)
                 print(e)
                 return []
             for route in json.loads(response.text):
@@ -156,6 +158,7 @@ def get_routes(origin, destination, day, time):
         return json_response if response.status_code == 200 else []
 
 def get_custom_ad(on = "home"):
+    print("Getting custom ad...")
     adImage = None
     adTarget = None
     try:
@@ -169,7 +172,7 @@ def get_custom_ad(on = "home"):
         if adAction == "open":
             adTarget = adTarget
     except Exception as e:
-        print(e)
+        print("ERROR on get_custom_ad(): ", e)
         return None
     return {"id": adID, "image": adImage, "target": adTarget, "entity": adEntity}
 
@@ -203,7 +206,7 @@ def index():
         if origin in stops and destination in stops:
             routes.append(Route(route['id'], route['route'], route['origin'], route['destination'], route['start'], route['end'], stops, route['type_of_day'], information))
     routes.sort(key=lambda route: route.stop_time)
-    return render_template('index.html', stops=get_stops(), routes=routes, nRoutes=len(routes), origin=origin, destination=destination, day=day, time=time.replace("h", ":"), attr = LANGS[lang], lang = lang, anchor='tm-section-search')#, ad=get_custom_ad())
+    return render_template('index.html', stops=get_stops(), routes=routes, nRoutes=len(routes), origin=origin, destination=destination, day=day, time=time.replace("h", ":"), attr = LANGS[lang], lang = lang, anchor='tm-section-search', ad=get_custom_ad(destination))
 
 @app.route('/click', methods=['POST'])
 def ad_click():
@@ -211,7 +214,7 @@ def ad_click():
     try:
         response = requests.post(url)
     except Exception as e:
-        print(e)
+        print("ERROR on ad_click(): ", e)
     return response.text
 
 @app.route("/app")
@@ -229,7 +232,7 @@ def propellerads():
 
 @app.errorhandler(Exception)
 def page_not_found(e):
-    print(e)
+    print("ERROR on page_not_found(): ", e)
     return render_template('error.html') 
 
 #Talisman(app, content_security_policy=None)
