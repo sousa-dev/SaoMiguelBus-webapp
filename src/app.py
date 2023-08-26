@@ -181,7 +181,7 @@ def home():
     change_lang = request.args.get('lang', '')
     if change_lang != '':
         session['lang'] = change_lang
-    return render_template('index.html', stops=get_stops(), attr = LANGS[session.get('lang', 'pt')], lang = session.get('lang', 'pt'))#, ad=get_custom_ad("home"))
+    return render_template('index.html', stops=get_stops(), attr = LANGS[session.get('lang', 'pt')], lang = session.get('lang', 'pt'), ad=get_custom_ad("home"))
 
 @app.route("/index.html")
 def index():
@@ -206,7 +206,7 @@ def index():
         if origin in stops and destination in stops:
             routes.append(Route(route['id'], route['route'], route['origin'], route['destination'], route['start'], route['end'], stops, route['type_of_day'], information))
     routes.sort(key=lambda route: route.stop_time)
-    return render_template('index.html', stops=get_stops(), routes=routes, nRoutes=len(routes), origin=origin, destination=destination, day=day, time=time.replace("h", ":"), attr = LANGS[lang], lang = lang, anchor='tm-section-search', ad=get_custom_ad("home"))
+    return render_template('index.html', stops=get_stops(), routes=routes, nRoutes=len(routes), origin=origin, destination=destination, day=day, time=time.replace("h", ":"), attr = LANGS[lang], lang = lang, anchor='tm-section-search', ad=get_custom_ad(destination))
 
 @app.route('/click', methods=['POST'])
 def ad_click():
