@@ -167,10 +167,23 @@ def get_custom_ad(on = "home"):
         adID = json_response['id']
         adImage = json_response['media']
         adAction = json_response['action']
-        adTarget = json_response['target']
-        adEntity = json_response['entity']
+        target = json_response['target']
+     
         if adAction == "open":
-            adTarget = adTarget
+            adTarget = target
+        elif adAction == "directions":
+            adTarget = f"https://www.google.com/maps/dir//{target}"
+        # elif adAction == "call":
+        #     adTarget = "tel:" + target
+        elif adAction == "email":
+            adTarget = "mailto:" + target
+        # elif adAction == "sms":
+        #     adTarget = "sms:" + target
+        elif adAction == "whatsapp":
+            adTarget = "https://wa.me/" + target
+
+        adEntity = json_response['entity']
+
     except Exception as e:
         print("ERROR on get_custom_ad(): ", e)
         return None
