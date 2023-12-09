@@ -1,9 +1,53 @@
+document.addEventListener("DOMContentLoaded", function() {
+    console.log('Applying text to page elements...')
+    // Function to get the 'lang' query parameter value
+    function getLanguageFromQuery() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('lang') || 'en'; // TODO: Default to Portuguese if no parameter is found
+    }
+
+    // Set the language based on the query parameter
+    setTextBasedOnLanguage(getLanguageFromQuery());
+});
+
 // Function to set text based on selected language
 function setTextBasedOnLanguage(language) {
+    console.log('Switching language to ' + language)
     const langTexts = LANGS[language];
     // Populate HTML elements with values from langTexts...
     // ...
-    document.getElementById('pageTitle').textContent = langTexts.website_title;
+    document.title = langTexts.website_title;
+    document.getElementById('navBarSearchLabel').textContent = langTexts.Search_menu
+    document.getElementById('navBarContactLabel').textContent = langTexts.Contact
+    document.getElementById('bannerTitle').textContent = langTexts.title
+    document.getElementById('bannerSubtitle').textContent = langTexts.subtitle
+    document.getElementById('originLabel').textContent = langTexts.From
+    document.getElementById('origin').value = langTexts.From_placeholder
+    document.getElementById('destinationLabel').textContent = langTexts.To
+    document.getElementById('destination').value = langTexts.To_placeholder
+    document.getElementById('dayLabel').textContent = langTexts.Day
+    document.getElementById('weekday').textContent = langTexts.Weekday
+    document.getElementById('saturday').textContent = langTexts.Saturday
+    document.getElementById('sunday').textContent = langTexts.Sunday
+    document.getElementById('timeLabel').textContent = langTexts.Time
+    document.getElementById('timeLabelSubtitle').textContent = langTexts.Optional
+    document.getElementById('searchButton').textContent = langTexts.Search
+    document.getElementById('searchWarning').textContent = langTexts.warning
+
+    document.getElementById('formTitle').textContent = langTexts.contact_title
+    document.getElementById('formSubtitle').textContent = langTexts.contact_subtitle
+    document.getElementById('nameLabel').textContent = langTexts.contact_name
+    document.getElementById('name').placeholder = langTexts.contact_name
+    document.getElementById('subjectLabel').textContent = langTexts.contact_subject
+    document.getElementById('subject').placeholder = langTexts.contact_subject
+    document.getElementById('messageLabel').textContent = langTexts.contact_message
+    document.getElementById('message').placeholder = langTexts.contact_message
+    document.getElementById('submitForm').value = langTexts.contact_button
+    document.getElementById('contactCardTitle').textContent = langTexts.card_title
+    document.getElementById('support').textContent = langTexts.support
+    document.getElementById('supportBold').textContent = langTexts.support_bold
+    document.getElementById('websiteInfo').textContent = langTexts.info_warning
+
 }
 
 // LANGS object with all your language-specific text
@@ -16,7 +60,7 @@ const LANGS = {
         'To': 'To',
         'From_placeholder': 'Type your origin...',
         'To_placeholder': 'Type your destination...',
-        'Day': 'Day Of the Week',
+        'Day': 'Day of the Week',
         'Weekday': 'Weekday',
         'Saturday': 'Saturday',
         'Sunday': 'Sunday/Holiday',
@@ -77,6 +121,3 @@ const LANGS = {
         "info_warning": "Este site não é afiliado a nenhuma empresa ou organização. O horário usado foi retirado de documentos públicos disponibilizados pelas empresas de autocarros. Alguns horários podem estar desatualizados!"
     }
 };
-
-// Call this function on page load or when the user changes the language
-setTextBasedOnLanguage('pt'); // Default to English, for example

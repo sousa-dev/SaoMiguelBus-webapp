@@ -13,7 +13,6 @@
     </script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8246676797736648"
      crossorigin="anonymous"></script>
-    <script src="templates/languageHandler.js"></script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -50,7 +49,7 @@ http://www.templatemo.com/tm-511-journey
             <div class="container">
                 <div class="row">
                     <nav class="navbar navbar-expand-lg narbar-light">
-                        <a class="navbar-brand mr-auto" href="REPLACE_WITH_STATIC_CONTENT_OR_JS">
+                        <a class="navbar-brand mr-auto" href="#top">
                             <img src="static/img/logo-playstore.png" alt="São Miguel Bus Logo">
                             São Miguel Bus
                         </a>
@@ -65,13 +64,13 @@ http://www.templatemo.com/tm-511-journey
                                             class="sr-only">(current)</span></a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#tm-section-search">REPLACE_WITH_STATIC_CONTENT_OR_JS</a>
+                                    <a class="nav-link" href="#tm-section-search" id="navBarSearchLabel">Pesquisar</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="#tm-section-3">Download</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#tm-section-4">REPLACE_WITH_STATIC_CONTENT_OR_JS</a>
+                                    <a class="nav-link" href="#tm-section-4" id="navBarContactLabel">Contatar</a>
                                 </li>
                             </ul>
                             <select
@@ -99,9 +98,9 @@ http://www.templatemo.com/tm-511-journey
                         <div class="row tm-banner-row tm-banner-row-header">
                             <div class="col-xs-12">
                                 <div class="tm-banner-header">
-                                    <h1 class="text-uppercase tm-banner-title">REPLACE_WITH_STATIC_CONTENT_OR_JS</h1>
+                                    <h1 class="text-uppercase tm-banner-title" id="bannerTitle">Procura um Autocarro</h1>
                                     <img src="static/img/dots-3.png" alt="Dots">
-                                    <p class="tm-banner-subtitle">REPLACE_WITH_STATIC_CONTENT_OR_JS</p>
+                                    <p class="tm-banner-subtitle" id="bannerSubtitle">Encontra a melhor rota para ti.</p>
                                     <a href="javascript:void(0)" class="tm-down-arrow-link"><i
                                             class="fa fa-2x fa-angle-down tm-down-arrow"></i></a>
                                 </div>
@@ -112,10 +111,10 @@ http://www.templatemo.com/tm-511-journey
                             <form action="index.html" method="get" class="tm-search-form tm-section-pad-2">
                                 <div class="form-row tm-search-form-row">
                                     <div class="form-group tm-form-group tm-form-group-pad tm-form-form-1">
-                                        <label for="origin">REPLACE_WITH_STATIC_CONTENT_OR_JS</label> <i
+                                        <label for="origin" id="originLabel">Partida</label> <i
                                             style="color: grey; font-style: italic">*</i>
-                                        <input name="origin" value="REPLACE_WITH_STATIC_CONTENT_OR_JS" list="origin-stops" class="form-control"
-                                            id="origin" placeholder="REPLACE_WITH_STATIC_CONTENT_OR_JS" required>
+                                        <input name="origin" value="Escolhe o teu ponto de partida..." list="origin-stops" class="form-control"
+                                            id="origin" placeholder="Escolhe o teu ponto de partida..." required>
                                         <datalist name="origin" id="origin-stops">
                                             
                                             <option value="REPLACE_WITH_STATIC_CONTENT_OR_JS"></option>
@@ -129,11 +128,11 @@ http://www.templatemo.com/tm-511-journey
                                                 class="fa fa-exchange"></i></a>
                                     </div>
                                     <div class="form-group tm-form-group tm-form-group-pad tm-form-form-3">
-                                        <label for="destination">REPLACE_WITH_STATIC_CONTENT_OR_JS</label><i
+                                        <label for="destination" id="destinationLabel">Destino</label><i
                                             style="color: grey; font-style: italic">*</i>
-                                        <input name="destination" value="REPLACE_WITH_STATIC_CONTENT_OR_JS" list="destination-stops"
+                                        <input name="destination" value="Escolhe o teu destino..." list="destination-stops"
                                             type="text" class="form-control" id="destination"
-                                            placeholder="REPLACE_WITH_STATIC_CONTENT_OR_JS" required>
+                                            placeholder="Escolhe o teu destino..." required>
                                         <datalist name="destination" id="destination-stops">
                                             
                                             <option value="REPLACE_WITH_STATIC_CONTENT_OR_JS"></option>
@@ -144,39 +143,27 @@ http://www.templatemo.com/tm-511-journey
                                 <div class="form-row tm-search-form-row">
 
                                     <div class="form-group tm-form-group tm-form-group-pad tm-form-group-3">
-                                        <label for="day">REPLACE_WITH_STATIC_CONTENT_OR_JS</label><i
+                                        <label for="day" id="dayLabel">Dias da Semana</label><i
                                             style="color: grey; font-style: italic">*</i>
                                         
                                         <select name="day" class="form-control tm-select" id="day">
-                                            <option value="1">REPLACE_WITH_STATIC_CONTENT_OR_JS</option>
-                                            <option value="2">REPLACE_WITH_STATIC_CONTENT_OR_JS</option>
-                                            <option value="3" selected>REPLACE_WITH_STATIC_CONTENT_OR_JS</option>
-                                        </select>
-                                        
-                                        <select name="day" class="form-control tm-select" id="day">
-                                            <option value="1">REPLACE_WITH_STATIC_CONTENT_OR_JS</option>
-                                            <option value="2" selected>REPLACE_WITH_STATIC_CONTENT_OR_JS</option>
-                                            <option value="3">REPLACE_WITH_STATIC_CONTENT_OR_JS</option>
-                                        </select>
-                                        
-                                        <select name="day" class="form-control tm-select" id="day">
-                                            <option value="1" selected>REPLACE_WITH_STATIC_CONTENT_OR_JS</option>
-                                            <option value="2">REPLACE_WITH_STATIC_CONTENT_OR_JS</option>
-                                            <option value="3">REPLACE_WITH_STATIC_CONTENT_OR_JS</option>
+                                            <option value="1" id="weekday" selected>Dia da Semana</option>
+                                            <option value="2" id="saturday">Sábado</option>
+                                            <option value="3" id="sunday">Domingo/Feriado</option>
                                         </select>
                                         
                                     </div>
                                     <div class="form-group tm-form-group tm-form-group-pad tm-form-group-3">
-                                        <label for="time">REPLACE_WITH_STATIC_CONTENT_OR_JS</label> <i
-                                            style="color: grey; font-style: italic">REPLACE_WITH_STATIC_CONTENT_OR_JS</i>
+                                        <label for="time" id="timeLabel">Hora</label> <i
+                                            style="color: grey; font-style: italic" id="timeLabelSubtitle">Opcional</i>
                                         <input class="form-control tm-select" value="REPLACE_WITH_STATIC_CONTENT_OR_JS" type="time" id="time"
                                             name="time">
                                     </div>
                                     <div class="form-group tm-form-group tm-form-group-pad tm-form-group-1">
                                         <label for="btnSubmit">&nbsp;</label>
                                         <button class="btn btn-primary tm-btn tm-btn-search text-uppercase"
-                                            id="btnSubmit">REPLACE_WITH_STATIC_CONTENT_OR_JS</button>
-                                        <text style="color: grey; font-style: italic; text-align: right;">REPLACE_WITH_STATIC_CONTENT_OR_JS</text>
+                                            id="btnSubmit"><a id="searchButton">Pesquisar</a></button>
+                                        <text style="color: grey; font-style: italic; text-align: right;" id="searchWarning">Apenas são apresentadas rotas diretas</text>
                                     </div>
                                 </div>
                             </form>
@@ -313,20 +300,20 @@ http://www.templatemo.com/tm-511-journey
                                 <div class="row no-gutters">
                                     <div class="col-lg-8 col-md-7 order-md-last d-flex align-items-stretch">
                                         <div class="contact-wrap w-100 p-md-5 p-4">
-                                            <h3 class="mb-4">REPLACE_WITH_STATIC_CONTENT_OR_JS</h3>
-                                            <p class="mb-4">REPLACE_WITH_STATIC_CONTENT_OR_JS</p>
+                                            <h3 class="mb-4" id="formTitle">Encontrou algo errado?</h3>
+                                            <p class="mb-4" id="formSubtitle">Estamos abertos para qualquer sugestão ou apenas para conversar</p>
                                             <div id="form-message-warning" class="mb-4"></div>
                                             <div id="form-message-success" class="mb-4">
                                             </div>
-                                            <form action="https://formsubmit.co/sousadev@yahoo.com" method="POST"
+                                            <form action="https://formsubmit.co/info@saomiguelbus.com" method="POST"
                                                 id="contactForm" name="contactForm" class="contactForm">
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <div class="form-group">
-                                                            <label class="label"
-                                                                for="name">REPLACE_WITH_STATIC_CONTENT_OR_JS</label>
+                                                            <label id="nameLabel" class="label"
+                                                                for="name">Nome</label>
                                                             <input type="text" class="form-control" name="name"
-                                                                id="name" placeholder="REPLACE_WITH_STATIC_CONTENT_OR_JS">
+                                                                id="name" placeholder="Nome">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
@@ -338,24 +325,24 @@ http://www.templatemo.com/tm-511-journey
                                                     </div>
                                                     <div class="col-md-12">
                                                         <div class="form-group">
-                                                            <label class="label"
-                                                                for="subject">REPLACE_WITH_STATIC_CONTENT_OR_JS</label>
+                                                            <label id="subjectLabel" class="label"
+                                                                for="subject">Assunto</label>
                                                             <input type="text" class="form-control" name="subject"
-                                                                id="subject" placeholder="REPLACE_WITH_STATIC_CONTENT_OR_JS">
+                                                                id="subject" placeholder="Assunto">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-12">
                                                         <div class="form-group">
-                                                            <label class="label"
-                                                                for="#">REPLACE_WITH_STATIC_CONTENT_OR_JS</label>
+                                                            <label id="messageLabel" class="label"
+                                                                for="#">Mensagem</label>
                                                             <textarea name="message" class="form-control" id="message"
                                                                 cols="30" rows="4"
-                                                                placeholder="REPLACE_WITH_STATIC_CONTENT_OR_JS"></textarea>
+                                                                placeholder="Mensagem"></textarea>
                                                         </div>
                                                     </div>
                                                     <div class="col-md-12">
                                                         <div class="form-group">
-                                                            <input type="submit" value="REPLACE_WITH_STATIC_CONTENT_OR_JS"
+                                                            <input type="submit" id="submitForm" value="Enviar Mensagem"
                                                                 class="btn btn-primary">
                                                             <div class="submitting"></div>
                                                         </div>
@@ -366,13 +353,13 @@ http://www.templatemo.com/tm-511-journey
                                     </div>
                                     <div class="col-lg-4 col-md-5 d-flex align-items-stretch">
                                         <div class="contact-info w-100 p-md-5 p-4">
-                                            <h3 class="mb-3 text-white">REPLACE_WITH_STATIC_CONTENT_OR_JS</h3>
+                                            <h3 class="mb-3 text-white" id="contactCardTitle">Entre em contato</h3>
                                             <div class="contact-info-item">
                                                 <p class="footer-text mb-0"><a href="https://wa.link/tboeew"
                                                         target="_blank"><span class="iconify"
                                                             data-icon="uil:whatsapp"></span> +351 968 378 315</a></p>
                                                 <p><a title="Mail"
-                                                        href="mailto:sousadev@yahoo.com">sousadev@yahoo.com</a></p>
+                                                        href="mailto:info@saomiguelbus.com">info@saomiguelbus.com</a></p>
 
                                                 <ul class="social-links">
                                                     <li><a href="https://www.linkedin.com/in/henriquecsousa/"
@@ -410,7 +397,7 @@ http://www.templatemo.com/tm-511-journey
                     <div class="container">
                         <div class="row">
                             <div class="col-xs-12 mx-auto tm-about-text-wrap text-center">
-                                <h2 class="text-uppercase mb-4">REPLACE_WITH_STATIC_CONTENT_OR_JS <strong>REPLACE_WITH_STATIC_CONTENT_OR_JS</strong>
+                                <h2 class="text-uppercase mb-4"><text id="support">APOIA O</text> <strong id="supportBold">CRIADOR</strong>
                                 </h2>
                                 <a target="_blank" href="https://www.patreon.com/sousadev"
                                     style="padding-right:5px"><img style="width:40%" src="static/img/patreon-badge.png"
@@ -421,7 +408,7 @@ http://www.templatemo.com/tm-511-journey
                             </div>
                         </div>
                     </div>
-                    <p style="text-align:center; font-style:italic">REPLACE_WITH_STATIC_CONTENT_OR_JS</p>
+                    <p style="text-align:center; font-style:italic" id="websiteInfo">Este site não é afiliado a nenhuma empresa ou organização. O horário usado foi retirado de documentos públicos disponibilizados pelas empresas de autocarros. Alguns horários podem estar desatualizados!</p>
 
                 </section>
             </div>
@@ -479,7 +466,8 @@ http://www.templatemo.com/tm-511-journey
     <script src="static/slick/slick.min.js"></script> <!-- http://kenwheeler.github.io/slick/ -->
     <script src="static/js/jquery.scrollTo.min.js"></script> <!-- https://github.com/flesler/jquery.scrollTo -->
     <script src="https://code.iconify.design/2/2.1.2/iconify.min.js"></script>
-
+    
+    <script src="templates/languageHandler.js"></script>
 </body>
 
 </html>
