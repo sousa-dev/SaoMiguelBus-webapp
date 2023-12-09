@@ -22,9 +22,9 @@ function setTextBasedOnLanguage(language) {
     document.getElementById('bannerTitle').textContent = langTexts.title
     document.getElementById('bannerSubtitle').textContent = langTexts.subtitle
     document.getElementById('originLabel').textContent = langTexts.From
-    document.getElementById('origin').value = langTexts.From_placeholder
+    document.getElementById('origin').placeholder = langTexts.From_placeholder
     document.getElementById('destinationLabel').textContent = langTexts.To
-    document.getElementById('destination').value = langTexts.To_placeholder
+    document.getElementById('destination').placeholder = langTexts.To_placeholder
     document.getElementById('dayLabel').textContent = langTexts.Day
     document.getElementById('weekday').textContent = langTexts.Weekday
     document.getElementById('saturday').textContent = langTexts.Saturday
