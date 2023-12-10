@@ -14,6 +14,12 @@ document.addEventListener("DOMContentLoaded", function() {
 // Function to set text based on selected language
 function setTextBasedOnLanguage(language) {
     console.log('Switching language to ' + language)
+    const languageSelect = document.getElementById('language');
+
+    if (languageSelect) {
+        languageSelect.value = LANG;
+    }
+
     const langTexts = LANGS[language];
     // Populate HTML elements with values from langTexts...
     // ...
@@ -123,4 +129,4 @@ const LANGS = {
     }
 };
 
-LANG = 'en';
+let LANG = 'pt';
