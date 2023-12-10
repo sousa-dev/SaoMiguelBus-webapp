@@ -52,7 +52,9 @@ function searchRoutes(origin, destination, day, time) {
     + '&day=' + parameters.day 
     + '&start=' + parameters.time
     fetchAndDisplayRoutes(url, parameters);
-    postToStats(parameters)
+    // postToStats if not in localhost 
+    if (window.location.hostname != "localhost" && window.location.hostname != "127.0.0.1")
+        postToStats(parameters)
 }
 
 function fetchAndDisplayRoutes(url, parameters) {
@@ -70,6 +72,7 @@ function fetchAndDisplayRoutes(url, parameters) {
 }
 
 function postToStats(parameters) {
+    console.log("Posting to stats...");
     const url = `https://saomiguelbus-api.herokuapp.com/api/v1/stat?request=get_route&origin=${parameters.origin}&destination=${parameters.destination}&time=${parameters.time}&language=${LANG}&platform=web&day=${parameters.day}`;
     fetch(url, {
         method: 'POST',
@@ -98,14 +101,15 @@ function displayRoutes(routes, originStop) {
     routesContainer.innerHTML = ''; // Clear previous content
 
     console.log('There are', routes.length, 'routes to display');
+    console.log(routes)
 
     // Sort routes by origin time
     routes.sort((a, b) => {
         const aStopsObj = stringToJSON(a.stops);
         const bStopsObj = stringToJSON(b.stops);
 
-        const aTime = aStopsObj[originStop];
-        const bTime = bStopsObj[originStop];
+        const aTime = aStopsObj.hasOwnProperty(originStop) ? aStopsObj[originStop] : aStopsObj[Object.keys(aStopsObj)[0]];
+        const bTime = bStopsObj.hasOwnProperty(originStop) ? bStopsObj[originStop] : bStopsObj[Object.keys(bStopsObj)[0]];
         return aTime.localeCompare(bTime);
     });
 
@@ -124,7 +128,7 @@ function displayRoutes(routes, originStop) {
         }
 
         // Get the time for the origin stop
-        const originTime = stopsObj[originStop];
+        const originTime = stopsObj.hasOwnProperty(originStop) ? stopsObj[originStop] : '';
 
         routeDiv.innerHTML = `
             <div class="row">
