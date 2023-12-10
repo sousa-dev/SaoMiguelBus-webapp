@@ -85,15 +85,8 @@ function displayRoutes(routes, originStop) {
 
     // Sort routes by origin time
     routes.sort((a, b) => {
-        aStopsString = a.stops;
-        const aValidJsonString = aStopsString.replace(/'/g, '"');
-        // Parse the string to a JavaScript object
-        const aStopsObj = JSON.parse(aValidJsonString);
-
-        bStopsString = b.stops;
-        const bValidJsonString = bStopsString.replace(/'/g, '"');
-        // Parse the string to a JavaScript object
-        const bStopsObj = JSON.parse(bValidJsonString);
+        const aStopsObj = stringToJSON(a.stops);
+        const bStopsObj = stringToJSON(b.stops);
 
         const aTime = aStopsObj[originStop];
         const bTime = bStopsObj[originStop];
@@ -106,12 +99,8 @@ function displayRoutes(routes, originStop) {
         routeDiv.style.cssText = 'margin-top: 30px; border-radius: 8px; padding: 10px;';
 
         let stopsHtml = '';
-        stopsString = route.stops;
-        // Convert to valid JSON format by replacing single quotes with double quotes
-        const validJsonString = stopsString.replace(/'/g, '"');
-
         // Parse the string to a JavaScript object
-        const stopsObj = JSON.parse(validJsonString);
+        const stopsObj = stringToJSON(route.stops)
 
         // Iterate over the object
         for (const [stop, time] of Object.entries(stopsObj)) {
@@ -173,6 +162,13 @@ function displayRoutes(routes, originStop) {
     });
 
     routesContainer.style.display = 'block';
+}
+
+function stringToJSON(string) {
+    const validJsonString = string.replace(/'/g, '"');
+    // Parse the string to a JavaScript object
+    const jsonObj = JSON.parse(validJsonString);
+    return jsonObj;
 }
 
 function getUrlParameters(origin, destination, day, time) {
