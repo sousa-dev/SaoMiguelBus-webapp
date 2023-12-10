@@ -279,6 +279,26 @@ label { font-weight: 700; }
     flex-direction: row-reverse;
 }
 
+#scrollToTopBtn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    border: none;
+    background-color: #218732; /* Green background */
+    color: white; /* White icon color */
+    border-radius: 50%; /* Circular shape */
+    width: 50px; /* Width of the button */
+    height: 50px; /* Height of the button */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+#scrollToTopBtn i {
+    font-size: 20px; /* Size of the search icon */
+}
+
 .tm-slideshow { width: 50%; }
 
 .tm-slideshow-description {

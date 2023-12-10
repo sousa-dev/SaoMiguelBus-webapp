@@ -94,7 +94,7 @@ http://www.templatemo.com/tm-511-journey
                                     <h1 class="text-uppercase tm-banner-title" id="bannerTitle">Procura um Autocarro</h1>
                                     <img src="static/img/dots-3.png" alt="Dots">
                                     <p class="tm-banner-subtitle" id="bannerSubtitle">Encontra a melhor rota para ti.</p>
-                                    <a href="javascript:void(0)" class="tm-down-arrow-link"><i
+                                    <a class="tm-down-arrow-link" id="search-background"><i
                                             class="fa fa-2x fa-angle-down tm-down-arrow"></i></a>
                                 </div>
                             </div> <!-- col-xs-12 -->
@@ -322,6 +322,11 @@ http://www.templatemo.com/tm-511-journey
                 </section>
             </div>
         </div>
+
+        <button id="scrollToTopBtn" style="display: none;">
+            <i class="fa fa-search"></i> 
+        </button>
+        
         <footer class="tm-container-outer">
             <p class="mb-0">Copyright © <span class="tm-current-year">2022</span> <a target="_blank"
                     href="https://www.sousadev.com">Sousa Dev</a>
@@ -333,6 +338,35 @@ http://www.templatemo.com/tm-511-journey
     </div> <!-- .main-content -->
 
     <!-- load JS files -->
+
+    <script>
+        // Logic to show the button after scrolling down a bit
+        window.addEventListener('scroll', function() {
+            const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                scrollToTopBtn.style.display = "block";
+            } else {
+                scrollToTopBtn.style.display = "none";
+            }
+        });
+
+        // Scroll to top logic
+        document.getElementById('scrollToTopBtn').addEventListener('click', function() {
+            const searchSection = document.getElementById('search-background');
+            if (searchSection) {
+                searchSection.scrollIntoView({behavior: 'smooth' });
+            }
+        });
+    </script>
+
+    <script>
+        document.getElementById('search-background').addEventListener('click', function() {
+            const searchSection = document.getElementById('search-background');
+            if (searchSection) {
+                searchSection.scrollIntoView({behavior: 'smooth' });
+            }
+        });
+    </script>
     
     <script>
         document.getElementById('change').onclick = function () {
