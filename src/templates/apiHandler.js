@@ -138,7 +138,7 @@ function displayRoutes(routes, originStop) {
             </div>
             <div class="row">
                 <div class="col">
-                    <input class="spoilerbutton" type="button" value="+" onclick="this.value=this.value=='+'?'-':'+';">
+                    <input class="spoilerbutton" style="width: fit-content; height: fit-content; float: right; font-weight: bold; font-size: 20px; border-radius: 8px; border:0px;background-color: #218732; color: white" type="button" value="+" onclick="this.value=this.value=='+'?'-':'+';">
                     <div class="spoiler" style="display: none;">${stopsHtml}</div>
                 </div>
             </div>
