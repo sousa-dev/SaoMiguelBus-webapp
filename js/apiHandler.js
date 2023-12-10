@@ -67,6 +67,7 @@ function fetchAndDisplayRoutes(url, parameters) {
             } else {
                 displayNoRoutesMessage(parameters);
             }
+            document.getElementById('placeHolderForAd').scrollIntoView({ behavior: 'smooth' });
         })
         .catch(error => console.error('Error fetching routes:', error));
 }
@@ -182,8 +183,6 @@ function displayRoutes(routes, originStop) {
     });
 
     routesContainer.style.display = 'block';
-
-    document.getElementById('placeHolderForAd').scrollIntoView({ behavior: 'smooth' });
 }
 
 function loadAdBanner(on) {
