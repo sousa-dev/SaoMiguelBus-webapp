@@ -173,16 +173,8 @@ http://www.templatemo.com/tm-511-journey
             </section>
 
             
-            <!-- add banner -->
-            <div class="tm-container-outer" id="tm-section-2">
-                <div class="row justify-content-center">
-                    <div class="col-sm-8 col-md-6 col-lg-6">
-                        <div class="ad-banner text-center p-3">
-                            <a href="REPLACE_WITH_STATIC_CONTENT_OR_JS" target="_blank"><img src="REPLACE_WITH_STATIC_CONTENT_OR_JS" alt="REPLACE_WITH_STATIC_CONTENT_OR_JS"
-                                    class="img-fluid" id="ad-image" data-id="REPLACE_WITH_STATIC_CONTENT_OR_JS"></a>
-                        </div>
-                    </div>
-                </div>
+            <div id="placeHolderForAd">
+                <!-- The ad banner will be inserted here by JavaScript -->
             </div>
             
 
@@ -349,31 +341,6 @@ http://www.templatemo.com/tm-511-journey
 
     <!-- load JS files -->
     
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            document.location.hash = '#REPLACE_WITH_STATIC_CONTENT_OR_JS';
-        });
-    </script>
-    
-
-    <script>
-        const adImage = document.getElementById("ad-image");
-        const adId = adImage.getAttribute("data-id");
-        adImage.addEventListener("click", function () {
-            $.ajax({
-                url: '/click',
-                type: 'POST',
-                data: {id: adId},
-                success: function(response) {
-                    console.log(response);
-                },
-                error: function(error) {
-                    console.log(error);
-                }
-            });
-        });
-    </script>
-
     <script>
         document.getElementById('change').onclick = function () {
             var tmp = document.getElementById('origin').value;

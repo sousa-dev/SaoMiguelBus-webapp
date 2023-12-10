@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", function() {
         // Call your function here, passing the origin and destination
         searchRoutes(origin, destination, day, time);
     });
+    loadAdBanner('home');
 });
 
 function fetchAndPopulateStops() {
@@ -163,6 +164,54 @@ function displayRoutes(routes, originStop) {
 
     routesContainer.style.display = 'block';
 }
+
+function loadAdBanner(on) {
+    const apiUrl = `https://saomiguelbus-api.herokuapp.com/api/v1/ad?on=${on}&platform=web`;  // Replace with your API endpoint
+
+    fetch(apiUrl)
+        .then(response => response.json())
+        .then(ad => {
+            if (ad) {
+                // Assuming ad object has properties like 'target', 'image', 'entity', 'id'
+                const adBannerHTML = `
+                    <div class="tm-container-outer" id="tm-section-2">
+                        <div class="row justify-content-center">
+                            <div class="col-sm-8 col-md-6 col-lg-6">
+                                <div class="ad-banner text-center p-3">
+                                    <a href="${ad.target}" target="_blank">
+                                        <img src="${ad.media}" alt="${ad.entity}" class="img-fluid" id="ad-image" data-id="${ad.id}">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+
+                // Insert the ad banner into the DOM
+                document.getElementById('placeHolderForAd').innerHTML = adBannerHTML;
+
+                // After inserting the ad banner into the DOM
+                const adImage = document.getElementById("ad-image");
+                if (adImage) {
+                    document.body.addEventListener('click', function(event) {
+                        const adId = adImage.getAttribute("data-id");
+                        const URL = "https://saomiguelbus-api.herokuapp.com/api/v1/ad/click?id="+ adId
+                        console.log('User clicked on ad with id', adId)
+                        fetch(URL, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => console.log(data))
+                        .catch(error => console.error(error));
+                    });
+                }
+            }
+        })
+        .catch(error => console.error('Error loading ad banner:', error));
+}
+
 
 function stringToJSON(string) {
     const validJsonString = string.replace(/'/g, '"');
