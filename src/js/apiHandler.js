@@ -199,7 +199,7 @@ function loadAdBanner(on) {
                         <div class="row justify-content-center">
                             <div class="col-sm-8 col-md-6 col-lg-6">
                                 <div class="ad-banner text-center p-3">
-                                    <a href="${ad.target}" target="_blank">
+                                    <a href="${ad.target}" target="_blank" id='ad-clickable'>
                                         <img src="${ad.media}" alt="${ad.entity}" class="img-fluid" id="ad-image" data-id="${ad.id}">
                                     </a>
                                 </div>
@@ -213,7 +213,7 @@ function loadAdBanner(on) {
                 // After inserting the ad banner into the DOM
                 const adImage = document.getElementById("ad-image");
                 if (adImage) {
-                    document.body.addEventListener('click', function(event) {
+                    document.getElementById('ad-clickable').addEventListener('click', function(event) {
                         const adId = adImage.getAttribute("data-id");
                         const URL = "https://saomiguelbus-api.herokuapp.com/api/v1/ad/click?id="+ adId
                         fetch(URL, {
