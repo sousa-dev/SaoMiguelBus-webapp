@@ -184,5 +184,7 @@ function getUrlParameters(origin, destination, day, time) {
     };
     // 1 -> weekday, 2 -> saturday, 3 -> sunday
     parameters.day = parameters.day == 1 ? 'weekday' : parameters.day == 2 ? 'saturday' : 'sunday';
+    //00:00 -> 00h00
+    parameters.time = parameters.time.replace(':', 'h');
     return parameters;
 }
