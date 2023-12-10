@@ -3,7 +3,8 @@ document.addEventListener("DOMContentLoaded", function() {
     // Function to get the 'lang' query parameter value
     function getLanguageFromQuery() {
         const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get('lang') || 'en'; // TODO: Default to Portuguese if no parameter is found
+        LANG = urlParams.get('lang') || LANG; // TODO: Default to Portuguese if no parameter is found
+        return LANG
     }
 
     // Set the language based on the query parameter
@@ -121,3 +122,5 @@ const LANGS = {
         "info_warning": "Este site não é afiliado a nenhuma empresa ou organização. O horário usado foi retirado de documentos públicos disponibilizados pelas empresas de autocarros. Alguns horários podem estar desatualizados!"
     }
 };
+
+LANG = 'en';

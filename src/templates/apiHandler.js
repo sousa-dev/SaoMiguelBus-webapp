@@ -53,27 +53,27 @@ function searchRoutes(origin, destination, day, time) {
     + '&day=' + parameters.day 
     + '&start=' + parameters.time
     console.log('url: ', url);
-    fetchAndDisplayRoutes(url, parameters.origin);
+    fetchAndDisplayRoutes(url, parameters);
     // TODO: Add the post request to the API here
 }
 
-function fetchAndDisplayRoutes(url, originStop) {
+function fetchAndDisplayRoutes(url, parameters) {
     fetch(url)
         .then(response => response.json())
         .then(data => {
             if (data && data.length > 0) {
                 console.log('Displaying routes...');
-                displayRoutes(data, originStop);
+                displayRoutes(data, parameters.origin);
             } else {
-                displayNoRoutesMessage();
+                displayNoRoutesMessage(parameters);
             }
         })
         .catch(error => console.error('Error fetching routes:', error));
 }
 
-function displayNoRoutesMessage() {
+function displayNoRoutesMessage(parameters) {
     const noRoutesDiv = document.getElementById('noRoutesMessage');
-    noRoutesDiv.innerHTML = '<div class="container"><div class="row"><div class="col-xs-12"><h3>No routes found</h3><p>Subtitle or additional info here.</p></div></div></div>';
+    noRoutesDiv.innerHTML = `<div class="container"><div class="row"><div class="col-xs-12"><h3>${LANGS[LANG].No_routes1} <b>${parameters.origin}</b> ${LANGS[LANG].No_routes2} <b>${parameters.destination}</b></h3><p>${LANGS[LANG].No_routes_subtitle}</p></div></div></div>`;
     noRoutesDiv.style.display = 'block';
 }
 
