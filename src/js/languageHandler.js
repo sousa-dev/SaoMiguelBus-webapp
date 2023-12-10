@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function() {
-    console.log('Applying text to page elements...')
     // Function to get the 'lang' query parameter value
     function getLanguageFromQuery() {
         const urlParams = new URLSearchParams(window.location.search);
@@ -13,7 +12,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // Function to set text based on selected language
 function setTextBasedOnLanguage(language) {
-    console.log('Switching language to ' + language)
     const languageSelect = document.getElementById('language');
 
     if (languageSelect) {
@@ -22,7 +20,6 @@ function setTextBasedOnLanguage(language) {
 
     const langTexts = LANGS[language];
     // Populate HTML elements with values from langTexts...
-    // ...
     document.title = langTexts.website_title;
     document.getElementById('navBarSearchLabel').textContent = langTexts.Search_menu
     document.getElementById('navBarContactLabel').textContent = langTexts.Contact
