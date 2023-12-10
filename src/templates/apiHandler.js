@@ -46,16 +46,13 @@ function searchRoutes(origin, destination, day, time) {
     document.getElementById('routesContainer').style.display = 'none';
     document.getElementById('noRoutesMessage').style.display = 'none';
 
-
-    // TODO: format the origin and destination strings to remove spaces and special characters
     const parameters = getUrlParameters(origin, destination, day, time);
     const url = 'https://saomiguelbus-api.herokuapp.com/api/v1/route?origin=' + parameters.origin 
     + '&destination=' + parameters.destination 
     + '&day=' + parameters.day 
     + '&start=' + parameters.time
-    console.log('url: ', url);
     fetchAndDisplayRoutes(url, parameters);
-    // TODO: Add the post request to the API here
+    postToStats(parameters)
 }
 
 function fetchAndDisplayRoutes(url, parameters) {
@@ -71,6 +68,24 @@ function fetchAndDisplayRoutes(url, parameters) {
         })
         .catch(error => console.error('Error fetching routes:', error));
 }
+
+function postToStats(parameters) {
+    const url = `https://saomiguelbus-api.herokuapp.com/api/v1/stat?request=get_route&origin=${parameters.origin}&destination=${parameters.destination}&time=${parameters.time}&language=${LANG}&platform=web&day=${parameters.day}`;
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
+
 
 function displayNoRoutesMessage(parameters) {
     const noRoutesDiv = document.getElementById('noRoutesMessage');
@@ -163,6 +178,8 @@ function displayRoutes(routes, originStop) {
     });
 
     routesContainer.style.display = 'block';
+
+    document.getElementById('placeHolderForAd').scrollIntoView({ behavior: 'smooth' });
 }
 
 function loadAdBanner(on) {
@@ -195,7 +212,6 @@ function loadAdBanner(on) {
                     document.body.addEventListener('click', function(event) {
                         const adId = adImage.getAttribute("data-id");
                         const URL = "https://saomiguelbus-api.herokuapp.com/api/v1/ad/click?id="+ adId
-                        console.log('User clicked on ad with id', adId)
                         fetch(URL, {
                             method: "POST",
                             headers: {
@@ -228,8 +244,11 @@ function getUrlParameters(origin, destination, day, time) {
         'time': time
     };
     // 1 -> weekday, 2 -> saturday, 3 -> sunday
-    parameters.day = parameters.day == 1 ? 'weekday' : parameters.day == 2 ? 'saturday' : 'sunday';
+    parameters.day = parameters.day == 1 ? 'WEEKDAY' : parameters.day == 2 ? 'SATURDAY' : 'SUNDAY';
     //00:00 -> 00h00
     parameters.time = parameters.time.replace(':', 'h');
+
+    // TODO: format the origin and destination strings to remove spaces and special characters
+
     return parameters;
 }
