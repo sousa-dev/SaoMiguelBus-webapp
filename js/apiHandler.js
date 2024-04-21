@@ -128,6 +128,10 @@ function displayRoutes(routes, originStop) {
             stopsHtml += `<b>${stop}</b>: ${time} <br />`;
         }
 
+        let information_split = route.information.split('"');
+        const pt = information_split[3];
+        const en = information_split[7];
+
         // Get the time for the origin stop
         const originTime = stopsObj.hasOwnProperty(originStop) ? stopsObj[originStop] : '';
 
@@ -163,7 +167,7 @@ function displayRoutes(routes, originStop) {
                     <div class="spoiler" style="display: none;">${stopsHtml}</div>
                 </div>
             </div>
-            ${route.information!='None' ? `<text style="color: red">${route.information}</text>` : ''}
+            ${route.information!='None' ? `<text style="color: red">PT: ${pt} // ENG: ${en}</text>` : ''}
         `;
 
         const spoilerButton = routeDiv.querySelector('.spoilerbutton');
