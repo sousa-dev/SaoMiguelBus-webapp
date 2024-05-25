@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function fetchAndPopulateStops() {
-    const url = 'https://saomiguelbus-api.herokuapp.com/api/v1/stops';
+    const url = 'http://127.0.0.1:8000/api/v2/stops';
     fetch(url)
         .then(response => response.json())
         .then(data => {
@@ -47,7 +47,7 @@ function searchRoutes(origin, destination, day, time) {
     document.getElementById('noRoutesMessage').style.display = 'none';
 
     const parameters = getUrlParameters(origin, destination, day, time);
-    const url = 'https://saomiguelbus-api.herokuapp.com/api/v1/route?origin=' + parameters.origin 
+    const url = 'http://127.0.0.1:8000/api/v2/route?origin=' + parameters.origin 
     + '&destination=' + parameters.destination 
     + '&day=' + parameters.day 
     + '&start=' + parameters.time
@@ -61,6 +61,7 @@ function fetchAndDisplayRoutes(url, parameters) {
     fetch(url)
         .then(response => response.json())
         .then(data => {
+            console.log('Routes fetched:', data);
             if (data && data.length > 0) {
                 console.log('Displaying routes...');
                 displayRoutes(data, parameters.origin);
@@ -74,7 +75,7 @@ function fetchAndDisplayRoutes(url, parameters) {
 
 function postToStats(parameters) {
     console.log("Posting to stats...");
-    const url = `https://saomiguelbus-api.herokuapp.com/api/v1/stat?request=get_route&origin=${parameters.origin}&destination=${parameters.destination}&time=${parameters.time}&language=${LANG}&platform=web&day=${parameters.day}`;
+    const url = `http://127.0.0.1:8000/api/v1/stat?request=get_route&origin=${parameters.origin}&destination=${parameters.destination}&time=${parameters.time}&language=${LANG}&platform=web&day=${parameters.day}`;
     fetch(url, {
         method: 'POST',
         headers: {
@@ -101,9 +102,6 @@ function displayRoutes(routes, originStop) {
     const routesContainer = document.getElementById('routesContainer');
     routesContainer.innerHTML = ''; // Clear previous content
 
-    console.log('There are', routes.length, 'routes to display');
-    console.log(routes)
-
     // Sort routes by origin time
     routes.sort((a, b) => {
         const aStopsObj = stringToJSON(a.stops);
@@ -117,76 +115,86 @@ function displayRoutes(routes, originStop) {
     routes.forEach(route => {
         const routeDiv = document.createElement('div');
         routeDiv.className = 'container card w-100 center';
-        routeDiv.style.cssText = 'margin-top: 30px; border-radius: 8px; padding: 10px;';
-
-        let stopsHtml = '';
+        routeDiv.style.cssText = 'margin-top: 30px; border-radius: 8px; padding: 10px; cursor: pointer;';
+    
         // Parse the string to a JavaScript object
-        const stopsObj = stringToJSON(route.stops)
-
-        // Iterate over the object
-        for (const [stop, time] of Object.entries(stopsObj)) {
-            stopsHtml += `<b>${stop}</b>: ${time} <br />`;
-        }
-
-        // Get the time for the origin stop
-        const originTime = stopsObj.hasOwnProperty(originStop) ? stopsObj[originStop] : '';
-
-        routeDiv.innerHTML = `
-            <div class="row">
-                <div class="col"></div>
-                <div class="col">
-                    <p class="card-text center-center" style="font-size: 20px; margin-left: 10px; width: 100%; text-align: center">${route.origin}</p>
-                </div>
-                <div class="col">
-                    <p class="card-text" style="float:right; font-weight:bold; font-size: 20px; text-align: center; margin: auto; padding:10px">${originTime}</p>
-                </div>
+        const stopsObj = stringToJSON(route.stops);
+        const stopsArray = Object.entries(stopsObj);
+    
+        // Get the first and last stops
+        const firstStop = stopsArray[0];
+        const lastStop = stopsArray[stopsArray.length - 1];
+    
+        // Generate HTML for the first and last stops and transfer information
+        let stopsHtml = `
+            <div class="stop"><b>${firstStop[0]}</b>: ${firstStop[1]}</div>
+            <div class="transfer" id="transfer-info"><span class="transfer-icon">🔄</span> <span class="transfer-info">+${stopsArray.length - 2} transfer(s)</span></div>
+            <div class="intermediate-stops" style="max-height: 0; overflow: hidden; transition: max-height 0.5s ease-out;">
+                ${stopsArray.slice(1, stopsArray.length - 1).map(([stop, time]) => `<div class="stop"><b>${stop}</b>: ${time}</div>`).join('')}
             </div>
-            <div class="row">
-                <div class="col" style="margin: auto">
-                    <h5 class="card-title" style="font-weight: bold; margin-left: 10px; color: black;">${route.route}</h5>
-                </div>
-                <div class="col">
-                    <p class="card-text center-center" style="font-size: 20px; font-weight: bold; width: 100%; text-align: center">&#8595</p>
-                </div>
-                <div class="col"></div>
-            </div>
-            <div class="row">
-                <div class="col"></div>
-                <div class="col">
-                    <p class="card-text center-center" style="font-size: 20px; margin-left: 10px; width: 100%; text-align: center">${route.destination}</p>
-                </div>
-                <div class="col"></div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <input class="spoilerbutton" style="width: fit-content; height: fit-content; float: right; font-weight: bold; font-size: 20px; border-radius: 8px; border:0px;background-color: #218732; color: white" type="button" value="+" onclick="this.value=this.value=='+'?'-':'+';">
-                    <div class="spoiler" style="display: none;">${stopsHtml}</div>
-                </div>
-            </div>
-            ${route.information!='None' ? `<text style="color: red">${route.information}</text>` : ''}
+            <div class="stop"><b>${lastStop[0]}</b>: ${lastStop[1]}</div>
         `;
-
-        const spoilerButton = routeDiv.querySelector('.spoilerbutton');
-        const spoilerContent = routeDiv.querySelector('.spoiler');
-
-        spoilerButton.addEventListener('click', function() {
-            if (spoilerContent.style.display === 'none' || !spoilerContent.style.display) {
-                spoilerContent.style.display = 'block';
-                spoilerButton.value = '-';
+    
+        routeDiv.innerHTML = `
+            <div class="route-header">
+                <div class="route-icon">🚌</div>
+                <div class="route-number">${route.route}</div>
+            </div>
+            <div class="stops-summary">
+                ${stopsHtml}
+            </div>
+            <div class="route-footer">
+                <div class="total-time">
+                    <span>Total Travel Time:</span>
+                    <span>${calculateTotalTravelTime(stopsObj)}</span>
+                </div>
+            </div>
+        `;
+    
+        const intermediateStops = routeDiv.querySelector('.intermediate-stops');
+        const transferInfo = routeDiv.querySelector('#transfer-info');
+        routeDiv.addEventListener('click', function() {
+            if (intermediateStops.style.maxHeight === '0px' || !intermediateStops.style.maxHeight) {
+                intermediateStops.style.maxHeight = intermediateStops.scrollHeight + 'px';
+                transferInfo.style.display = 'none';
             } else {
-                spoilerContent.style.display = 'none';
-                spoilerButton.value = '+';
+                intermediateStops.style.maxHeight = '0px';
+                transferInfo.style.display = 'block';
             }
         });
-
+    
         routesContainer.appendChild(routeDiv);
     });
-
+    
     routesContainer.style.display = 'block';
+    
+    // Helper function to calculate total travel time
+    function calculateTotalTravelTime(stopsObj) {
+        const times = Object.values(stopsObj).map(timeStr => {
+            const [hours, minutes] = timeStr.split('h').map(Number);
+            return hours * 60 + minutes;
+        });
+        const totalTime = Math.max(...times) - Math.min(...times);
+        const hours = Math.floor(totalTime / 60);
+        const minutes = totalTime % 60;
+        return `${hours}h${minutes < 10 ? '0' : ''}${minutes}`;
+    }
 }
+    
+    // Helper function to calculate total travel time
+    function calculateTotalTravelTime(stopsObj) {
+        const times = Object.values(stopsObj).map(timeStr => {
+            const [hours, minutes] = timeStr.split('h').map(Number);
+            return hours * 60 + minutes;
+        });
+        const totalTime = Math.max(...times) - Math.min(...times);
+        const hours = Math.floor(totalTime / 60);
+        const minutes = totalTime % 60;
+        return `${hours}h${minutes < 10 ? '0' : ''}${minutes}`;
+    }
 
 function loadAdBanner(on) {
-    const apiUrl = `https://saomiguelbus-api.herokuapp.com/api/v1/ad?on=${on}&platform=web`;  // Replace with your API endpoint
+    const apiUrl = `http://127.0.0.1:8000/api/v1/ad?on=${on}&platform=web`;  // Replace with your API endpoint
 
     fetch(apiUrl)
         .then(response => response.json())
@@ -214,7 +222,7 @@ function loadAdBanner(on) {
                 if (adImage) {
                     document.getElementById('ad-clickable').addEventListener('click', function(event) {
                         const adId = adImage.getAttribute("data-id");
-                        const URL = "https://saomiguelbus-api.herokuapp.com/api/v1/ad/click?id="+ adId
+                        const URL = "http://127.0.0.1:8000/api/v1/ad/click?id="+ adId
                         fetch(URL, {
                             method: "POST",
                             headers: {
