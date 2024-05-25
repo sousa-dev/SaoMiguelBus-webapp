@@ -128,9 +128,9 @@ function displayRoutes(routes, originStop) {
         // Generate HTML for the first and last stops and transfer information
         let stopsHtml = `
             <div class="stop"><b>${firstStop[0]}</b>: ${firstStop[1]}</div>
-            <div class="transfer" id="transfer-info"><span class="transfer-icon">🔄</span> <span class="transfer-info">+${stopsArray.length - 2} transfer(s)</span></div>
+            <div class="transfer" id="transfer-info"> <span class="arrow-icon">⬇</span> ${stopsArray.length > 2 ? `<span class="transfer-info">+${stopsArray.length - 2} ${stopsArray.length - 2 === 1 ? LANGS[LANG].Transfer : LANGS[LANG].Transfers}</span> <span class="transfer-icon">🔀</span>` : ''} </div>
             <div class="intermediate-stops" style="max-height: 0; overflow: hidden; transition: max-height 0.5s ease-out;">
-                ${stopsArray.slice(1, stopsArray.length - 1).map(([stop, time]) => `<div class="stop"><b>${stop}</b>: ${time}</div>`).join('')}
+                ${stopsArray.slice(1, stopsArray.length - 1).map(([stop, time]) => `<div class="stop"><b style="margin-left: 10px">${stop}</b>: ${time}</div>`).join('')}
             </div>
             <div class="stop"><b>${lastStop[0]}</b>: ${lastStop[1]}</div>
         `;
@@ -145,7 +145,7 @@ function displayRoutes(routes, originStop) {
             </div>
             <div class="route-footer">
                 <div class="total-time">
-                    <span>Total Travel Time:</span>
+                    <span>🕒 </span>
                     <span>${calculateTotalTravelTime(stopsObj)}</span>
                 </div>
             </div>
