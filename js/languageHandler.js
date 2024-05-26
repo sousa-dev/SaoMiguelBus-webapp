@@ -36,8 +36,13 @@ function setTextBasedOnLanguage(language) {
     document.getElementById('timeLabel').textContent = langTexts.Time
     document.getElementById('timeLabelSubtitle').textContent = langTexts.Optional
     document.getElementById('searchButton').textContent = langTexts.Search
-    document.getElementById('searchWarning').textContent = langTexts.warning
 
+    let searchWarningElement = document.getElementById('searchWarning');
+    if (searchWarningElement) {
+        searchWarningElement.textContent = langTexts.warning;
+    } else {
+        console.warn('Element with id "searchWarning" not found');
+    }
     document.getElementById('formTitle').textContent = langTexts.contact_title
     document.getElementById('formSubtitle').textContent = langTexts.contact_subtitle
     document.getElementById('nameLabel').textContent = langTexts.contact_name
@@ -48,8 +53,7 @@ function setTextBasedOnLanguage(language) {
     document.getElementById('message').placeholder = langTexts.contact_message
     document.getElementById('submitForm').value = langTexts.contact_button
     document.getElementById('contactCardTitle').textContent = langTexts.card_title
-    document.getElementById('support').textContent = langTexts.support
-    document.getElementById('supportBold').textContent = langTexts.support_bold
+    document.getElementById('patreonSubtitle').textContent = langTexts.patreon_subtitle
     document.getElementById('websiteInfo').textContent = langTexts.info_warning
 
 }
@@ -87,8 +91,7 @@ const LANGS = {
         'contact_subject': 'Subject',
         'contact_message': 'Message',
         'contact_button': 'Send Message Now',
-        'support': "Support the",
-        'support_bold': "Developer",
+        'patreon_subtitle': "Follow me on Patreon and be the first to know about new updates, releases, and much more!",
         'route_warning': 'Information taken from public sources provided by bus companies',
         'info_warning': "This website is not affiliated with any company or organization. The present schedule was taken from public documents made available by the bus companies. Some routes/hours may be outdated!",
     },
@@ -123,8 +126,7 @@ const LANGS = {
         'contact_subject': 'Assunto',
         'contact_message': 'Mensagem',
         'contact_button': 'Enviar Mensagem',
-        'support': "Apoia o",
-        'support_bold': "Criador",
+        'patreon_subtitle': "Siga-me no Patreon e seja o primeiro a saber sobre novas atualizações, lançamentos e muito mais!",
         'route_warning': 'Informação retirada de fontes públicas disponibilizadas pelas empresas de autocarros',
         "info_warning": "Este site não é afiliado a nenhuma empresa ou organização. O horário usado foi retirado de documentos públicos disponibilizados pelas empresas de autocarros. Alguns horários podem estar desatualizados!"
     }
