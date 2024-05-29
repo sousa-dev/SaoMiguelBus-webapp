@@ -126,7 +126,7 @@ const LANGS = {
         'contact_subject': 'Assunto',
         'contact_message': 'Mensagem',
         'contact_button': 'Enviar Mensagem',
-        'patreon_subtitle': "Siga-me no Patreon e seja o primeiro a saber sobre novas atualizações, lançamentos e muito mais!",
+        'patreon_subtitle': "Segue-me no Patreon e seja o primeiro a saber sobre novas atualizações, lançamentos e muito mais!",
         'route_warning': 'Informação retirada de fontes públicas disponibilizadas pelas empresas de autocarros',
         "info_warning": "Este site não é afiliado a nenhuma empresa ou organização. O horário usado foi retirado de documentos públicos disponibilizados pelas empresas de autocarros. Alguns horários podem estar desatualizados!"
     }
