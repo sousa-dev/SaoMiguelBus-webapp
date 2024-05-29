@@ -55,6 +55,15 @@ function setTextBasedOnLanguage(language) {
     document.getElementById('contactCardTitle').textContent = langTexts.card_title
     document.getElementById('patreonSubtitle').textContent = langTexts.patreon_subtitle
     document.getElementById('websiteInfo').textContent = langTexts.info_warning
+    document.getElementById('chamadasLabel').textContent = langTexts.chamadas_label
+
+    let anchorTag = document.querySelector('.badge-image.grey-out').parentNode;
+
+    if (language === 'pt') {
+        anchorTag.href = '/newsletter/';
+    } else {
+        anchorTag.href = '/newsletter-eng/';
+    }
 
 }
 
@@ -91,6 +100,7 @@ const LANGS = {
         'contact_subject': 'Subject',
         'contact_message': 'Message',
         'contact_button': 'Send Message Now',
+        'chamadas_label': "(We don't answer calls)",
         'patreon_subtitle': "Follow me on Patreon and be the first to know about new updates, releases, and much more!",
         'route_warning': 'Information taken from public sources provided by bus companies',
         'info_warning': "This website is not affiliated with any company or organization. The present schedule was taken from public documents made available by the bus companies. Some routes/hours may be outdated!",
@@ -126,7 +136,8 @@ const LANGS = {
         'contact_subject': 'Assunto',
         'contact_message': 'Mensagem',
         'contact_button': 'Enviar Mensagem',
-        'patreon_subtitle': "Segue-me no Patreon e seja o primeiro a saber sobre novas atualizações, lançamentos e muito mais!",
+        'chamadas_label': "(Não atendemos chamadas)",
+        'patreon_subtitle': "Segue-me no Patreon e sê o primeiro a saber sobre novas atualizações, lançamentos e muito mais!",
         'route_warning': 'Informação retirada de fontes públicas disponibilizadas pelas empresas de autocarros',
         "info_warning": "Este site não é afiliado a nenhuma empresa ou organização. O horário usado foi retirado de documentos públicos disponibilizados pelas empresas de autocarros. Alguns horários podem estar desatualizados!"
     }
