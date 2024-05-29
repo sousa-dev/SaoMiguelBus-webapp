@@ -113,13 +113,48 @@ function displayRoutes(routes, originStop) {
     });
 
     routes.forEach(route => {
+        let ignoreRoute = false;
         const routeDiv = document.createElement('div');
         routeDiv.className = 'container card w-100 center';
         routeDiv.style.cssText = 'margin-top: 30px; border-radius: 8px; padding: 10px; cursor: pointer;';
     
         // Parse the string to a JavaScript object
         const stopsObj = stringToJSON(route.stops);
-        const stopsArray = Object.entries(stopsObj);
+        const prepositions = ['de', 'da', 'do', 'dos', 'das'];
+
+        originStop = originStop.split(' ').map(word => prepositions.includes(word) ? word : word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        destinationStop = routes[0].destination.split(' ').map(word => prepositions.includes(word) ? word : word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+
+        // Filter stops to only include stops between the origin and destination
+        let stops = {};
+        let foundOrigin = false;
+        let foundDestination = false;
+        console.log('Stops:', stopsObj);
+        for (const [stop, time] of Object.entries(stopsObj)) {
+            console.log('Stop:', stop);
+            console.log('originStop:', originStop);
+            console.log('destinationStop:', destinationStop);
+            if (stop === originStop) {
+                foundOrigin = true;
+            }
+            if (foundOrigin) {
+                stops[stop] = time;
+            }
+            if (stop === destinationStop) {
+                if (!foundOrigin) {
+                    ignoreRoute = true;
+                    continue;
+                }
+                foundDestination = true;
+                break;
+            }
+        }
+
+        if (!foundOrigin || !foundDestination || ignoreRoute) {
+            return;
+        }
+
+        const stopsArray = Object.entries(stops);   
     
         // Get the first and last stops
         const firstStop = stopsArray[0];
@@ -128,7 +163,7 @@ function displayRoutes(routes, originStop) {
         // Generate HTML for the first and last stops and transfer information
         let stopsHtml = `
             <div class="stop"><b>${firstStop[0]}</b>: ${firstStop[1]}</div>
-            <div class="transfer" id="transfer-info"> <span class="arrow-icon">⬇</span> ${stopsArray.length > 2 ? `<span class="transfer-info">+${stopsArray.length - 2} ${stopsArray.length - 2 === 1 ? LANGS[LANG].Transfer : LANGS[LANG].Transfers}</span> <span class="transfer-icon">🔀</span>` : ''} </div>
+            <div class="transfer" id="transfer-info"> <span class="arrow-icon">⬇</span> ${stopsArray.length > 2 ? `<span class="transfer-info">+${stopsArray.length - 2} ${stopsArray.length - 2 === 1 ? LANGS[LANG].Transfer : LANGS[LANG].Transfers}</span>` : ''} </div>
             <div class="intermediate-stops" style="max-height: 0; overflow: hidden; transition: max-height 0.5s ease-out;">
                 ${stopsArray.slice(1, stopsArray.length - 1).map(([stop, time]) => `<div class="stop"><b style="margin-left: 10px">${stop}</b>: ${time}</div>`).join('')}
             </div>
@@ -144,9 +179,9 @@ function displayRoutes(routes, originStop) {
                 ${stopsHtml}
             </div>
             <div class="route-footer">
-                <div class="total-time">
+                <div class="total-time" style="text-align: right">
                     <span>🕒 </span>
-                    <span>${calculateTotalTravelTime(stopsObj)}</span>
+                    <span style="font-size: 16px">${calculateTotalTravelTime(firstStop[1], lastStop[1])}</span>
                 </div>
             </div>
         `;
@@ -169,29 +204,19 @@ function displayRoutes(routes, originStop) {
     routesContainer.style.display = 'block';
     
     // Helper function to calculate total travel time
-    function calculateTotalTravelTime(stopsObj) {
-        const times = Object.values(stopsObj).map(timeStr => {
-            const [hours, minutes] = timeStr.split('h').map(Number);
-            return hours * 60 + minutes;
-        });
-        const totalTime = Math.max(...times) - Math.min(...times);
-        const hours = Math.floor(totalTime / 60);
-        const minutes = totalTime % 60;
-        return `${hours}h${minutes < 10 ? '0' : ''}${minutes}`;
+    function calculateTotalTravelTime(firstStopTime, lastStopTime) {
+        const firstTime = firstStopTime.split('h');
+        const lastTime = lastStopTime.split('h');
+        const firstDate = new Date(0, 0, 0, firstTime[0], firstTime[1], 0);
+        const lastDate = new Date(0, 0, 0, lastTime[0], lastTime[1], 0);
+        let diff = lastDate.getTime() - firstDate.getTime();
+        let hours = Math.floor(diff / 1000 / 60 / 60);
+        diff -= hours * 1000 * 60 * 60;
+        let minutes = Math.floor(diff / 1000 / 60);
+    
+        return `${hours > 0 ? `${hours < 10 ? '0' + hours : hours}h${minutes < 10 ? '0' + minutes : minutes}` : `${minutes} min`}`;    
     }
 }
-    
-    // Helper function to calculate total travel time
-    function calculateTotalTravelTime(stopsObj) {
-        const times = Object.values(stopsObj).map(timeStr => {
-            const [hours, minutes] = timeStr.split('h').map(Number);
-            return hours * 60 + minutes;
-        });
-        const totalTime = Math.max(...times) - Math.min(...times);
-        const hours = Math.floor(totalTime / 60);
-        const minutes = totalTime % 60;
-        return `${hours}h${minutes < 10 ? '0' : ''}${minutes}`;
-    }
 
 function loadAdBanner(on) {
     const apiUrl = `https://api.saomiguelbus.com/api/v1/ad?on=${on}&platform=web`;  // Replace with your API endpoint
