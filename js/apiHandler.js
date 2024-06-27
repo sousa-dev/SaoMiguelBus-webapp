@@ -60,6 +60,7 @@ function searchRoutes(origin, destination, day, time) {
     // postToStats if not in localhost 
     if (window.location.hostname != "localhost" && window.location.hostname != "127.0.0.1")
         postToStats(parameters)
+    loadAdBanner('home');
 }
 
 function fetchAndDisplayRoutes(url, parameters) {
@@ -261,11 +262,11 @@ function loadAdBanner(on) {
                         const adId = adImage.getAttribute("data-id");
                         const URL = "https://saomiguelbus-api.herokuapp.com/api/v1/ad/click?id="+ adId
                         fetch(URL, {
-                            method: 'GET',
+                            method: 'POST',
                             headers: {
                               'Content-Type': 'application/json',
                             },
-                            mode: 'cors',  // Ensure CORS mode is enabled
+                            mode: 'cors',
                         })
                         .then(response => response.json())
                         .then(data => console.log(data))
