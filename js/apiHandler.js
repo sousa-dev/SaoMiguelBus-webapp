@@ -238,13 +238,19 @@ function loadAdBanner(on) {
         .then(response => response.json())
         .then(ad => {
             if (ad) {
+                let hrefValue;
+                if (ad.action === 'directions') {
+                    hrefValue = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(ad.target)}`; // Directions URL
+                } else {
+                    hrefValue = ad.target;
+                }
                 // Assuming ad object has properties like 'target', 'image', 'entity', 'id'
                 const adBannerHTML = `
                     <div class="tm-container-outer" id="tm-section-2">
                         <div class="row justify-content-center">
                             <div class="col-sm-8 col-md-6 col-lg-6">
                                 <div class="ad-banner text-center p-3">
-                                    <a href="${ad.target}" target="_blank" id='ad-clickable'>
+                                    <a href="${hrefValue}" target="_blank" id='ad-clickable'>
                                         <img src="${ad.media}" alt="${ad.entity}" class="img-fluid" id="ad-image" data-id="${ad.id}">
                                     </a>
                                 </div>
