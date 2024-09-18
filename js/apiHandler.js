@@ -60,6 +60,7 @@ function searchRoutes(origin, destination, day, time) {
     // postToStats if not in localhost 
     if (window.location.hostname != "localhost" && window.location.hostname != "127.0.0.1")
         postToStats(parameters)
+    loadAdBanner('home');
 }
 
 function fetchAndDisplayRoutes(url, parameters) {
@@ -237,13 +238,19 @@ function loadAdBanner(on) {
         .then(response => response.json())
         .then(ad => {
             if (ad) {
+                let hrefValue;
+                if (ad.action === 'directions') {
+                    hrefValue = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(ad.target)}`; // Directions URL
+                } else {
+                    hrefValue = ad.target;
+                }
                 // Assuming ad object has properties like 'target', 'image', 'entity', 'id'
                 const adBannerHTML = `
                     <div class="tm-container-outer" id="tm-section-2">
                         <div class="row justify-content-center">
                             <div class="col-sm-8 col-md-6 col-lg-6">
                                 <div class="ad-banner text-center p-3">
-                                    <a href="${ad.target}" target="_blank" id='ad-clickable'>
+                                    <a href="${hrefValue}" target="_blank" id='ad-clickable'>
                                         <img src="${ad.media}" alt="${ad.entity}" class="img-fluid" id="ad-image" data-id="${ad.id}">
                                     </a>
                                 </div>
@@ -261,11 +268,11 @@ function loadAdBanner(on) {
                         const adId = adImage.getAttribute("data-id");
                         const URL = "https://saomiguelbus-api.herokuapp.com/api/v1/ad/click?id="+ adId
                         fetch(URL, {
-                            method: 'GET',
+                            method: 'POST',
                             headers: {
                               'Content-Type': 'application/json',
                             },
-                            mode: 'cors',  // Ensure CORS mode is enabled
+                            mode: 'cors',
                         })
                         .then(response => response.json())
                         .then(data => console.log(data))
