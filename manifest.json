@@ -1,0 +1,22 @@
+{
+  "short_name": "São Miguel Bus",
+  "name": "Autocarros da Ilha de São Miguel",
+  "icons": [
+    {
+      "src": "static/icons/icon-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "static/icons/icon-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#28a745",
+  "description": "Encontre horários e rotas de autocarros na Ilha de São Miguel."
+}

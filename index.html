@@ -65,6 +65,18 @@ http://www.templatemo.com/tm-511-journey
         }
     </script>
     <style>
+        #installPrompt {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #28a745;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 1000;
+        }
         /* Responsive styles */
         @media (max-width: 768px) {
             .tm-top-bar {
@@ -92,6 +104,11 @@ http://www.templatemo.com/tm-511-journey
             }
         }
     </style>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#007bff">
+    <!-- Add icons if not already included -->
+    <link rel="icon" type="image/png" sizes="192x192" href="static/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" href="static/icons/icon-512x512.png">
 </head>
 
 <body>
@@ -423,18 +440,51 @@ http://www.templatemo.com/tm-511-journey
                 document.getElementById('destination').value = tmp;
             };
         </script>
-        <script src="static/js/jquery-1.11.3.min.js" integrity="sha384-..." crossorigin="anonymous"></script> <!-- jQuery (https://jquery.com/download/) -->
-        <script src="static/js/popper.min.js" integrity="sha384-..." crossorigin="anonymous"></script> <!-- https://popper.js.org/ -->
-        <script src="static/js/bootstrap.min.js" integrity="sha384-..." crossorigin="anonymous"></script> <!-- https://getbootstrap.com/ -->
-        <script src="static/js/datepicker.min.js" integrity="sha384-..." crossorigin="anonymous"></script> <!-- https://github.com/qodesmith/datepicker -->
-        <script src="static/js/jquery.singlePageNav.min.js" integrity="sha384-..." crossorigin="anonymous"></script>
+        <script src="static/js/jquery-1.11.3.min.js" crossorigin="anonymous"></script> <!-- jQuery (https://jquery.com/download/) -->
+        <script src="static/js/popper.min.js" crossorigin="anonymous"></script> <!-- https://popper.js.org/ -->
+        <script src="static/js/bootstrap.min.js"  crossorigin="anonymous"></script> <!-- https://getbootstrap.com/ -->
+        <script src="static/js/datepicker.min.js" crossorigin="anonymous"></script> <!-- https://github.com/qodesmith/datepicker -->
+        <script src="static/js/jquery.singlePageNav.min.js"  crossorigin="anonymous"></script>
         <!-- Single Page Nav (https://github.com/ChrisWojcik/single-page-nav) -->
-        <script src="static/slick/slick.min.js" integrity="sha384-..." crossorigin="anonymous"></script> <!-- http://kenwheeler.github.io/slick/ -->
-        <script src="static/js/jquery.scrollTo.min.js" integrity="sha384-..." crossorigin="anonymous"></script> <!-- https://github.com/flesler/jquery.scrollTo -->
-        <script src="https://code.iconify.design/2/2.1.2/iconify.min.js" integrity="sha384-..." crossorigin="anonymous"></script>
+        <script src="static/slick/slick.min.js" crossorigin="anonymous"></script> <!-- http://kenwheeler.github.io/slick/ -->
+        <script src="static/js/jquery.scrollTo.min.js" crossorigin="anonymous"></script> <!-- https://github.com/flesler/jquery.scrollTo -->
+        <script src="https://code.iconify.design/2/2.1.2/iconify.min.js" crossorigin="anonymous"></script>
         
         <script src="js/languageHandler.js" defer></script>
         <script src="js/apiHandler.js" defer></script>
+
+        <script>
+            if ('serviceWorker' in navigator) {
+              window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/service-worker.js')
+                .then(function(registration) {
+                  console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                }, function(err) {
+                  console.log('ServiceWorker registration failed: ', err);
+                });
+              });
+            }
+        </script>
+
+        <div id="installPrompt">
+            Para instalar este aplicativo, toque no botão de compartilhamento e selecione "Adicionar à Tela de Início".
+        </div>
+
+        <script>
+            function isIphone() {
+                return /iPhone/i.test(navigator.userAgent);
+            }
+
+            function showInstallPrompt() {
+                const installPrompt = document.getElementById('installPrompt');
+                installPrompt.style.display = 'block';
+            }
+
+            // Check if the user is on an iPhone
+            if (isIphone()) {
+                showInstallPrompt();
+            }
+        </script>
 
     </body>
 
