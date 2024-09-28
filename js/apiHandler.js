@@ -45,8 +45,6 @@ function fetchAndPopulateStops() {
 }
 
 function searchRoutes(origin, destination, day, time) {
-    console.log("Searching routes from", origin, "to", destination);
-
     // Hide the routes container and the no routes message
     document.getElementById('routesContainer').style.display = 'none';
     document.getElementById('noRoutesMessage').style.display = 'none';
@@ -73,9 +71,7 @@ function fetchAndDisplayRoutes(url, parameters) {
     })
         .then(response => response.json())
         .then(data => {
-            console.log('Routes fetched:', data);
             if (data && data.length > 0) {
-                console.log('Displaying routes...');
                 displayRoutes(data, parameters.origin);
             } else {
                 displayNoRoutesMessage(parameters);
@@ -86,7 +82,6 @@ function fetchAndDisplayRoutes(url, parameters) {
 }
 
 function postToStats(parameters) {
-    console.log("Posting to stats...");
     const url = `https://saomiguelbus-api.herokuapp.com/api/v1/stat?request=get_route&origin=${parameters.origin}&destination=${parameters.destination}&time=${parameters.time}&language=${LANG}&platform=web&day=${parameters.day}`;
     fetch(url, {
         method: 'POST',
@@ -107,7 +102,18 @@ function postToStats(parameters) {
 
 function displayNoRoutesMessage(parameters) {
     const noRoutesDiv = document.getElementById('noRoutesMessage');
-    noRoutesDiv.innerHTML = `<div class="container"><div class="row"><div class="col-xs-12"><h3>${LANGS[LANG].No_routes1} <b>${parameters.origin}</b> ${LANGS[LANG].No_routes2} <b>${parameters.destination}</b></h3><p>${LANGS[LANG].No_routes_subtitle}</p></div></div></div>`;
+    noRoutesDiv.innerHTML = `
+        <div class="container mx-auto px-4 mt-4">
+            <div class="bg-red-100 shadow-md rounded-lg p-6">
+                <div class="flex flex-col items-center">
+                    <h3 class="text-xl font-semibold mb-2 text-center">
+                        ${LANGS[LANG].No_routes1} <span class="font-bold">${parameters.origin}</span> ${LANGS[LANG].No_routes2} <span class="font-bold">${parameters.destination}</span>
+                    </h3>
+                    <p class="text-gray-600 text-center">${LANGS[LANG].No_routes_subtitle}</p>
+                </div>
+            </div>
+        </div>
+    `;
     noRoutesDiv.style.display = 'block';
 }
 
@@ -142,11 +148,7 @@ function displayRoutes(routes, originStop) {
         let stops = {};
         let foundOrigin = false;
         let foundDestination = false;
-        console.log('Stops:', stopsObj);
         for (const [stop, time] of Object.entries(stopsObj)) {
-            console.log('Stop:', stop);
-            console.log('originStop:', originStop);
-            console.log('destinationStop:', destinationStop);
             if (stop === originStop) {
                 foundOrigin = true;
             }
@@ -175,26 +177,31 @@ function displayRoutes(routes, originStop) {
     
         // Generate HTML for the first and last stops and transfer information
         let stopsHtml = `
-            <div class="stop"><b>${firstStop[0]}</b>: ${firstStop[1]}</div>
-            <div class="transfer" id="transfer-info"> <span class="arrow-icon">⬇</span> ${stopsArray.length > 2 ? `<span class="transfer-info">+${stopsArray.length - 2} ${stopsArray.length - 2 === 1 ? LANGS[LANG].Transfer : LANGS[LANG].Transfers}</span>` : ''} </div>
-            <div class="intermediate-stops" style="max-height: 0; overflow: hidden; transition: max-height 0.5s ease-out;">
-                ${stopsArray.slice(1, stopsArray.length - 1).map(([stop, time]) => `<div class="stop"><b style="margin-left: 10px">${stop}</b>: ${time}</div>`).join('')}
+            <div class="stop text-lg font-bold mb-2">${firstStop[0]}: ${firstStop[1]}</div>
+            <div class="transfer flex items-center mb-2" id="transfer-info">
+                <span class="arrow-icon text-green-500 mr-2">⬇</span> 
+                ${stopsArray.length > 2 ? `<span class="transfer-info text-sm text-gray-600">+${stopsArray.length - 2} ${stopsArray.length - 2 === 1 ? LANGS[LANG].Transfer : LANGS[LANG].Transfers}</span>` : ''} 
             </div>
-            <div class="stop"><b>${lastStop[0]}</b>: ${lastStop[1]}</div>
+            <div class="intermediate-stops max-h-0 overflow-hidden transition-max-height duration-500 ease-out">
+                ${stopsArray.slice(1, stopsArray.length - 1).map(([stop, time]) => `<div class="stop ml-4 text-base text-gray-700 mb-1">${stop}: ${time}</div>`).join('')}
+            </div>
+            <div class="stop text-lg font-bold mt-2">${lastStop[0]}: ${lastStop[1]}</div>
         `;
     
         routeDiv.innerHTML = `
-            <div class="route-header">
-                <div class="route-icon">🚌</div>
-                <div class="route-number">${route.route}</div>
-            </div>
-            <div class="stops-summary">
-                ${stopsHtml}
-            </div>
-            <div class="route-footer">
-                <div class="total-time" style="text-align: right">
-                    <span>🕒 </span>
-                    <span style="font-size: 16px">${calculateTotalTravelTime(firstStop[1], lastStop[1])}</span>
+            <div class="bg-white shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-300">
+                <div class="route-header flex items-center justify-between mb-4 pb-2 border-b border-gray-200">
+                    <div class="flex items-center">
+                        <div class="route-icon text-2xl mr-2">🚌</div>
+                        <div class="route-number text-xl font-semibold text-green-600">${route.route}</div>
+                    </div>
+                    <div class="total-time flex items-center">
+                        <span class="text-gray-500 mr-1">🕒</span>
+                        <span class="text-lg font-medium">${calculateTotalTravelTime(firstStop[1], lastStop[1])}</span>
+                    </div>
+                </div>
+                <div class="stops-summary">
+                    ${stopsHtml}
                 </div>
             </div>
         `;
@@ -246,12 +253,13 @@ function loadAdBanner(on) {
                 }
                 // Assuming ad object has properties like 'target', 'image', 'entity', 'id'
                 const adBannerHTML = `
-                    <div class="tm-container-outer" id="tm-section-2">
-                        <div class="row justify-content-center">
-                            <div class="col-sm-8 col-md-6 col-lg-6">
-                                <div class="ad-banner text-center p-3">
+                    <div class="container mx-auto" id="tm-section-2">
+                        <div class="flex justify-center">
+                            <div class="w-full sm:w-2/3 md:w-1/2 lg:w-1/2">
+                                <div class="ad-banner text-center p-2 relative">
+                                    <span class="absolute top-0 left-0 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-tl-lg rounded-br-lg z-10">AD</span>
                                     <a href="${hrefValue}" target="_blank" id='ad-clickable'>
-                                        <img src="${ad.media}" alt="${ad.entity}" class="img-fluid" id="ad-image" data-id="${ad.id}">
+                                        <img src="${ad.media}" alt="${ad.entity}" class="w-full h-auto rounded-lg" id="ad-image" data-id="${ad.id}">
                                     </a>
                                 </div>
                             </div>
