@@ -3,7 +3,6 @@ document.getElementById('btnSubmitStepByStep').addEventListener('click', functio
     event.preventDefault(); // Prevent form submission
 
     const parameters = getStepByStepSearchParameters();
-    console.log(parameters);
     if (parameters) {
         searchStepByStep(parameters.origin, parameters.destination, parameters.day, parameters.time);
     }
@@ -12,7 +11,7 @@ document.getElementById('btnSubmitStepByStep').addEventListener('click', functio
 function searchStepByStep(origin, destination, day, time) {
     showLoadingSpinner();
     const parameters = getUrlParameters(origin, destination, day, time);
-    const languageCode = getCookie('language') || 'pt';
+    const languageCode = getCookie('language') || (['pt', 'en', 'es'].includes(navigator.language.split('-')[0]) ? navigator.language.split('-')[0] : 'pt');
     if (languageCode === 'pt') {
         currentLanguage = 'pt-pt';
     }
@@ -146,7 +145,6 @@ function getArrivalTime(step) {
 }
 
 function getStepByStepSearchParameters() {
-    console.log("getStepByStepSearchParameters called");
     const originInput = document.getElementById('originStepByStep');
     const destinationInput = document.getElementById('destinationStepByStep');
     const day = checkDayType("datePickerStepByStep");
