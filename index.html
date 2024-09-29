@@ -59,18 +59,19 @@
     <script src="https://code.iconify.design/2/2.1.2/iconify.min.js" crossorigin="anonymous"></script>
 
     <style>
-        /* Evitar scroll no mobile */
+        /* Ajuste para scroll no mobile */
         @media (max-width: 1024px) {
             body {
-                overflow: hidden;
+                padding-bottom: 56px; /* Altura da navbar inferior */
             }
             .page {
                 display: none;
+                min-height: calc(100vh - 56px); /* Ajuste para a altura da navbar inferior */
+                overflow-y: auto;
+                padding-bottom: 20px; /* Espaço extra no final da página */
             }
             .page.active {
                 display: block;
-                height: calc(100vh - 56px); /* Ajuste conforme a altura da navbar inferior */
-                overflow-y: auto;
             }
         }
         /* Animation for swap icon */
@@ -87,23 +88,36 @@
 </head>
 
 <body class="bg-gray-100 text-gray-800">
+    <!-- Ad Placeholder (available on all pages) -->
+    <div id="placeHolderForAd" class="relative border-2 border-gray-300 rounded-lg w-full mb-4 p-4">
+        <!-- The ad banner will be inserted here by JavaScript -->
+    </div>
     
     <!-- Bottom Navigation Bar for Mobile -->
     <nav class="fixed bottom-0 left-0 right-0 bg-white shadow-lg lg:hidden">
         <div class="flex justify-around">
-            <a href="#pesquisar" class="flex flex-col items-center justify-center text-gray-600 hover:text-green-600 py-2" data-target="home">
+            <a href="#" class="flex flex-col items-center justify-center text-gray-600 hover:text-green-600 py-2" data-target="home">
                 <i class="fas fa-search text-xl"></i>
                 <span class="text-xs">Pesquisar</span>
+            </a>
+            <a href="#" class="flex flex-col items-center justify-center text-gray-600 hover:text-green-600 py-2" data-target="routes">
+                <i class="fas fa-route text-xl"></i>
+                <span class="text-xs">Rotas</span>
+            </a>
+            <a href="#" class="flex flex-col items-center justify-center text-gray-600 hover:text-green-600 py-2" data-target="advert">
+                <i class="fas fa-ad text-xl"></i>
+                <span class="text-xs">Anúncios</span>
+            </a>
+            <a href="#" class="flex flex-col items-center justify-center text-gray-600 hover:text-green-600 py-2" data-target="info">
+                <i class="fas fa-info-circle text-xl"></i>
+                <span class="text-xs">Info</span>
             </a>
         </div>
     </nav>
 
     <!-- Pesquisar Page -->
-    <section id="pesquisar" class="page bg-white min-h-screen flex flex-col items-center p-4">
-        <div id="placeHolderForAd" class="relative border-2 border-gray-300 rounded-lg w-full mb-4">
-            <!-- The ad banner will be inserted here by JavaScript -->
-        </div>
-        <div class="w-full max-w-md bg-white rounded-3xl shadow-lg overflow-hidden mt-4">
+    <section id="home" class="page active bg-white min-h-screen flex flex-col items-center p-4">
+        <div class="w-full max-w-md mx-auto bg-white rounded-3xl shadow-lg overflow-hidden mt-4">
             <!-- Ad Banner -->
             <a href="https://ad.saomiguelbus.com" target="_blank" class="block">
                 <div class="bg-green-600 text-white p-4 text-center">
@@ -169,21 +183,194 @@
                 </div>
             </form>
         </div>
-            <div class="tm-container-outer" id="routesDiv" style="height: 50vh; overflow-y: auto;">      
-                <!-- Placeholder for No Routes Message -->
-                <div id="noRoutesMessage" class="hidden text-center text-lg text-gray-700 mt-4">
-                    <p>Nenhuma rota encontrada. Tente novamente com diferentes parâmetros.</p>
-                </div>
-        
-                <!-- Placeholder for Routes -->
-                <div id="routesContainer" class="hidden mt-4">
-                    <!-- Routes will be added dynamically -->
-                </div>       
+        <div class="tm-container-outer" id="routesDiv" style="max-height: calc(100vh - 56px - 400px); overflow-y: auto;">      
+            <!-- Placeholder for No Routes Message -->
+            <div id="noRoutesMessage" class="hidden text-center text-lg text-gray-700 mt-4">
+                <p>Nenhuma rota encontrada. Tente novamente com diferentes parâmetros.</p>
             </div>
+    
+            <!-- Placeholder for Routes -->
+            <div id="routesContainer" class="hidden mt-4">
+                <!-- Routes will be added dynamically -->
+            </div>       
+        </div>
     </section>
+
+    <!-- Routes Page -->
+    <section id="routes" class="page hidden bg-white min-h-screen flex flex-col items-center p-4">
+        <h2 class="text-2xl font-bold mb-4">Rotas Populares</h2>
+        <!-- Add content for popular routes -->
+    </section>
+
+    <!-- Advert Page -->
+    <section id="advert" class="page hidden bg-white min-h-screen flex flex-col items-center p-4">
+        <h2 class="text-2xl text-center font-bold mb-4">Anuncie em São Miguel Bus</h2>
+        <p class="text-center text-lg mb-6">Anuncie na nossa aplicação a partir de X euros por mês.</p>
+        <div class="bg-green-100 rounded-lg p-6 shadow-md max-w-md mx-auto mb-6">
+            <h3 class="text-xl font-semibold mb-3 text-center">Oportunidade de Publicidade</h3>
+            <p class="text-gray-700 text-center">
+                Pode anunciar o seu negócio para residentes e turistas da ilha de São Miguel. 
+                <br> <br>
+                Saiba mais em <a href="https://ad.saomiguelbus.com" class="text-green-600 hover:underline">ad.saomiguelbus.com</a>
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-white rounded-lg p-4 shadow-md flex flex-col items-center">
+                <i class="fas fa-cubes text-green-500 text-3xl mb-2"></i>
+                <h3 class="text-xl font-semibold text-center">Segmentação Precisa</h3>
+                <p class="text-gray-700 text-center mt-2">Exiba seu anúncio para usuários que pesquisam rotas próximas ao seu estabelecimento.</p>
+            </div>
+            <div class="bg-white rounded-lg p-4 shadow-md flex flex-col items-center">
+                <i class="fas fa-chart-line text-green-500 text-3xl mb-2"></i>
+                <h3 class="text-xl font-semibold text-center">Interações Direcionadas</h3>
+                <p class="text-gray-700 text-center mt-2">Redirecione usuários para seu site ou mapa com direções para seu estabelecimento.</p>
+            </div>
+            <div class="bg-white rounded-lg p-4 shadow-md flex flex-col items-center">
+                <i class="fas fa-money-bill-wave text-green-500 text-3xl mb-2"></i>
+                <h3 class="text-xl font-semibold text-center">Preço Flexível</h3>
+                <p class="text-gray-700 text-center mt-2">Opções de preço baseadas em como você deseja promover seus serviços.</p>
+            </div>
+            <div class="bg-white rounded-lg p-4 shadow-md flex flex-col items-center">
+                <i class="fas fa-credit-card text-green-500 text-3xl mb-2"></i>
+                <h3 class="text-xl font-semibold text-center">Pagamento Conveniente</h3>
+                <p class="text-gray-700 text-center mt-2">Aceita-se MBWay ou transferência bancária, com recibo para fins contabilísticos.</p>
+            </div>
+        </div>
+
+        <div class="mt-6 flex flex-col items-center">
+            <button class="bg-green-500 text-white py-2 px-4 rounded-full hover:bg-green-600 transition duration-300 ease-in-out flex items-center" onclick="toggleSpoiler()">
+                Porque é que existem anúncios na aplicação?
+                <svg class="ml-2 h-4 w-4 transform transition-transform duration-200" id="spoilerArrow" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </button>
+            <div id="spoilerContent" class="hidden mt-4 bg-white shadow-md rounded-lg w-full overflow-hidden transition-all duration-300 ease-in-out">
+                <div class="p-6">
+                    <h4 class="text-xl font-semibold text-green-600 mb-3">Sobre os Anúncios</h4>
+                    <p class="text-gray-700 leading-relaxed">
+                        A aplicação São Miguel Bus foi desenvolvida por apenas uma pessoa, sem qualquer apoio externo ou associação com companhias ou entidades. Os anúncios desempenham um papel crucial:
+                    </p>
+                    <ul class="list-disc list-inside text-gray-700 mt-2 space-y-2">
+                        <li>Ajudam a cobrir os custos do servidor da aplicação</li>
+                        <li>Permitem manter a aplicação totalmente gratuita para todos os utilizadores</li>
+                        <li>Contribuem para o contínuo desenvolvimento e melhoria da plataforma</li>
+                    </ul>
+                    <p class="text-gray-700 mt-4 italic">
+                        Agradecemos a sua compreensão e apoio ao utilizar a São Miguel Bus!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Info Page -->
+    <section id="info" class="page hidden bg-white min-h-screen flex flex-col items-center p-4">
+        <div class="w-full max-w-md">
+            <div class="bg-gray-100 rounded-lg p-4 mb-4 flex items-center">
+                <span class="iconify text-3xl mr-4" data-icon="mdi:code-braces"></span>
+                <div>
+                    <h3 class="font-semibold">Esta aplicação foi desenvolvida por Sousa Dev</h3>
+                </div>
+            </div>
+
+            <a href="#" class="block bg-white border border-gray-200 rounded-lg p-4 mb-4 flex items-center justify-between hover:bg-gray-50">
+                <div class="flex items-center">
+                    <span class="iconify text-3xl mr-4" data-icon="mdi:alert-circle-outline"></span>
+                    <h3 class="font-semibold">Aplicação Não Desenvolvida pelas Empresas de Autocarros</h3>
+                </div>
+                <span class="iconify" data-icon="mdi:chevron-right"></span>
+            </a>
+
+            <a href="#" class="block bg-white border border-gray-200 rounded-lg p-4 mb-4 flex items-center justify-between hover:bg-gray-50">
+                <div class="flex items-center">
+                    <span class="iconify text-3xl mr-4" data-icon="mdi:bus"></span>
+                    <h3 class="font-semibold">Contato das Companhias de Autocarros</h3>
+                </div>
+                <span class="iconify" data-icon="mdi:chevron-right"></span>
+            </a>
+
+            <a href="#" class="block bg-white border border-gray-200 rounded-lg p-4 mb-4 flex items-center justify-between hover:bg-gray-50">
+                <div class="flex items-center">
+                    <span class="iconify text-3xl mr-4" data-icon="mdi:help-circle-outline"></span>
+                    <h3 class="font-semibold">Perguntas Frequentes</h3>
+                </div>
+                <span class="iconify" data-icon="mdi:chevron-right"></span>
+            </a>
+
+            <a href="#" class="block bg-white border border-gray-200 rounded-lg p-4 mb-4 flex items-center justify-between hover:bg-gray-50">
+                <div class="flex items-center">
+                    <span class="iconify text-3xl mr-4" data-icon="mdi:star-outline"></span>
+                    <h3 class="font-semibold">Avalie a App</h3>
+                </div>
+                <span class="iconify" data-icon="mdi:chevron-right"></span>
+            </a>
+
+            <a href="#" class="block bg-white border border-gray-200 rounded-lg p-4 mb-4 flex items-center justify-between hover:bg-gray-50">
+                <div class="flex items-center">
+                    <span class="iconify text-3xl mr-4" data-icon="mdi:currency-usd"></span>
+                    <h3 class="font-semibold">Apoie o Criador</h3>
+                </div>
+                <span class="iconify" data-icon="mdi:chevron-right"></span>
+            </a>
+
+            <a href="#" class="text-blue-500 hover:underline text-center block mt-6">
+                Contate o Desenvolvedor
+            </a>
+
+            <p class="text-center text-gray-500 mt-8">
+                Copyright © 2023 Sousa Dev
+            </p>
+        </div>
+    </section>
+
+    
 
     <!-- JavaScript Logic -->
     <script>
+        function toggleSpoiler() {
+            var spoilerContent = document.getElementById('spoilerContent');
+            var spoilerArrow = document.getElementById('spoilerArrow');
+            spoilerContent.classList.toggle('hidden');
+            spoilerArrow.classList.toggle('rotate-180');
+        }
+        // Page switching logic
+        document.addEventListener('DOMContentLoaded', function() {
+            const pages = document.querySelectorAll('.page');
+            const navLinks = document.querySelectorAll('.bottom-0 a');
+
+            function showPage(pageId) {
+                pages.forEach(page => {
+                    if (page.id === pageId) {
+                        page.classList.remove('hidden');
+                        page.classList.add('active');
+                    } else {
+                        page.classList.add('hidden');
+                        page.classList.remove('active');
+                    }
+                });
+            }
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetPage = this.getAttribute('data-target');
+                    showPage(targetPage);
+
+                    // Update active state of nav links
+                    navLinks.forEach(navLink => {
+                        if (navLink === this) {
+                            navLink.classList.add('text-green-600');
+                            navLink.classList.remove('text-gray-600');
+                        } else {
+                            navLink.classList.remove('text-green-600');
+                            navLink.classList.add('text-gray-600');
+                        }
+                    });
+                });
+            });
+        });
+
         // Toggle Navigation Menu on Mobile Top Navbar if implemented
         document.getElementById('nav-toggle')?.addEventListener('click', function() {
             const mainNav = document.getElementById('mainNav');
@@ -222,17 +409,9 @@
             }, 300); // Remove the class after the animation duration
         }
 
-        // Initial Load: Show 'pesquisar' page
+        // Initial Load: Show 'home' page
         document.addEventListener('DOMContentLoaded', function() {
-            const initialPage = document.querySelector('.page.active');
-            if (!initialPage) {
-                const primeiraPagina = document.getElementById('pesquisar');
-                if (primeiraPagina) {
-                    primeiraPagina.classList.add('active');
-                    primeiraPagina.classList.remove('hidden');
-                    updatePageContent('home');
-                }
-            }
+            showPage('home');
         });
 
         // Register Service Worker
