@@ -55,7 +55,10 @@
     "transfer": "transferência",
     "transfers": "transferências",
     "searchBackgroundClickMessage": "Clique para buscar",
-    "swapButton": "Intercambiar Origen y Destino",
     "originRequired": "Por favor, preencha a origem.",
-    "destinationRequired": "Por favor, preencha o destino."
+    "destinationRequired": "Por favor, preencha o destino.",
+    "portuguese": "Português",
+    "english": "English",
+    "spanish": "Español",
+    "currentLanguage": "🇵🇹"
 }

@@ -55,7 +55,10 @@
     "transfer": "transfer",
     "transfers": "transfers",
     "searchBackgroundClickMessage": "Click to search",
-    "swapButton": "Swap Origin and Destination",
     "originRequired": "Please fill in the origin.",
-    "destinationRequired": "Please fill in the destination."
+    "destinationRequired": "Please fill in the destination.",
+    "portuguese": "Português",
+    "english": "English",
+    "spanish": "Español",
+    "currentLanguage": "🇬🇧"
 }

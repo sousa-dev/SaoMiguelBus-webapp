@@ -78,6 +78,10 @@ function updatePageContent() {
 
 function changeLanguage(lang) {
     loadTranslations(lang);
+    const languageModal = document.getElementById('languageModal');
+    if (languageModal) {
+        languageModal.style.display = 'none';
+    }
 }
 
 // Initial load

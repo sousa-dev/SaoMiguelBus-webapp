@@ -153,6 +153,26 @@
         .tm-about-text-wrap {
             margin-bottom: 30px;
         }
+
+        #languageModal {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        #languageModal .bg-white {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 8px;
+        }
     </style>
 
     <link rel="manifest" href="/manifest.json">
@@ -188,13 +208,31 @@
 
     <!-- Pesquisar Page -->
     <section id="home" class="page active bg-white min-h-screen flex flex-col items-center p-4">
-        <select
-            onchange="changeLanguage(this.value)"
-            name="language" class="custom-select" id="languageSelect" aria-label="Select Language">
-            <option value="pt" selected>🇵🇹 PT</option>
-            <option value="en">🇬🇧 ENG</option>
-            <option value="es">🇪🇸 ESP</option> <!-- Added Spanish option -->
-        </select>
+        <!-- Language Selection Button -->
+        <button id="languageButton" class="bg-green-500 text-white py-2 px-4 rounded-full hover:bg-green-600 transition duration-300 ease-in-out flex items-center">
+            <span id="currentLanguage" class="mr-2" data-i18n="currentLanguage">🇵🇹</span>
+            <i class="fas fa-chevron-down ml-2"></i>
+        </button>
+
+        <!-- Language Selection Modal -->
+        <div id="languageModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
+            <div class="bg-white rounded-lg p-6 w-80 relative">
+                <button id="closeModal" class="absolute top-2 right-2 text-gray-600 hover:text-gray-800 transition duration-300 ease-in-out">
+                    <i class="fas fa-times"></i>
+                </button>
+                <ul>
+                    <li>
+                        🇵🇹 <button onclick="changeLanguage('pt')" class="w-auto font-bold text-left py-2" data-i18n="portuguese">Português</button>
+                    </li>
+                    <li>
+                        🇬🇧 <button onclick="changeLanguage('en')" class="w-auto font-bold text-left py-2" data-i18n="english">English</button>
+                    </li>
+                    <li>
+                        🇪🇸 <button onclick="changeLanguage('es')" class="w-auto font-bold text-left py-2" data-i18n="spanish">Español</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
         
         <div class="w-full max-w-md mx-auto bg-white rounded-3xl shadow-lg overflow-hidden mt-4">
             <!-- Ad Banner -->
@@ -506,5 +544,6 @@
 
     <!-- External JS Files -->
     <script src="js/apiHandler.js" defer></script>
+    <script src="js/languageModal.js" defer></script>
 </body>
 </html>
