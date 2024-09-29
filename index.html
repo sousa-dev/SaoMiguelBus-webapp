@@ -173,16 +173,41 @@
             padding: 20px;
             border-radius: 8px;
         }
+
+        /* New styles for fixed ad and scrollable content */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        #placeHolderForAd {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: white;
+        }
+
+        .page {
+            flex: 1;
+            overflow-y: auto;
+        }
     </style>
 
     <link rel="manifest" href="/manifest.json">
 </head>
 
-<body class="bg-gray-100 text-gray-800">
-    <!-- Ad Placeholder (available on all pages) -->
+<body class="bg-white text-gray-800">
+    <!-- Ad Placeholder (fixed at the top) -->
     <div id="placeHolderForAd" class="relative border-2 border-gray-300 rounded-lg w-full mb-4 p-4">
         <!-- The ad banner will be inserted here by JavaScript -->
     </div>
+
+    <!-- Language Selection Button -->
+    <button id="languageButton" class="bg-green-500 text-white py-2 px-4 rounded-full hover:bg-green-600 transition duration-300 ease-in-out flex items-center">
+        <span id="currentLanguage" class="mr-2" data-i18n="currentLanguage">🇵🇹</span>
+        <i class="fas fa-chevron-down ml-2"></i>
+    </button>
     
     <!-- Bottom Navigation Bar for Mobile -->
     <nav class="fixed bottom-0 left-0 right-0 bg-white lg:hidden z-50">
@@ -206,33 +231,28 @@
         </div>
     </nav>
 
-    <!-- Pesquisar Page -->
-    <section id="home" class="page active bg-white min-h-screen flex flex-col items-center p-4">
-        <!-- Language Selection Button -->
-        <button id="languageButton" class="bg-green-500 text-white py-2 px-4 rounded-full hover:bg-green-600 transition duration-300 ease-in-out flex items-center">
-            <span id="currentLanguage" class="mr-2" data-i18n="currentLanguage">🇵🇹</span>
-            <i class="fas fa-chevron-down ml-2"></i>
-        </button>
-
-        <!-- Language Selection Modal -->
-        <div id="languageModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
-            <div class="bg-white rounded-lg p-6 w-80 relative">
-                <button id="closeModal" class="absolute top-2 right-2 text-gray-600 hover:text-gray-800 transition duration-300 ease-in-out">
-                    <i class="fas fa-times"></i>
-                </button>
-                <ul>
-                    <li>
-                        🇵🇹 <button onclick="changeLanguage('pt')" class="w-auto font-bold text-left py-2" data-i18n="portuguese">Português</button>
-                    </li>
-                    <li>
-                        🇬🇧 <button onclick="changeLanguage('en')" class="w-auto font-bold text-left py-2" data-i18n="english">English</button>
-                    </li>
-                    <li>
-                        🇪🇸 <button onclick="changeLanguage('es')" class="w-auto font-bold text-left py-2" data-i18n="spanish">Español</button>
-                    </li>
-                </ul>
-            </div>
+    <!-- Language Selection Modal -->
+    <div id="languageModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg p-6 w-80 relative">
+            <button id="closeModal" class="absolute top-2 right-2 text-gray-600 hover:text-gray-800 transition duration-300 ease-in-out">
+                <i class="fas fa-times"></i>
+            </button>
+            <ul>
+                <li>
+                    🇵🇹 <button onclick="changeLanguage('pt')" class="w-auto font-bold text-left py-2" data-i18n="portuguese">Português</button>
+                </li>
+                <li>
+                    🇬🇧 <button onclick="changeLanguage('en')" class="w-auto font-bold text-left py-2" data-i18n="english">English</button>
+                </li>
+                <li>
+                    🇪🇸 <button onclick="changeLanguage('es')" class="w-auto font-bold text-left py-2" data-i18n="spanish">Español</button>
+                </li>
+            </ul>
         </div>
+    </div>
+
+    <!-- Pesquisar Page -->
+    <section id="home" class="page active bg-white flex flex-col items-center p-4">       
         
         <div class="w-full max-w-md mx-auto bg-white rounded-3xl shadow-lg overflow-hidden mt-4">
             <!-- Ad Banner -->
@@ -322,7 +342,7 @@
     </section>
 
     <!-- Routes Page -->
-    <section id="routes" class="page hidden bg-white min-h-screen flex flex-col items-center p-4">
+    <section id="routes" class="page hidden bg-white flex flex-col items-center p-4">
         <div class="w-full max-w-md mx-auto bg-white rounded-3xl shadow-lg overflow-hidden mt-4">
             <!-- Ad Banner -->
             <a href="https://ad.saomiguelbus.com" target="_blank" class="block">
@@ -401,7 +421,7 @@
     </section>
 
     <!-- Advert Page -->
-    <section id="advert" class="page hidden bg-white min-h-screen flex flex-col items-center p-4">
+    <section id="advert" class="page hidden bg-white flex flex-col items-center p-4">
         <h2 class="text-2xl text-center font-bold mb-4" data-i18n="advertiseTitle">Anuncie em São Miguel Bus</h2>
         <p class="text-center text-lg mb-6" data-i18n="advertiseSubtitle">Anuncie na nossa aplicação a partir de X euros por mês.</p>
         <div class="bg-green-100 rounded-lg p-6 shadow-md max-w-md mx-auto mb-6">
