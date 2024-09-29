@@ -533,6 +533,40 @@
             });
         });
 
+        // Add event listener for btnRoutes
+        document.getElementById('btnRoutes').addEventListener('click', function() {
+            const origin = document.getElementById('origin').value;
+            const destination = document.getElementById('destination').value;
+            const date = document.getElementById('datePicker').value;
+            const time = document.getElementById('time').value;
+
+            // Switch to the Directions page
+            showPage('routes');
+
+            // Update the form values on the Directions page
+            document.getElementById('originStepByStep').value = origin;
+            document.getElementById('destinationStepByStep').value = destination;
+            document.getElementById('datePickerStepByStep').value = date;
+            document.getElementById('timeStepByStep').value = time;
+        });
+
+        // Add event listener for btnRoutesStepByStep
+        document.getElementById('btnRoutesStepByStep').addEventListener('click', function() {
+            const origin = document.getElementById('originStepByStep').value;
+            const destination = document.getElementById('destinationStepByStep').value;
+            const date = document.getElementById('datePickerStepByStep').value;
+            const time = document.getElementById('timeStepByStep').value;
+
+            // Switch to the home page
+            showPage('home');
+
+            // Update the form values on the Directions page
+            document.getElementById('origin').value = origin;
+            document.getElementById('destination').value = destination;
+            document.getElementById('datePicker').value = date;
+            document.getElementById('time').value = time;
+        });
+
         // Toggle Navigation Menu on Mobile Top Navbar if implemented
         document.getElementById('nav-toggle')?.addEventListener('click', function() {
             const mainNav = document.getElementById('mainNav');
