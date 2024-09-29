@@ -1,4 +1,4 @@
-let currentLanguage = 'pt';
+let currentLanguage = getCookie('language') || 'pt';
 let translations = {};
 
 async function loadTranslations(lang) {
@@ -78,13 +78,39 @@ function updatePageContent() {
 
 function changeLanguage(lang) {
     loadTranslations(lang);
+    setCookie('language', lang, 30); // Save language preference for 30 days
     const languageModal = document.getElementById('languageModal');
     if (languageModal) {
         languageModal.style.display = 'none';
     }
+    window.location.reload();
 }
 
 // Initial load
 document.addEventListener('DOMContentLoaded', () => {
     loadTranslations(currentLanguage);
 });
+
+// js/cookie.js
+function setCookie(name, value, days) {
+    const d = new Date();
+    d.setTime(d.getTime() + (days*24*60*60*1000));
+    const expires = "expires="+ d.toUTCString();
+    document.cookie = `${name}=${value};${expires};path=/`;
+}
+
+function getCookie(name) {
+    const cname = name + "=";
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const ca = decodedCookie.split(';');
+    for(let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(cname) === 0) {
+            return c.substring(cname.length, c.length);
+        }
+    }
+    return "";
+}

@@ -4,35 +4,57 @@ document.addEventListener("DOMContentLoaded", function() {
     searchBtn.addEventListener('click', function(event) {
         event.preventDefault();  // Prevents the default form submission action
 
-        const originInput = document.getElementById('origin');
-        const destinationInput = document.getElementById('destination');
-        const day = checkDayType();
-        const time = document.getElementById('time').value;
-
-        // Remove any existing error messages
-        originInput.setCustomValidity('');
-        destinationInput.setCustomValidity('');
-
-        // Check if origin or destination is empty
-        if (!originInput.value) {
-            originInput.setCustomValidity(t('originRequired')); // Use translation function
-            originInput.reportValidity();
-            return;
+        const parameters = getSearchParameters();
+        if (parameters) {
+            searchRoutes(parameters.origin, parameters.destination, parameters.day, parameters.time);
         }
-        if (!destinationInput.value) {
-            destinationInput.setCustomValidity(t('destinationRequired')); // Use translation function
-            destinationInput.reportValidity();
-            return;
-        }
-
-        // Call your function here, passing the origin and destination
-        searchRoutes(originInput.value, destinationInput.value, day, time);
     });
+
+    const routesBtn = document.getElementById('btnRoutes');
+    routesBtn.addEventListener('click', function(event) {
+        event.preventDefault();  // Prevents the default form submission action
+
+        const parameters = getSearchParameters();
+        if (parameters) {
+            searchStepByStep(parameters.origin, parameters.destination, parameters.day, parameters.time);
+        }
+    });
+
     loadAdBanner('home');
 });
 
+function getSearchParameters() {
+    const originInput = document.getElementById('origin');
+    const destinationInput = document.getElementById('destination');
+    const day = checkDayType();
+    const time = document.getElementById('time').value;
+
+    // Remove any existing error messages
+    originInput.setCustomValidity('');
+    destinationInput.setCustomValidity('');
+
+    // Check if origin or destination is empty
+    if (!originInput.value) {
+        originInput.setCustomValidity(t('originRequired')); // Use translation function
+        originInput.reportValidity();
+        return;
+    }
+    if (!destinationInput.value) {
+        destinationInput.setCustomValidity(t('destinationRequired')); // Use translation function
+        destinationInput.reportValidity();
+        return;
+    }
+
+    return {
+        origin: originInput.value,
+        destination: destinationInput.value,
+        day: day,
+        time: time
+    };
+}
+
 function fetchAndPopulateStops() {
-    const url = 'https://saomiguelbus-api.herokuapp.com/api/v1/stops';
+    const url = 'https://saomiguelbus-api.herokuapp.com/api/v2/stops';
     fetch(url, {
         method: 'GET',
         headers: {
@@ -66,7 +88,7 @@ function searchRoutes(origin, destination, day, time) {
     document.getElementById('noRoutesMessage').style.display = 'none';
 
     const parameters = getUrlParameters(origin, destination, day, time);
-    const url = 'https://saomiguelbus-api.herokuapp.com/api/v1/route?origin=' + encodeURIComponent(parameters.origin) 
+    const url = 'https://saomiguelbus-api.herokuapp.com/api/v2/route?origin=' + encodeURIComponent(parameters.origin) 
     + '&destination=' + encodeURIComponent(parameters.destination) 
     + '&day=' + encodeURIComponent(parameters.day) 
     + '&start=' + encodeURIComponent(parameters.time);
@@ -75,6 +97,14 @@ function searchRoutes(origin, destination, day, time) {
     if (window.location.hostname != "localhost" && window.location.hostname != "127.0.0.1")
         postToStats(parameters);
     loadAdBanner('home');
+}
+
+function searchStepByStep(origin, destination, day, time) {
+    const parameters = getUrlParameters(origin, destination, day, time);
+    const url = 'https://saomiguelbus-api.herokuapp.com/api/v2/route?origin=' + encodeURIComponent(parameters.origin) 
+    + '&destination=' + encodeURIComponent(parameters.destination) 
+    + '&day=' + encodeURIComponent(parameters.day) 
+    + '&start=' + encodeURIComponent(parameters.time);
 }
 
 function fetchAndDisplayRoutes(url, parameters) {
@@ -186,7 +216,6 @@ function displayRoutes(routes, originStop) {
         }
 
         const stopsArray = Object.entries(stops);   
-    
         // Get the first and last stops
         const firstStop = stopsArray[0];
         const lastStop = stopsArray[stopsArray.length - 1];
