@@ -50,14 +50,14 @@ function searchRoutes(origin, destination, day, time) {
     document.getElementById('noRoutesMessage').style.display = 'none';
 
     const parameters = getUrlParameters(origin, destination, day, time);
-    const url = 'https://saomiguelbus-api.herokuapp.com/api/v1/route?origin=' + parameters.origin 
-    + '&destination=' + parameters.destination 
-    + '&day=' + parameters.day 
-    + '&start=' + parameters.time
+    const url = 'https://saomiguelbus-api.herokuapp.com/api/v1/route?origin=' + encodeURIComponent(parameters.origin) 
+    + '&destination=' + encodeURIComponent(parameters.destination) 
+    + '&day=' + encodeURIComponent(parameters.day) 
+    + '&start=' + encodeURIComponent(parameters.time);
     fetchAndDisplayRoutes(url, parameters);
     // postToStats if not in localhost 
     if (window.location.hostname != "localhost" && window.location.hostname != "127.0.0.1")
-        postToStats(parameters)
+        postToStats(parameters);
     loadAdBanner('home');
 }
 
@@ -82,7 +82,7 @@ function fetchAndDisplayRoutes(url, parameters) {
 }
 
 function postToStats(parameters) {
-    const url = `https://saomiguelbus-api.herokuapp.com/api/v1/stat?request=get_route&origin=${parameters.origin}&destination=${parameters.destination}&time=${parameters.time}&language=${LANG}&platform=web&day=${parameters.day}`;
+    const url = `https://saomiguelbus-api.herokuapp.com/api/v1/stat?request=get_route&origin=${encodeURIComponent(parameters.origin)}&destination=${encodeURIComponent(parameters.destination)}&time=${encodeURIComponent(parameters.time)}&language=${encodeURIComponent(currentLanguage)}&platform=web&day=${encodeURIComponent(parameters.day)}`;
     fetch(url, {
         method: 'POST',
         headers: {
@@ -99,17 +99,17 @@ function postToStats(parameters) {
     });
 }
 
-
 function displayNoRoutesMessage(parameters) {
     const noRoutesDiv = document.getElementById('noRoutesMessage');
+    const message = t('noRoutesMessage').replace('{origin}', parameters.origin).replace('{destination}', parameters.destination);
     noRoutesDiv.innerHTML = `
         <div class="container mx-auto px-4 mt-4">
             <div class="bg-red-100 shadow-md rounded-lg p-6">
                 <div class="flex flex-col items-center">
                     <h3 class="text-xl font-semibold mb-2 text-center">
-                        ${LANGS[LANG].No_routes1} <span class="font-bold">${parameters.origin}</span> ${LANGS[LANG].No_routes2} <span class="font-bold">${parameters.destination}</span>
+                        ${message}
                     </h3>
-                    <p class="text-gray-600 text-center">${LANGS[LANG].No_routes_subtitle}</p>
+                    <p class="text-gray-600 text-center">${t('noRoutesSubtitle')}</p>
                 </div>
             </div>
         </div>
@@ -141,8 +141,8 @@ function displayRoutes(routes, originStop) {
         const stopsObj = stringToJSON(route.stops);
         const prepositions = ['de', 'da', 'do', 'dos', 'das'];
 
-        originStop = originStop.split(' ').map(word => prepositions.includes(word) ? word : word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-        destinationStop = routes[0].destination.split(' ').map(word => prepositions.includes(word) ? word : word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        originStop = originStop.split(' ').map(word => prepositions.includes(word.toLowerCase()) ? word : word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        const destinationStop = route.destination.split(' ').map(word => prepositions.includes(word.toLowerCase()) ? word : word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 
         // Filter stops to only include stops between the origin and destination
         let stops = {};
@@ -179,8 +179,8 @@ function displayRoutes(routes, originStop) {
         let stopsHtml = `
             <div class="stop text-lg font-bold mb-2">${firstStop[0]}: ${firstStop[1]}</div>
             <div class="transfer flex items-center mb-2" id="transfer-info">
-                <span class="arrow-icon text-green-500 mr-2">⬇</span> 
-                ${stopsArray.length > 2 ? `<span class="transfer-info text-sm text-gray-600">+${stopsArray.length - 2} ${stopsArray.length - 2 === 1 ? LANGS[LANG].Transfer : LANGS[LANG].Transfers}</span>` : ''} 
+                <span class="arrow-icon text-green-500 mr-2"><i class="fas fa-arrow-down"></i></span> 
+                ${stopsArray.length > 2 ? `<span class="transfer-info text-sm text-gray-600">+${stopsArray.length - 2} ${stopsArray.length - 2 === 1 ? t('transfer') : t('transfers')}</span>` : ''} 
             </div>
             <div class="intermediate-stops max-h-0 overflow-hidden transition-max-height duration-500 ease-out">
                 ${stopsArray.slice(1, stopsArray.length - 1).map(([stop, time]) => `<div class="stop ml-4 text-base text-gray-700 mb-1">${stop}: ${time}</div>`).join('')}
@@ -192,11 +192,11 @@ function displayRoutes(routes, originStop) {
             <div class="bg-white shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-300">
                 <div class="route-header flex items-center justify-between mb-4 pb-2 border-b border-gray-200">
                     <div class="flex items-center">
-                        <div class="route-icon text-2xl mr-2">🚌</div>
+                        <div class="route-icon text-2xl mr-2"><i class="fas fa-bus"></i></div>
                         <div class="route-number text-xl font-semibold text-green-600">${route.route}</div>
                     </div>
                     <div class="total-time flex items-center">
-                        <span class="text-gray-500 mr-1">🕒</span>
+                        <span class="text-gray-500 mr-1"><i class="far fa-clock"></i></span>
                         <span class="text-lg font-medium">${calculateTotalTravelTime(firstStop[1], lastStop[1])}</span>
                     </div>
                 </div>
@@ -251,7 +251,7 @@ function loadAdBanner(on) {
                 } else {
                     hrefValue = ad.target;
                 }
-                // Assuming ad object has properties like 'target', 'image', 'entity', 'id'
+                // Assuming ad object has properties like 'target', 'media', 'entity', 'id'
                 const adBannerHTML = `
                     <div class="container mx-auto" id="tm-section-2">
                         <div class="flex justify-center">
@@ -274,7 +274,7 @@ function loadAdBanner(on) {
                 if (adImage) {
                     document.getElementById('ad-clickable').addEventListener('click', function(event) {
                         const adId = adImage.getAttribute("data-id");
-                        const URL = "https://saomiguelbus-api.herokuapp.com/api/v1/ad/click?id="+ adId
+                        const URL = "https://saomiguelbus-api.herokuapp.com/api/v1/ad/click?id="+ encodeURIComponent(adId);
                         fetch(URL, {
                             method: 'POST',
                             headers: {
@@ -291,7 +291,6 @@ function loadAdBanner(on) {
         })
         .catch(error => console.error('Error loading ad banner:', error));
 }
-
 
 function stringToJSON(string) {
     const validJsonString = string.replace(/'/g, '"');
