@@ -17,105 +17,63 @@ function t(key) {
 }
 
 function updatePageContent() {
-    // Update the page title
-    const pageTitle = document.getElementById('pageTitle');
-    if (pageTitle && translations['pageTitle']) {
-        pageTitle.innerText = translations['pageTitle'];
-    }
-
-    // Update navbar labels
-    const navBarSearchLabel = document.getElementById('navBarSearchLabel');
-    if (navBarSearchLabel && translations['navBarSearchLabel']) {
-        navBarSearchLabel.innerText = translations['navBarSearchLabel'];
-    }
-    const navBarRoutesLabel = document.getElementById('navBarRoutesLabel');
-    if (navBarRoutesLabel && translations['navBarRoutesLabel']) {
-        navBarRoutesLabel.innerText = translations['navBarRoutesLabel'];
-    }
-    const navBarAdvertLabel = document.getElementById('navBarAdvertLabel');
-    if (navBarAdvertLabel && translations['navBarAdvertLabel']) {
-        navBarAdvertLabel.innerText = translations['navBarAdvertLabel'];
-    }
-    const navBarInfoLabel = document.getElementById('navBarInfoLabel');
-    if (navBarInfoLabel && translations['navBarInfoLabel']) {
-        navBarInfoLabel.innerText = translations['navBarInfoLabel'];
-    }
-
-    // Update form placeholders
-    const originInput = document.getElementById('origin');
-    if (originInput && translations['originPlaceholder']) {
-        originInput.placeholder = translations['originPlaceholder'];
-    }
-
-    const destinationInput = document.getElementById('destination');
-    if (destinationInput && translations['destinationPlaceholder']) {
-        destinationInput.placeholder = translations['destinationPlaceholder'];
-    }
-
-    // Update the day select options
-    const daySelect = document.getElementById('day');
-    if (daySelect) {
-        const dayOptions = daySelect.options;
-        for (let i = 0; i < dayOptions.length; i++) {
-            const option = dayOptions[i];
-            switch(option.value) {
-                case '1':
-                    option.text = translations['weekday'] || option.text;
-                    break;
-                case '2':
-                    option.text = translations['saturday'] || option.text;
-                    break;
-                case '3':
-                    option.text = translations['sunday'] || option.text;
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
-    // Update button text
-    const btnSubmit = document.getElementById('btnSubmit');
-    if (btnSubmit && translations['searchButton']) {
-        btnSubmit.innerText = translations['searchButton'];
-    }
-
-    // Update No Routes Message
-    const noRoutesMessage = document.getElementById('noRoutesMessage');
-    if (noRoutesMessage && translations['noRoutesMessage']) {
-        noRoutesMessage.innerText = translations['noRoutesMessage'];
-    }
-
-    // Update additional static text elements
-    const staticElements = [
-        { id: 'navBarContactLabel', key: 'navBarContactLabel' },
-        { id: 'infoHeader', key: 'infoHeader' },
-        { id: 'advertHeader', key: 'advertHeader' },
-        // Add more elements as needed
-    ];
-
-    staticElements.forEach(element => {
-        const elem = document.getElementById(element.id);
-        if (elem && translations[element.key]) {
-            elem.innerText = translations[element.key];
+    // Update elements with data-i18n attribute (innerText)
+    const textElements = document.querySelectorAll('[data-i18n]');
+    textElements.forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        const translation = t(key);
+        if (translation) {
+            element.innerText = translation;
         }
     });
 
-    // Update placeholders or other attributes if needed
-    // Example for placeholders (if any additional)
-    const placeholderElements = [
-        { id: 'anotherInputId', key: 'anotherPlaceholderKey' },
-        // Add more as needed
-    ];
-
+    // Update elements with data-i18n-placeholder attribute (placeholders)
+    const placeholderElements = document.querySelectorAll('[data-i18n-placeholder]');
     placeholderElements.forEach(element => {
-        const elem = document.getElementById(element.id);
-        if (elem && translations[element.key]) {
-            elem.placeholder = translations[element.key];
+        const key = element.getAttribute('data-i18n-placeholder');
+        const translation = t(key);
+        if (translation) {
+            element.placeholder = translation;
         }
     });
 
-    // Update any other dynamic content as required
+    // Update elements with data-i18n-html attribute (innerHTML)
+    const htmlElements = document.querySelectorAll('[data-i18n-html]');
+    htmlElements.forEach(element => {
+        const key = element.getAttribute('data-i18n-html');
+        const translation = t(key);
+        if (translation) {
+            element.innerHTML = translation;
+        }
+    });
+
+    // Update elements with data-i18n-title attribute (title attribute)
+    const titleElements = document.querySelectorAll('[data-i18n-title]');
+    titleElements.forEach(element => {
+        const key = element.getAttribute('data-i18n-title');
+        const translation = t(key);
+        if (translation) {
+            element.title = translation;
+        }
+    });
+
+    // Update <option> elements within <select> elements
+    const selectElements = document.querySelectorAll('select[data-i18n]');
+    selectElements.forEach(select => {
+        const key = select.getAttribute('data-i18n');
+        const translation = t(key);
+        if (translation) {
+            select.options[0].text = translation; // Update the select label
+        }
+        const options = select.querySelectorAll('option[data-i18n]');
+        options.forEach(option => {
+            const optionKey = option.getAttribute('data-i18n');
+            const optionTranslation = t(optionKey);
+            if (optionTranslation) {
+                option.text = optionTranslation; // Update the option text
+            }
+        });
+    });
 }
 
 function changeLanguage(lang) {
