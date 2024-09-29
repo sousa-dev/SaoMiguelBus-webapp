@@ -185,21 +185,21 @@
     </div>
     
     <!-- Bottom Navigation Bar for Mobile -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-white shadow-lg lg:hidden">
-        <div class="flex justify-around">
-            <a href="#" class="flex flex-col items-center justify-center text-gray-600 hover:text-green-600 py-2" data-target="home">
+    <nav class="fixed bottom-0 left-0 right-0 bg-white lg:hidden z-50">
+        <div class="flex">
+            <a href="#" class="flex flex-col items-center justify-center text-gray-600 hover:text-green-600 py-2 flex-1" data-target="home">
                 <i class="fas fa-bus text-xl"></i>
                 <span id="navBarSearchLabel" class="text-xs" data-i18n="navBarSearchLabel">Rotas</span>
             </a>
-            <a href="#" class="flex flex-col items-center justify-center text-gray-600 hover:text-green-600 py-2" data-target="routes">
+            <a href="#" class="flex flex-col items-center justify-center text-gray-600 hover:text-green-600 py-2 flex-1" data-target="routes">
                 <i class="fas fa-route text-xl"></i>
                 <span id="navBarRoutesLabel" class="text-xs" data-i18n="navBarRoutesLabel">Direções</span>
             </a>
-            <a href="#" class="flex flex-col items-center justify-center text-gray-600 hover:text-green-600 py-2" data-target="advert">
+            <a href="#" class="flex flex-col items-center justify-center text-gray-600 hover:text-green-600 py-2 flex-1" data-target="advert">
                 <i class="fas fa-ad text-xl"></i>
                 <span id="navBarAdvertLabel" class="text-xs" data-i18n="navBarAdvertLabel">Anúncios</span>
             </a>
-            <a href="#" class="flex flex-col items-center justify-center text-gray-600 hover:text-green-600 py-2" data-target="info">
+            <a href="#" class="flex flex-col items-center justify-center text-gray-600 hover:text-green-600 py-2 flex-1" data-target="info">
                 <i class="fas fa-info-circle text-xl"></i>
                 <span id="navBarInfoLabel" class="text-xs" data-i18n="navBarInfoLabel">Info</span>
             </a>
@@ -465,22 +465,55 @@
 
     <!-- Info Page -->
     <section id="info" class="page hidden bg-white min-h-screen flex flex-col items-center p-4">
-        <div class="w-full max-w-md">
+        <div class="w-full max-w-md mx-auto">
             <div class="bg-gray-100 rounded-lg p-4 mb-4 flex items-center">
-                <span class="iconify text-3xl mr-4" data-icon="mdi:code-braces"></span>
-                <div>
-                    <h3 class="font-semibold" data-i18n="infoDevelopedBy">Esta aplicação foi desenvolvida por Sousa Dev</h3>
-                </div>
+                <img src="static/img/logo.png" alt="Logo" class="w-8 h-8 mr-4">
+                <div><h3 class="font-semibold" data-i18n="infoDevelopedBy">Esta aplicação foi desenvolvida por</h3> <a href="https://www.sousadev.com" target="_blank" class="text-blue-500">Sousa Dev</a></div>
             </div>
 
-            <a href="#" class="block bg-white border border-gray-200 rounded-lg p-4 mb-4 flex items-center justify-between hover:bg-gray-50" data-i18n-title="infoNotDevelopedByBusCompanies">
+            <a href="#" class="block bg-white border border-gray-200 rounded-lg p-4 mb-4 flex items-center justify-between hover:bg-gray-50">
                 <div class="flex items-center">
                     <span class="iconify text-3xl mr-4" data-icon="mdi:alert-circle-outline"></span>
                     <h3 class="font-semibold" data-i18n="infoNotDevelopedByBusCompanies">Aplicação Não Desenvolvida pelas Empresas de Autocarros</h3>
                 </div>
                 <span class="iconify" data-icon="mdi:chevron-right"></span>
             </a>
-            <!-- ...(about 166 lines omitted)... -->
+
+            <a href="#" class="block bg-white border border-gray-200 rounded-lg p-4 mb-4 flex items-center justify-between hover:bg-gray-50">
+                <div class="flex items-center">
+                    <span class="iconify text-3xl mr-4" data-icon="mdi:bus"></span>
+                    <h3 class="font-semibold" data-i18n="contactBusCompanies">Contato das Companhias de Autocarros</h3>
+                </div>
+                <span class="iconify" data-icon="mdi:chevron-right"></span>
+            </a>
+
+            <a href="#" class="block bg-white border border-gray-200 rounded-lg p-4 mb-4 flex items-center justify-between hover:bg-gray-50">
+                <div class="flex items-center">
+                    <span class="iconify text-3xl mr-4" data-icon="mdi:help-circle-outline"></span>
+                    <h3 class="font-semibold" data-i18n="faqTitle">Perguntas Frequentes</h3>
+                </div>
+                <span class="iconify" data-icon="mdi:chevron-right"></span>
+            </a>
+
+            <a href="#" class="block bg-white border border-gray-200 rounded-lg p-4 mb-4 flex items-center justify-between hover:bg-gray-50">
+                <div class="flex items-center">
+                    <span class="iconify text-3xl mr-4" data-icon="mdi:star-outline"></span>
+                    <h3 class="font-semibold" data-i18n="rateApp">Avalie a App</h3>
+                </div>
+                <span class="iconify" data-icon="mdi:chevron-right"></span>
+            </a>
+
+            <a href="#" class="block bg-white border border-gray-200 rounded-lg p-4 mb-4 flex items-center justify-between hover:bg-gray-50">
+                <div class="flex items-center">
+                    <span class="iconify text-3xl mr-4" data-icon="mdi:currency-usd"></span>
+                    <h3 class="font-semibold" data-i18n="supportCreator">Apoie o Criador</h3>
+                </div>
+                <span class="iconify" data-icon="mdi:chevron-right"></span>
+            </a>
+
+            <a href="#" class="text-blue-500 text-center block mt-4" data-i18n="contactDeveloper">Contate o Desenvolvedor</a>
+
+            <p class="text-center text-gray-500 mt-8" data-i18n="footerCopyright">Copyright © 2023 Sousa Dev</p>
         </div>
     </section>
     
