@@ -605,6 +605,11 @@
                     });
                 });
             });
+
+            // Check if the user is on a mobile device
+            if (/Mobi|Android/i.test(navigator.userAgent)) {
+                alert('Instale o aplicativo São Miguel Bus para uma melhor experiência!');
+            }
         });
 
         // Add event listener for btnRoutes
