@@ -10,6 +10,7 @@ document.getElementById('btnSubmitStepByStep').addEventListener('click', functio
 });
 
 function searchStepByStep(origin, destination, day, time) {
+    showLoadingSpinner();
     const parameters = getUrlParameters(origin, destination, day, time);
     const languageCode = getCookie('language') || 'pt';
     if (languageCode === 'pt') {
@@ -36,9 +37,11 @@ function fetchGMaps(url) {
     .then(response => response.json())
     .then(data => {
         displayDirections(data);
+        hideLoadingSpinner();
     })
     .catch(error => {
         console.error('Error:', error);
+        hideLoadingSpinner();
     });
 }
 

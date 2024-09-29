@@ -73,6 +73,7 @@ function fetchAndPopulateStops() {
 }
 
 function searchRoutes(origin, destination, day, time) {
+    showLoadingSpinner();
     // Hide the routes container and the no routes message
     document.getElementById('routesContainer').style.display = 'none';
     document.getElementById('noRoutesMessage').style.display = 'none';
@@ -97,16 +98,15 @@ function fetchAndDisplayRoutes(url, parameters) {
         },
         mode: 'cors',  // Ensure CORS mode is enabled
     })
-        .then(response => response.json())
-        .then(data => {
-            if (data && data.length > 0) {
-                displayRoutes(data, parameters.origin);
-            } else {
-                displayNoRoutesMessage(parameters);
-            }
-            document.getElementById('placeHolderForAd').scrollIntoView({ behavior: 'smooth' });
-        })
-        .catch(error => console.error('Error fetching routes:', error));
+    .then(response => response.json())
+    .then(data => {
+        displayRoutes(data, parameters.origin);
+        hideLoadingSpinner();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        hideLoadingSpinner();
+    });
 }
 
 function postToStats(parameters) {

@@ -258,6 +258,10 @@
         </div>
     </div>
 
+    <div id="loadingSpinner" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+        <div class="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-green-500"></div>
+    </div>
+
     <!-- Pesquisar Page -->
     <section id="home" class="page active bg-white flex flex-col items-center p-2">       
         <div class="w-full max-w-md mx-auto bg-white rounded-3xl shadow-lg overflow-hidden mt-4 relative">
@@ -550,6 +554,13 @@
     <script src="js/i18n.js" defer></script>
     <!-- JavaScript Logic -->
     <script>
+        function showLoadingSpinner() {
+            document.getElementById('loadingSpinner').classList.remove('hidden');
+        }
+
+        function hideLoadingSpinner() {
+            document.getElementById('loadingSpinner').classList.add('hidden');
+        }
         function toggleSpoiler() {
             var spoilerContent = document.getElementById('spoilerContent');
             var spoilerArrow = document.getElementById('spoilerArrow');
