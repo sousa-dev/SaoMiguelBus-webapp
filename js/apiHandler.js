@@ -281,10 +281,10 @@ function loadAdBanner(on) {
                 // Assuming ad object has properties like 'target', 'media', 'entity', 'id'
                 const adBannerHTML = `
                     <div class="container mx-auto" id="tm-section-2">
+                        <span class="absolute top-0 left-0 bg-green-500 text-white font-bold text-[10px] px-1 py-0.5 rounded-br-lg z-10">AD</span>
                         <div class="flex justify-center">
                             <div class="w-full sm:w-2/3 md:w-1/2 lg:w-1/2">
-                                <div class="ad-banner text-center p-2 relative">
-                                    <span class="absolute top-0 left-0 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-tl-lg rounded-br-lg z-10">AD</span>
+                                <div class="ad-banner text-center p-1 relative">
                                     <a href="${hrefValue}" target="_blank" id='ad-clickable'>
                                         <img src="${ad.media}" alt="${ad.entity}" class="w-full h-auto rounded-lg" id="ad-image" data-id="${ad.id}">
                                     </a>

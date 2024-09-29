@@ -59,6 +59,13 @@
     <script src="https://code.iconify.design/2/2.1.2/iconify.min.js" crossorigin="anonymous"></script>
 
     <style>
+        /* Import Poppins font */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        /* Apply Poppins font to all elements */
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
         /* Ajuste para scroll no mobile */
         @media (max-width: 1024px) {
             body {
@@ -199,7 +206,7 @@
 
 <body class="bg-white text-gray-800">
     <!-- Ad Placeholder (fixed at the top) -->
-    <div id="placeHolderForAd" class="relative border-2 border-gray-300 rounded-lg w-full mb-4 p-4">
+    <div id="placeHolderForAd" class="relative border-b-2 border-gray-300 w-full mb-1 p-1 rounded-lg">
         <!-- The ad banner will be inserted here by JavaScript -->
     </div>
 
@@ -252,10 +259,9 @@
     </div>
 
     <!-- Pesquisar Page -->
-    <section id="home" class="page active bg-white flex flex-col items-center p-4">       
-        
-        <div class="w-full max-w-md mx-auto bg-white rounded-3xl shadow-lg overflow-hidden mt-4">
-            <!-- Ad Banner -->
+    <section id="home" class="page active bg-white flex flex-col items-center p-2">       
+        <div class="w-full max-w-md mx-auto bg-white rounded-3xl shadow-lg overflow-hidden mt-4 relative">
+            <span class="absolute top-0 left-0 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-tl-lg rounded-br-lg z-10">AD</span>          
             <a href="https://ad.saomiguelbus.com" target="_blank" class="block">
                 <div class="bg-green-600 text-white p-4 text-center">
                     <p class="font-bold" data-i18n="adBannerTitle">ANUNCIE AQUI</p>
@@ -342,9 +348,9 @@
     </section>
 
     <!-- Routes Page -->
-    <section id="routes" class="page hidden bg-white flex flex-col items-center p-4">
-        <div class="w-full max-w-md mx-auto bg-white rounded-3xl shadow-lg overflow-hidden mt-4">
-            <!-- Ad Banner -->
+    <section id="routes" class="page hidden bg-white flex flex-col items-center p-2">
+        <div class="w-full max-w-md mx-auto bg-white rounded-3xl shadow-lg overflow-hidden mt-4 relative">
+            <span class="absolute top-0 left-0 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-tl-lg rounded-br-lg z-10">AD</span>          
             <a href="https://ad.saomiguelbus.com" target="_blank" class="block">
                 <div class="bg-green-600 text-white p-4 text-center">
                     <p class="font-bold" data-i18n="adBannerTitle">ANUNCIE AQUI</p>
