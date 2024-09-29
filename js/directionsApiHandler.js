@@ -11,10 +11,15 @@ document.getElementById('btnSubmitStepByStep').addEventListener('click', functio
 
 function searchStepByStep(origin, destination, day, time) {
     const parameters = getUrlParameters(origin, destination, day, time);
+    const languageCode = getCookie('language') || 'pt';
+    if (languageCode === 'pt') {
+        currentLanguage = 'pt-pt';
+    }
     const url = 'https://saomiguelbus-api.herokuapp.com/api/v1/gmaps?origin=' + encodeURIComponent(parameters.origin) 
     + '&destination=' + encodeURIComponent(parameters.destination) 
     + '&day=' + encodeURIComponent(parameters.day) 
     + '&start=' + encodeURIComponent(parameters.time)
+    + '&languageCode=' + currentLanguage
     + '&key=' + 'SMBFj56xBCLc986j6odk3AK6fJa95k'
     + '&version=' + '5.0';
     fetchGMaps(url);
@@ -46,66 +51,95 @@ function displayDirections(data) {
         return;
     }
 
-    data.routes.forEach((route, routeIndex) => {
-        const routeCard = document.createElement('div');
-        routeCard.className = 'bg-white shadow-md rounded-lg p-6 mb-6';
-        routeCard.innerHTML = `<h4 class="text-2xl font-semibold mb-4">Route ${routeIndex + 1}</h4>`;
-
-        const leg = route.legs[0];
-
-        // Create a card for the overall trip
-        const tripCard = createTripCard(leg);
-        routeCard.appendChild(tripCard);
-
-        // Create cards for each step
-        leg.steps.forEach((step, index) => {
-            const stepCard = createStepCard(step, index + 1);
-            routeCard.appendChild(stepCard);
-        });
-
+    // Create cards for each route
+    data.routes.forEach((route, index) => {
+        const routeCard = createRouteCard(route, index);
         directionsContainer.appendChild(routeCard);
     });
 }
 
-function createTripCard(leg) {
+function createRouteCard(route, index) {
     const card = document.createElement('div');
-    card.className = 'bg-white shadow-md rounded-lg p-6 mb-6';
-    card.innerHTML = `
-        <h5 class="text-xl font-semibold mb-4">Trip Overview</h5>
-        <p class="mb-2"><span class="font-medium">From:</span> ${leg.start_address}</p>
-        <p class="mb-2"><span class="font-medium">To:</span> ${leg.end_address}</p>
-        <p class="mb-2"><span class="font-medium">Distance:</span> ${leg.distance.text}</p>
-        <p class="mb-2"><span class="font-medium">Duration:</span> ${leg.duration.text}</p>
-        <p class="mb-2"><span class="font-medium">Departure:</span> ${leg.departure_time.text}</p>
-        <p class="mb-2"><span class="font-medium">Arrival:</span> ${leg.arrival_time.text}</p>
+    card.className = 'bg-white mb-4 shadow-md rounded-lg overflow-hidden';
+    
+    const leg = route.legs[0];
+    
+    const header = document.createElement('div');
+    header.className = 'p-4 cursor-pointer';
+    header.innerHTML = `
+        <div class="flex items-center justify-between mb-2">
+            <h2 class="text-xl font-semibold">${leg.start_address}</h2>
+            <span class="iconify text-green-600" data-icon="mdi:crosshairs-gps"></span>
+        </div>
+        <div class="flex items-center justify-between mb-2">
+            <h2 class="text-xl font-semibold">${leg.end_address}</h2>
+        </div>
+        <div class="flex items-center justify-between text-gray-600">
+            <span>Partir às ${leg.departure_time.text}</span>
+            <span>Chegar às ${leg.arrival_time.text}</span>
+        </div>
     `;
+
+    const detailsContainer = document.createElement('div');
+    detailsContainer.className = 'hidden';
+
+    leg.steps.forEach((step, stepIndex) => {
+        const stepCard = createStepCard(step, stepIndex + 1);
+        detailsContainer.appendChild(stepCard);
+    });
+
+    card.appendChild(header);
+    card.appendChild(detailsContainer);
+
+    // Add click event to toggle details
+    header.addEventListener('click', () => {
+        detailsContainer.classList.toggle('hidden');
+    });
+
     return card;
 }
 
 function createStepCard(step, stepNumber) {
     const card = document.createElement('div');
-    card.className = 'bg-white shadow-md rounded-lg p-4 mb-4';
+    card.className = 'p-4 border-t border-gray-200';
     
+    let icon = 'mdi:bus';
+    let alertIcon = '';
+    if (step.travel_mode === 'WALKING') {
+        icon = 'mdi:walk';
+    }
+
     let stepContent = `
-        <h6 class="text-lg font-semibold mb-2">Step ${stepNumber}</h6>
-        <p class="mb-2">${step.html_instructions}</p>
-        <p class="mb-1"><span class="font-medium">Distance:</span> ${step.distance.text}</p>
-        <p class="mb-1"><span class="font-medium">Duration:</span> ${step.duration.text}</p>
+        <div class="flex items-start">
+            <span class="iconify text-3xl mr-4" data-icon="${icon}"></span>
+            <div class="flex-grow">
+                <h3 class="font-semibold">${step.html_instructions}${alertIcon}</h3>
+                <p class="text-gray-600">${step.duration.text}</p>
+            </div>
+            <span class="text-gray-600">${getArrivalTime(step)}</span>
+        </div>
     `;
 
     if (step.travel_mode === 'TRANSIT') {
         const transit = step.transit_details;
         stepContent += `
-            <p class="mb-1"><span class="font-medium">Transit:</span> ${transit.line.short_name || transit.line.name}</p>
-            <p class="mb-1"><span class="font-medium">Departure Stop:</span> ${transit.departure_stop.name}</p>
-            <p class="mb-1"><span class="font-medium">Arrival Stop:</span> ${transit.arrival_stop.name}</p>
-            <p class="mb-1"><span class="font-medium">Departure Time:</span> ${transit.departure_time.text}</p>
-            <p class="mb-1"><span class="font-medium">Arrival Time:</span> ${transit.arrival_time.text}</p>
+            <div class="ml-10 mt-2">
+                <p class="text-gray-600">Sair em ${transit.arrival_stop.name}</p>
+            </div>
         `;
     }
 
     card.innerHTML = stepContent;
     return card;
+}
+
+function getArrivalTime(step) {
+    if (step.travel_mode === 'TRANSIT') {
+        return step.transit_details.arrival_time.text;
+    }
+    // For non-transit steps, you might need to calculate this based on the departure time and duration
+    // This is a placeholder and might need adjustment
+    return '';
 }
 
 function getStepByStepSearchParameters() {
