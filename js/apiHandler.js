@@ -10,16 +10,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    const routesBtn = document.getElementById('btnRoutes');
-    routesBtn.addEventListener('click', function(event) {
-        event.preventDefault();  // Prevents the default form submission action
-
-        const parameters = getSearchParameters();
-        if (parameters) {
-            searchStepByStep(parameters.origin, parameters.destination, parameters.day, parameters.time);
-        }
-    });
-
     loadAdBanner('home');
 });
 
@@ -97,14 +87,6 @@ function searchRoutes(origin, destination, day, time) {
     if (window.location.hostname != "localhost" && window.location.hostname != "127.0.0.1")
         postToStats(parameters);
     loadAdBanner('home');
-}
-
-function searchStepByStep(origin, destination, day, time) {
-    const parameters = getUrlParameters(origin, destination, day, time);
-    const url = 'https://saomiguelbus-api.herokuapp.com/api/v2/route?origin=' + encodeURIComponent(parameters.origin) 
-    + '&destination=' + encodeURIComponent(parameters.destination) 
-    + '&day=' + encodeURIComponent(parameters.day) 
-    + '&start=' + encodeURIComponent(parameters.time);
 }
 
 function fetchAndDisplayRoutes(url, parameters) {

@@ -1,7 +1,7 @@
 {
     "pageTitle": "Horarios y Rutas de Autobuses en la Isla de São Miguel | São Miguel Bus",
-    "navBarSearchLabel": "Buscar",
-    "navBarRoutesLabel": "Rutas",
+    "navBarSearchLabel": "Rutas",
+    "navBarRoutesLabel": "Direcciones",
     "navBarAdvertLabel": "Anuncios",
     "navBarInfoLabel": "Información",
     "bannerTitle": "Buscar un Autobús",
@@ -60,5 +60,6 @@
     "portuguese": "Português",
     "english": "English",
     "spanish": "Español",
-    "currentLanguage": "🇪🇸"
+    "currentLanguage": "🇪🇸",
+    "directionsButton": "Obtener Direcciones"
 }

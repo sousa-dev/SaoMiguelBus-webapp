@@ -188,12 +188,12 @@
     <nav class="fixed bottom-0 left-0 right-0 bg-white shadow-lg lg:hidden">
         <div class="flex justify-around">
             <a href="#" class="flex flex-col items-center justify-center text-gray-600 hover:text-green-600 py-2" data-target="home">
-                <i class="fas fa-search text-xl"></i>
-                <span id="navBarSearchLabel" class="text-xs" data-i18n="navBarSearchLabel">Pesquisar</span>
+                <i class="fas fa-bus text-xl"></i>
+                <span id="navBarSearchLabel" class="text-xs" data-i18n="navBarSearchLabel">Rotas</span>
             </a>
             <a href="#" class="flex flex-col items-center justify-center text-gray-600 hover:text-green-600 py-2" data-target="routes">
                 <i class="fas fa-route text-xl"></i>
-                <span id="navBarRoutesLabel" class="text-xs" data-i18n="navBarRoutesLabel">Rotas</span>
+                <span id="navBarRoutesLabel" class="text-xs" data-i18n="navBarRoutesLabel">Direções</span>
             </a>
             <a href="#" class="flex flex-col items-center justify-center text-gray-600 hover:text-green-600 py-2" data-target="advert">
                 <i class="fas fa-ad text-xl"></i>
@@ -323,8 +323,81 @@
 
     <!-- Routes Page -->
     <section id="routes" class="page hidden bg-white min-h-screen flex flex-col items-center p-4">
-        <h2 class="text-2xl font-bold mb-4" data-i18n="routesPopularTitle">Rotas Populares</h2>
-        <!-- Add content for popular routes -->
+        <div class="w-full max-w-md mx-auto bg-white rounded-3xl shadow-lg overflow-hidden mt-4">
+            <!-- Ad Banner -->
+            <a href="https://ad.saomiguelbus.com" target="_blank" class="block">
+                <div class="bg-green-600 text-white p-4 text-center">
+                    <p class="font-bold" data-i18n="adBannerTitle">ANUNCIE AQUI</p>
+                    <p class="text-sm" data-i18n="adBannerSubtitle">Saiba mais em <span class="underline">ad.saomiguelbus.com</span></p>
+                </div>
+            </a>
+
+            <!-- Search Form -->
+            <form action="index.html" method="get" class="p-6" role="search" aria-label="Formulário de Pesquisa de Autocarros">
+                <div class="space-y-4">
+                    <div class="relative">
+                        <input name="origin" id="originStepByStep" type="text" list="origin-stops" placeholder="Origem" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" data-i18n-placeholder="originPlaceholder" required>
+                        <datalist id="origin-stops"></datalist>
+                        <svg class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                    </div>
+                
+                    <!-- Swap Button -->
+                    <button type="button" class="w-full flex justify-end items-center" onclick="swapOriginDestination()">
+                        <div class="bg-green-500 rounded-full w-8 h-8 flex items-center justify-center hover:bg-green-600 transition duration-300 ease-in-out">
+                            <i id="swapIconStepByStep" class="fas fa-exchange-alt transform rotate-90 text-white text-sm"></i>
+                        </div>
+                    </button>
+
+                    <div class="relative">
+                        <input name="destination" id="destinationStepByStep" type="text" list="destination-stops" placeholder="Destino" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" data-i18n-placeholder="destinationPlaceholder" required>
+                        <datalist id="destination-stops"></datalist>
+                        <svg class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                    </div>
+
+                    <!-- Date and Time Picker Container -->
+                    <div class="flex space-x-2 w-full max-w-md">
+                        <!-- Date Picker Input -->
+                        <div class="relative flex-grow">
+                            <input 
+                                type="date" 
+                                id="datePickerStepByStep" 
+                                name="date" 
+                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" 
+                                data-i18n="dayLabel" 
+                                onchange="checkDayType('datePickerStepByStep')"
+                            >
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                <i class="fas fa-calendar-alt"></i>
+                            </span>
+                        </div>
+
+                        <!-- Time Picker Input -->
+                        <div class="relative flex-grow">
+                            <input type="time" id="timeStepByStep" name="time" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" data-i18n-placeholder="timePlaceholder" required>
+                            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="flex space-x-2">
+                        <button type="submit" id="btnSubmitStepByStep" class="flex-grow bg-green-500 text-white py-2 rounded-full hover:bg-green-600 transition duration-300 ease-in-out" data-i18n="directionsButton">
+                            Obter Direções
+                        </button>
+                        <button type="button" id="btnRoutesStepByStep" class="bg-green-500 text-white p-2 rounded-full hover:bg-green-600 transition duration-300 ease-in-out w-10 h-10 flex items-center justify-center">
+                            <i class="fas fa-bus"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <div id="directionsContainer"></div>
+        </div>
     </section>
 
     <!-- Advert Page -->
@@ -469,17 +542,31 @@
         function swapOriginDestination() {
             const originInput = document.getElementById('origin');
             const destinationInput = document.getElementById('destination');
+            const originInputStepByStep = document.getElementById('originStepByStep');
+            const destinationInputStepByStep = document.getElementById('destinationStepByStep');
+
             const swapIcon = document.getElementById('swapIcon');
+            const swapIconStepByStep = document.getElementById('swapIconStepByStep');
             
             // Swap the values
             const temp = originInput.value;
             originInput.value = destinationInput.value;
             destinationInput.value = temp;
+
+            const tempStepByStep = originInputStepByStep.value;
+            originInputStepByStep.value = destinationInputStepByStep.value;
+            destinationInputStepByStep.value = tempStepByStep;
+
             
             // Animate the icon
             swapIcon.classList.add('rotate-icon');
             setTimeout(() => {
                 swapIcon.classList.remove('rotate-icon');
+            }, 300); // Remove the class after the animation duration
+
+            swapIconStepByStep.classList.add('rotate-icon');
+            setTimeout(() => {
+                swapIconStepByStep.classList.remove('rotate-icon');
             }, 300); // Remove the class after the animation duration
         }
 
@@ -500,8 +587,8 @@
         }
 
         // Function to determine day type and update the message
-        function checkDayType() {
-            const dateInput = document.getElementById('datePicker');
+        function checkDayType(inputId = 'datePicker') {
+            const dateInput = document.getElementById(inputId);
             const dayTypeMessage = document.getElementById('dayTypeMessage');
             
             // Get the selected date
@@ -529,21 +616,29 @@
 
         // Function to set today's date on page load
         function setTodayDate() {
-            const dateInput = document.getElementById('datePicker');
+            const datePicker = document.getElementById('datePicker');
+            const datePickerStepByStep = document.getElementById('datePickerStepByStep');
             const today = new Date();
             const year = today.getFullYear();
             const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-based
             const day = String(today.getDate()).padStart(2, '0');
             const todayStr = `${year}-${month}-${day}`;
-            dateInput.value = todayStr;
             
-            // Trigger the day type check
-            checkDayType();
+            if (datePicker) {
+                datePicker.value = todayStr;
+                checkDayType('datePicker');
+            }
+            
+            if (datePickerStepByStep) {
+                datePickerStepByStep.value = todayStr;
+                checkDayType('datePickerStepByStep');
+            }
         }
     </script>
 
     <!-- External JS Files -->
     <script src="js/apiHandler.js" defer></script>
+    <script src="js/directionsApiHandler.js" defer></script>
     <script src="js/languageModal.js" defer></script>
 </body>
 </html>

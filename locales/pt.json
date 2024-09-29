@@ -1,7 +1,7 @@
 {
     "pageTitle": "Horários e Rotas de Autocarros na Ilha de São Miguel | São Miguel Bus",
-    "navBarSearchLabel": "Pesquisar",
-    "navBarRoutesLabel": "Rotas",
+    "navBarSearchLabel": "Rotas",
+    "navBarRoutesLabel": "Direções",
     "navBarAdvertLabel": "Anúncios",
     "navBarInfoLabel": "Info",
     "bannerTitle": "Procura um Autocarro",
@@ -60,5 +60,6 @@
     "portuguese": "Português",
     "english": "English",
     "spanish": "Español",
-    "currentLanguage": "🇵🇹"
+    "currentLanguage": "🇵🇹",
+    "directionsButton": "Obter Direções"
 }

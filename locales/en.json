@@ -1,7 +1,7 @@
 {
     "pageTitle": "Bus Schedules and Routes on São Miguel Island | São Miguel Bus",
-    "navBarSearchLabel": "Search",
-    "navBarRoutesLabel": "Routes",
+    "navBarSearchLabel": "Routes",
+    "navBarRoutesLabel": "Directions",
     "navBarAdvertLabel": "Ads",
     "navBarInfoLabel": "Info",
     "bannerTitle": "Search a Bus",
@@ -60,5 +60,6 @@
     "portuguese": "Português",
     "english": "English",
     "spanish": "Español",
-    "currentLanguage": "🇬🇧"
+    "currentLanguage": "🇬🇧",
+    "directionsButton": "Get Directions"
 }
