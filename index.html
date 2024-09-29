@@ -219,8 +219,8 @@
                 
                     <!-- Swap Button -->
                     <button type="button" class="w-full flex justify-end items-center" onclick="swapOriginDestination()">
-                        <div class="bg-green-500 rounded-full pl-2 pr-1 hover:bg-green-600 transition duration-300 ease-in-out">
-                            <i id="swapIcon" class="fas fa-exchange-alt transform rotate-90 text-white text-sm mr-1"></i>
+                        <div class="bg-green-500 rounded-full w-8 h-8 flex items-center justify-center hover:bg-green-600 transition duration-300 ease-in-out">
+                            <i id="swapIcon" class="fas fa-exchange-alt transform rotate-90 text-white text-sm"></i>
                         </div>
                     </button>
 
@@ -233,31 +233,40 @@
                         </svg>
                     </div>
 
-                    <div class="flex space-x-2">
+                    <!-- Date and Time Picker Container -->
+                    <div class="flex space-x-2 w-full max-w-md">
+                        <!-- Date Picker Input -->
                         <div class="relative flex-grow">
-                            <select id="day" name="day" class="w-100 pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 appearance-none">
-                                <option value="1" id="weekday" data-i18n="weekday" selected>Dia da Semana</option>
-                                <option value="2" id="saturday" data-i18n="saturday">Sábado</option>
-                                <option value="3" id="sunday" data-i18n="sunday">Domingo/Feriado</option>
-                            </select>
-                            <svg class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                            </svg>
-                            <svg class="absolute right-3 top-2.5 h-5 w-5 text-gray-400 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                            </svg>
+                            <input 
+                                type="date" 
+                                id="datePicker" 
+                                name="date" 
+                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" 
+                                data-i18n="dayLabel" 
+                                onchange="checkDayType()"
+                            >
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                <i class="fas fa-calendar-alt"></i>
+                            </span>
                         </div>
+
+                        <!-- Time Picker Input -->
                         <div class="relative flex-grow">
                             <input type="time" id="time" name="time" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" data-i18n-placeholder="timePlaceholder" required>
-                            <svg class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                         </div>
                     </div>
 
-                    <button type="submit" id="btnSubmit" class="w-full bg-green-500 text-white py-2 rounded-full hover:bg-green-600 transition duration-300 ease-in-out" data-i18n="searchButton">
-                        Pesquisar
-                    </button>
+                    <div class="flex space-x-2">
+                        <button type="submit" id="btnSubmit" class="flex-grow bg-green-500 text-white py-2 rounded-full hover:bg-green-600 transition duration-300 ease-in-out" data-i18n="searchButton">
+                            Pesquisar
+                        </button>
+                        <button type="button" id="btnRoutes" class="bg-green-500 text-white p-2 rounded-full hover:bg-green-600 transition duration-300 ease-in-out w-10 h-10 flex items-center justify-center">
+                            <i class="fas fa-route"></i>
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -323,7 +332,7 @@
             <svg class="ml-2 h-4 w-4 transform transition-transform duration-200" id="spoilerArrow" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
             </svg>
-            <div id="spoilerContent" class="hidden mt-4 bg-white shadow-md rounded-lg w-full overflow-hidden transition-all duration-300 ease-in-out" data-i18n-html="aboutAdsContent">
+            <div id="spoilerContent" class="hidden mt-4 bg-white shadow-md rounded-lg w-full overflow-hidden transition-all duration-300 ease-in-out">
                 <div class="p-6">
                     <h4 class="text-xl font-semibold text-green-600 mb-3" data-i18n="aboutAdsTitle">Sobre os Anúncios</h4>
                     <p class="text-gray-700 leading-relaxed" data-i18n="aboutAdsParagraph1">
@@ -389,6 +398,7 @@
 
         // Page switching logic
         document.addEventListener('DOMContentLoaded', function() {
+            setTodayDate();
             const pages = document.querySelectorAll('.page');
             const navLinks = document.querySelectorAll('.bottom-0 a');
 
@@ -449,6 +459,48 @@
                     console.log('ServiceWorker registration failed:', error);
                 });
             });
+        }
+
+        // Function to determine day type and update the message
+        function checkDayType() {
+            const dateInput = document.getElementById('datePicker');
+            const dayTypeMessage = document.getElementById('dayTypeMessage');
+            
+            // Get the selected date
+            const selectedDate = new Date(dateInput.value);
+            
+            // Check if the date is valid
+            if (!isNaN(selectedDate)) {
+                const day = selectedDate.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+                
+                // Determine the day type
+                let dayTypeKey;
+                if (day === 0) {
+                    dayTypeKey = "sunday";
+                } else if (day === 6) {
+                    dayTypeKey = "saturday";
+                } else {
+                    dayTypeKey = "weekday";
+                }
+                
+                return dayTypeKey;
+            } else {
+                return null;
+            }
+        }
+
+        // Function to set today's date on page load
+        function setTodayDate() {
+            const dateInput = document.getElementById('datePicker');
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+            const day = String(today.getDate()).padStart(2, '0');
+            const todayStr = `${year}-${month}-${day}`;
+            dateInput.value = todayStr;
+            
+            // Trigger the day type check
+            checkDayType();
         }
     </script>
 

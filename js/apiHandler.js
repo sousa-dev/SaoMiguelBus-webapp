@@ -4,13 +4,29 @@ document.addEventListener("DOMContentLoaded", function() {
     searchBtn.addEventListener('click', function(event) {
         event.preventDefault();  // Prevents the default form submission action
 
-        const origin = document.getElementById('origin').value;
-        const destination = document.getElementById('destination').value;
-        const day = document.getElementById('day').value;
+        const originInput = document.getElementById('origin');
+        const destinationInput = document.getElementById('destination');
+        const day = checkDayType();
         const time = document.getElementById('time').value;
 
+        // Remove any existing error messages
+        originInput.setCustomValidity('');
+        destinationInput.setCustomValidity('');
+
+        // Check if origin or destination is empty
+        if (!originInput.value) {
+            originInput.setCustomValidity(t('originRequired')); // Use translation function
+            originInput.reportValidity();
+            return;
+        }
+        if (!destinationInput.value) {
+            destinationInput.setCustomValidity(t('destinationRequired')); // Use translation function
+            destinationInput.reportValidity();
+            return;
+        }
+
         // Call your function here, passing the origin and destination
-        searchRoutes(origin, destination, day, time);
+        searchRoutes(originInput.value, destinationInput.value, day, time);
     });
     loadAdBanner('home');
 });

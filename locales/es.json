@@ -55,5 +55,7 @@
     "transfer": "transferencia",
     "transfers": "transferencias",
     "searchBackgroundClickMessage": "Haz clic para buscar",
-    "swapButton": "Intercambiar Origen y Destino"
+    "swapButton": "Intercambiar Origen y Destino",
+    "originRequired": "Por favor, rellene el origen.",
+    "destinationRequired": "Por favor, rellene el destino."
 }
