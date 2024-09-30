@@ -61,5 +61,8 @@
     "english": "English",
     "spanish": "Español",
     "currentLanguage": "🇪🇸",
-    "directionsButton": "Obtener Direcciones"
+    "directionsButton": "Obtener Direcciones",
+    "clickToSeeDetails": "Clique para ver detalhes",
+    "operatedBy": "Operado por ",
+    "and": " y "
 }

@@ -608,33 +608,21 @@
                 });
             });
 
-            // Check if the user is on Android or iOS
-            if (/Android/i.test(navigator.userAgent)) {
-                if (confirm('Instale o aplicativo São Miguel Bus para Android para uma melhor experiência!')) {
-                    window.location.href = 'https:/saomiguelbus.com/android';
-                }
-            } else if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-                if (confirm('Instale o aplicativo São Miguel Bus para iOS para uma melhor experiência!')) {
-                    window.location.href = 'https://saomiguelbus.com/ios/';
-                }
-            }
+            // // Check if the user is on Android or iOS
+            // if (/Android/i.test(navigator.userAgent)) {
+            //     if (confirm('Instale o aplicativo São Miguel Bus para Android para uma melhor experiência!')) {
+            //         window.location.href = 'https:/saomiguelbus.com/android';
+            //     }
+            // } else if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+            //     if (confirm('Instale o aplicativo São Miguel Bus para iOS para uma melhor experiência!')) {
+            //         window.location.href = 'https://saomiguelbus.com/ios/';
+            //     }
+            // }
         });
 
         // Add event listener for btnRoutes
         document.getElementById('btnRoutes').addEventListener('click', function() {
-            const origin = document.getElementById('origin').value;
-            const destination = document.getElementById('destination').value;
-            const date = document.getElementById('datePicker').value;
-            const time = document.getElementById('time').value;
-
-            // Switch to the Directions page
-            showPage('routes');
-
-            // Update the form values on the Directions page
-            document.getElementById('originStepByStep').value = origin;
-            document.getElementById('destinationStepByStep').value = destination;
-            document.getElementById('datePickerStepByStep').value = date;
-            document.getElementById('timeStepByStep').value = time;
+            redirectToStepByStepDirections();
         });
 
         // Add event listener for btnRoutesStepByStep

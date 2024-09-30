@@ -1,3 +1,20 @@
+function redirectToStepByStepDirections() {
+    console.log('redirectToStepByStepDirections');
+    const origin = document.getElementById('origin').value;
+    const destination = document.getElementById('destination').value;
+    const date = document.getElementById('datePicker').value;
+    const time = document.getElementById('time').value;
+
+    // Switch to the Directions page
+    showPage('routes');
+
+    // Update the form values on the Directions page
+    document.getElementById('originStepByStep').value = origin;
+    document.getElementById('destinationStepByStep').value = destination;
+    document.getElementById('datePickerStepByStep').value = date;
+    document.getElementById('timeStepByStep').value = time;
+}
+
 // Set up click event listener for btnSubmitStepByStep
 document.getElementById('btnSubmitStepByStep').addEventListener('click', function(event) {
     event.preventDefault(); // Prevent form submission

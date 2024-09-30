@@ -160,6 +160,7 @@ function displayRoutes(routes, originStop) {
     });
 
     routes.forEach(route => {
+        console.log(route);
         let ignoreRoute = false;
         const routeDiv = document.createElement('div');
         routeDiv.className = 'container card w-100 center';
@@ -177,79 +178,207 @@ function displayRoutes(routes, originStop) {
         let foundOrigin = false;
         let foundDestination = false;
         for (const [stop, time] of Object.entries(stopsObj)) {
-            if (stop === originStop) {
-                foundOrigin = true;
-            }
-            if (foundOrigin) {
-                stops[stop] = time;
-            }
-            if (stop === destinationStop) {
-                if (!foundOrigin) {
-                    ignoreRoute = true;
-                    continue;
-                }
-                foundDestination = true;
-                break;
-            }
+            stops[stop] = time;
+            // if (stop === originStop) {
+            //     foundOrigin = true;
+            // }
+            // if (foundOrigin) {
+            //     stops[stop] = time;
+            // }
+            // if (stop === destinationStop) {
+            //     if (!foundOrigin) {
+            //         ignoreRoute = true;
+            //         continue;
+            //     }
+            //     foundDestination = true;
+            //     break;
+            // }
         }
 
-        if (!foundOrigin || !foundDestination || ignoreRoute) {
-            return;
-        }
+        // if (!foundOrigin || !foundDestination || ignoreRoute) {
+        //     return;
+        // }
 
         const stopsArray = Object.entries(stops);   
-        // Get the first and last stops
+        console.log(stopsArray);
         const firstStop = stopsArray[0];
         const lastStop = stopsArray[stopsArray.length - 1];
-    
-        // Generate HTML for the first and last stops and transfer information
-        let stopsHtml = `
-            <div class="stop text-lg font-bold mb-2">${firstStop[0]}: ${firstStop[1]}</div>
-            <div class="transfer flex items-center mb-2" id="transfer-info">
-                <span class="arrow-icon text-green-500 mr-2"><i class="fas fa-arrow-down"></i></span> 
-                ${stopsArray.length > 2 ? `<span class="transfer-info text-sm text-gray-600">+${stopsArray.length - 2} ${stopsArray.length - 2 === 1 ? t('transfer') : t('transfers')}</span>` : ''} 
-            </div>
-            <div class="intermediate-stops max-h-0 overflow-hidden transition-max-height duration-500 ease-out">
-                ${stopsArray.slice(1, stopsArray.length - 1).map(([stop, time]) => `<div class="stop ml-4 text-base text-gray-700 mb-1">${stop}: ${time}</div>`).join('')}
-            </div>
-            <div class="stop text-lg font-bold mt-2">${lastStop[0]}: ${lastStop[1]}</div>
-        `;
-    
+
+        console.log(firstStop);
+
+        // Calculate number of transfers
+        const transferCount = route.route.split('/').length - 1;
+        
         routeDiv.innerHTML = `
-            <div class="bg-white shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-300">
-                <div class="route-header flex items-center justify-between mb-4 pb-2 border-b border-gray-200">
+            <div id="route-${route.route}" class="bg-white shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-300">
+                <div class="route-header flex items-center justify-between mb-4">
                     <div class="flex items-center">
-                        <div class="route-icon text-2xl mr-2"><i class="fas fa-bus"></i></div>
+                        <div class="route-icon text-2xl mr-2"><i class="fa-solid fa-bus"></i></div>
                         <div class="route-number text-xl font-semibold text-green-600">${route.route}</div>
                     </div>
-                    <div class="total-time flex items-center">
-                        <span class="text-gray-500 mr-1"><i class="far fa-clock"></i></span>
-                        <span class="text-lg font-medium">${calculateTotalTravelTime(firstStop[1], lastStop[1])}</span>
+                    <div class="text-sm text-gray-600">
+                        ${transferCount > 0 ? `<i class="fa fa-shuffle mr-1"></i> ${transferCount} ${transferCount === 1 ? t('transfer') : t('transfers')}` : ''}
                     </div>
                 </div>
-                <div class="stops-summary">
-                    ${stopsHtml}
+                <div class="stops-summary flex flex-col">
+                    <div class="time-line flex items-center justify-between mb-2">
+                        <div class="time text-2xl font-bold text-center w-1/4">${firstStop[1]}</div>
+                        <div class="route-line flex-grow mx-4 relative">
+                            <div class="absolute inset-0 flex items-center">
+                                <div class="h-0.5 w-full bg-gray-300 relative dashed-line">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <span class="bg-white px-2 text-sm font-medium text-gray-500 travel-time rounded border">
+                                            ${calculateTotalTravelTime(firstStop[1], lastStop[1])}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="time text-2xl font-bold text-center w-1/4">${lastStop[1]}</div>
+                    </div>
+                    <div class="stops flex justify-between">
+                        <div class="start-stop w-1/4 pr-2">
+                            <div class="location text-center">
+                                <div class="text-base">${firstStop[0].split(' - ')[0]}</div>
+                                <div class="text-sm text-gray-600">${firstStop[0].split(' - ').slice(1).join(' - ')}</div>
+                            </div>
+                        </div>
+                        <div class="end-stop w-1/4 pl-2">
+                            <div class="location text-center">
+                                <div class="text-base">${lastStop[0].split(' - ')[0]}</div>
+                                <div class="text-sm text-gray-600">${lastStop[0].split(' - ').slice(1).join(' - ')}</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+                <div class="mt-4 text-center">
+                    <button class="expand-stops flex items-center justify-center w-full text-blue-500 hover:text-blue-700 text-base py-2">
+                        <span class="mr-2">${t('clickToSeeDetails')}</span>
+                        <span class="iconify transform transition-transform duration-300 text-xl" data-icon="mdi:chevron-down"></span>
+                    </button>
+                </div>
+                <div class="all-stops mt-4 hidden">
+                    ${stopsArray.map(([stop, time]) => `
+                        <div class="stop-item flex justify-between items-center py-1">
+                            <div class="location">
+                                <div class="text-sm">${stop.split(' - ')[0]}</div>
+                                <div class="text-xs text-gray-600">${stop.split(' - ').slice(1).join(' - ')}</div>
+                            </div>
+                            <div class="time font-medium">${time}</div>
+                        </div>
+                    `).join('')}
+                    <div class="company mt-2 text-right text-sm text-gray-300">
+                        ${(() => {
+                            const routeNumbers = route.route.split('/').map(num => parseInt(num));
+                            const operators = new Set();
+                            
+                            routeNumbers.forEach(routeNumber => {
+                                if (routeNumber >= 200 && routeNumber < 300) {
+                                    operators.add('Auto Viação Micaelense');
+                                } else if (routeNumber >= 300 && routeNumber < 400) {
+                                    operators.add('Varela & Lda.');
+                                } else if (routeNumber >= 100 && routeNumber < 200) {
+                                    operators.add('Caetano Raposo e Pereiras Lda.');
+                                }
+                            });
+                            
+                            if (operators.size > 0) {
+                                return t('operatedBy') + ' ' + Array.from(operators).join(t('and'));
+                            } else {
+                                return '';
+                            }
+                        })()}
+                    </div>
+                </div>
+                <div class="flex space-x-2 mt-2">
+                    <button type="submit" class="flex-grow bg-green-500 text-white py-2 rounded-full hover:bg-green-600 transition duration-300 ease-in-out" data-i18n="directionsButton"
+                    onclick="redirectToStepByStepDirections(event)">
+                        Obter Direções <i class="fas fa-route"></i>
+                    </button>
+                </div>
+        </div>
         `;
-    
-        const intermediateStops = routeDiv.querySelector('.intermediate-stops');
-        const transferInfo = routeDiv.querySelector('#transfer-info');
-        routeDiv.addEventListener('click', function() {
-            if (intermediateStops.style.maxHeight === '0px' || !intermediateStops.style.maxHeight) {
-                intermediateStops.style.maxHeight = intermediateStops.scrollHeight + 'px';
-                transferInfo.style.display = 'none';
+
+        // Function to toggle route details
+        function toggleRouteDetails(routeDiv) {
+            const allStopsDiv = routeDiv.querySelector('.all-stops');
+            const expandButton = routeDiv.querySelector('.expand-stops');
+            const icon = expandButton.querySelector('.iconify');
+            
+            allStopsDiv.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+            
+            // Smooth transition for expanding/collapsing
+            if (allStopsDiv.classList.contains('hidden')) {
+                allStopsDiv.style.maxHeight = '0px';
             } else {
-                intermediateStops.style.maxHeight = '0px';
-                transferInfo.style.display = 'block';
+                allStopsDiv.style.maxHeight = allStopsDiv.scrollHeight + 'px';
             }
+        }
+
+        // Add click event to expand/collapse route details
+        routeDiv.addEventListener('click', function(event) {
+            // Prevent the click event from triggering on buttons inside the card
+            if (event.target.tagName === 'BUTTON' || event.target.closest('button')) {
+                return;
+            }
+            
+            toggleRouteDetails(this);
         });
-    
+
+        // Add click event to the expand button
+        const expandButton = routeDiv.querySelector('.expand-stops');
+        expandButton.addEventListener('click', function(event) {
+            event.stopPropagation();
+            toggleRouteDetails(routeDiv);
+        });
+
+        // Update the CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            .dashed-line {
+                background-image: linear-gradient(to right, #CBD5E0 50%, transparent 50%);
+                background-size: 8px 1px;
+                background-repeat: repeat-x;
+            }
+            .travel-time {
+                position: relative;
+            }
+            .travel-time::before,
+            .travel-time::after {
+                content: '';
+                position: absolute;
+                top: 50%;
+                width: 20px;
+                height: 1px;
+                background-image: linear-gradient(to right, #CBD5E0 50%, transparent 50%);
+                background-size: 4px 1px;
+                background-repeat: repeat-x;
+            }
+            .travel-time::before {
+                right: 100%;
+                margin-right: 5px;
+            }
+            .travel-time::after {
+                left: 100%;
+                margin-left: 5px;
+            }
+            .all-stops {
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease-out;
+            }
+            .all-stops:not(.hidden) {
+                max-height: 1000px; /* Adjust this value as needed */
+            }
+        `;
+        document.head.appendChild(style);
+
         routesContainer.appendChild(routeDiv);
     });
-    
+
     routesContainer.style.display = 'block';
-    
+
     // Helper function to calculate total travel time
     function calculateTotalTravelTime(firstStopTime, lastStopTime) {
         const firstTime = firstStopTime.split('h');
@@ -341,4 +470,10 @@ function getUrlParameters(origin, destination, day, time) {
     // TODO: format the origin and destination strings to remove spaces and special characters
 
     return parameters;
+}
+
+// Add this function to handle the "Directions" button click
+function showDirections(destination) {
+    const encodedDestination = encodeURIComponent(destination);
+    window.open(`https://www.google.com/maps/dir/?api=1&destination=${encodedDestination}`, '_blank');
 }
