@@ -160,7 +160,6 @@ function displayRoutes(routes, originStop) {
     });
 
     routes.forEach(route => {
-        console.log(route);
         let ignoreRoute = false;
         const routeDiv = document.createElement('div');
         routeDiv.className = 'container card w-100 center';
@@ -200,12 +199,11 @@ function displayRoutes(routes, originStop) {
         // }
 
         const stopsArray = Object.entries(stops);   
-        console.log(stopsArray);
         const firstStop = stopsArray[0];
         const lastStop = stopsArray[stopsArray.length - 1];
 
-        console.log(firstStop);
 
+        
         // Calculate number of transfers
         const transferCount = route.route.split('/').length - 1;
         
