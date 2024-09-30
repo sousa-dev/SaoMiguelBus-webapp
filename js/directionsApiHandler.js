@@ -145,12 +145,12 @@ function createRouteCard(route, index) {
                                 <span class="bg-white px-2 text-sm font-medium text-gray-500 travel-time rounded border">
                                     ${leg.duration.text}
                                 </span>
-                                ${nTransfers > 0 ? `
-                                    <span class="bg-white px-2 text-xs font-medium text-gray-500 mt-1 flex items-center justify-center">
-                                        <i class="fa fa-shuffle mr-1"></i> ${nTransfers} ${nTransfers === 1 ? t('transfer') : t('transfers')}
-                                    </span>
-                                ` : ''}
                             </div>
+                            ${nTransfers > 0 ? `
+                                <span class="bg-white px-2 text-xs font-medium text-gray-500 mt-4 flex items-center justify-center">
+                                    <i class="fa fa-shuffle mr-1"></i> ${nTransfers} ${nTransfers === 1 ? t('transfer') : t('transfers')}
+                                </span>
+                            ` : ''}
                         </div>
                     </div>
                 </div>
