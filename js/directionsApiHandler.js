@@ -121,16 +121,15 @@ function createRouteCard(route, index) {
     const header = document.createElement('div');
     header.className = 'p-4 cursor-pointer';
     header.innerHTML = `
-        <div class="flex items-center justify-between mb-2 mt-4">
-            <div class="flex items-center">
-                <i class="fas fa-route text-green-600 mr-2"></i>
-                <span class="text-gray-600">${leg.duration.text}</span>
+        <div class="flex items-center justify-center mb-2 mt-4">
+            <div class="flex items-center justify-start flex-1">
+                <i class="fas fa-route text-green-600 mr-1"></i>
             </div>
-            <div class="flex items-center">
+            <div class="flex items-center justify-center flex-1">
                 <i class="fas fa-walking text-green-600 mr-1"></i>
                 <span class="text-gray-600">${formattedWalkDistance}</span>
             </div>
-            <div class="flex items-center">
+            <div class="flex items-center justify-end flex-1">
                 <i class="fas fa-bus text-green-600 mr-1"></i>
                 <span class="text-gray-600">${formattedBusDistance}</span>
             </div>
