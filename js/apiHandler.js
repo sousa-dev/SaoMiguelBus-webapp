@@ -291,7 +291,7 @@ function displayRoutes(routes, originStop) {
                 <div class="flex space-x-2 mt-2">
                     <button type="submit" class="flex-grow bg-green-500 text-white py-2 rounded-full hover:bg-green-600 transition duration-300 ease-in-out" data-i18n="directionsButton"
                     onclick="redirectToStepByStepDirections(event)">
-                        Obter Direções <i class="fas fa-route"></i>
+                        ${t('directionsButton')} <i class="fas fa-route"></i>
                     </button>
                 </div>
         </div>
@@ -376,20 +376,6 @@ function displayRoutes(routes, originStop) {
     });
 
     routesContainer.style.display = 'block';
-
-    // Helper function to calculate total travel time
-    function calculateTotalTravelTime(firstStopTime, lastStopTime) {
-        const firstTime = firstStopTime.split('h');
-        const lastTime = lastStopTime.split('h');
-        const firstDate = new Date(0, 0, 0, firstTime[0], firstTime[1], 0);
-        const lastDate = new Date(0, 0, 0, lastTime[0], lastTime[1], 0);
-        let diff = lastDate.getTime() - firstDate.getTime();
-        let hours = Math.floor(diff / 1000 / 60 / 60);
-        diff -= hours * 1000 * 60 * 60;
-        let minutes = Math.floor(diff / 1000 / 60);
-    
-        return `${hours > 0 ? `${hours < 10 ? '0' + hours : hours}h${minutes < 10 ? '0' + minutes : minutes}` : `${minutes} min`}`;    
-    }
 }
 
 function loadAdBanner(on) {

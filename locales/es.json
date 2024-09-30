@@ -61,5 +61,7 @@
     "directionsButton": "Obtener Direcciones",
     "clickToSeeDetails": "Clique para ver detalhes",
     "operatedBy": "Operado por ",
-    "and": " y "
+    "and": " y ",
+    "departFrom": "Sale de",
+    "arriveAt": "Para em"
 }

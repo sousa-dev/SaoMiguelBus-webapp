@@ -436,8 +436,8 @@
                     </div>
                 </div>
             </form>
-            <div id="directionsContainer"></div>
         </div>
+        <div id="directionsContainer"></div>
     </section>
 
     <!-- Advert Page -->
@@ -749,6 +749,20 @@
                 checkDayType('datePickerStepByStep');
             }
         }
+        // Helper function to calculate total travel time
+        function calculateTotalTravelTime(firstStopTime, lastStopTime) {
+            const firstTime = firstStopTime.split('h');
+            const lastTime = lastStopTime.split('h');
+            const firstDate = new Date(0, 0, 0, firstTime[0], firstTime[1], 0);
+            const lastDate = new Date(0, 0, 0, lastTime[0], lastTime[1], 0);
+            let diff = lastDate.getTime() - firstDate.getTime();
+            let hours = Math.floor(diff / 1000 / 60 / 60);
+            diff -= hours * 1000 * 60 * 60;
+            let minutes = Math.floor(diff / 1000 / 60);
+
+            return `${hours > 0 ? `${hours < 10 ? '0' + hours : hours}h${minutes < 10 ? '0' + minutes : minutes}` : `${minutes} min`}`;    
+        }
+
     </script>
 
     <!-- External JS Files -->

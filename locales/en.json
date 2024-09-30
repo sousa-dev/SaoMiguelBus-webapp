@@ -61,5 +61,7 @@
     "directionsButton": "Get Directions",
     "clickToSeeDetails": "Click to see details",
     "operatedBy": "Operated by ",
-    "and": " and "
+    "and": " and ",
+    "departFrom": "Depart from",
+    "arriveAt": "Leave at"
 }

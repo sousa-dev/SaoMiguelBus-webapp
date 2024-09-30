@@ -61,5 +61,7 @@
     "directionsButton": "Richtungen abrufen",
     "clickToSeeDetails": "Klicken Sie, um Details zu sehen",
     "operatedBy": "Betrieben von ",
-    "and": " und "
+    "and": " und ",
+    "departFrom": "Abfahrt von",
+    "arriveAt": "Verlassen bei"
 }
