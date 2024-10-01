@@ -713,6 +713,7 @@
 
         function loadViatorWidget(language) {
             const widgetContainer = document.getElementById('viatorWidget');
+            console.log(language);
             if (language === 'pt') {
                 widgetContainer.innerHTML = '<div data-vi-partner-id=P00222801 data-vi-widget-ref=W-9498a477-c822-45c2-8ac8-1a241c13a34c ></div>';
             } else if (language === 'fr') {
@@ -787,7 +788,7 @@
                 // }
                 document.getElementById('installIOSApp').classList.remove('hidden');
             }
-            loadViatorWidget();
+            loadViatorWidget(currentLanguage);
 
         });
 
