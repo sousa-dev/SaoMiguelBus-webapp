@@ -406,20 +406,23 @@
         </div>
 
         <!-- Instructional Card for Home Section -->
-        <div id="homeInstructionCard" class="bg-white border-l-4 border-blue-500 text-blue-700 p-4 rounded-lg shadow-md mb-6 mt-4 hidden" role="alert">
+        <div id="homeInstructionCard" class="bg-white border-l-4 border-blue-500 text-blue-700 p-4 rounded-lg shadow-md mb-6 mt-4 hidden sm:block max-w-xl mx-auto">
             <div class="flex items-center mb-3">
-                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <span class="font-semibold mr-4" data-i18n="homeInstructionsTitle">Instruções de Uso</span>
-                <i class="fas fa-bus"></i>
+                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span class="font-semibold mr-4 text-lg sm:text-xl" data-i18n="homeInstructionsTitle">Instruções de Uso</span>
+                <i class="fas fa-bus text-xl sm:text-2xl"></i>
             </div>
-            <p class="mb-3" data-i18n="homeInstructionsText">Insira sua origem e destino acima para procurar as rotas disponíveis.</p>
-            <div class="bg-blue-50 border-l-4 border-blue-300 p-2 rounded text-sm">
+            <p class="mb-3 text-sm sm:text-base" data-i18n="homeInstructionsText">Insira sua origem e destino acima para procurar as rotas disponíveis.</p>
+            <div class="bg-blue-50 border-l-4 border-blue-300 p-2 rounded text-sm sm:text-base">
                 <div class="flex items-center">
                     <i class="fas fa-route bg-green-500 text-white p-1 rounded-full w-6 h-6 mr-2"></i>
                     <span data-i18n="homeInstructionsText2">Clique no botão de rota acima se pretender obter direções passo a passo.</span>
                 </div>
             </div>
         </div>
+
     </section>
 
     <!-- Routes Page -->
@@ -503,14 +506,16 @@
         <div id="directionsContainer"></div>
         
         <!-- Instructional Card for Routes Section -->
-        <div id="routesInstructionCard" class="bg-white border-l-4 border-blue-500 text-blue-700 p-4 rounded-lg shadow-md mb-6 mt-4 hidden" role="alert">
+        <div id="routesInstructionCard" class="bg-white border-l-4 border-blue-500 text-blue-700 p-4 rounded-lg shadow-md mb-6 mt-4 hidden sm:block max-w-xl mx-auto">
             <div class="flex items-center mb-3">
-                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                <span class="font-semibold mr-4" data-i18n="routeInstructionsTitle">Instruções de Uso</span>
-                <i class="fas fa-route"></i>
+                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span class="font-semibold mr-4 text-lg sm:text-xl" data-i18n="routeInstructionsTitle">Instruções de Uso</span>
+                <i class="fas fa-route text-xl sm:text-2xl"></i>
             </div>
-            <p class="mb-3" data-i18n="routeInstructionsText">Insira um local de origem e de destino para receber detalhes e direções passo a passo.</p>
-            <div class="bg-blue-50 border-l-4 border-blue-300 p-2 rounded text-sm">
+            <p class="mb-3 text-sm sm:text-base" data-i18n="routeInstructionsText">Insira um local de origem e de destino para receber detalhes e direções passo a passo.</p>
+            <div class="bg-blue-50 border-l-4 border-blue-300 p-2 rounded text-sm sm:text-base">
                 <div class="flex items-center">
                     <i class="fas fa-bus bg-green-500 text-white p-1 rounded-full w-6 h-6 mr-2"></i>
                     <span data-i18n="routeInstructionsText2">Clique no botão do autocarro acima se pretender apenas procurar rotas de autocarros disponíveis.</span>
@@ -858,7 +863,7 @@
 
     <script>
         function checkScreenWidth() {
-            if (window.innerWidth > 639) {
+            if (window.innerWidth > 769) {
                 window.location.href = '/desktop';
             }
         }
