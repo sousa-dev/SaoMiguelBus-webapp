@@ -64,5 +64,11 @@
     "and": " et ",
     "departFrom": "Part de",
     "arriveAt": "S'arrête à",
-    "stepByStep": "Étape par Étape"
+    "stepByStep": "Étape par Étape",
+    "homeInstructionsTitle": "Instructions d'utilisation",
+    "homeInstructionsText": "Insérez votre origine et votre destination ci-dessus pour rechercher les itinéraires disponibles.",
+    "homeInstructionsText2": "Cliquez sur le bouton de l'itinéraire ci-dessus si vous souhaitez obtenir des directions étape par étape.",
+    "routeInstructionsTitle": "Instructions d'utilisation",
+    "routeInstructionsText": "Insérez un lieu de départ et de destination pour recevoir des détails et des directions étape par étape.",
+    "routeInstructionsText2": "Cliquez sur le bouton du bus ci-dessus si vous souhaitez uniquement rechercher des itinéraires de bus disponibles."
 }

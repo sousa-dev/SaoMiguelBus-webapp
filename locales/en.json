@@ -64,5 +64,11 @@
     "and": " and ",
     "departFrom": "Depart from",
     "arriveAt": "Leave at",
-    "stepByStep": "Step by Step"
+    "stepByStep": "Step by Step",
+    "homeInstructionsTitle": "Usage Instructions",
+    "homeInstructionsText": "Enter your origin and destination above to search for available routes.",
+    "homeInstructionsText2": "Click the route button above if you want to get step-by-step directions.",
+    "routeInstructionsTitle": "Usage Instructions",
+    "routeInstructionsText": "Enter a starting location and destination to get details and step-by-step directions.",
+    "routeInstructionsText2": "Click the bus button above if you want to search for available bus routes only."
 }

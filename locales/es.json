@@ -64,5 +64,11 @@
     "and": " y ",
     "departFrom": "Sale de",
     "arriveAt": "Para em",
-    "stepByStep": "Paso a Paso"
+    "stepByStep": "Paso a Paso",
+    "homeInstructionsTitle": "Instrucciones de Uso",
+    "homeInstructionsText": "Ingrese su origen y destino arriba para buscar las rutas disponibles.",
+    "homeInstructionsText2": "Haga clic en el botón de ruta arriba si desea obtener direcciones paso a paso.",
+    "routeInstructionsTitle": "Instrucciones de Uso",
+    "routeInstructionsText": "Ingrese un lugar de origen y de destino para recibir detalles y direcciones paso a paso.",
+    "routeInstructionsText2": "Haga clic en el botón del autobús arriba si desea buscar solo rutas de autobuses disponibles."
 }

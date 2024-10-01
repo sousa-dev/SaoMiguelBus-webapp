@@ -64,5 +64,11 @@
     "and": " e ",
     "departFrom": "Sai de",
     "arriveAt": "Para em",
-    "stepByStep": "Passo a Passo"
+    "stepByStep": "Passo a Passo",
+    "homeInstructionsTitle": "Instruções de Uso",
+    "homeInstructionsText": "Insira sua origem e destino acima para procurar as rotas disponíveis.",
+    "homeInstructionsText2": "Clique no botão de rota acima se pretender obter direções passo a passo.",
+    "routeInstructionsTitle": "Instruções de Uso",
+    "routeInstructionsText": "Insira um local de origem e de destino para receber detalhes e direções passo a passo.",
+    "routeInstructionsText2": "Clique no botão do autocarro acima se pretender apenas procurar rotas de autocarros disponíveis."
 }

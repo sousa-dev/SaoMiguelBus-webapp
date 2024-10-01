@@ -64,5 +64,11 @@
     "and": " und ",
     "departFrom": "Abfahrt von",
     "arriveAt": "Verlassen bei",
-    "stepByStep": "Schritt für Schritt"
+    "stepByStep": "Schritt für Schritt",
+    "homeInstructionsTitle": "Bedienungsanleitung",
+    "homeInstructionsText": "Geben Sie Ihren Ursprung und Ihr Ziel oben ein, um die verfügbaren Routen zu suchen.",
+    "homeInstructionsText2": "Klicken Sie auf den Route-Button oben, wenn Sie Schritt für Schritt-Anweisungen erhalten möchten.",
+    "routeInstructionsTitle": "Bedienungsanleitung",
+    "routeInstructionsText": "Geben Sie einen Startort und ein Ziel ein, um Details und Schritt-für-Schritt-Anweisungen zu erhalten.",
+    "routeInstructionsText2": "Klicken Sie auf den Bus-Button oben, wenn Sie nur verfügbare Bus-Routen suchen möchten."
 }
