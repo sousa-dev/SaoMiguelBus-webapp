@@ -184,13 +184,116 @@ function displayRoutes(routes, originStop, destinationStop) {
         let stops = {};
         let foundOrigin = false;
         let foundDestination = false;
-        const originWords = originStop.toLowerCase().replace(/-/g, '').split(' ').filter(word => word.trim() !== '' && word !== ' ');
-        const destinationWords = destinationStop.toLowerCase().replace(/-/g, '').split(' ').filter(word => word.trim() !== '' && word !== ' ');
+        const originWords = originStop.toLowerCase().replace(/[-áàâãäéèêëíìîïóòôõöúùûüç]/g, match => {
+            switch (match) {
+                case 'á':
+                case 'à':
+                case 'â':
+                case 'ã':
+                case 'ä':
+                    return 'a';
+                case 'é':
+                case 'è':
+                case 'ê':
+                case 'ë':
+                    return 'e';
+                case 'í':
+                case 'ì':
+                case 'î':
+                case 'ï':
+                    return 'i';
+                case 'ó':
+                case 'ò':
+                case 'ô':
+                case 'õ':
+                case 'ö':
+                    return 'o';
+                case 'ú':
+                case 'ù':
+                case 'û':
+                case 'ü':
+                    return 'u';
+                case 'ç':
+                    return 'c';
+                default:
+                    return match;
+            }
+        }).split(' ').filter(word => word.trim() !== '' && word !== ' ');
+        
+        const destinationWords = destinationStop.toLowerCase().replace(/[-áàâãäéèêëíìîïóòôõöúùûüç]/g, match => {
+            switch (match) {
+                case 'á':
+                case 'à':
+                case 'â':
+                case 'ã':
+                case 'ä':
+                    return 'a';
+                case 'é':
+                case 'è':
+                case 'ê':
+                case 'ë':
+                    return 'e';
+                case 'í':
+                case 'ì':
+                case 'î':
+                case 'ï':
+                    return 'i';
+                case 'ó':
+                case 'ò':
+                case 'ô':
+                case 'õ':
+                case 'ö':
+                    return 'o';
+                case 'ú':
+                case 'ù':
+                case 'û':
+                case 'ü':
+                    return 'u';
+                case 'ç':
+                    return 'c';
+                default:
+                    return match;
+            }
+        }).split(' ').filter(word => word.trim() !== '' && word !== ' ');
 
         for (const [stop, time] of Object.entries(stopsObj)) {
             stops[stop] = time;
 
-            const stopWords = stop.toLowerCase().replace(/-/g, '').split(' ').filter(word => word.trim() !== '' && word !== ' ');
+            const stopWords = stop.toLowerCase().replace(/[-áàâãäéèêëíìîïóòôõöúùûüç]/g, match => {
+                switch (match) {
+                    case 'á':
+                    case 'à':
+                    case 'â':
+                    case 'ã':
+                    case 'ä':
+                        return 'a';
+                    case 'é':
+                    case 'è':
+                    case 'ê':
+                    case 'ë':
+                        return 'e';
+                    case 'í':
+                    case 'ì':
+                    case 'î':
+                    case 'ï':
+                        return 'i';
+                    case 'ó':
+                    case 'ò':
+                    case 'ô':
+                    case 'õ':
+                    case 'ö':
+                        return 'o';
+                    case 'ú':
+                    case 'ù':
+                    case 'û':
+                    case 'ü':
+                        return 'u';
+                    case 'ç':
+                        return 'c';
+                    default:
+                        return match;
+                }
+            }).replace(/-/g, '').split(' ').filter(word => word.trim() !== '' && word !== ' ');
             for (const word of originWords) {
                 if (stopWords.some(stopWord => stopWord.includes(word))) {
                     foundOrigin = true;
