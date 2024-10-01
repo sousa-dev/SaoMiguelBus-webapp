@@ -169,6 +169,12 @@ function createRouteCard(route, index) {
                     </div>
                 </div>
             </div>
+            <div class="mt-4 text-center">
+                <button class="expand-stops flex items-center justify-center w-full text-blue-500 hover:text-blue-700 text-base py-2">
+                    <span class="mr-2">${t('clickToSeeDetails')}</span>
+                    <span class="iconify transform transition-transform duration-300 text-xl" data-icon="mdi:chevron-down"></span>
+                </button>
+            </div>
         </div>
     `;
 
@@ -190,8 +196,45 @@ function createRouteCard(route, index) {
         header.querySelector('.iconify').classList.toggle('mdi:chevron-down');
     });
 
+    // Add click event to expand/collapse route details
+    card.addEventListener('click', function(event) {
+        // Prevent the click event from triggering on buttons inside the card
+        if (event.target.tagName === 'BUTTON' || event.target.closest('button')) {
+            return;
+        }
+        
+        toggleStepByStepDetails(this);
+    });
+
+    // Add click event to the expand button
+    const expandButton = card.querySelector('.expand-stops');
+    expandButton.addEventListener('click', function(event) {
+        toggleStepByStepDetails(card);
+    });
+
     return card;
 }
+
+/**
+ * Toggles the visibility of the step details.
+ * @param {HTMLElement} card - The card element.
+ */
+function toggleStepByStepDetails(card) {
+    const detailsContainer = card.querySelector('.details-container');
+    const expandButton = card.querySelector('.expand-stops');
+    const icon = expandButton.querySelector('.iconify');
+
+    detailsContainer.classList.toggle('hidden');
+    icon.classList.toggle('rotate-180');
+
+    // Smooth transition for expanding/collapsing
+    if (detailsContainer.classList.contains('hidden')) {
+        detailsContainer.style.maxHeight = '0px';
+    } else {
+        detailsContainer.style.maxHeight = detailsContainer.scrollHeight + 'px';
+    }
+}
+
 
 /**
  * Creates a styled Step Card for each step in the directions.
@@ -201,7 +244,7 @@ function createRouteCard(route, index) {
  */
 function createStepCard(step, stepNumber) {
     const card = document.createElement('div');
-    card.className = 'p-4 border-t border-gray-200 bg-gray-50';
+    card.className = 'p-4 border-t border-gray-200 bg-gray-50 details-container';
 
     let icon = 'mdi:bus';
     if (step.travel_mode === 'WALKING') {
