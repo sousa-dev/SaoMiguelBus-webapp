@@ -749,6 +749,27 @@
             });
             // Scroll to the top of the page
             window.scrollTo(0, 0);
+
+            // Change the browser title based on the page
+            let pageTitle = t('pageTitle', 'São Miguel Bus');
+            switch(pageId) {
+                case 'home':
+                    pageTitle += ' - ' + t('navBarSearchLabel', 'Home');
+                    break;
+                case 'routes':
+                    pageTitle += ' - ' + t('navBarRoutesLabel', 'Routes');
+                    break;
+                case 'tours':
+                    pageTitle += ' - ' + t('navBarToursLabel', 'Tours');
+                    break;
+                case 'advert':
+                    pageTitle += ' - ' + t('navBarAdvertLabel', 'Advertise');
+                    break;
+                case 'info':
+                    pageTitle += ' - ' + t('navBarInfoLabel', 'Info');
+                    break;
+            }
+            document.title = pageTitle;
         }
 
         // Page switching logic
