@@ -88,5 +88,7 @@
     "aluguerTitle": "Aluguer de Autocarros",
     "aluguerDescription": "Para mais informações sobre aluguer de autocarros, entre em contato com as companhias de autocarros diretamente.",
     "priceAppDescription": "Os preços dos bilhetes são determinados pelas companhias de autocarros e podem variar de acordo com a distância, o tipo de bilhete e outros fatores. Não temos acesso aos preços, mas podemos informar que os bilhetes são vendidos no próprio autocarro e devem ser comprados ao motorista com dinheiro físico ao entrar no autocarro.",
-    "priceAppEnd": "Para mais informações, entre em contato com as companhias de autocarros diretamente."
+    "priceAppEnd": "Para mais informações, entre em contato com as companhias de autocarros diretamente.",
+    "termsAndConditions": "Termos e Condições",
+    "privacyPolicy": "Política de Privacidade"
 }
