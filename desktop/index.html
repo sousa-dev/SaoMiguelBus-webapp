@@ -466,24 +466,18 @@ http://www.templatemo.com/tm-511-journey
             }
         </script>
 
-        <div id="installPrompt">
-            Para instalar este aplicativo, toque no botão de compartilhamento e selecione "Adicionar à Tela de Início".
-        </div>
-
         <script>
-            function isIphone() {
-                return /iPhone/i.test(navigator.userAgent);
+            function checkScreenWidth() {
+                if (window.innerWidth <= 639) {
+                    window.location.href = '/';
+                }
             }
 
-            function showInstallPrompt() {
-                const installPrompt = document.getElementById('installPrompt');
-                installPrompt.style.display = 'block';
-            }
+            // Check screen width after DOM content is loaded
+            document.addEventListener('DOMContentLoaded', checkScreenWidth);
 
-            // Check if the user is on an iPhone
-            if (isIphone()) {
-                showInstallPrompt();
-            }
+            // Continuously monitor screen size
+            window.addEventListener('resize', checkScreenWidth);
         </script>
 
     </body>

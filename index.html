@@ -855,6 +855,20 @@
     <script src="js/directionsApiHandler.js" defer></script>
     <script src="js/languageModal.js" defer></script>
 
+
+    <script>
+        function checkScreenWidth() {
+            if (window.innerWidth > 639) {
+                window.location.href = '/desktop';
+            }
+        }
+
+        // Check screen width after DOM content is loaded
+        document.addEventListener('DOMContentLoaded', checkScreenWidth);
+
+        // Continuously monitor screen size
+        window.addEventListener('resize', checkScreenWidth);
+    </script>
     <!-- Add this script within your existing JavaScript block -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
