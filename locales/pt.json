@@ -73,5 +73,11 @@
     "routeInstructionsText2": "Clique no botão do autocarro acima se pretender apenas procurar rotas de autocarros disponíveis.",
     "tryDirectionsButton": "Tentar Obter Direções",
     "installAndroidApp": "Instalar Aplicação Android",
-    "registerToDownloadIOSApp": "Registar para Download da Aplicação iOS"
+    "registerToDownloadIOSApp": "Registar para Download da Aplicação iOS",
+    "navBarToursLabel": "Tours",
+    "toursTitle": "Tours",
+    "toursSubtitle": "Encontre tours turísticos na ilha de São Miguel.",
+    "loadingToursInfoTitle": "Encontre tours turísticos na ilha de São Miguel.",
+    "loadingToursInfoDescription": "Por favor, aguarde enquanto carregamos as informações dos tours disponíveis.",
+    "loadingToursAlternativeLink": "Se demorar muito a carregar pode também aceder através deste link:"
 }

@@ -73,5 +73,11 @@
     "routeInstructionsText2": "Klicken Sie auf den Bus-Button oben, wenn Sie nur verfügbare Bus-Routen suchen möchten.",
     "tryDirectionsButton": "Versuchen, Richtungen zu erhalten",
     "installAndroidApp": "Android-App installieren",
-    "registerToDownloadIOSApp": "Registrieren, um die iOS-App herunterzuladen"
+    "registerToDownloadIOSApp": "Registrieren, um die iOS-App herunterzuladen",
+    "navBarToursLabel": "Touren",
+    "toursTitle": "Touren",
+    "toursSubtitle": "Finde Touren auf São Miguel.",
+    "loadingToursInfoTitle": "Finden Sie touristische Touren auf der Insel São Miguel.",
+    "loadingToursInfoDescription": "Bitte warten Sie, während wir Informationen zu verfügbaren Touren laden.",
+    "loadingToursAlternativeLink": "Wenn das Laden zu lange dauert, können Sie auch über diesen Link zugreifen:"
 }
