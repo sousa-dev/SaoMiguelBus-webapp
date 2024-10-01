@@ -172,6 +172,7 @@
             bottom: 0;
             background-color: rgba(0, 0, 0, 0.5);
             z-index: 1000;
+
         }
 
         #languageModal .bg-white {
@@ -199,6 +200,48 @@
             flex: 1;
             overflow-y: auto;
         }
+
+        /* Improved language picker styling */
+        #languageModal .bg-white {
+            max-width: 600px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #languageModal ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #languageModal li {
+            margin-bottom: 10px;
+        }
+
+        #languageModal button {
+            align-items: center;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background-color: #f3f4f6;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        #languageModal button:hover {
+            background-color: #e5e7eb;
+        }
+
+        #languageModal button span {
+            margin-right: 10px;
+            font-size: 1.5em;
+        }
+
+        #closeModal {
+            width: auto !important;
+            background: none !important;
+            text-align: right !important;
+            float: right !important;
+            margin: 0px !important;
+        }
     </style>
 
     <link rel="manifest" href="/manifest.json">
@@ -209,12 +252,6 @@
     <div id="placeHolderForAd" class="relative border-b-2 border-gray-300 w-full mb-1 p-1 rounded-lg">
         <!-- The ad banner will be inserted here by JavaScript -->
     </div>
-
-    <!-- Language Selection Button -->
-    <button id="languageButton" class="bg-green-500 text-white py-2 px-4 rounded-full hover:bg-green-600 transition duration-300 ease-in-out flex items-center">
-        <span id="currentLanguage" class="mr-2" data-i18n="currentLanguage">🇵🇹</span>
-        <i class="fas fa-chevron-down ml-2"></i>
-    </button>
     
     <!-- Bottom Navigation Bar for Mobile -->
     <nav class="fixed bottom-0 left-0 right-0 bg-white lg:hidden z-50">
@@ -241,24 +278,34 @@
     <!-- Language Selection Modal -->
     <div id="languageModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
         <div class="bg-white rounded-lg p-6 w-80 relative">
-            <button id="closeModal" class="absolute top-2 right-2 text-gray-600 hover:text-gray-800 transition duration-300 ease-in-out">
-                <i class="fas fa-times"></i>
+            <button id="closeModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2">
+                <i class="fas fa-times text-xl text-right"></i>
             </button>
             <ul>
                 <li>
-                    🇵🇹 <button onclick="changeLanguage('pt')" class="w-auto font-bold text-left py-2">Português</button>
+                    <button onclick="changeLanguage('pt')" class="w-full text-left py-2">
+                        <span>🇵🇹</span> Português
+                    </button>
                 </li>
                 <li>
-                    🇬🇧 <button onclick="changeLanguage('en')" class="w-auto font-bold text-left py-2"">English</button>
+                    <button onclick="changeLanguage('en')" class="w-full text-left py-2">
+                        <span>🇬🇧</span> English
+                    </button>
                 </li>
                 <li>
-                    🇪🇸 <button onclick="changeLanguage('es')" class="w-auto font-bold text-left py-2"">Español</button>
+                    <button onclick="changeLanguage('es')" class="w-full text-left py-2">
+                        <span>🇪🇸</span> Español
+                    </button>
                 </li>
                 <li>
-                    🇫🇷 <button onclick="changeLanguage('fr')" class="w-auto font-bold text-left py-2"">Français</button>
+                    <button onclick="changeLanguage('fr')" class="w-full text-left py-2">
+                        <span>🇫🇷</span> Français
+                    </button>
                 </li>
                 <li>
-                    🇩🇪 <button onclick="changeLanguage('de')" class="w-auto font-bold text-left py-2">Deutsch</button>
+                    <button onclick="changeLanguage('de')" class="w-full text-left py-2">
+                        <span>🇩🇪</span> Deutsch
+                    </button>
                 </li>
             </ul>
         </div>
@@ -506,6 +553,12 @@
     <!-- Info Page -->
     <section id="info" class="page hidden bg-white min-h-screen flex flex-col items-center p-4">
         <div class="w-full max-w-md mx-auto">
+            <!-- Language Selection Button -->
+            <button id="languageButton" class="bg-white w-auto text-green-600 py-2 px-4 rounded-full shadow-md hover:bg-green-50 transition duration-300 ease-in-out flex items-center border border-green-500 mb-2 float-right">
+                <span id="currentLanguage" class="mr-2 text-xl" data-i18n="currentLanguage">🇵🇹</span>
+                <i class="fas fa-chevron-down ml-2 text-green-500"></i>
+            </button>
+            <br><br><br>
             <div class="bg-gray-100 rounded-lg p-4 mb-4 flex items-center">
                 <img src="static/img/logo.png" alt="Logo" class="w-8 h-8 mr-4">
                 <div><h3 class="font-semibold" data-i18n="infoDevelopedBy">Esta aplicação foi desenvolvida por</h3> <a href="https://www.sousadev.com" target="_blank" class="text-blue-500">Sousa Dev</a></div>
