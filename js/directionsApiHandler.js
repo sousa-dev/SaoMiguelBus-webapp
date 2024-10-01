@@ -210,12 +210,15 @@ function createStepCard(step, stepNumber) {
 
     const stepContent = `
         <div class="flex items-start">
-            <span class="iconify text-3xl mr-4" data-icon="${icon}"></span>
+            <span class="iconify text-3xl mr-4 text-green-500" data-icon="${icon}"></span>
             <div class="flex-grow">
-                <h3 class="font-semibold">${step.html_instructions}</h3>
-                <p class="text-gray-600">${step.duration.text}</p>
+                <h3 class="font-bold text-lg text-green-700">${step.html_instructions}</h3>
+                <p class="text-gray-700 mt-1">
+                    <span class="font-medium">${step.duration.text}</span>
+                    <span class="text-gray-500 ml-4">${step.distance.text}</span>
+                </p>
             </div>
-            <span class="text-gray-600">${getArrivalTime(step)}</span>
+            <span class="text-green-600 font-bold font-xl ml-12">${getArrivalTime(step)}</span>
         </div>
     `;
 
@@ -223,11 +226,19 @@ function createStepCard(step, stepNumber) {
         const transit = step.transit_details;
         card.innerHTML = `
             ${stepContent}
-            <div class="ml-10 mt-2">
-                <p class="text-gray-600">${t('departFrom')} ${transit.departure_stop.name}</p>
-                <p class="text-gray-600">${t('arriveAt')} ${transit.arrival_stop.name}</p>
+            <div class="ml-10 mt-2 bg-white rounded-lg shadow-sm p-3">
+                <p class="text-gray-700 flex items-center mb-2">
+                    <span class="iconify mr-2 text-green-500" data-icon="mdi:bus-stop"></span>
+                    <span class="font-medium">${t('departFrom')}</span>
+                    <span class="ml-2 text-black font-semibold">${transit.departure_stop.name}</span>
+                </p>
+                <p class="text-gray-700 flex items-center">
+                    <span class="iconify mr-2 text-red-500" data-icon="mdi:bus-stop"></span>
+                    <span class="font-medium">${t('arriveAt')}</span>
+                    <span class="ml-2 text-black font-semibold">${transit.arrival_stop.name}</span>
+                </p>
             </div>
-        `;
+            `;
     } else {
         card.innerHTML = stepContent;
     }
