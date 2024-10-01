@@ -545,23 +545,24 @@
     </section>
 
     <!-- Tours Page -->
-    <section id="tours" class="page hidden bg-white flex flex-col items-center p-4">
+    <section id="tours" class="page hidden bg-white flex flex-col items-center p-2">
         <h2 class="text-2xl text-center font-bold mb-4" data-i18n="toursTitle">Tours</h2>
         <p class="text-center text-lg mb-6" data-i18n="toursSubtitle">Encontre tours turísticos na ilha de São Miguel.</p>
         <div id="viatorWidget"></div>
-    <!-- Loading Info Section -->
-    <div id="loadingToursInfo" class="bg-white rounded-lg p-4 shadow-md mb-6 max-w-md mx-auto">
-        <h3 class="text-xl font-semibold mb-3 text-center" data-i18n="loadingToursInfoTitle">Carregando Informações</h3>
-        <p class="text-gray-700 text-center mb-4" data-i18n="loadingToursInfoDescription">
-            Por favor, aguarde enquanto carregamos as informações dos tours disponíveis.
-        </p>
-        <div class="flex justify-center mb-4">
-            <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-green-500"></div>
+        
+        <!-- Loading Info Section -->
+        <div id="loadingToursInfo" class="bg-white rounded-lg p-4 shadow-md mb-6 max-w-md mx-auto">
+            <h3 class="text-xl font-semibold mb-3 text-center" data-i18n="loadingToursInfoTitle">Carregando Informações</h3>
+            <p class="text-gray-700 text-center mb-4" data-i18n="loadingToursInfoDescription">
+                Por favor, aguarde enquanto carregamos as informações dos tours disponíveis.
+            </p>
+            <div class="flex justify-center mb-4">
+                <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-green-500"></div>
+            </div>
+            <p class="text-sm text-gray-600 text-center" data-i18n="loadingToursAlternativeLink">
+                Se demorar muito a carregar pode também aceder através deste link: 
+            </p>
         </div>
-        <p class="text-sm text-gray-600 text-center" data-i18n="loadingToursAlternativeLink">
-            Se demorar muito a carregar pode também aceder através deste link: 
-        </p>
-    </div>
     <div class="flex justify-center">
         <a href="https://www.viator.com/?pid=P00222801&mcid=42383&medium=link&medium_version=selector&campaign=sao-miguel-tours" target="_blank" class="text-blue-500 hover:underline">São Miguel Tours <i class="fas fa-external-link-alt text-xs ml-1"></i></a>
     </div>
@@ -817,18 +818,28 @@
 
         function loadViatorWidget(language) {
             const widgetContainer = document.getElementById('viatorWidget');
+            widgetContainer.innerHTML = ''; // Clear previous widget
             console.log(language);
-            if (language === 'pt') {
-                widgetContainer.innerHTML = '<div data-vi-partner-id=P00222801 data-vi-widget-ref=W-9498a477-c822-45c2-8ac8-1a241c13a34c ></div>';
-            } else if (language === 'fr') {
-                widgetContainer.innerHTML = '<div data-vi-partner-id=P00222801 data-vi-widget-ref=W-f73fa3e1-fd82-4cfe-b32c-7a7cd7e6bc70 ></div>';
-            } else if (language === 'de') {
-                widgetContainer.innerHTML = '<div data-vi-partner-id=P00222801 data-vi-widget-ref=W-7be85e92-9d74-4086-89f4-cc11540ff074 ></div>';
-            } else if (language === 'es') {
-                widgetContainer.innerHTML = '<div data-vi-partner-id=P00222801 data-vi-widget-ref=W-619d8787-da9d-449b-b071-61e28e34bc02 ></div>';
-            } else {
-                widgetContainer.innerHTML = '<div data-vi-partner-id=P00222801 data-vi-widget-ref=W-00e6047e-b988-4a48-823b-d534a5a5ff04></div>';
+            let widgetRef;
+
+            switch (language) {
+                case 'pt':
+                    widgetRef = 'W-9498a477-c822-45c2-8ac8-1a241c13a34c';
+                    break;
+                case 'fr':
+                    widgetRef = 'W-f73fa3e1-fd82-4cfe-b32c-7a7cd7e6bc70';
+                    break;
+                case 'de':
+                    widgetRef = 'W-7be85e92-9d74-4086-89f4-cc11540ff074';
+                    break;
+                case 'es':
+                    widgetRef = 'W-619d8787-da9d-449b-b071-61e28e34bc02';
+                    break;
+                default:
+                    widgetRef = 'W-00e6047e-b988-4a48-823b-d534a5a5ff04';
             }
+
+            widgetContainer.innerHTML = `<div data-vi-partner-id="P00222801" data-vi-widget-ref="${widgetRef}"></div>`;
             const script = document.createElement('script');
             script.src = 'https://www.viator.com/orion/partner/widget.js';
             script.async = true;
@@ -884,6 +895,7 @@
 
             navLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
+                    console.log('link clicked');
                     e.preventDefault();
                     const targetPage = this.getAttribute('data-target');
                     showPage(targetPage);
