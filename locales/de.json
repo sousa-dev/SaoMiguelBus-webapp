@@ -47,7 +47,6 @@
     "infoDevelopedBy": "Diese App wurde entwickelt von ",
     "infoNotDevelopedByBusCompanies": "App nicht entwickelt von Busunternehmen",
     "contactBusCompanies": "Kontakt zu Busunternehmen",
-    "faqTitle": "Häufig gestellte Fragen",
     "rateApp": "Bewerten Sie die App",
     "supportCreator": "Unterstützen Sie den Ersteller",
     "contactDeveloper": "Kontaktiere den Entwickler",
@@ -79,5 +78,15 @@
     "toursSubtitle": "Finde Touren auf São Miguel.",
     "loadingToursInfoTitle": "Finden Sie touristische Touren auf der Insel São Miguel.",
     "loadingToursInfoDescription": "Bitte warten Sie, während wir Informationen zu verfügbaren Touren laden.",
-    "loadingToursAlternativeLink": "Wenn das Laden zu lange dauert, können Sie auch über diesen Link zugreifen:"
+    "loadingToursAlternativeLink": "Wenn das Laden zu lange dauert, können Sie auch über diesen Link zugreifen:",
+    "priceApp": "Ticketpreise",
+    "infoModalTitle": "Wichtige Informationen",
+    "infoModalDescription": "Die São Miguel Bus-App wurde von nur einer Person entwickelt, ohne externe Unterstützung oder Verbindung zu Unternehmen oder Institutionen.",
+    "infoModalEnd": "Die Zeiten sind die gesamte Verantwortung der Busunternehmen.",
+    "contactBusCompaniesTitle": "Kontakt der Busunternehmen",
+    "contactBusCompaniesDescription": "Für weitere Informationen kontaktieren Sie die Busunternehmen direkt.",
+    "aluguerTitle": "Bus-Rental",
+    "aluguerDescription": "Für weitere Informationen über Bus-Rental kontaktieren Sie die Busunternehmen direkt.",
+    "priceAppDescription": "Die Preise der Tickets werden von den Busunternehmen bestimmt und können je nach Entfernung, Tickettyp und anderen Faktoren variieren. Wir haben keinen Zugriff auf die Preise, aber wir können Ihnen sagen, dass Tickets auf dem Bus selbst verkauft werden und mit physischem Geld beim Einsteigen im Bus gekauft werden müssen.",
+    "priceAppEnd": "Für weitere Informationen kontaktieren Sie die Busunternehmen direkt."
 }

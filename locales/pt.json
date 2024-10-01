@@ -45,9 +45,8 @@
     "aboutAdsList2": "Permite que a aplicação permaneça completamente gratuita para todos os utlizadores",
     "aboutAdsList3": "Contribuem para o contínuo desenvolvimento e melhoria da plataforma",
     "infoDevelopedBy": "Esta aplicação foi desenvolvida por ",
-    "infoNotDevelopedByBusCompanies": "Aplicação Não Desenvolvida por Companhias de Autocarros",
+    "infoNotDevelopedByBusCompanies": "Aplicação não Desenvolvida por Companhias de Autocarros",
     "contactBusCompanies": "Contato das Companhias de Autocarros",
-    "faqTitle": "Perguntas Frequentes",
     "rateApp": "Avalie a Aplicação",
     "supportCreator": "Apoie o Criador",
     "contactDeveloper": "Contate o Desenvolvedor",
@@ -79,5 +78,15 @@
     "toursSubtitle": "Encontre tours turísticos na ilha de São Miguel.",
     "loadingToursInfoTitle": "Encontre tours turísticos na ilha de São Miguel.",
     "loadingToursInfoDescription": "Por favor, aguarde enquanto carregamos as informações dos tours disponíveis.",
-    "loadingToursAlternativeLink": "Se demorar muito a carregar pode também aceder através deste link:"
+    "loadingToursAlternativeLink": "Se demorar muito a carregar pode também aceder através deste link:",
+    "priceApp": "Preço dos Bilhetes",
+    "infoModalTitle": "Informações Importantes",
+    "infoModalDescription": "A aplicação São Miguel Bus foi desenvolvida por apenas uma pessoa, sem qualquer apoio externo ou associação com companhias ou entidades.",
+    "infoModalEnd": "Os horários são da inteira responsabilidade das empresas de autocarros.",
+    "contactBusCompaniesTitle": "Contato das Companhias de Autocarros",
+    "contactBusCompaniesDescription": "Para mais informações, entre em contato com as companhias de autocarros diretamente.",
+    "aluguerTitle": "Aluguer de Autocarros",
+    "aluguerDescription": "Para mais informações sobre aluguer de autocarros, entre em contato com as companhias de autocarros diretamente.",
+    "priceAppDescription": "Os preços dos bilhetes são determinados pelas companhias de autocarros e podem variar de acordo com a distância, o tipo de bilhete e outros fatores. Não temos acesso aos preços, mas podemos informar que os bilhetes são vendidos no próprio autocarro e devem ser comprados ao motorista com dinheiro físico ao entrar no autocarro.",
+    "priceAppEnd": "Para mais informações, entre em contato com as companhias de autocarros diretamente."
 }

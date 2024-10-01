@@ -47,7 +47,6 @@
     "infoDevelopedBy": "Esta aplicación fue desarrollada por ",
     "infoNotDevelopedByBusCompanies": "Aplicación No Desarrollada por Compañías de Autobuses",
     "contactBusCompanies": "Contacto de Compañías de Autobuses",
-    "faqTitle": "Preguntas Frecuentes",
     "rateApp": "Calificar la Aplicación",
     "supportCreator": "Apoya al Creador",
     "contactDeveloper": "Contactar al Desarrollador",
@@ -79,5 +78,15 @@
     "toursSubtitle": "Encuentre tours turísticos en la isla de São Miguel.",
     "loadingToursInfoTitle": "Encuentre tours turísticos en la isla de São Miguel.",
     "loadingToursInfoDescription": "Por favor, espere mientras cargamos la información de los tours disponibles.",
-    "loadingToursAlternativeLink": "Si tarda mucho en cargar, también puede acceder a través de este enlace:"
+    "loadingToursAlternativeLink": "Si tarda mucho en cargar, también puede acceder a través de este enlace:",
+    "priceApp": "Precios de los Billetes",
+    "infoModalTitle": "Información Importante",
+    "infoModalDescription": "La aplicación São Miguel Bus fue desarrollada por una sola persona, sin ningún apoyo externo o asociación con compañías o entidades.",
+    "infoModalEnd": "Los horarios son de la responsabilidad entera de las compañías de autobuses.",
+    "contactBusCompaniesTitle": "Contacto de Compañías de Autobuses",
+    "contactBusCompaniesDescription": "Para más información, contacte con las compañías de autobuses directamente.",
+    "aluguerTitle": "Aluguer de Autocarros",
+    "aluguerDescription": "Para más información sobre aluguer de autocarros, contacte con las compañías de autocarros directamente.",
+    "priceAppDescription": "Los precios de los billetes se determinan por las compañías de autocarros y pueden variar según la distancia, el tipo de billete y otros factores. No tenemos acceso a los precios, pero podemos informar que los billetes se venden en el autocarro mismo y deben ser comprados al conductor con dinero físico al entrar en el autocarro.",
+    "priceAppEnd": "Para más información, contacte con las compañías de autocarros directamente."
 }

@@ -47,7 +47,6 @@
     "infoDevelopedBy": "Cette application a été développée par ",
     "infoNotDevelopedByBusCompanies": "Application Non Développée par des Compagnies de Bus",
     "contactBusCompanies": "Contactez les Compagnies de Bus",
-    "faqTitle": "Questions Fréquemment Posées",
     "rateApp": "Évaluez l'Application",
     "supportCreator": "Soutenez le Créateur",
     "contactDeveloper": "Contactez le Développeur",
@@ -79,5 +78,15 @@
     "toursSubtitle": "Trouvez des tours touristiques à São Miguel.",
     "loadingToursInfoTitle": "Trouvez des visites guidées sur l'île de São Miguel.",
     "loadingToursInfoDescription": "Veuillez patienter pendant que nous chargeons les informations sur les visites disponibles.",
-    "loadingToursAlternativeLink": "Si le chargement prend trop de temps, vous pouvez également accéder via ce lien :"
+    "loadingToursAlternativeLink": "Si le chargement prend trop de temps, vous pouvez également accéder via ce lien :",
+    "priceApp": "Prix des Billets",
+    "infoModalTitle": "Informations Importantes",
+    "infoModalDescription": "L'application São Miguel Bus a été développée par une seule personne, sans aucun apoio externe ou association avec des entreprises ou entités.",
+    "infoModalEnd": "Les horaires sont entièrement de la responsabilité des compagnies de bus.",
+    "contactBusCompaniesTitle": "Contactez les Compagnies de Bus",
+    "contactBusCompaniesDescription": "Pour plus d'informations, contactez les compagnies de bus directement.",
+    "aluguerTitle": "Location de Bus",
+    "aluguerDescription": "Pour plus d'informations sur la location de bus, contactez les compagnies de bus directement.",
+    "priceAppDescription": "Les prix des billets sont déterminés par les compagnies de bus et peuvent varier en fonction de la distance, du type de billet et d'autres facteurs. Nous n'avons pas accès aux prix, mais nous pouvons informer que les billets sont vendus sur le bus lui-même et doivent être achetés au conducteur avec de l'argent physique au moment de l'entrée dans le bus.",
+    "priceAppEnd": "Pour plus d'informations, contactez les compagnies de bus directement."
 }
