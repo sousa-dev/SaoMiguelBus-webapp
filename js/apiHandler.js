@@ -184,33 +184,46 @@ function displayRoutes(routes, originStop, destinationStop) {
         let stops = {};
         let foundOrigin = false;
         let foundDestination = false;
+        const originWords = originStop.toLowerCase().replace(/-/g, '').split(' ').filter(word => word.trim() !== '' && word !== ' ');
+        const destinationWords = destinationStop.toLowerCase().replace(/-/g, '').split(' ').filter(word => word.trim() !== '' && word !== ' ');
+
         for (const [stop, time] of Object.entries(stopsObj)) {
             stops[stop] = time;
-            // if (stop === originStop) {
-            //     foundOrigin = true;
-            // }
-            // if (foundOrigin) {
-            //     stops[stop] = time;
-            // }
-            // if (stop === destinationStop) {
-            //     if (!foundOrigin) {
-            //         ignoreRoute = true;
-            //         continue;
-            //     }
-            //     foundDestination = true;
-            //     break;
-            // }
+
+            const stopWords = stop.toLowerCase().replace(/-/g, '').split(' ').filter(word => word.trim() !== '' && word !== ' ');
+            for (const word of originWords) {
+                if (stopWords.some(stopWord => stopWord.includes(word))) {
+                    foundOrigin = true;
+                    break;
+                }
+            }
+
+            if (foundOrigin) {
+                stops[stop] = time;
+            }
+
+            for (const word of destinationWords) {
+                if (stopWords.some(stopWord => stopWord.includes(word))) {
+                    foundDestination = true;
+                    break;
+                }
+            }
+            if (foundDestination) {
+                if (!foundOrigin) {
+                    ignoreRoute = true;
+                    continue;
+                }
+                break;
+            }
         }
 
-        // if (!foundOrigin || !foundDestination || ignoreRoute) {
-        //     return;
-        // }
+        if (!foundOrigin || !foundDestination || ignoreRoute) {
+            return;
+        }
 
         const stopsArray = Object.entries(stops);   
         const firstStop = stopsArray[0];
         const lastStop = stopsArray[stopsArray.length - 1];
-
-
         
         // Calculate number of transfers
         const transferCount = route.route.split('/').length - 1;
