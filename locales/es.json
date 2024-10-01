@@ -71,5 +71,7 @@
     "routeInstructionsTitle": "Instrucciones de Uso",
     "routeInstructionsText": "Ingrese un lugar de origen y de destino para recibir detalles y direcciones paso a paso.",
     "routeInstructionsText2": "Haga clic en el botón del autobús arriba si desea buscar solo rutas de autobuses disponibles.",
-    "tryDirectionsButton": "Intentar obtener direcciones"
+    "tryDirectionsButton": "Intentar obtener direcciones",
+    "installAndroidApp": "Instalar Aplicación Android",
+    "registerToDownloadIOSApp": "Registrar para Descargar Aplicación iOS"
 }

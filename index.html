@@ -423,6 +423,22 @@
             </div>
         </div>
 
+        <!-- Install App Buttons -->
+        <div id="installAppButtons" class="w-full max-w-md mx-auto mt-4">
+            <button id="installAndroidApp" class="hidden w-full bg-green-500 text-white py-2 px-4 rounded-full hover:bg-green-600 transition duration-300 ease-in-out mb-2" onclick="window.location.href='https://play.google.com/store/apps/details?id=com.hsousa_apps.Autocarros'">
+                <div class="flex items-center"></div>
+                    <i class="fab fa-android mr-2 self-center text-xl"></i>
+                    <span data-i18n="installAndroidApp" class="flex-grow">Install Android App</span>
+                </div>
+            </button>
+            <button id="installIOSApp" class="hidden w-full bg-black text-white py-2 px-4 rounded-full hover:bg-blue-600 transition duration-300 ease-in-out" onclick="window.location.href='/newsletter'">
+                <div class="flex items-center">
+                    <i class="fab fa-apple mr-2 self-center text-xl"></i>
+                    <span data-i18n="registerToDownloadIOSApp" class="flex-grow">Register to Download iOS App</span>
+                </div>
+            </button>
+        </div>
+
     </section>
 
     <!-- Routes Page -->
@@ -528,14 +544,16 @@
     <section id="advert" class="page hidden bg-white flex flex-col items-center p-4">
         <h2 class="text-2xl text-center font-bold mb-4" data-i18n="advertiseTitle">Anuncie em São Miguel Bus</h2>
         <!-- <p class="text-center text-lg mb-6" data-i18n="advertiseSubtitle">Anuncie na nossa aplicação a partir de X euros por mês.</p> -->
-        <div class="bg-green-100 rounded-lg p-6 shadow-md max-w-md mx-auto mb-6">
-            <h3 class="text-xl font-semibold mb-3 text-center" data-i18n="advertisingOpportunity">Oportunidade de Publicidade</h3>
-            <p class="text-gray-700 text-center" data-i18n="advertisingOpportunityDescription">
-                Pode anunciar o seu negócio para residentes e turistas da ilha de São Miguel. 
-                <br> <br>
-                Saiba mais em <a href="https://ad.saomiguelbus.com" class="text-green-600 hover:underline">ad.saomiguelbus.com</a>
-            </p>
-        </div>
+        <a href="https://ad.saomiguelbus.com" target="_blank" class="block">
+            <div class="bg-green-100 rounded-lg p-6 shadow-md max-w-md mx-auto mb-6 hover:bg-green-200 transition-colors duration-300 cursor-pointer">
+                <h3 class="text-xl font-semibold mb-3 text-center" data-i18n="advertisingOpportunity">Oportunidade de Publicidade</h3>
+                <p class="text-gray-700 text-center" data-i18n="advertisingOpportunityDescription">
+                    Pode anunciar o seu negócio para residentes e turistas da ilha de São Miguel. 
+                    <br> <br>
+                </p>
+                <div class="text-green-600 text-center block mt-4"><i class="fas fa-external-link-alt"></i> ad.saomiguelbus.com</div>
+            </div>
+        </a>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="bg-white rounded-lg p-4 shadow-md flex flex-col items-center">
@@ -706,16 +724,18 @@
                 });
             });
 
-            // // Check if the user is on Android or iOS
-            // if (/Android/i.test(navigator.userAgent)) {
-            //     if (confirm('Instale o aplicativo São Miguel Bus para Android para uma melhor experiência!')) {
-            //         window.location.href = 'https:/saomiguelbus.com/android';
-            //     }
-            // } else if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-            //     if (confirm('Instale o aplicativo São Miguel Bus para iOS para uma melhor experiência!')) {
-            //         window.location.href = 'https://saomiguelbus.com/ios/';
-            //     }
-            // }
+            // Check if the user is on Android or iOS
+            if (/Android/i.test(navigator.userAgent)) {
+                // if (confirm('Instale o aplicativo São Miguel Bus para Android para uma melhor experiência!')) {
+                //     window.location.href = 'https:/saomiguelbus.com/android';
+                // }
+                document.getElementById('installAndroidApp').classList.remove('hidden');
+            } else if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                // if (confirm('Instale o aplicativo São Miguel Bus para iOS para uma melhor experiência!')) {
+                //     window.location.href = 'https://saomiguelbus.com/ios/';
+                // }
+                document.getElementById('installIOSApp').classList.remove('hidden');
+            }
         });
 
         // Add event listener for btnRoutes

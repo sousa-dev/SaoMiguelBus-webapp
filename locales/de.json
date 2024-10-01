@@ -71,5 +71,7 @@
     "routeInstructionsTitle": "Bedienungsanleitung",
     "routeInstructionsText": "Geben Sie einen Startort und ein Ziel ein, um Details und Schritt-für-Schritt-Anweisungen zu erhalten.",
     "routeInstructionsText2": "Klicken Sie auf den Bus-Button oben, wenn Sie nur verfügbare Bus-Routen suchen möchten.",
-    "tryDirectionsButton": "Versuchen, Richtungen zu erhalten"
+    "tryDirectionsButton": "Versuchen, Richtungen zu erhalten",
+    "installAndroidApp": "Android-App installieren",
+    "registerToDownloadIOSApp": "Registrieren, um die iOS-App herunterzuladen"
 }
