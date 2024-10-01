@@ -2,7 +2,6 @@
  * Redirects to the Step By Step Directions page and populates form values.
  */
 function redirectToStepByStepDirections() {
-    console.log('redirectToStepByStepDirections');
     const origin = document.getElementById('origin').value;
     const destination = document.getElementById('destination').value;
     const date = document.getElementById('datePicker').value;
@@ -85,8 +84,22 @@ function displayDirections(data) {
     const directionsContainer = document.getElementById('directionsContainer');
     directionsContainer.innerHTML = ''; // Clear previous results
 
+    const userInputOrigin = document.getElementById('originStepByStep').value;
+    const userInputDestination = document.getElementById('destinationStepByStep').value;
     if (!data.routes || data.routes.length === 0) {
-        directionsContainer.innerHTML = '<p class="text-red-500 text-center py-4">No routes found.</p>';
+        const noRoutesDiv = document.createElement('div');
+        noRoutesDiv.className = 'container mx-auto px-4 mt-4';
+        noRoutesDiv.innerHTML = `
+            <div class="bg-red-100 shadow-md rounded-lg p-6">
+                <div class="flex flex-col items-center">
+                    <h3 class="text-xl font-semibold mb-2 text-center">
+                        ${t('noRoutesMessage').replace('{origin}', userInputOrigin).replace('{destination}', userInputDestination)}
+                    </h3>
+                    <p class="text-gray-600 text-center">${t('noRoutesSubtitle')}</p>
+                </div>
+            </div>
+        `;
+        directionsContainer.appendChild(noRoutesDiv);
         return;
     }
 
@@ -108,7 +121,6 @@ function createRouteCard(route, index) {
     card.className = 'bg-white mb-4 shadow-md rounded-lg overflow-hidden';
 
     const leg = route.legs[0];
-    console.log(leg);
 
     const walkDistance = leg.steps.filter(step => step.travel_mode === 'WALKING').reduce((total, step) => total + step.distance.value, 0);
     const busDistance = leg.steps.filter(step => step.travel_mode === 'TRANSIT').reduce((total, step) => total + step.distance.value, 0);

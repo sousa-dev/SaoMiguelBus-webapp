@@ -70,5 +70,6 @@
     "homeInstructionsText2": "Cliquez sur le bouton de l'itinéraire ci-dessus si vous souhaitez obtenir des directions étape par étape.",
     "routeInstructionsTitle": "Instructions d'utilisation",
     "routeInstructionsText": "Insérez un lieu de départ et de destination pour recevoir des détails et des directions étape par étape.",
-    "routeInstructionsText2": "Cliquez sur le bouton du bus ci-dessus si vous souhaitez uniquement rechercher des itinéraires de bus disponibles."
+    "routeInstructionsText2": "Cliquez sur le bouton du bus ci-dessus si vous souhaitez uniquement rechercher des itinéraires de bus disponibles.",
+    "tryDirectionsButton": "Essayer d'obtenir des directions"
 }

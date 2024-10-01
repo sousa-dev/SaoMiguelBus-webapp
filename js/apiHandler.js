@@ -100,7 +100,7 @@ function fetchAndDisplayRoutes(url, parameters) {
     })
     .then(response => response.json())
     .then(data => {
-        displayRoutes(data, parameters.origin);
+        displayRoutes(data, parameters.origin, parameters.destination);
         hideLoadingSpinner();
     })
     .catch(error => {
@@ -127,9 +127,9 @@ function postToStats(parameters) {
     });
 }
 
-function displayNoRoutesMessage(parameters) {
+function displayNoRoutesMessage(origin, destination) {
     const noRoutesDiv = document.getElementById('noRoutesMessage');
-    const message = t('noRoutesMessage').replace('{origin}', parameters.origin).replace('{destination}', parameters.destination);
+    const message = t('noRoutesMessage').replace('{origin}', origin).replace('{destination}', destination);
     noRoutesDiv.innerHTML = `
         <div class="container mx-auto px-4 mt-4">
             <div class="bg-red-100 shadow-md rounded-lg p-6">
@@ -138,6 +138,9 @@ function displayNoRoutesMessage(parameters) {
                         ${message}
                     </h3>
                     <p class="text-gray-600 text-center">${t('noRoutesSubtitle')}</p>
+                    <button class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="redirectToStepByStepDirections(event)">
+                        ${t('tryDirectionsButton')}
+                    </button>
                 </div>
             </div>
         </div>
@@ -145,7 +148,7 @@ function displayNoRoutesMessage(parameters) {
     noRoutesDiv.style.display = 'block';
 }
 
-function displayRoutes(routes, originStop) {
+function displayRoutes(routes, originStop, destinationStop) {
     const routesContainer = document.getElementById('routesContainer');
     routesContainer.innerHTML = ''; // Clear previous content
 
@@ -158,6 +161,11 @@ function displayRoutes(routes, originStop) {
         const bTime = bStopsObj.hasOwnProperty(originStop) ? bStopsObj[originStop] : bStopsObj[Object.keys(bStopsObj)[0]];
         return aTime.localeCompare(bTime);
     });
+
+    if (routes.length === 0) {
+        displayNoRoutesMessage(originStop, destinationStop);
+        return;
+    }
 
     routes.forEach(route => {
         let ignoreRoute = false;
