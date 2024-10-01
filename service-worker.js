@@ -1,4 +1,4 @@
-const CACHE_NAME = 'saomiguelbus-cache-v1';
+const CACHE_NAME = 'saomiguelbus-cache-v2';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -12,6 +12,7 @@ const urlsToCache = [
   '/static/js/apiHandler.js',
   '/static/js/languageHandler.js',
   '/static/img/logo-playstore.png',
+  '/offline.html' // Página de fallback offline
 ];
 
 // Install the service worker and cache resources
@@ -20,39 +21,44 @@ self.addEventListener('install', event => {
     caches.open(CACHE_NAME)
       .then(cache => {
         console.log('Opened cache');
-        return cache.addAll(urlsToCache).catch(error => {
-          console.error('Failed to cache:', error);
-        });
+        return cache.addAll(urlsToCache);
+      })
+      .catch(error => {
+        console.error('Failed to cache during install:', error);
       })
   );
 });
 
 // Cache and return requests
 self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        // Cache hit - return the response
-        if (response) {
-          return response;
-        }
-        return fetch(event.request);
-      })
-  );
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request)
+        .then(response => response)
+        .catch(() => caches.match('/offline.html'))
+    );
+  } else {
+    event.respondWith(
+      caches.match(event.request)
+        .then(response => response || fetch(event.request))
+    );
+  }
 });
 
-// Update the service worker
+// Update the service worker and clean old caches
 self.addEventListener('activate', event => {
   const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.map(cacheName => {
-          if (!cacheWhitelist.includes(cacheName)) {
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    })
+    caches.keys()
+      .then(cacheNames => {
+        return Promise.all(
+          cacheNames.map(cacheName => {
+            if (!cacheWhitelist.includes(cacheName)) {
+              console.log('Deleting old cache:', cacheName);
+              return caches.delete(cacheName);
+            }
+          })
+        );
+      })
   );
 });
