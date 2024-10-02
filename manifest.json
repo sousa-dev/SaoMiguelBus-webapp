@@ -1,0 +1,39 @@
+{
+  "short_name": "São Miguel Bus",
+  "name": "Autocarros da Ilha de São Miguel",
+  "icons": [
+    {
+      "src": "static/icons/icon-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any"
+    },
+    {
+      "src": "static/icons/icon-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    },
+    {
+      "src": "static/icons/maskable_icon.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#28a745",
+  "description": "Encontre horários e rotas de autocarros na Ilha de São Miguel.",
+  "orientation": "portrait-primary",
+  "prefer_related_applications": true,
+  "related_applications": [
+    {
+      "platform": "play",
+      "id": "com.hsousa_apps.Autocarros",
+      "url": "https://play.google.com/store/apps/details?id=com.hsousa_apps.Autocarros"
+    }
+  ]
+}

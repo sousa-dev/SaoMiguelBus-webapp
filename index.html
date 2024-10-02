@@ -1,8 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt" class="scroll-smooth">
 
 <head>
-    <!-- Google tag (gtag.js) -->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle" data-i18n="pageTitle">Horários e Rotas de Autocarros na Ilha de São Miguel | São Miguel Bus</title>
+    <meta name="description" content="Encontre horários e rotas de autocarros na Ilha de São Miguel, Açores. Apenas insira sua origem e destino para explorar as opções de transporte disponíveis que o levarão a todos os cantos desta bela ilha.">
+    <meta name="keywords" content="São Miguel, autocarros, horários, transporte público, rotas de autocarro, horários de autocarros, horários de ônibus, transporte na Ilha de São Miguel, bus schedule São Miguel, public transport São Miguel">
+    <meta name="monetag" content="dc40a4dc94c1d8ad17136ef2d06a51df">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Tag Manager -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-YSWK1F7F0B"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -11,382 +22,1122 @@
 
       gtag('config', 'G-YSWK1F7F0B');
     </script>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8246676797736648"
-     crossorigin="anonymous"></script>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Horários dos Autocarros da Ilha de São Miguel. Pesquisa por autocarros de todas as companhias que operam na ilha e encontra a melhor solução para ti. São Miguel Island Bus Schedule. Search and find the best bus for your trip.">
-    <meta name="monetag" content="dc40a4dc94c1d8ad17136ef2d06a51df">
 
-    <title id="pageTile">Autocarros São Miguel</title>
-    <!-- 
-Journey Template 
-http://www.templatemo.com/tm-511-journey
--->
-    <!-- load stylesheets -->
-    <link rel="icon" type="image/x-icon" href="static/img/logo-playstore.png">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
-    <!-- Google web font "Open Sans" -->
-    <link rel="stylesheet" href="static/font-awesome-4.7.0/css/font-awesome.min.css"> <!-- Font Awesome -->
-    <link rel="stylesheet" href="static/css/bootstrap.min.css"> <!-- Bootstrap style -->
-    <link rel="stylesheet" type="text/css" href="static/css/datepicker.css" />
-    <link rel="stylesheet" type="text/css" href="static/slick/slick.css" />
-    <link rel="stylesheet" type="text/css" href="static/slick/slick-theme.css" />
-    <link rel="stylesheet" href="static/css/templatemo-style.css"> <!-- Templatemo style -->
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-              <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-              <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-          <![endif]-->
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8246676797736648" crossorigin="anonymous"></script>
+    
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+        {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "name": "São Miguel Bus",
+        "url": "https://www.saomiguelbus.com",
+        "logo": "https://www.saomiguelbus.com/static/img/logo-playstore.png",
+        "sameAs": [
+            "https://www.linkedin.com/in/henriquecsousa/",
+            "https://www.instagram.com/sousadev/",
+            "https://www.twitter.com/sousadev/",
+            "https://www.github.com/hc-sousa/"
+        ],
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "Customer Service",
+            "email": "info@saomiguelbus.com"
+        },
+        "description": "São Miguel Bus oferece informações atualizadas sobre horários e rotas de autocarros na Ilha de São Miguel, ajudando-o a encontrar a melhor opção de transporte para sua viagem."
+        }
+    </script>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="static/favicon/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="static/favicon/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="static/favicon/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="static/favicon/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#28a745">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="São Miguel Bus">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" crossorigin="anonymous" data-i18n="fontAwesomeLink">
+
+    <!-- Iconify -->
+    <script src="https://code.iconify.design/2/2.1.2/iconify.min.js" crossorigin="anonymous"></script>
+
+    <style>
+        /* Import Poppins font */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        /* Apply Poppins font to all elements */
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+        /* Ajuste para scroll no mobile */
+        @media (max-width: 1024px) {
+            body {
+                padding-bottom: 56px; /* Altura da navbar inferior */
+            }
+            .page {
+                display: none;
+                min-height: calc(100vh - 56px); /* Ajuste para a altura da navbar inferior */
+                overflow-y: auto;
+                padding-bottom: 20px; /* Espaço extra no final da página */
+            }
+            .page.active {
+                display: block;
+            }
+        }
+        /* Animation for swap icon */
+        @keyframes rotateIcon {
+            from { transform: rotate(90deg); }
+            to { transform: rotate(270deg); }
+        }
+        .rotate-icon {
+            animation: rotateIcon 0.3s ease-in-out;
+        }
+
+        /* Additional styles */
+        #language {
+            width: 100%;
+        }
+
+        .container.card {
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 30px;
+            cursor: pointer; /* Make the card look clickable */
+        }
+
+        .route-header {
+            display: flex;
+            align-items: center;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .route-icon {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
+        .route-number {
+            font-weight: bold;
+        }
+
+        .stops-summary {
+            margin-top: 10px;
+        }
+
+        .stop, .transfer {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .transfer-icon {
+            margin-right: 5px;
+        }
+
+        .route-footer {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .intermediate-stops {
+            overflow: hidden;
+            transition: max-height 0.5s ease-out; /* Add transition for animation */
+        }
+
+        .grey-out {
+            position: relative;
+        }
+
+        .grey-out::after {
+            content: "";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(128, 128, 128, 0.1); /* grey with 50% opacity */
+        }
+
+        .tm-about-text-wrap {
+            margin-bottom: 30px;
+        }
+
+        #languageModal {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+
+        }
+
+        #languageModal .bg-white {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        /* New styles for fixed ad and scrollable content */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        #placeHolderForAd {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: white;
+        }
+
+        .page {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        /* Improved language picker styling */
+        #languageModal .bg-white {
+            max-width: 600px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #languageModal ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #languageModal li {
+            margin-bottom: 10px;
+        }
+
+        #languageModal button {
+            align-items: center;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background-color: #f3f4f6;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        #languageModal button:hover {
+            background-color: #e5e7eb;
+        }
+
+        #languageModal button span {
+            margin-right: 10px;
+            font-size: 1.5em;
+        }
+
+        #closeModal {
+            width: auto !important;
+            background: none !important;
+            text-align: right !important;
+            float: right !important;
+            margin: 0px !important;
+        }
+    </style>
 </head>
 
-<body>
-    <div class="tm-main-content" id="top">
-        <div class="tm-top-bar-bg"></div>
-        <div class="tm-top-bar" id="tm-top-bar">
-            <div class="container">
-                <div class="row">
-                    <nav class="navbar navbar-expand-lg narbar-light">
-                        <a class="navbar-brand mr-auto" href="#top">
-                            <img src="static/img/logo-playstore.png" alt="São Miguel Bus Logo">
-                            São Miguel Bus
-                        </a>
-                        <button type="button" id="nav-toggle" class="navbar-toggler collapsed" data-toggle="collapse"
-                            data-target="#mainNav" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
+<body class="bg-white text-gray-800">
+    <!-- Ad Placeholder (fixed at the top) -->
+    <div id="placeHolderForAd" class="relative border-b-2 border-gray-300 w-full mb-1 p-1 rounded-lg">
+        <!-- The ad banner will be inserted here by JavaScript -->
+    </div>
+    
+    <!-- Bottom Navigation Bar for Mobile -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white lg:hidden z-50">
+        <div class="flex">
+            <a href="#" class="flex flex-col items-center justify-center text-gray-600 hover:text-green-600 py-2 flex-1" data-target="home">
+                <i class="fas fa-bus text-xl"></i>
+                <span id="navBarSearchLabel" class="text-xs" data-i18n="navBarSearchLabel">Rotas</span>
+            </a>
+            <a href="#" class="flex flex-col items-center justify-center text-gray-600 hover:text-green-600 py-2 flex-1" data-target="routes">
+                <i class="fas fa-route text-xl"></i>
+                <span id="navBarRoutesLabel" class="text-xs" data-i18n="navBarRoutesLabel">Direções</span>
+            </a>
+            <a href="#" class="flex flex-col items-center justify-center text-gray-600 hover:text-green-600 py-2 flex-1" data-target="tours">
+                <i class="fas fa-map-marked-alt text-xl"></i>
+                <span id="navBarToursLabel" class="text-xs" data-i18n="navBarToursLabel">Tours</span>
+            </a>
+            <a href="#" class="flex flex-col items-center justify-center text-gray-600 hover:text-green-600 py-2 flex-1" data-target="advert">
+                <i class="fas fa-ad text-xl"></i>
+                <span id="navBarAdvertLabel" class="text-xs" data-i18n="navBarAdvertLabel">Anúncios</span>
+            </a>
+            <a href="#" class="flex flex-col items-center justify-center text-gray-600 hover:text-green-600 py-2 flex-1" data-target="info">
+                <i class="fas fa-info-circle text-xl"></i>
+                <span id="navBarInfoLabel" class="text-xs" data-i18n="navBarInfoLabel">Info</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Language Selection Modal -->
+    <div id="languageModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white rounded-lg p-6 w-80 relative">
+            <button id="closeModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2">
+                <i class="fas fa-times text-xl text-right"></i>
+            </button>
+            <ul>
+                <li>
+                    <button onclick="changeLanguage('pt')" class="w-full text-left py-2">
+                        <span>🇵🇹</span> Português
+                    </button>
+                </li>
+                <li>
+                    <button onclick="changeLanguage('en')" class="w-full text-left py-2">
+                        <span>🇬🇧</span> English
+                    </button>
+                </li>
+                <li>
+                    <button onclick="changeLanguage('es')" class="w-full text-left py-2">
+                        <span>🇪🇸</span> Español
+                    </button>
+                </li>
+                <li>
+                    <button onclick="changeLanguage('fr')" class="w-full text-left py-2">
+                        <span>🇫🇷</span> Français
+                    </button>
+                </li>
+                <li>
+                    <button onclick="changeLanguage('de')" class="w-full text-left py-2">
+                        <span>🇩🇪</span> Deutsch
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="loadingSpinner" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+        <div class="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-green-500"></div>
+    </div>
+
+    <!-- Pesquisar Page -->
+    <section id="home" class="page active bg-white flex flex-col items-center p-2">       
+        <div class="w-full max-w-md mx-auto bg-white rounded-3xl shadow-lg overflow-hidden relative">
+            <span class="absolute top-0 left-0 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-tl-lg rounded-br-lg">AD</span>          
+            <a href="https://ad.saomiguelbus.com" target="_blank" class="block">
+                <div class="bg-green-600 text-white p-4 text-center">
+                    <p class="font-bold" data-i18n="adBannerTitle">ANUNCIE AQUI</p>
+                    <p class="text-sm" data-i18n="adBannerSubtitle">Saiba mais em <span class="underline">ad.saomiguelbus.com</span></p>
+                </div>
+            </a>
+
+            <!-- Search Form -->
+            <form action="index.html" method="get" class="p-2" role="search" aria-label="Formulário de Pesquisa de Autocarros">
+                <div class="space-y-1">
+                    <div class="relative">
+                        <input name="origin" id="origin" type="text" list="origin-stops" placeholder="Origem" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" data-i18n-placeholder="originPlaceholder" required>
+                        <datalist id="origin-stops"></datalist>
+                        <svg class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                    </div>
+                
+                    <!-- Swap Button -->
+                    <button type="button" class="w-full flex justify-end items-center" onclick="swapOriginDestination()">
+                        <div class="bg-green-500 rounded-full w-8 h-8 flex items-center justify-center hover:bg-green-600 transition duration-300 ease-in-out">
+                            <i id="swapIcon" class="fas fa-exchange-alt transform rotate-90 text-white text-sm"></i>
+                        </div>
+                    </button>
+
+                    <div class="relative">
+                        <input name="destination" id="destination" type="text" list="destination-stops" placeholder="Destino" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" data-i18n-placeholder="destinationPlaceholder" required>
+                        <datalist id="destination-stops"></datalist>
+                        <svg class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                    </div>
+
+                    <br>
+
+                    <!-- Date and Time Picker Container -->
+                    <div class="flex flex-row space-x-4 w-full max-w-md">
+                        <!-- Date Picker Input -->
+                        <div class="relative flex-1">
+                            <input 
+                                type="date" 
+                                id="datePicker" 
+                                name="date" 
+                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 bg-white appearance-none"
+                                style="-webkit-appearance: none; -moz-appearance: none; appearance: none;" 
+                                data-i18n="dayLabel" 
+                                onchange="checkDayType()"
+                            >
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
+                                <i class="fas fa-calendar-alt"></i>
+                            </span>
+                        </div>
+    
+                        <!-- Time Picker Input -->
+                        <div class="relative flex-1">
+                            <input 
+                                type="time" 
+                                id="time" 
+                                name="time" 
+                                class="w-full pl-10 pr-4 py-2 h-10 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 bg-white appearance-none" 
+                                style="-webkit-appearance: none; -moz-appearance: none; appearance: none;" 
+                                data-i18n-placeholder="timePlaceholder" 
+                                required
+                            >
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
+                                <i class="fas fa-clock"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="flex space-x-2">
+                        <button type="submit" id="btnSubmit" class="flex-grow bg-green-500 text-white py-2 rounded-full hover:bg-green-600 transition duration-300 ease-in-out" data-i18n="searchButton">
+                            Pesquisar
                         </button>
-                        <div id="mainNav" class="collapse navbar-collapse tm-bg-white">
-                            <ul class="navbar-nav ml-auto">
-                                <li class="nav-item">
-                                    <a class="nav-link active" href="#top">Home <span
-                                            class="sr-only">(current)</span></a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#tm-section-search" id="navBarSearchLabel">Pesquisar</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#tm-section-3">Download</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="#tm-section-4" id="navBarContactLabel">Contatar</a>
-                                </li>
-                            </ul>
-                            <select onchange="this.options[this.selectedIndex].value && (window.location.href = '?lang='.concat(this.options[this.selectedIndex].value));" name="language" class="custom-select" id="language">
-                                <option value="pt">🇵🇹 PT</option>
-                                <option value="en">🇬🇧 ENG</option>
-                            </select>
-                        </div>
-                    </nav>
-                </div> <!-- row -->
-            </div> <!-- container -->
-        </div> <!-- .tm-top-bar -->
-
-        <div class="tm-page-wrap mx-auto">
-            <section class="tm-banner">
-                <div class="tm-container-outer tm-banner-bg">
-                    <div class="container">
-
-                        <div class="row tm-banner-row tm-banner-row-header">
-                            <div class="col-xs-12">
-                                <div class="tm-banner-header">
-                                    <h1 class="text-uppercase tm-banner-title" id="bannerTitle">Procura um Autocarro</h1>
-                                    <img src="static/img/dots-3.png" alt="Dots">
-                                    <p class="tm-banner-subtitle" id="bannerSubtitle">Encontra a melhor rota para ti.</p>
-                                    <a class="tm-down-arrow-link" id="search-background"><i
-                                            class="fa fa-2x fa-angle-down tm-down-arrow"></i></a>
-                                </div>
-                            </div> <!-- col-xs-12 -->
-                        </div> <!-- row -->
-                        <div class="row tm-banner-row" id="tm-section-search">
-
-                            <form action="index.html" method="get" class="tm-search-form tm-section-pad-2">
-                                <div class="form-row tm-search-form-row">
-                                    <div class="form-group tm-form-group tm-form-group-pad tm-form-form-1">
-                                        <label for="origin" id="originLabel">Partida</label> <i
-                                            style="color: grey; font-style: italic">*</i>
-                                        <input name="origin" value="" list="origin-stops" class="form-control"
-                                            id="origin" placeholder="Escolhe o teu ponto de partida..." required>
-                                        <datalist name="origin" id="origin-stops">
-                                                   
-                                            
-                                        </datalist>
-                                    </div>
-                                    <div class="form-group tm-form-form-2">
-                                        <label for="origin"></label> <i style="color: grey; font-style: italic"></i>
-                                        <a id="change" class="change-button form-control"
-                                            style="font-size:16px; outline: none; text-align: center"><i
-                                                class="fa fa-exchange"></i></a>
-                                    </div>
-                                    <div class="form-group tm-form-group tm-form-group-pad tm-form-form-3">
-                                        <label for="destination" id="destinationLabel">Destino</label><i
-                                            style="color: grey; font-style: italic">*</i>
-                                        <input name="destination" value="" list="destination-stops"
-                                            type="text" class="form-control" id="destination"
-                                            placeholder="Escolhe o teu destino..." required>
-                                        <datalist name="destination" id="destination-stops">
-                                            
-
-                                        </datalist>
-                                    </div>
-                                </div> <!-- form-row -->
-                                <div class="form-row tm-search-form-row">
-
-                                    <div class="form-group tm-form-group tm-form-group-pad tm-form-group-3">
-                                        <label for="day" id="dayLabel">Dias da Semana</label><i
-                                            style="color: grey; font-style: italic">*</i>
-                                        
-                                        <select name="day" class="form-control tm-select" id="day">
-                                            <option value="1" id="weekday" selected>Dia da Semana</option>
-                                            <option value="2" id="saturday">Sábado</option>
-                                            <option value="3" id="sunday">Domingo/Feriado</option>
-                                        </select>
-                                        
-                                    </div>
-                                    <div class="form-group tm-form-group tm-form-group-pad tm-form-group-3">
-                                        <label for="time" id="timeLabel">Hora</label> <i
-                                            style="color: grey; font-style: italic" id="timeLabelSubtitle">Opcional</i>
-                                        <input class="form-control tm-select" value="" type="time" id="time"
-                                            name="time">
-                                    </div>
-                                    <div class="form-group tm-form-group tm-form-group-pad tm-form-group-1">
-                                        <label for="btnSubmit">&nbsp;</label>
-                                        <button class="btn btn-primary tm-btn tm-btn-search text-uppercase"
-                                            id="btnSubmit"><a id="searchButton">Pesquisar</a></button>
-                                    </div>
-                                </div>
-                            </form>
-
-                        </div> <!-- row -->
-                        <div class="tm-banner-overlay"></div>
-                    </div> <!-- .container -->
-                </div> <!-- .tm-container-outer -->
-            </section>
-
-            
-            <div id="placeHolderForAd">
-                <!-- The ad banner will be inserted here by JavaScript -->
-            </div>
-            
-            <div class="tm-container-outer" id="routesDiv">
-                
-                <!-- Placeholder for No Routes Message -->
-                <div id="noRoutesMessage" style="display: none;">
-                    <!-- Content will be added dynamically -->
-                </div>
-
-                <!-- Placeholder for Routes -->
-                <div id="routesContainer" style="display: none;">
-                    <!-- Routes will be added dynamically -->
-                </div>       
-                
-            </div>
-
-            <div class="tm-container-outer" id="tm-section-3">
-                <section class="p-5 tm-container-outer">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-12 mx-auto tm-about-text-wrap text-center">
-                                <h2 class="text-uppercase mb-4">Download São Miguel Bus <strong>APP</strong></h2>
-                                <div class="d-flex justify-content-center">
-                                    <a target="_blank" href="https://play.google.com/store/apps/details?id=com.hsousa_apps.Autocarros&hl=pt_PT&gl=US">
-                                        <img class="badge-image" src="static/img/Google-play.png" alt="Download on Play Store"/>
-                                    </a>
-                                    <a target="_blank" href="/newsletter/">
-                                        <img class="badge-image grey-out" src="static/img/apple.webp" alt="Download on App Store"/>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-            
-
-            <div class="tm-container-outer" id="tm-section-4">
-                <div class="container">
-                    <div class="row justify-content-center">
-                        <div class="col-md-12">
-                            <div class="wrapper">
-                                <div class="row no-gutters">
-                                    <div class="col-lg-8 col-md-7 order-md-last d-flex align-items-stretch">
-                                        <div class="contact-wrap w-100 p-md-5 p-4">
-                                            <h3 class="mb-4" id="formTitle">Encontrou algo errado?</h3>
-                                            <p class="mb-4" id="formSubtitle">Estamos abertos para qualquer sugestão ou apenas para conversar</p>
-                                            <div id="form-message-warning" class="mb-4"></div>
-                                            <div id="form-message-success" class="mb-4">
-                                            </div>
-                                            <form action="https://formsubmit.co/info@saomiguelbus.com" method="POST"
-                                                id="contactForm" name="contactForm" class="contactForm">
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label id="nameLabel" class="label"
-                                                                for="name">Nome</label>
-                                                            <input type="text" class="form-control" name="name"
-                                                                id="name" placeholder="Nome">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="form-group">
-                                                            <label class="label" for="email">Email</label>
-                                                            <input type="email" class="form-control" name="email"
-                                                                id="email" placeholder="Email" required>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-12">
-                                                        <div class="form-group">
-                                                            <label id="subjectLabel" class="label"
-                                                                for="subject">Assunto</label>
-                                                            <input type="text" class="form-control" name="subject"
-                                                                id="subject" placeholder="Assunto">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-12">
-                                                        <div class="form-group">
-                                                            <label id="messageLabel" class="label"
-                                                                for="#">Mensagem</label>
-                                                            <textarea name="message" class="form-control" id="message"
-                                                                cols="30" rows="4"
-                                                                placeholder="Mensagem"></textarea>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-12">
-                                                        <div class="form-group">
-                                                            <input type="submit" id="submitForm" value="Enviar Mensagem"
-                                                                class="btn btn-primary">
-                                                            <div class="submitting"></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-5 d-flex align-items-stretch">
-                                        <div class="contact-info w-100 p-md-5 p-4">
-                                            <h3 class="mb-3 text-white" id="contactCardTitle">Entre em contato</h3>
-                                            <div class="contact-info-item">
-                                                <p class="footer-text mb-0"><a href="https://wa.link/tboeew"
-                                                        target="_blank"><span class="iconify"
-                                                            data-icon="uil:whatsapp"></span> Whatsapp <span id="chamadasLabel">(Não atendemos chamadas)</span></a></p>
-                                                <p><a title="Mail"
-                                                        href="mailto:info@saomiguelbus.com">info@saomiguelbus.com</a></p>
-
-                                                <ul class="social-links">
-                                                    <li><a href="https://www.linkedin.com/in/henriquecsousa/"
-                                                            target="_blank" title="LinkedIn"><span class="iconify"
-                                                                data-icon="uil:linkedin"></span> LinkedIn</a></li>
-                                                    <li><a href="https://www.instagram.com/sousadev/" target="_blank"
-                                                            title="Instagram"><span class="iconify"
-                                                                data-icon="uil:instagram"></span> Instagram</a></li>
-                                                    <li><a href="https://www.twitter.com/sousadev/" target="_blank"
-                                                            title="Twitter"><span class="iconify"
-                                                                data-icon="uil:twitter"></span> Twitter</a></li>
-                                                    <li><a href="https://www.github.com/sousaua/" target="_blank"
-                                                            title="GitHub"><span class="iconify"
-                                                                data-icon="uil:github"></span> GitHub</a></li>
-                                                </ul>
-
-                                                <div class="google-map w-100" style="height: auto">
-                                                    <iframe
-                                                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d201744.92890198727!2d-25.635057728071235!3d37.80727282800227!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xb5cd77250e697c3%3A0xae4f6f26c3f63890!2sS%C3%A3o%20Miguel%20Island!5e0!3m2!1sen!2spt!4v1645534242199!5m2!1sen!2spt"
-                                                        width="400" height="300" frameborder="0" style="border:0; border-radius:15px"
-                                                        allowfullscreen=""></iframe>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <button type="button" id="btnRoutes" class="bg-green-500 text-white p-2 rounded-full hover:bg-green-600 transition duration-300 ease-in-out w-10 h-10 flex items-center justify-center">
+                            <i class="fas fa-route"></i>
+                        </button>
                     </div>
                 </div>
-            </div> <!-- .tm-container-outer -->
+            </form>
+        </div>
+        <div class="tm-container-outer" id="routesDiv" style="max-height: calc(100vh - 56px - 400px); overflow-y: auto;">      
+            <!-- Placeholder for No Routes Message -->
+            <div id="noRoutesMessage" class="hidden text-center text-lg text-gray-700 mt-4" data-i18n="noRoutesMessage">
+                Nenhuma rota encontrada. Tente novamente com diferentes parâmetros.
+            </div>
 
-            <div class="tm-container-outer" id="sponsor">
-                <section class="p-5 tm-container-outer">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-12 mx-auto tm-about-text-wrap text-center">
-                                <p id="patreonSubtitle" class="lead mb-4">Siga-me no Patreon e seja o primeiro a saber sobre novas atualizações, lançamentos e muito mais!</p>
-                                <a class="patreon-link" target="_blank" href="https://www.patreon.com/sousadev">
-                                    <img class="patreon-symbol" style="height: 50px ;" src="static/img/PATREON_SYMBOL_1_BLACK_RGB.svg" alt="Become a Patron">
-                                    <img class="patreon-wordmark" style="height: 50px ;"  src="static/img/PATREON_WORDMARK_1_BLACK_RGB.svg" alt="Become a Patron">
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </section>                
-                <p style="text-align:center; font-style:italic" id="websiteInfo">Este site não é afiliado a nenhuma empresa ou organização. O horário usado foi retirado de documentos públicos disponibilizados pelas empresas de autocarros. Alguns horários podem estar desatualizados!</p>
+            <!-- Placeholder for Routes -->
+            <div id="routesContainer" class="hidden mt-4">
+                <!-- Routes will be added dynamically -->
+            </div>       
+        </div>
+
+        <!-- Instructional Card for Home Section -->
+        <div id="homeInstructionCard" class="bg-white border-l-4 border-blue-500 text-blue-700 p-4 rounded-lg shadow-md mb-6 mt-4 sm:block max-w-xl mx-auto">
+            <div class="flex items-center mb-3">
+                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span class="font-semibold mr-4 text-lg sm:text-xl" data-i18n="homeInstructionsTitle">Instruções de Uso</span>
+                <i class="fas fa-bus text-xl sm:text-2xl"></i>
+            </div>
+            <p class="mb-3 text-sm sm:text-base" data-i18n="homeInstructionsText">Insira sua origem e destino acima para procurar as rotas disponíveis.</p>
+            <div class="bg-blue-50 border-l-4 border-blue-300 p-2 rounded text-sm sm:text-base">
+                <div class="flex items-center">
+                    <i class="fas fa-route bg-green-500 text-white p-1 rounded-full w-6 h-6 mr-2"></i>
+                    <span data-i18n="homeInstructionsText2">Clique no botão de rota acima se pretender obter direções passo a passo.</span>
+                </div>
             </div>
         </div>
 
-        <button id="scrollToTopBtn" style="display: none;">
-            <i class="fa fa-search"></i> 
-        </button>
+        <!-- Install App Buttons -->
+        <div id="installAppButtons" class="w-full max-w-md mx-auto mt-4">
+            <button id="installAndroidApp" class="hidden w-full bg-green-500 text-white py-2 px-4 rounded-full hover:bg-green-600 transition duration-300 ease-in-out mb-2" onclick="window.location.href='https://play.google.com/store/apps/details?id=com.hsousa_apps.Autocarros'">
+                <div class="flex items-center"></div>
+                    <i class="fab fa-android mr-2 self-center text-xl"></i>
+                    <span data-i18n="installAndroidApp" class="flex-grow">Install Android App</span>
+                </div>
+            </button>
+            <button id="installIOSApp" class="hidden w-full bg-black text-white py-2 px-4 rounded-full hover:bg-blue-600 transition duration-300 ease-in-out" onclick="window.location.href='/newsletter'">
+                <div class="flex items-center">
+                    <i class="fab fa-apple mr-2 self-center text-xl"></i>
+                    <span data-i18n="registerToDownloadIOSApp" class="flex-grow text-sm">Register to Download iOS App</span>
+                </div>
+            </button>
+        </div>
+
+    </section>
+
+    <!-- Routes Page -->
+    <section id="routes" class="page hidden bg-white flex flex-col items-center p-2">
+        <div class="w-full max-w-md mx-auto bg-white rounded-3xl shadow-lg overflow-hidden relative">
+            <span class="absolute top-0 left-0 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-tl-lg rounded-br-lg">AD</span>          
+            <a href="https://ad.saomiguelbus.com" target="_blank" class="block">
+                <div class="bg-green-600 text-white p-4 text-center">
+                    <p class="font-bold" data-i18n="adBannerTitle">ANUNCIE AQUI</p>
+                    <p class="text-sm" data-i18n="adBannerSubtitle">Saiba mais em <span class="underline">ad.saomiguelbus.com</span></p>
+                </div>
+            </a>
+
+            <!-- Search Form -->
+            <form action="index.html" method="get" class="p-2" role="search" aria-label="Formulário de Pesquisa de Autocarros">
+                <div class="space-y-1">
+                    <div class="relative">
+                        <input name="origin" id="originStepByStep" type="text" list="origin-stops" placeholder="Origem" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" data-i18n-placeholder="originPlaceholder" required>
+                        <datalist id="origin-stops"></datalist>
+                        <svg class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                    </div>
+                
+                    <!-- Swap Button -->
+                    <button type="button" class="w-full flex justify-end items-center" onclick="swapOriginDestination()">
+                        <div class="bg-green-500 rounded-full w-8 h-8 flex items-center justify-center hover:bg-green-600 transition duration-300 ease-in-out">
+                            <i id="swapIconStepByStep" class="fas fa-exchange-alt transform rotate-90 text-white text-sm"></i>
+                        </div>
+                    </button>
+
+                    <div class="relative">
+                        <input name="destination" id="destinationStepByStep" type="text" list="destination-stops" placeholder="Destino" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" data-i18n-placeholder="destinationPlaceholder" required>
+                        <datalist id="destination-stops"></datalist>
+                        <svg class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                    </div>
+
+                    <br>
+
+                    <!-- Date and Time Picker Container -->
+                    <div class="flex flex-row space-x-4 w-full max-w-md">
+                        <!-- Date Picker Input -->
+                        <div class="relative flex-1">
+                            <input 
+                                type="date" 
+                                id="datePickerStepByStep" 
+                                name="date" 
+                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 bg-white appearance-none"
+                                style="-webkit-appearance: none; -moz-appearance: none; appearance: none;" 
+                                data-i18n="dayLabel" 
+                                onchange="checkDayType()"
+                            >
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
+                                <i class="fas fa-calendar-alt"></i>
+                            </span>
+                        </div>
+    
+                        <!-- Time Picker Input -->
+                        <div class="relative flex-1">
+                            <input 
+                                type="time" 
+                                id="timeStepByStep" 
+                                name="time" 
+                                class="w-full pl-10 pr-4 py-2 h-10 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 bg-white appearance-none" 
+                                style="-webkit-appearance: none; -moz-appearance: none; appearance: none;" 
+                                data-i18n-placeholder="timePlaceholder" 
+                                required
+                            >
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
+                                <i class="fas fa-clock"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="flex space-x-2">
+                        <button type="submit" id="btnSubmitStepByStep" class="flex-grow bg-green-500 text-white py-2 rounded-full hover:bg-green-600 transition duration-300 ease-in-out" data-i18n="directionsButton">
+                            Obter Direções
+                        </button>
+                        <button type="button" id="btnRoutesStepByStep" class="bg-green-500 text-white p-2 rounded-full hover:bg-green-600 transition duration-300 ease-in-out w-10 h-10 flex items-center justify-center">
+                            <i class="fas fa-bus"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div id="directionsContainer"></div>
         
-        <footer class="tm-container-footer">
-            <p class="mb-0">Copyright © <span class="tm-current-year">2024</span> <a target="_blank"
-                    href="https://www.sousadev.com">Sousa Dev</a>
+        <!-- Instructional Card for Routes Section -->
+        <div id="routesInstructionCard" class="bg-white border-l-4 border-blue-500 text-blue-700 p-4 rounded-lg shadow-md mb-6 mt-4 sm:block max-w-xl mx-auto">
+            <div class="flex items-center mb-3">
+                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span class="font-semibold mr-4 text-lg sm:text-xl" data-i18n="routeInstructionsTitle">Instruções de Uso</span>
+                <i class="fas fa-route text-xl sm:text-2xl"></i>
+            </div>
+            <p class="mb-3 text-sm sm:text-base" data-i18n="routeInstructionsText">Insira um local de origem e de destino para receber detalhes e direções passo a passo.</p>
+            <div class="bg-blue-50 border-l-4 border-blue-300 p-2 rounded text-sm sm:text-base">
+                <div class="flex items-center">
+                    <i class="fas fa-bus bg-green-500 text-white p-1 rounded-full w-6 h-6 mr-2"></i>
+                    <span data-i18n="routeInstructionsText2">Clique no botão do autocarro acima se pretender apenas procurar rotas de autocarros disponíveis.</span>
+                </div>
+            </div>
+        </div>
+    </section>
 
-                . Designed by <a rel="nofollow" href="https://templatemo.com/" target="_blank">Template Mo</a></p>
-            <p><a href="https://sousadev.com/terms-and-conditions.html" target="_blank">Terms and conditions</a> / <a
-                    href="https://sousadev.com/privacy-policy.html" target="_blank">Privacy Policy</a></p>
-        </footer>
-    </div> <!-- .main-content -->
+    <!-- Tours Page -->
+    <section id="tours" class="page hidden bg-white flex flex-col items-center p-2">
+        <h2 class="text-2xl text-center font-bold mb-4" data-i18n="toursTitle">Tours</h2>
+        <p class="text-center text-lg mb-6" data-i18n="toursSubtitle">Encontre tours turísticos na ilha de São Miguel.</p>
+        <div id="viatorWidget"></div>
+        
+        <!-- Loading Info Section -->
+        <div id="loadingToursInfo" class="bg-white rounded-lg p-4 shadow-md mb-6 max-w-md mx-auto">
+            <h3 class="text-xl font-semibold mb-3 text-center" data-i18n="loadingToursInfoTitle">Carregando Informações</h3>
+            <p class="text-gray-700 text-center mb-4" data-i18n="loadingToursInfoDescription">
+                Por favor, aguarde enquanto carregamos as informações dos tours disponíveis.
+            </p>
+            <div class="flex justify-center mb-4">
+                <div class="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-green-500"></div>
+            </div>
+            <p class="text-sm text-gray-600 text-center" data-i18n="loadingToursAlternativeLink">
+                Se demorar muito a carregar pode também aceder através deste link: 
+            </p>
+        </div>
+    <div class="flex justify-center">
+        <a href="https://www.viator.com/?pid=P00222801&mcid=42383&medium=link&medium_version=selector&campaign=sao-miguel-tours" target="_blank" class="text-blue-500 hover:underline">São Miguel Tours <i class="fas fa-external-link-alt text-xs ml-1"></i></a>
+    </div>
+    </section>
 
-    <!-- load JS files -->
+    <!-- Advert Page -->
+    <section id="advert" class="page hidden bg-white flex flex-col items-center p-4">
+        <h2 class="text-2xl text-center font-bold mb-4" data-i18n="advertiseTitle">Anuncie em São Miguel Bus</h2>
+        <!-- <p class="text-center text-lg mb-6" data-i18n="advertiseSubtitle">Anuncie na nossa aplicação a partir de X euros por mês.</p> -->
+        <a href="https://ad.saomiguelbus.com" target="_blank" class="block">
+            <div class="bg-green-100 rounded-lg p-6 shadow-md max-w-md mx-auto mb-6 hover:bg-green-200 transition-colors duration-300 cursor-pointer">
+                <h3 class="text-xl font-semibold mb-3 text-center" data-i18n="advertisingOpportunity">Oportunidade de Publicidade</h3>
+                <p class="text-gray-700 text-center" data-i18n="advertisingOpportunityDescription">
+                    Pode anunciar o seu negócio para residentes e turistas da ilha de São Miguel. 
+                    <br> <br>
+                </p>
+                <div class="text-green-600 text-center block mt-4"><i class="fas fa-external-link-alt"></i> ad.saomiguelbus.com</div>
+            </div>
+        </a>
 
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-white rounded-lg p-4 shadow-md flex flex-col items-center">
+                <i class="fas fa-cubes text-green-500 text-3xl mb-2"></i>
+                <h3 class="text-xl font-semibold text-center" data-i18n="exactTargeting">Segmentação Precisa</h3>
+                <p class="text-gray-700 text-center mt-2" data-i18n="exactTargetingDescription">Exiba seu anúncio para usuários que pesquisam rotas próximas ao seu estabelecimento.</p>
+            </div>
+            <div class="bg-white rounded-lg p-4 shadow-md flex flex-col items-center">
+                <i class="fas fa-chart-line text-green-500 text-3xl mb-2"></i>
+                <h3 class="text-xl font-semibold text-center" data-i18n="directedInteractions">Interações Direcionadas</h3>
+                <p class="text-gray-700 text-center mt-2" data-i18n="directedInteractionsDescription">Redirecione usuários para seu site ou mapa com direções para seu estabelecimento.</p>
+            </div>
+            <div class="bg-white rounded-lg p-4 shadow-md flex flex-col items-center">
+                <i class="fas fa-money-bill-wave text-green-500 text-3xl mb-2"></i>
+                <h3 class="text-xl font-semibold text-center" data-i18n="flexiblePricing">Preço Flexível</h3>
+                <p class="text-gray-700 text-center mt-2" data-i18n="flexiblePricingDescription">Opções de preço baseadas em como você deseja promover seus serviços.</p>
+            </div>
+            <div class="bg-white rounded-lg p-4 shadow-md flex flex-col items-center">
+                <i class="fas fa-credit-card text-green-500 text-3xl mb-2"></i>
+                <h3 class="text-xl font-semibold text-center" data-i18n="convenientPayment">Pagamento Conveniente</h3>
+                <p class="text-gray-700 text-center mt-2" data-i18n="convenientPaymentDescription">Aceita-se MBWay ou transferência bancária, com recibo para fins contabilísticos.</p>
+            </div>
+        </div>
+
+        <div class="mt-6 flex flex-col items-center">
+            <button class="bg-green-500 text-white py-2 px-4 rounded-full hover:bg-green-600 transition duration-300 ease-in-out flex items-center" onclick="toggleSpoiler()" data-i18n="whyAdsButton">
+                Porque é que existem anúncios na aplicação?
+            </button>
+            <svg class="ml-2 h-4 w-4 transform transition-transform duration-200" id="spoilerArrow" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+            <div id="spoilerContent" class="hidden mt-4 bg-white shadow-md rounded-lg w-full overflow-hidden transition-all duration-300 ease-in-out">
+                <div class="p-6">
+                    <h4 class="text-xl font-semibold text-green-600 mb-3" data-i18n="aboutAdsTitle">Sobre os Anúncios</h4>
+                    <p class="text-gray-700 leading-relaxed" data-i18n="aboutAdsParagraph1">
+                        A aplicação São Miguel Bus foi desenvolvida por apenas uma pessoa, sem qualquer apoio externo ou associação com companhias ou entidades. Os anúncios desempenham um papel crucial:
+                    </p>
+                    <h4 class="text-xl font-semibold text-green-600 mb-3" data-i18n="aboutAdsListTitle">Como os anúncios ajudam a São Miguel Bus</h4>
+                    <ul class="list-disc list-inside text-gray-700 mt-2 space-y-2">
+                        <li data-i18n="aboutAdsList1">Ajudam a cobrir os custos do servidor da aplicação</li>
+                        <li data-i18n="aboutAdsList2">Permitem manter a aplicação totalmente gratuita para todos os utilizadores</li>
+                        <li data-i18n="aboutAdsList3">Contribuem para o contínuo desenvolvimento e melhoria da plataforma</li>
+                    </ul>
+                    <p class="text-gray-700 mt-4 italic" data-i18n="supportThankYou">
+                        Agradecemos a sua compreensão e apoio ao utilizar a São Miguel Bus!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Info Page -->
+    <section id="info" class="page hidden bg-white min-h-screen flex flex-col items-center p-4">
+        <div class="w-full max-w-md mx-auto">
+            <!-- Language Selection Button -->
+            <button id="languageButton" class="bg-white w-auto text-green-600 py-2 px-4 rounded-full shadow-md hover:bg-green-50 transition duration-300 ease-in-out flex items-center border border-green-500 mb-2 float-right">
+                <span id="currentLanguage" class="mr-2 text-xl" data-i18n="currentLanguage">🇵🇹</span>
+                <i class="fas fa-chevron-down ml-2 text-green-500"></i>
+            </button>
+            <br><br><br>
+            <div class="bg-gray-100 rounded-lg p-4 mb-4 flex items-center">
+                <img src="static/img/logo.png" alt="Logo" class="w-8 h-8 mr-4">
+                <div><h3 class="font-semibold" data-i18n="infoDevelopedBy">Esta aplicação foi desenvolvida por</h3> <a href="https://www.sousadev.com" target="_blank" class="text-blue-500">Sousa Dev</a></div>
+            </div>
+
+            <a href="#" class="block bg-white border border-gray-200 rounded-lg p-4 mb-4 flex items-center justify-between hover:bg-gray-50" onclick="document.getElementById('infoModal').classList.remove('hidden');">
+                <div class="flex items-center">
+                    <span class="iconify text-3xl mr-4" data-icon="mdi:information-outline"></span>
+                    <h3 class="font-semibold" data-i18n="infoNotDevelopedByBusCompanies">Aplicação não Desenvolvida pelas Empresas de Autocarros</h3>
+                </div>
+                <span class="iconify" data-icon="mdi:chevron-right"></span>
+            </a>
+            <div id="infoModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden" onclick="document.getElementById('infoModal').classList.add('hidden');">
+                <div class="bg-white rounded-lg p-6 w-80 relative" onclick="event.stopPropagation();">
+                    <button id="closeInfoModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" onclick="document.getElementById('infoModal').classList.add('hidden');">
+                        <i class="fas fa-times text-xl text-right"></i>
+                    </button>
+                    <h3 class="text-xl font-semibold text-green-600 mb-3" data-i18n="infoModalTitle">Informações Importantes</h3>
+                    <p class="text-gray-700 leading-relaxed" data-i18n="infoModalDescription">
+                        A aplicação São Miguel Bus foi desenvolvida por apenas uma pessoa, sem qualquer apoio externo ou associação com companhias ou entidades.
+                    </p>
+                    <p class="text-gray-700 mt-4 italic" data-i18n="infoModalEnd">Os horários são da inteira responsabilidade das empresas de autocarros.</p>
+                </div>
+            </div>
+
+            <a href="#" class="block bg-white border border-gray-200 rounded-lg p-4 mb-4 flex items-center justify-between hover:bg-gray-50" onclick="document.getElementById('contactCompaniesModal').classList.remove('hidden');">
+                <div class="flex items-center">
+                    <span class="iconify text-3xl mr-4" data-icon="mdi:bus"></span>
+                    <h3 class="font-semibold" data-i18n="contactBusCompanies">Contato das Companhias de Autocarros</h3>
+                </div>
+                <span class="iconify" data-icon="mdi:chevron-right"></span>
+            </a>
+
+            <div id="contactCompaniesModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden" onclick="document.getElementById('contactCompaniesModal').classList.add('hidden');">
+                <div class="bg-white rounded-lg p-6 w-80 relative" onclick="event.stopPropagation();">
+                    <button id="closeContactModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" onclick="document.getElementById('contactCompaniesModal').classList.add('hidden');">
+                        <i class="fas fa-times text-xl text-right"></i>
+                    </button>
+                    <h3 class="text-xl font-semibold text-green-600 mb-3" data-i18n="contactBusCompaniesTitle">Contato das Companhias de Autocarros</h3>
+                    <p class="text-gray-700" data-i18n="contactBusCompaniesDescription">Para mais informações, entre em contato com as companhias de autocarros diretamente.</p>
+                    <ul class="list-disc list-inside text-gray-700 mt-2 space-y-2">
+                        <li>
+                            <a href="https://www.facebook.com/autoviacaomicaelensetransportes?locale=pt_PT" target="_blank" class="text-blue-500 hover:underline">Auto Viação Micaelense, Lda. </a>
+                            <br>
+                            <span class="text-gray-500 text-xs ml-4">Telefone: 296 301 358</span>
+                            <br>
+                            <span class="text-gray-500 text-xs ml-4">Email: transportes@autoviacaomicaelense.pt</span>
+                        </li>
+                        <li>
+                            <a href="https://www.visitazores.com/en/explore/varela-e-companhia-lda" target="_blank" class="text-blue-500 hover:underline">Varela & Companhia, Lda.</a>
+                            <br>
+                            <span class="text-gray-500 text-xs ml-4">Telefone: +351 296 301 800</span>
+                            <br>
+                            <span class="text-gray-500 text-xs ml-4">Email: bensaude@bensaude.pt</span>
+                        </li>
+                        <li>
+                            <a href="https://www.crp-caetanoraposopereiras.pt/" target="_blank" class="text-blue-500 hover:underline">Caetano Raposo e Pereiras, Lda.</a>
+                            <br>
+                            <span class="text-gray-500 text-xs ml-4">Telefone: +351 296 304 260</span>
+                            <br>
+                            <span class="text-gray-500 text-xs ml-4">Email: turismo@crp.com.pt</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <a href="#" class="block bg-white border border-gray-200 rounded-lg p-4 mb-4 flex items-center justify-between hover:bg-gray-50" onclick="document.getElementById('aluguerModal').classList.remove('hidden');">
+                <div class="flex items-center">
+                    <span class="iconify text-3xl mr-4" data-icon="mdi:bus-clock"></span>
+                    <h3 class="font-semibold" data-i18n="aluguerTitle">Aluguer de Autocarros</h3>
+                </div>
+                <span class="iconify" data-icon="mdi:chevron-right"></span>
+            </a>
+
+            <div id="aluguerModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden" onclick="document.getElementById('aluguerModal').classList.add('hidden');">
+                <div class="bg-white rounded-lg p-6 w-80 relative" onclick="event.stopPropagation();">
+                    <button id="closeAluguerModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" onclick="document.getElementById('aluguerModal').classList.add('hidden');">
+                        <i class="fas fa-times text-xl text-right"></i>
+                    </button>
+                    <h3 class="text-xl font-semibold text-green-600 mb-3" data-i18n="aluguerTitle">Aluguer de Autocarros</h3>
+                    <p class="text-gray-700" data-i18n="aluguerDescription">Para mais informações sobre aluguer de autocarros, entre em contato com as companhias de autocarros diretamente.</p>
+                </div>
+            </div>
+
+            <a href="#" class="block bg-white border border-gray-200 rounded-lg p-4 mb-4 flex items-center justify-between hover:bg-gray-50" onclick="document.getElementById('priceModal').classList.remove('hidden');">
+                <div class="flex items-center">
+                    <span class="iconify text-3xl mr-4" data-icon="mdi:ticket"></span>
+                    <h3 class="font-semibold" data-i18n="priceApp">Preço dos Bilhetes</h3>
+                </div>
+                <span class="iconify" data-icon="mdi:chevron-right"></span>
+            </a>
+
+            <div id="priceModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden" onclick="document.getElementById('priceModal').classList.add('hidden');">
+                <div class="bg-white rounded-lg p-6 w-80 relative" onclick="event.stopPropagation();">
+                    <button id="closePriceModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" onclick="document.getElementById('priceModal').classList.add('hidden');">
+                        <i class="fas fa-times text-xl text-right"></i>
+                    </button>
+                    <h3 class="text-xl font-semibold text-green-600 mb-3" data-i18n="priceApp">Preço dos Bilhetes</h3>
+                    <p class="text-gray-700" data-i18n="priceAppDescription">Os preços dos bilhetes são determinados pelas companhias de autocarros e podem variar de acordo com a distância, o tipo de bilhete e outros fatores. Não temos acesso aos preços, mas podemos informar que os bilhetes são vendidos no próprio autocarro e devem ser comprados ao motorista com dinheiro físico ao entrar no autocarro.</p>
+                    <p class="text-gray-700 mt-4 italic" data-i18n="priceAppEnd">Para mais informações, entre em contato com as companhias de autocarros diretamente.</p>
+                </div>
+            </div>
+
+            <a href="#" class="block bg-white border border-gray-200 rounded-lg p-4 mb-4 flex items-center justify-between hover:bg-gray-50" onclick="document.getElementById('infoModalAds').classList.remove('hidden');">
+                <div class="flex items-center">
+                    <span class="text-3xl mr-4"><i class="fas fa-ad"></i></span>
+                    <h3 class="font-semibold" data-i18n="whyAdsButton">Por que há anúncios na app?</h3>
+                </div>
+                <span class="iconify" data-icon="mdi:chevron-right"></span>
+            </a>
+
+            <div id="infoModalAds" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden" onclick="document.getElementById('infoModalAds').classList.add('hidden');">
+                <div class="bg-white rounded-lg p-6 w-80 relative" onclick="event.stopPropagation();">
+                    <button id="closeInfoModalAds" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" onclick="document.getElementById('infoModalAds').classList.add('hidden');">
+                        <i class="fas fa-times text-xl text-right"></i>
+                    </button>
+                    <div class="p-6">
+                        <h4 class="text-xl font-semibold text-green-600 mb-3" data-i18n="aboutAdsTitle">Sobre os Anúncios</h4>
+                        <p class="text-gray-700 leading-relaxed" data-i18n="aboutAdsParagraph1">
+                            A aplicação São Miguel Bus foi desenvolvida por apenas uma pessoa, sem qualquer apoio externo ou associação com companhias ou entidades. Os anúncios desempenham um papel crucial:
+                        </p>
+                        <ul class="list-disc list-inside text-gray-700 mt-2 space-y-2">
+                            <li data-i18n="aboutAdsList1">Ajudam a cobrir os custos do servidor da aplicação</li>
+                            <li data-i18n="aboutAdsList2">Permitem manter a aplicação totalmente gratuita para todos os utilizadores</li>
+                            <li data-i18n="aboutAdsList3">Contribuem para o contínuo desenvolvimento e melhoria da plataforma</li>
+                        </ul>
+                        <p class="text-gray-700 mt-4 italic" data-i18n="supportThankYou">
+                            Agradecemos a sua compreensão e apoio ao utilizar a São Miguel Bus!
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <a href="mailto:info@saomiguelbus.com" class="text-blue-500 text-center block mt-4" data-i18n="contactDeveloper">Contate o Desenvolvedor</a>
+
+            <p class="text-center text-gray-500 mt-8">Copyright © 2024 
+                <a href="https://www.sousadev.com" target="_blank" class="text-blue-600">Sousa Dev</a>
+            </p>
+            <div class="text-center">
+                <a href="https://twitter.com/sousadev" target="_blank" class="mx-2">
+                    <i class="fab fa-twitter text-2xl"></i>
+                </a>
+                <a href="https://instagram.com/saomiguelbus" target="_blank" class="mx-2">
+                    <i class="fab fa-instagram text-2xl"></i>
+                </a>
+                <a href="https://linkedin.com/in/henriquecsousa" target="_blank" class="mx-2">
+                    <i class="fab fa-linkedin text-2xl"></i>
+                </a>
+            </div>
+            <p class="text-center text-gray-500 text-sm">
+                <a href="https://sousadev.com/terms-and-conditions.html" target="_blank" rel="noopener noreferrer" data-i18n="termsAndConditions">Termos e Condições</a> 
+                / 
+                <a href="https://sousadev.com/privacy-policy.html" target="_blank" rel="noopener noreferrer" data-i18n="privacyPolicy">Política de Privacidade</a>
+            </p>
+        </div>
+    </section>
+    
+    <script src="js/i18n.js" defer></script>
+    <!-- JavaScript Logic -->
     <script>
-        // Logic to show the button after scrolling down a bit
-        window.addEventListener('scroll', function() {
-            const scrollToTopBtn = document.getElementById('scrollToTopBtn');
-            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-                scrollToTopBtn.style.display = "block";
+        function showLoadingSpinner() {
+            document.getElementById('loadingSpinner').classList.remove('hidden');
+        }
+
+        function hideLoadingSpinner() {
+            document.getElementById('loadingSpinner').classList.add('hidden');
+        }
+        function toggleSpoiler() {
+            var spoilerContent = document.getElementById('spoilerContent');
+            var spoilerArrow = document.getElementById('spoilerArrow');
+            spoilerContent.classList.toggle('hidden');
+            spoilerArrow.classList.toggle('rotate-180');
+        }
+
+        function loadViatorWidget(language) {
+            const widgetContainer = document.getElementById('viatorWidget');
+            widgetContainer.innerHTML = ''; // Clear previous widget
+            let widgetRef;
+
+            switch (language) {
+                case 'pt':
+                    widgetRef = 'W-9498a477-c822-45c2-8ac8-1a241c13a34c';
+                    break;
+                case 'fr':
+                    widgetRef = 'W-f73fa3e1-fd82-4cfe-b32c-7a7cd7e6bc70';
+                    break;
+                case 'de':
+                    widgetRef = 'W-7be85e92-9d74-4086-89f4-cc11540ff074';
+                    break;
+                case 'es':
+                    widgetRef = 'W-619d8787-da9d-449b-b071-61e28e34bc02';
+                    break;
+                default:
+                    widgetRef = 'W-00e6047e-b988-4a48-823b-d534a5a5ff04';
+            }
+
+            widgetContainer.innerHTML = `<div data-vi-partner-id="P00222801" data-vi-widget-ref="${widgetRef}"></div>`;
+            const script = document.createElement('script');
+            script.src = 'https://www.viator.com/orion/partner/widget.js';
+            script.async = true;
+            script.onload = function() {
+                setTimeout(function() {
+                    document.getElementById('loadingToursInfo').classList.add('hidden');
+                }, 3000);
+            };
+            document.body.appendChild(script);
+        }
+
+        function showPage(pageId) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => {
+                if (page.id === pageId) {
+                    page.classList.remove('hidden');
+                    page.classList.add('active');
+                } else {
+                    page.classList.add('hidden');
+                    page.classList.remove('active');
+                }
+            });
+            // Scroll to the top of the page
+            window.scrollTo(0, 0);
+
+            // Change the browser title based on the page
+            let pageTitle = t('pageTitle', 'São Miguel Bus');
+            switch(pageId) {
+                case 'home':
+                    pageTitle += ' - ' + t('navBarSearchLabel', 'Home');
+                    break;
+                case 'routes':
+                    pageTitle += ' - ' + t('navBarRoutesLabel', 'Routes');
+                    break;
+                case 'tours':
+                    pageTitle += ' - ' + t('navBarToursLabel', 'Tours');
+                    break;
+                case 'advert':
+                    pageTitle += ' - ' + t('navBarAdvertLabel', 'Advertise');
+                    break;
+                case 'info':
+                    pageTitle += ' - ' + t('navBarInfoLabel', 'Info');
+                    break;
+            }
+            document.title = pageTitle;
+        }
+
+        // Page switching logic
+        document.addEventListener('DOMContentLoaded', function() {
+            setTodayDate();
+            const pages = document.querySelectorAll('.page');
+            const navLinks = document.querySelectorAll('.bottom-0 a');
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetPage = this.getAttribute('data-target');
+                    showPage(targetPage);
+
+                    // Update active state of nav links
+                    navLinks.forEach(navLink => {
+                        if (navLink === this) {
+                            navLink.classList.add('text-green-600');
+                            navLink.classList.remove('text-gray-600');
+                        } else {
+                            navLink.classList.remove('text-green-600');
+                            navLink.classList.add('text-gray-600');
+                        }
+                    });
+                });
+            });
+
+            // Check if the user is on Android or iOS
+            if (/Android/i.test(navigator.userAgent)) {
+                // if (confirm('Instale o aplicativo São Miguel Bus para Android para uma melhor experiência!')) {
+                //     window.location.href = 'https:/saomiguelbus.com/android';
+                // }
+                document.getElementById('installAndroidApp').classList.remove('hidden');
+            } else if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                // if (confirm('Instale o aplicativo São Miguel Bus para iOS para uma melhor experiência!')) {
+                //     window.location.href = 'https://saomiguelbus.com/ios/';
+                // }
+                document.getElementById('installIOSApp').classList.remove('hidden');
+            }
+            loadViatorWidget(currentLanguage);
+
+        });
+
+        // Add event listener for btnRoutes
+        document.getElementById('btnRoutes').addEventListener('click', function() {
+            redirectToStepByStepDirections();
+        });
+
+        // Add event listener for btnRoutesStepByStep
+        document.getElementById('btnRoutesStepByStep').addEventListener('click', function() {
+            const origin = document.getElementById('originStepByStep').value;
+            const destination = document.getElementById('destinationStepByStep').value;
+            const date = document.getElementById('datePickerStepByStep').value;
+            const time = document.getElementById('timeStepByStep').value;
+
+            // Switch to the home page
+            showPage('home');
+
+            // Update the form values on the Directions page
+            document.getElementById('origin').value = origin;
+            document.getElementById('destination').value = destination;
+            document.getElementById('datePicker').value = date;
+            document.getElementById('time').value = time;
+        });
+
+        // Toggle Navigation Menu on Mobile Top Navbar if implemented
+        document.getElementById('nav-toggle')?.addEventListener('click', function() {
+            const mainNav = document.getElementById('mainNav');
+            mainNav.classList.toggle('hidden');
+        });
+
+        function swapOriginDestination() {
+            const originInput = document.getElementById('origin');
+            const destinationInput = document.getElementById('destination');
+            const originInputStepByStep = document.getElementById('originStepByStep');
+            const destinationInputStepByStep = document.getElementById('destinationStepByStep');
+
+            const swapIcon = document.getElementById('swapIcon');
+            const swapIconStepByStep = document.getElementById('swapIconStepByStep');
+            
+            // Swap the values
+            const temp = originInput.value;
+            originInput.value = destinationInput.value;
+            destinationInput.value = temp;
+
+            const tempStepByStep = originInputStepByStep.value;
+            originInputStepByStep.value = destinationInputStepByStep.value;
+            destinationInputStepByStep.value = tempStepByStep;
+
+            
+            // Animate the icon
+            swapIcon.classList.add('rotate-icon');
+            setTimeout(() => {
+                swapIcon.classList.remove('rotate-icon');
+            }, 300); // Remove the class after the animation duration
+
+            swapIconStepByStep.classList.add('rotate-icon');
+            setTimeout(() => {
+                swapIconStepByStep.classList.remove('rotate-icon');
+            }, 300); // Remove the class after the animation duration
+        }
+
+        // Initial Load: Show 'home' page
+        document.addEventListener('DOMContentLoaded', function() {
+            showPage('home');
+        });
+
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+
+        // Function to determine day type and update the message
+        function checkDayType(inputId = 'datePicker') {
+            const dateInput = document.getElementById(inputId);
+            const dayTypeMessage = document.getElementById('dayTypeMessage');
+            
+            // Get the selected date
+            const selectedDate = new Date(dateInput.value);
+            
+            // Check if the date is valid
+            if (!isNaN(selectedDate)) {
+                const day = selectedDate.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+                
+                // Determine the day type
+                let dayTypeKey;
+                if (day === 0) {
+                    dayTypeKey = "sunday";
+                } else if (day === 6) {
+                    dayTypeKey = "saturday";
+                } else {
+                    dayTypeKey = "weekday";
+                }
+                
+                return dayTypeKey;
             } else {
-                scrollToTopBtn.style.display = "none";
+                return null;
             }
-        });
+        }
 
-        // Scroll to top logic
-        document.getElementById('scrollToTopBtn').addEventListener('click', function() {
-            const searchSection = document.getElementById('search-background');
-            if (searchSection) {
-                searchSection.scrollIntoView({behavior: 'smooth' });
+        // Function to set today's date on page load
+        function setTodayDate() {
+            const datePicker = document.getElementById('datePicker');
+            const datePickerStepByStep = document.getElementById('datePickerStepByStep');
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+            const day = String(today.getDate()).padStart(2, '0');
+            const todayStr = `${year}-${month}-${day}`;
+            
+            if (datePicker) {
+                datePicker.value = todayStr;
+                checkDayType('datePicker');
             }
-        });
+            
+            if (datePickerStepByStep) {
+                datePickerStepByStep.value = todayStr;
+                checkDayType('datePickerStepByStep');
+            }
+        }
+        // Helper function to calculate total travel time
+        function calculateTotalTravelTime(firstStopTime, lastStopTime) {
+            const firstTime = firstStopTime.split('h');
+            const lastTime = lastStopTime.split('h');
+            const firstDate = new Date(0, 0, 0, firstTime[0], firstTime[1], 0);
+            const lastDate = new Date(0, 0, 0, lastTime[0], lastTime[1], 0);
+
+            // Adjust for next day if last time is less than first time
+            if (lastDate.getTime() < firstDate.getTime()) {
+                lastDate.setDate(lastDate.getDate() + 1);
+            }
+
+            let diff = lastDate.getTime() - firstDate.getTime();
+            let hours = Math.floor(diff / 1000 / 60 / 60);
+            diff -= hours * 1000 * 60 * 60;
+            let minutes = Math.floor(diff / 1000 / 60);
+
+            return {
+                hours: hours,
+                minutes: minutes,
+                formatted: `${hours > 0 ? `${hours < 10 ? '0' + hours : hours}h` : ''}${minutes < 10 ? '0' + minutes : minutes} min`
+            };
+        }
+
     </script>
+
+    <!-- External JS Files -->
+    <script src="js/apiHandler.js" defer></script>
+    <script src="js/directionsApiHandler.js" defer></script>
+    <script src="js/languageModal.js" defer></script>
+
 
     <script>
-        document.getElementById('search-background').addEventListener('click', function() {
-            const searchSection = document.getElementById('search-background');
-            if (searchSection) {
-                searchSection.scrollIntoView({behavior: 'smooth' });
+        function checkScreenWidth() {
+            if (window.innerWidth > 769) {
+                window.location.href = '/desktop';
             }
+        }
+
+        // Check screen width after DOM content is loaded
+        document.addEventListener('DOMContentLoaded', checkScreenWidth);
+
+        // Continuously monitor screen size
+        window.addEventListener('resize', checkScreenWidth);
+    </script>
+    <!-- Add this script within your existing JavaScript block -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initially show the instructional cards
+            document.getElementById('homeInstructionCard').classList.remove('hidden');
+            document.getElementById('routesInstructionCard').classList.remove('hidden');
+
+            // Hide Home Instructional Card after a search is performed
+            document.getElementById('btnSubmit').addEventListener('click', function() {
+                document.getElementById('homeInstructionCard').classList.add('hidden');
+            });
+
+            // Hide Routes Instructional Card when a route is selected or directions are viewed
+            document.getElementById('btnSubmitStepByStep').addEventListener('click', function() {
+                document.getElementById('routesInstructionCard').classList.add('hidden');
+            });
         });
     </script>
-    
-    <script>
-        document.getElementById('change').onclick = function () {
-            var tmp = document.getElementById('origin').value;
-            document.getElementById('origin').value = document.getElementById('destination').value;
-            document.getElementById('destination').value = tmp;
-        };
-    </script>
-    <script src="static/js/jquery-1.11.3.min.js"></script> <!-- jQuery (https://jquery.com/download/) -->
-    <script src="static/js/popper.min.js"></script> <!-- https://popper.js.org/ -->
-    <script src="static/js/bootstrap.min.js"></script> <!-- https://getbootstrap.com/ -->
-    <script src="static/js/datepicker.min.js"></script> <!-- https://github.com/qodesmith/datepicker -->
-    <script src="static/js/jquery.singlePageNav.min.js"></script>
-    <!-- Single Page Nav (https://github.com/ChrisWojcik/single-page-nav) -->
-    <script src="static/slick/slick.min.js"></script> <!-- http://kenwheeler.github.io/slick/ -->
-    <script src="static/js/jquery.scrollTo.min.js"></script> <!-- https://github.com/flesler/jquery.scrollTo -->
-    <script src="https://code.iconify.design/2/2.1.2/iconify.min.js"></script>
-    
-    <script src="js/languageHandler.js"></script>
-    <script src="js/apiHandler.js"></script>
-
 </body>
-
 </html>
