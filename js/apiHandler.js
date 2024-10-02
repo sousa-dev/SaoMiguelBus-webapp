@@ -53,6 +53,7 @@ function fetchAndPopulateStops() {
         mode: 'cors',  // Ensure CORS mode is enabled
     }).then(response => response.json())
         .then(data => {
+            console.log(data);
             const stopsList = data; // Adjust this according to the actual API response structure
             const originDatalist = document.getElementById('origin-stops');
             const destinationDatalist = document.getElementById('destination-stops');
@@ -79,10 +80,10 @@ function searchRoutes(origin, destination, day, time) {
     document.getElementById('noRoutesMessage').style.display = 'none';
 
     const parameters = getUrlParameters(origin, destination, day, time);
-    const url = 'https://saomiguelbus-api.herokuapp.com/api/v2/route?origin=' + encodeURIComponent(parameters.origin) 
-    + '&destination=' + encodeURIComponent(parameters.destination) 
-    + '&day=' + encodeURIComponent(parameters.day) 
-    + '&start=' + encodeURIComponent(parameters.time);
+    const url = 'https://saomiguelbus-api.herokuapp.com/api/v2/route?origin=' + encodeURIComponent(origin) 
+    + '&destination=' + encodeURIComponent(destination) 
+    + '&day=' + encodeURIComponent(day) 
+    + '&start=' + encodeURIComponent(time);
     fetchAndDisplayRoutes(url, parameters);
     // postToStats if not in localhost 
     if (window.location.hostname != "localhost" && window.location.hostname != "127.0.0.1")
@@ -105,6 +106,7 @@ function fetchAndDisplayRoutes(url, parameters) {
     })
     .catch(error => {
         console.error('Error:', error);
+        displayNoRoutesMessage(parameters.origin, parameters.destination);
         hideLoadingSpinner();
     });
 }
@@ -311,6 +313,7 @@ function displayRoutes(routes, originStop, destinationStop) {
                     break;
                 }
             }
+
             if (foundDestination) {
                 if (!foundOrigin) {
                     ignoreRoute = true;
@@ -320,7 +323,7 @@ function displayRoutes(routes, originStop, destinationStop) {
             }
         }
 
-        if (!foundOrigin || !foundDestination || ignoreRoute) {
+        if (!foundOrigin || !foundDestination ) {
             return;
         }
 
