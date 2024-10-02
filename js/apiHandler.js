@@ -334,7 +334,6 @@ function displayRoutes(routes, originStop, destinationStop) {
 
         const stopsArray = Object.entries(stops); 
 
-        // Calculate number of transfers
         var transferCount = route.route.split('/').length - 1;
         transferCount = Math.min(transferCount, stopsArray.length - 2);
 
