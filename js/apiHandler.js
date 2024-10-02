@@ -334,14 +334,16 @@ function displayRoutes(routes, originStop, destinationStop) {
         const stopsArray = Object.entries(stops);   
 
         // Calculate number of transfers
-        const transferCount = route.route.split('/').length - 1;
+        var transferCount = route.route.split('/').length - 1;
+        transferCount = Math.min(transferCount, stopsArray.length - 2);
+
         const travelTime = calculateTotalTravelTime(firstStop[1], lastStop[1]);
 
         if (travelTime.hours > 4) {
             ignoreRoute = true;
             return;
         }
-        
+
         routeDiv.innerHTML = `
             <div id="route-${route.route}" class="bg-white shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-300">
                 <div class="route-header flex items-center justify-between mb-4">
