@@ -53,7 +53,6 @@ function fetchAndPopulateStops() {
         mode: 'cors',  // Ensure CORS mode is enabled
     }).then(response => response.json())
         .then(data => {
-            console.log(data);
             const stopsList = data; // Adjust this according to the actual API response structure
             const originDatalist = document.getElementById('origin-stops');
             const destinationDatalist = document.getElementById('destination-stops');
@@ -186,6 +185,8 @@ function displayRoutes(routes, originStop, destinationStop) {
         let stops = {};
         let foundOrigin = false;
         let foundDestination = false;
+        let firstStop = null;
+        let lastStop = null;
         const originWords = originStop.toLowerCase().replace(/[-áàâãäéèêëíìîïóòôõöúùûüç]/g, match => {
             switch (match) {
                 case 'á':
@@ -296,15 +297,17 @@ function displayRoutes(routes, originStop, destinationStop) {
                         return match;
                 }
             }).replace(/-/g, '').split(' ').filter(word => word.trim() !== '' && word !== ' ');
-            for (const word of originWords) {
-                if (stopWords.some(stopWord => stopWord.includes(word))) {
-                    foundOrigin = true;
-                    break;
-                }
-            }
-
+            
             if (foundOrigin) {
                 stops[stop] = time;
+            } else {
+                for (const word of originWords) {
+                    if (stopWords.some(stopWord => stopWord.includes(word))) {
+                        foundOrigin = true;
+                        firstStop = [stop, time];
+                        break;
+                    }
+                }
             }
 
             for (const word of destinationWords) {
@@ -315,6 +318,7 @@ function displayRoutes(routes, originStop, destinationStop) {
             }
 
             if (foundDestination) {
+                lastStop = [stop, time];
                 if (!foundOrigin) {
                     ignoreRoute = true;
                     continue;
@@ -328,11 +332,15 @@ function displayRoutes(routes, originStop, destinationStop) {
         }
 
         const stopsArray = Object.entries(stops);   
-        const firstStop = stopsArray[0];
-        const lastStop = stopsArray[stopsArray.length - 1];
-        
+
         // Calculate number of transfers
         const transferCount = route.route.split('/').length - 1;
+        const travelTime = calculateTotalTravelTime(firstStop[1], lastStop[1]);
+
+        if (travelTime.hours > 4) {
+            ignoreRoute = true;
+            return;
+        }
         
         routeDiv.innerHTML = `
             <div id="route-${route.route}" class="bg-white shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-300">
@@ -353,7 +361,7 @@ function displayRoutes(routes, originStop, destinationStop) {
                                 <div class="h-0.5 w-full bg-gray-300 relative dashed-line">
                                     <div class="absolute inset-0 flex items-center justify-center">
                                         <span class="bg-white px-2 text-sm font-medium text-gray-500 travel-time rounded border">
-                                            ${calculateTotalTravelTime(firstStop[1], lastStop[1])}
+                                            ${travelTime.formatted}
                                         </span>
                                     </div>
                                 </div>

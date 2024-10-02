@@ -837,7 +837,6 @@
         function loadViatorWidget(language) {
             const widgetContainer = document.getElementById('viatorWidget');
             widgetContainer.innerHTML = ''; // Clear previous widget
-            console.log(language);
             let widgetRef;
 
             switch (language) {
@@ -913,7 +912,6 @@
 
             navLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
-                    console.log('link clicked');
                     e.preventDefault();
                     const targetPage = this.getAttribute('data-target');
                     showPage(targetPage);
@@ -1081,7 +1079,11 @@
             diff -= hours * 1000 * 60 * 60;
             let minutes = Math.floor(diff / 1000 / 60);
 
-            return `${hours > 0 ? `${hours < 10 ? '0' + hours : hours}h${minutes < 10 ? '0' + minutes : minutes}` : `${minutes} min`}`;    
+            return {
+                hours: hours,
+                minutes: minutes,
+                formatted: `${hours > 0 ? `${hours < 10 ? '0' + hours : hours}h` : ''}${minutes < 10 ? '0' + minutes : minutes} min`
+            };
         }
 
     </script>
