@@ -1,1 +1,1 @@
-npx browser-sync start --server --files "*, js/"
+npx browser-sync start --server --files "*, js/" --no-inject
