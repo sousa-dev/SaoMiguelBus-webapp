@@ -580,11 +580,9 @@ function getUrlParameters(origin, destination, day, time) {
     const parameters = {
         'origin': origin,
         'destination': destination,
-        'day': day,
+        'day': day.toUpperCase(),
         'time': time
     };
-    // 1 -> weekday, 2 -> saturday, 3 -> sunday
-    parameters.day = parameters.day == 1 ? 'WEEKDAY' : parameters.day == 2 ? 'SATURDAY' : 'SUNDAY';
     //00:00 -> 00h00
     parameters.time = parameters.time.replace(':', 'h');
 

@@ -38,7 +38,7 @@ document.getElementById('btnSubmitStepByStep').addEventListener('click', functio
  */
 function searchStepByStep(origin, destination, day, time) {
     showLoadingSpinner();
-    const parameters = getUrlParameters(origin, destination, day, time);
+    const parameters = getUrlParametersStepByStep(origin, destination, day, time);
     const languageCode = getCookie('language') || (['pt', 'en', 'es'].includes(navigator.language.split('-')[0]) ? navigator.language.split('-')[0] : 'pt');
     if (languageCode === 'pt') {
         currentLanguage = 'pt-pt';
@@ -51,6 +51,27 @@ function searchStepByStep(origin, destination, day, time) {
     + '&key=' + 'SMBFj56xBCLc986j6odk3AK6fJa95k'
     + '&version=' + '5.0';
     fetchGMaps(url);
+
+    if (window.location.hostname != "localhost" && window.location.hostname != "127.0.0.1")
+        postToStatsStepByStep(parameters);
+}
+
+function postToStatsStepByStep(parameters) {
+    const url = `https://saomiguelbus-api.herokuapp.com/api/v1/stat?request=get_directions&origin=${encodeURIComponent(parameters.origin)}&destination=${encodeURIComponent(parameters.destination)}&time=${encodeURIComponent(parameters.time)}&language=${encodeURIComponent(currentLanguage)}&platform=web&day=${encodeURIComponent(parameters.day)}`;
+    fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        mode: 'cors',  // Ensure CORS mode is enabled
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
 }
 
 /**
@@ -357,15 +378,13 @@ function getStepByStepSearchParameters() {
  * @param {string} time - The time.
  * @returns {Object} - The formatted URL parameters.
  */
-function getUrlParameters(origin, destination, day, time) {
+function getUrlParametersStepByStep(origin, destination, day, time) {
     const parameters = {
         'origin': origin,
         'destination': destination,
-        'day': day,
+        'day': day.toUpperCase(),
         'time': time
     };
-    // 1 -> weekday, 2 -> saturday, 3 -> sunday
-    parameters.day = parameters.day == 1 ? 'WEEKDAY' : parameters.day == 2 ? 'SATURDAY' : 'SUNDAY';
     //00:00 -> 00h00
     parameters.time = parameters.time.replace(':', 'h');
 
