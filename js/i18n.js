@@ -1,4 +1,5 @@
-let currentLanguage = getCookie('language') || (['pt', 'en', 'es'].includes(navigator.language.split('-')[0]) ? navigator.language.split('-')[0] : 'pt');
+let availableLanguages = ['pt', 'en', 'es', 'de', 'fr'];
+let currentLanguage = getCookie('language') || (availableLanguages.includes(navigator.language.split('-')[0]) ? navigator.language.split('-')[0] : 'pt');
 let translations = {};
 
 async function loadTranslations(lang) {
