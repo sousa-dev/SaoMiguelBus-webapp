@@ -260,7 +260,6 @@ function displayRoutes(routes, originStop, destinationStop) {
         }).split(' ').filter(word => word.trim() !== '' && word !== ' ');
 
         for (const [stop, time] of Object.entries(stopsObj)) {
-            stops[stop] = time;
 
             const stopWords = stop.toLowerCase().replace(/[-áàâãäéèêëíìîïóòôõöúùûüç]/g, match => {
                 switch (match) {
@@ -305,6 +304,7 @@ function displayRoutes(routes, originStop, destinationStop) {
                     if (stopWords.some(stopWord => stopWord.includes(word))) {
                         foundOrigin = true;
                         firstStop = [stop, time];
+                        stops[stop] = time;
                         break;
                     }
                 }
@@ -313,12 +313,13 @@ function displayRoutes(routes, originStop, destinationStop) {
             for (const word of destinationWords) {
                 if (stopWords.some(stopWord => stopWord.includes(word))) {
                     foundDestination = true;
+                    lastStop = [stop, time];
+                    stops[stop] = time;
                     break;
                 }
             }
 
             if (foundDestination) {
-                lastStop = [stop, time];
                 if (!foundOrigin) {
                     ignoreRoute = true;
                     continue;
@@ -331,7 +332,7 @@ function displayRoutes(routes, originStop, destinationStop) {
             return;
         }
 
-        const stopsArray = Object.entries(stops);   
+        const stopsArray = Object.entries(stops); 
 
         // Calculate number of transfers
         var transferCount = route.route.split('/').length - 1;
