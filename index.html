@@ -361,28 +361,37 @@
                     <br>
 
                     <!-- Date and Time Picker Container -->
-                    <div class="flex space-x-2 w-full max-w-md">
+                    <div class="flex flex-row space-x-4 w-full max-w-md">
                         <!-- Date Picker Input -->
-                        <div class="relative flex-grow">
+                        <div class="relative flex-1">
                             <input 
                                 type="date" 
                                 id="datePicker" 
                                 name="date" 
-                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" 
+                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 bg-white appearance-none"
+                                style="-webkit-appearance: none; -moz-appearance: none; appearance: none;" 
                                 data-i18n="dayLabel" 
                                 onchange="checkDayType()"
                             >
-                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
                                 <i class="fas fa-calendar-alt"></i>
                             </span>
                         </div>
-
+    
                         <!-- Time Picker Input -->
-                        <div class="relative flex-grow">
-                            <input type="time" id="time" name="time" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" data-i18n-placeholder="timePlaceholder" required>
-                            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
+                        <div class="relative flex-1">
+                            <input 
+                                type="time" 
+                                id="time" 
+                                name="time" 
+                                class="w-full pl-10 pr-4 py-2 h-10 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 bg-white appearance-none" 
+                                style="-webkit-appearance: none; -moz-appearance: none; appearance: none;" 
+                                data-i18n-placeholder="timePlaceholder" 
+                                required
+                            >
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
+                                <i class="fas fa-clock"></i>
+                            </span>
                         </div>
                     </div>
 
@@ -487,28 +496,37 @@
                     <br>
 
                     <!-- Date and Time Picker Container -->
-                    <div class="flex space-x-2 w-full max-w-md">
+                    <div class="flex flex-row space-x-4 w-full max-w-md">
                         <!-- Date Picker Input -->
-                        <div class="relative flex-grow">
+                        <div class="relative flex-1">
                             <input 
                                 type="date" 
                                 id="datePickerStepByStep" 
                                 name="date" 
-                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" 
+                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 bg-white appearance-none"
+                                style="-webkit-appearance: none; -moz-appearance: none; appearance: none;" 
                                 data-i18n="dayLabel" 
-                                onchange="checkDayType('datePickerStepByStep')"
+                                onchange="checkDayType()"
                             >
-                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
                                 <i class="fas fa-calendar-alt"></i>
                             </span>
                         </div>
-
+    
                         <!-- Time Picker Input -->
-                        <div class="relative flex-grow">
-                            <input type="time" id="timeStepByStep" name="time" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" data-i18n-placeholder="timePlaceholder" required>
-                            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
+                        <div class="relative flex-1">
+                            <input 
+                                type="time" 
+                                id="timeStepByStep" 
+                                name="time" 
+                                class="w-full pl-10 pr-4 py-2 h-10 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 bg-white appearance-none" 
+                                style="-webkit-appearance: none; -moz-appearance: none; appearance: none;" 
+                                data-i18n-placeholder="timePlaceholder" 
+                                required
+                            >
+                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
+                                <i class="fas fa-clock"></i>
+                            </span>
                         </div>
                     </div>
 
