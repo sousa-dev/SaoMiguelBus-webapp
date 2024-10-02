@@ -1074,6 +1074,12 @@
             const lastTime = lastStopTime.split('h');
             const firstDate = new Date(0, 0, 0, firstTime[0], firstTime[1], 0);
             const lastDate = new Date(0, 0, 0, lastTime[0], lastTime[1], 0);
+
+            // Adjust for next day if last time is less than first time
+            if (lastDate.getTime() < firstDate.getTime()) {
+                lastDate.setDate(lastDate.getDate() + 1);
+            }
+
             let diff = lastDate.getTime() - firstDate.getTime();
             let hours = Math.floor(diff / 1000 / 60 / 60);
             diff -= hours * 1000 * 60 * 60;
