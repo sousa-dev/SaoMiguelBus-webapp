@@ -381,9 +381,40 @@ function displayRoutes(routes, originStop, destinationStop) {
                         <div class="route-icon text-2xl mr-2"><i class="fa-solid fa-bus"></i></div>
                         <!-- <div class="route-number text-xl font-semibold text-green-600">${route.route}</div> -->
                         ${route.route.includes('C') ? `
-                            <div class="confirmation-banner bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-1 mb-1" role="alert">
-                                <p class="font-bold text-xs">${t('confirmationRequired')}</p>
-                                <p class="text-xs">${t('confirmationMessage')}</p>
+                            <div class="confirmation-banner bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-1 mb-1 cursor-pointer flex justify-between items-center" onclick="document.getElementById('confirmationModal').classList.remove('hidden');">
+                                <div>
+                                    <p class="font-bold text-xs">${t('confirmationRequired')}</p>
+                                    <p class="text-xs">${t('confirmationMessage')}</p>
+                                </div>
+                                <i class="fas fa-phone-alt text-yellow-700 text-lg mr-2"></i>
+                            </div>
+                            <div id="confirmationModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden" onclick="document.getElementById('confirmationModal').classList.add('hidden');">
+                                <div class="bg-white rounded-lg p-6 w-80 relative" onclick="event.stopPropagation();">
+                                    <button id="closeConfirmationModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" onclick="document.getElementById('confirmationModal').classList.add('hidden');">
+                                        <i class="fas fa-times text-xl text-right"></i>
+                                    </button>
+                                    <h3 class="text-xl font-semibold text-green-600 mb-3" data-i18n="contactBusCompaniesTitle">Contato das Companhias de Autocarros</h3>
+                                    <p class="text-gray-700 text-sm" data-i18n="confirmBusCompaniesDescription">
+                                    Se não tem a certeza da existência desta rota, entre em contato com as companhias de autocarros diretamente para confirmá-la.
+                                    </p>
+                                    <ul class="list-disc list-inside text-gray-700 mt-2 space-y-2">
+                                        <li>
+                                            <strong class="text-sm">Auto Viação Micaelense, Lda.</strong>
+                                            <br>
+                                            <span class="text-gray-500 text-xs ml-4">Telefone: <a href="tel:+351296301358" class="text-blue-500 hover:underline">+351 296 301 358</a></span>
+                                        </li>
+                                        <li>
+                                            <strong class="text-sm">Varela & Companhia, Lda.</strong>
+                                            <br>
+                                            <span class="text-gray-500 text-xs ml-4">Telefone: <a href="tel:+351296301800" class="text-blue-500 hover:underline">+351 296 301 800</a></span>
+                                        </li>
+                                        <li>
+                                            <strong class="text-sm">Caetano Raposo e Pereiras, Lda.</strong>
+                                            <br>
+                                            <span class="text-gray-500 text-xs ml-4">Telefone: <a href="tel:+351296304260" class="text-blue-500 hover:underline">+351 296 304 260</a></span>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         ` : ''}
                     </div>

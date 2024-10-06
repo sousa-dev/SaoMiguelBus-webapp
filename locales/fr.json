@@ -92,5 +92,6 @@
     "termsAndConditions": "Termes et Conditions",
     "privacyPolicy": "Politique de Confidentialité",
     "confirmationRequired": "Confirmation requise",
-    "confirmationMessage": "Veuillez confirmer l'existence de cette route avec la compagnie de bus avant de voyager."
+    "confirmationMessage": "Veuillez confirmer l'existence de cette route avec la compagnie de bus avant de voyager.",
+    "confirmBusCompaniesDescription": "Si vous n'êtes pas sûr de l'existence de cette route, contactez les compagnies de bus directement pour la confirmer."
 }
