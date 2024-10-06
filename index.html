@@ -344,14 +344,14 @@
             <!-- Search Form -->
             <form action="index.html" method="get" class="p-2" role="search" aria-label="Formulário de Pesquisa de Autocarros">
                 <div class="space-y-1">
-                    <div class="relative">
-                        <input name="origin" id="origin" type="text" list="origin-stops" placeholder="Origem" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" data-i18n-placeholder="originPlaceholder" required>
-                        <datalist id="origin-stops"></datalist>
+                    <div class="relative w-full">
+                        <input name="origin" id="origin" type="text" placeholder="Origem" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" data-i18n-placeholder="originPlaceholder" required autocomplete="off">
+                        <div id="origin-suggestions" style="display: none;" class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-24 overflow-y-auto"></div>
                         <svg class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                         </svg>
-                    </div>
+                    </div>                   
                 
                     <!-- Swap Button -->
                     <button type="button" class="w-full flex justify-end items-center" onclick="swapOriginDestination()">
@@ -360,9 +360,9 @@
                         </div>
                     </button>
 
-                    <div class="relative">
-                        <input name="destination" id="destination" type="text" list="destination-stops" placeholder="Destino" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" data-i18n-placeholder="destinationPlaceholder" required>
-                        <datalist id="destination-stops"></datalist>
+                    <div class="relative w-full">
+                        <input name="destination" id="destination" type="text" placeholder="Destino" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" data-i18n-placeholder="destinationPlaceholder" required autocomplete="off">
+                        <div id="destination-suggestions" style="display: none;"  class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-24 overflow-y-auto"></div>
                         <svg class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -479,9 +479,9 @@
             <!-- Search Form -->
             <form action="index.html" method="get" class="p-2" role="search" aria-label="Formulário de Pesquisa de Autocarros">
                 <div class="space-y-1">
-                    <div class="relative">
-                        <input name="origin" id="originStepByStep" type="text" list="origin-stops" placeholder="Origem" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" data-i18n-placeholder="originPlaceholder" required>
-                        <datalist id="origin-stops"></datalist>
+                    <div class="relative w-full">
+                        <input name="originStepByStep" id="originStepByStep" type="text" placeholder="Origem" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" data-i18n-placeholder="originPlaceholder" required autocomplete="off">
+                        <div id="originStepByStep-suggestions" style="display: none;"  class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-24 overflow-y-auto"></div>
                         <svg class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -495,15 +495,14 @@
                         </div>
                     </button>
 
-                    <div class="relative">
-                        <input name="destination" id="destinationStepByStep" type="text" list="destination-stops" placeholder="Destino" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" data-i18n-placeholder="destinationPlaceholder" required>
-                        <datalist id="destination-stops"></datalist>
+                    <div class="relative w-full">
+                        <input name="destinationStepByStep" id="destinationStepByStep" type="text" placeholder="Destino" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" data-i18n-placeholder="destinationPlaceholder" required autocomplete="off">
+                        <div id="destinationStepByStep-suggestions" style="display: none;" class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-24 overflow-y-auto"></div>
                         <svg class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                         </svg>
                     </div>
-
                     <br>
 
                     <!-- Date and Time Picker Container -->

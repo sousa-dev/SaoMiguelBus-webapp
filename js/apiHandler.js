@@ -59,21 +59,222 @@ function fetchAndPopulateStops() {
     }).then(response => response.json())
         .then(data => {
             const stopsList = data; // Adjust this according to the actual API response structure
-            const originDatalist = document.getElementById('origin-stops');
-            const destinationDatalist = document.getElementById('destination-stops');
+            const originSuggestions = document.getElementById('origin-suggestions');
+            const destinationSuggestions = document.getElementById('destination-suggestions');
+            const originStepByStepSuggestions = document.getElementById('originStepByStep-suggestions');
+            const destinationStepByStepSuggestions = document.getElementById('destinationStepByStep-suggestions');
 
-            stopsList.forEach(stop => {
-                const optionOrigin = document.createElement('option');
-                optionOrigin.value = stop['name'];
-                originDatalist.appendChild(optionOrigin);
+            stopsList.forEach((stop, index) => {
+                // Create suggestion for origin
+                const originDiv = document.createElement('div');
+                originDiv.classList.add('suggestion-item', 'flex', 'flex-col'); // Add flex classes for layout
 
-                const optionDestination = document.createElement('option');
-                optionDestination.value = stop['name']; 
-                destinationDatalist.appendChild(optionDestination);
+                // Create a text node for the stop name
+                const stopName = document.createElement('span');
+                stopName.textContent = stop['name'];
+                stopName.classList.add('py-1'); // Add padding for better spacing
+                stopName.addEventListener('click', function() {
+                    document.getElementById('origin').value = this.textContent;
+                    originSuggestions.innerHTML = ''; // Clear suggestions on selection
+                });
+                originDiv.appendChild(stopName);
+                originSuggestions.appendChild(originDiv);
+
+                // Add a separator line
+                if (index < stopsList.length - 1) { // Avoid adding a separator after the last item
+                    const separatorOrigin = document.createElement('hr');
+                    separatorOrigin.style.margin = '10px 0'; // Add spacing above and below the hr
+                    originDiv.appendChild(separatorOrigin);
+                }
+
+                // Create suggestion for destination
+                const destinationDiv = document.createElement('div');
+                destinationDiv.classList.add('suggestion-item', 'flex', 'flex-col'); // Add flex classes for layout
+
+                // Create a text node for the stop name
+                const stopNameDest = document.createElement('span');
+                stopNameDest.textContent = stop['name'];
+                stopNameDest.classList.add('py-1'); // Add padding for better spacing
+                stopNameDest.addEventListener('click', function() {
+                    document.getElementById('destination').value = this.textContent;
+                    destinationSuggestions.innerHTML = ''; // Clear suggestions on selection
+                });
+                destinationDiv.appendChild(stopNameDest);
+                destinationSuggestions.appendChild(destinationDiv);
+
+                // Add a separator line
+                if (index < stopsList.length - 1) { // Avoid adding a separator after the last item
+                    const separatorDestination = document.createElement('hr');
+                    separatorDestination.style.margin = '10px 0'; // Add spacing above and below the hr
+                    destinationDiv.appendChild(separatorDestination);
+                }
+
+                // Create suggestion for origin StepByStep
+                const originStepByStepDiv = document.createElement('div');
+                originStepByStepDiv.classList.add('suggestion-item', 'flex', 'flex-col'); // Add flex classes for layout
+
+                // Create a text node for the stop name
+                const stopNameStepByStep = document.createElement('span');
+                stopNameStepByStep.textContent = stop['name'];
+                stopNameStepByStep.classList.add('py-1'); // Add padding for better spacing
+                stopNameStepByStep.addEventListener('click', function() {
+                    document.getElementById('originStepByStep').value = this.textContent;
+                    originStepByStepSuggestions.innerHTML = ''; // Clear suggestions on selection
+                });
+                originStepByStepDiv.appendChild(stopNameStepByStep);
+                originStepByStepSuggestions.appendChild(originStepByStepDiv);
+
+                // Add a separator line
+                if (index < stopsList.length - 1) { // Avoid adding a separator after the last item
+                    const separatorOriginStepByStep = document.createElement('hr');
+                    separatorOriginStepByStep.style.margin = '10px 0'; // Add spacing above and below the hr
+                    originStepByStepDiv.appendChild(separatorOriginStepByStep);
+                }
+
+                // Create suggestion for destination StepByStep
+                const destinationStepByStepDiv = document.createElement('div');
+                destinationStepByStepDiv.classList.add('suggestion-item', 'flex', 'flex-col'); // Add flex classes for layout
+
+                // Create a text node for the stop name
+                const stopNameDestStepByStep = document.createElement('span');
+                stopNameDestStepByStep.textContent = stop['name'];
+                stopNameDestStepByStep.classList.add('py-1'); // Add padding for better spacing
+                stopNameDestStepByStep.addEventListener('click', function() {
+                    document.getElementById('destinationStepByStep').value = this.textContent;
+                    destinationStepByStepSuggestions.innerHTML = ''; // Clear suggestions on selection
+                });
+                destinationStepByStepDiv.appendChild(stopNameDestStepByStep);
+                destinationStepByStepSuggestions.appendChild(destinationStepByStepDiv);
+
+                // Add a separator line
+                if (index < stopsList.length - 1) { // Avoid adding a separator after the last item
+                    const separatorDestinationStepByStep = document.createElement('hr');
+                    separatorDestinationStepByStep.style.margin = '10px 0'; // Add spacing above and below the hr
+                    destinationStepByStepDiv.appendChild(separatorDestinationStepByStep);
+                }
             });
+
+            // Initialize autocomplete functionality
+            initializeAutocomplete('origin', originSuggestions);
+            initializeAutocomplete('destination', destinationSuggestions);
+            initializeAutocomplete('originStepByStep', originStepByStepSuggestions);
+            initializeAutocomplete('destinationStepByStep', destinationStepByStepSuggestions);
         })
         .catch(error => {
             console.error('Error fetching stops:', error);
+        });
+}
+
+/**
+ * Initializes the autocomplete functionality for a given input and suggestions container.
+ * @param {string} inputId - The ID of the input element.
+ * @param {HTMLElement} suggestionsContainer - The container for suggestion items.
+ */
+function initializeAutocomplete(inputId, suggestionsContainer) {
+    const input = document.getElementById(inputId);
+    let currentFocus = -1;
+
+    input.addEventListener('input', function() {
+        const filter = this.value.toLowerCase();
+        const items = suggestionsContainer.getElementsByClassName('suggestion-item');
+        let visibleCount = 0;
+
+        // Clear previous suggestions
+        suggestionsContainer.innerHTML = '';
+
+        // Fetch and populate stops based on the current input
+        fetchStops(filter).then(stopsList => {
+            stopsList.forEach((stop, index) => {
+                const stopDiv = document.createElement('div');
+                stopDiv.textContent = stop['name'];
+                stopDiv.classList.add('suggestion-item');
+                stopDiv.addEventListener('click', function() {
+                    input.value = this.textContent; // Set the input value to the selected suggestion
+                    suggestionsContainer.innerHTML = ''; // Clear suggestions on selection
+                });
+                suggestionsContainer.appendChild(stopDiv);
+                visibleCount++;
+
+                // Add a separator line after each suggestion except the last one
+                if (index < stopsList.length - 1) {
+                    const separator = document.createElement('hr');
+                    separator.style.margin = '10px 0'; // Add spacing above and below the hr
+                    suggestionsContainer.appendChild(separator);
+                }
+            });
+
+            // Show suggestions if there are any visible
+            suggestionsContainer.style.display = visibleCount > 0 ? 'block' : 'none';
+        });
+    });
+
+    input.addEventListener('focus', function() {
+        // Show suggestions when input is focused
+        const items = suggestionsContainer.getElementsByClassName('suggestion-item');
+        if (items.length > 0) {
+            suggestionsContainer.style.display = 'block';
+        }
+    });
+
+    input.addEventListener('blur', function() {
+        // Hide suggestions when input loses focus
+        setTimeout(() => {
+            suggestionsContainer.style.display = 'none';
+        }, 100); // Delay to allow click event on suggestion
+    });
+
+    input.addEventListener('keydown', function(e) {
+        const items = suggestionsContainer.getElementsByClassName('suggestion-item');
+        if (e.keyCode == 40) { // Down key
+            currentFocus++;
+            addActive(items);
+        } else if (e.keyCode == 38) { // Up key
+            currentFocus--;
+            addActive(items);
+        } else if (e.keyCode == 13) { // Enter key
+            e.preventDefault();
+            if (currentFocus > -1) {
+                if (items[currentFocus]) {
+                    items[currentFocus].click();
+                }
+            }
+        }
+    });
+
+    function addActive(items) {
+        if (!items) return false;
+        removeActive(items);
+        if (currentFocus >= items.length) currentFocus = 0;
+        if (currentFocus < 0) currentFocus = items.length - 1;
+        items[currentFocus].classList.add('autocomplete-active');
+    }
+
+    function removeActive(items) {
+        Array.from(items).forEach(item => {
+            item.classList.remove('autocomplete-active');
+        });
+    }
+
+    // Close the suggestions when clicking outside
+    document.addEventListener('click', function(e) {
+        if (e.target !== input) {
+            suggestionsContainer.style.display = 'none';
+        }
+    });
+}
+
+// Function to fetch stops based on the current input
+function fetchStops(filter) {
+    const url = 'https://saomiguelbus-api.herokuapp.com/api/v2/stops';
+    return fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            // Filter stops based on the input
+            return data.filter(stop => stop.name.toLowerCase().includes(filter));
+        })
+        .catch(error => {
+            console.error('Error fetching stops:', error);
+            return [];
         });
 }
 
