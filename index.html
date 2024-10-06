@@ -941,16 +941,21 @@
             });
 
             // Check if the user is on Android or iOS
-            if (/Android/i.test(navigator.userAgent)) {
-                // if (confirm('Instale o aplicativo São Miguel Bus para Android para uma melhor experiência!')) {
-                //     window.location.href = 'https:/saomiguelbus.com/android';
-                // }
-                document.getElementById('installAndroidApp').classList.remove('hidden');
-            } else if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-                // if (confirm('Instale o aplicativo São Miguel Bus para iOS para uma melhor experiência!')) {
-                //     window.location.href = 'https://saomiguelbus.com/ios/';
-                // }
-                document.getElementById('installIOSApp').classList.remove('hidden');
+            const urlParams = new URLSearchParams(window.location.search);
+            const deviceParam = urlParams.get('device');
+
+            if (deviceParam !== 'android-app') {
+                if (/Android/i.test(navigator.userAgent)) {
+                    if (confirm('Instale o aplicativo São Miguel Bus para Android para uma melhor experiência!')) {
+                        window.location.href = 'https:/saomiguelbus.com/android';
+                    }
+                    document.getElementById('installAndroidApp').classList.remove('hidden');
+                } else if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                    // if (confirm('Instale o aplicativo São Miguel Bus para iOS para uma melhor experiência!')) {
+                    //     window.location.href = 'https://saomiguelbus.com/ios/';
+                    // }
+                    document.getElementById('installIOSApp').classList.remove('hidden');
+                }
             }
             loadViatorWidget(currentLanguage);
 
