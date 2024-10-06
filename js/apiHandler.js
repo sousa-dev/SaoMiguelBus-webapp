@@ -88,7 +88,6 @@ function searchRoutes(origin, destination, day, time) {
     + '&destination=' + encodeURIComponent(destination) 
     + '&day=' + encodeURIComponent(day) 
     + '&start=' + encodeURIComponent(time);
-    console.log(url);
     fetchAndDisplayRoutes(url, parameters);
     // postToStats if not in localhost 
     if (window.location.hostname != "localhost" && window.location.hostname != "127.0.0.1")
