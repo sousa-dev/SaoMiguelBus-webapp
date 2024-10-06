@@ -969,7 +969,7 @@
             const time = document.getElementById('timeStepByStep').value;
 
             // Switch to the home page
-            showPage('home');
+            showPage('routes');
 
             // Update the form values on the Directions page
             document.getElementById('origin').value = origin;
@@ -1017,7 +1017,7 @@
 
         // Initial Load: Show 'home' page
         document.addEventListener('DOMContentLoaded', function() {
-            showPage('home');
+            showPage('routes');
         });
 
         // Register Service Worker
@@ -1044,19 +1044,19 @@
             // Check if the date is valid
             if (!isNaN(selectedDate)) {
                 return dateInput.value
-                const day = selectedDate.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+                // const day = selectedDate.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
                 
-                // Determine the day type
-                let dayTypeKey;
-                if (day === 0) {
-                    dayTypeKey = "sunday";
-                } else if (day === 6) {
-                    dayTypeKey = "saturday";
-                } else {
-                    dayTypeKey = "weekday";
-                }
+                // // Determine the day type
+                // let dayTypeKey;
+                // if (day === 0) {
+                //     dayTypeKey = "sunday";
+                // } else if (day === 6) {
+                //     dayTypeKey = "saturday";
+                // } else {
+                //     dayTypeKey = "weekday";
+                // }
                 
-                return dayTypeKey;
+                // return dayTypeKey;
             } else {
                 return null;
             }

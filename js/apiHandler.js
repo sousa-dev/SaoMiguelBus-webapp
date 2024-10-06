@@ -49,7 +49,7 @@ function getSearchParameters() {
 }
 
 function fetchAndPopulateStops() {
-    const url = 'http://127.0.0.1:8000/api/v2/stops';
+    const url = 'https://saomiguelbus-api.herokuapp.com/api/v2/stops';
     fetch(url, {
         method: 'GET',
         headers: {
@@ -84,10 +84,11 @@ function searchRoutes(origin, destination, day, time) {
     document.getElementById('noRoutesMessage').style.display = 'none';
 
     const parameters = getUrlParameters(origin, destination, day, time);
-    const url = 'http://127.0.0.1:8000/api/v2/route?origin=' + encodeURIComponent(origin) 
+    const url = 'https://saomiguelbus-api.herokuapp.com/api/v2/route?origin=' + encodeURIComponent(origin) 
     + '&destination=' + encodeURIComponent(destination) 
     + '&day=' + encodeURIComponent(day) 
     + '&start=' + encodeURIComponent(time);
+    console.log(url);
     fetchAndDisplayRoutes(url, parameters);
     // postToStats if not in localhost 
     if (window.location.hostname != "localhost" && window.location.hostname != "127.0.0.1")
@@ -116,7 +117,7 @@ function fetchAndDisplayRoutes(url, parameters) {
 }
 
 function postToStats(parameters) {
-    const url = `http://127.0.0.1:8000/api/v1/stat?request=get_route&origin=${encodeURIComponent(parameters.origin)}&destination=${encodeURIComponent(parameters.destination)}&time=${encodeURIComponent(parameters.time)}&language=${encodeURIComponent(currentLanguage)}&platform=web&day=${encodeURIComponent(parameters.day)}`;
+    const url = `https://saomiguelbus-api.herokuapp.com/api/v1/stat?request=get_route&origin=${encodeURIComponent(parameters.origin)}&destination=${encodeURIComponent(parameters.destination)}&time=${encodeURIComponent(parameters.time)}&language=${encodeURIComponent(currentLanguage)}&platform=web&day=${encodeURIComponent(parameters.day)}`;
     fetch(url, {
         method: 'POST',
         headers: {
@@ -629,7 +630,7 @@ function loadAdBanner(on) {
                 if (adImage) {
                     document.getElementById('ad-clickable').addEventListener('click', function(event) {
                         const adId = adImage.getAttribute("data-id");
-                        const URL = "http://127.0.0.1:8000/api/v1/ad/click?id="+ encodeURIComponent(adId);
+                        const URL = "https://saomiguelbus-api.herokuapp.com/api/v1/ad/click?id="+ encodeURIComponent(adId);
                         fetch(URL, {
                             method: 'POST',
                             headers: {
