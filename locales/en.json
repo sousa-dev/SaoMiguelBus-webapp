@@ -90,5 +90,7 @@
     "priceAppDescription": "The prices of tickets are determined by bus companies and can vary according to distance, ticket type, and other factors. We do not have access to the prices, but we can inform that tickets are sold on the bus itself and must be purchased from the driver with physical money upon entering the bus.",
     "priceAppEnd": "For more information, contact the bus companies directly.",
     "termsAndConditions": "Terms and Conditions",
-    "privacyPolicy": "Privacy Policy"
+    "privacyPolicy": "Privacy Policy",
+    "confirmationRequired": "Requires Confirmation",
+    "confirmationMessage": "Please confirm the existence of this route with the bus company before traveling."
 }

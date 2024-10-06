@@ -90,5 +90,7 @@
     "priceAppDescription": "Les prix des billets sont déterminés par les compagnies de bus et peuvent varier en fonction de la distance, du type de billet et d'autres facteurs. Nous n'avons pas accès aux prix, mais nous pouvons informer que les billets sont vendus sur le bus lui-même et doivent être achetés au conducteur avec de l'argent physique au moment de l'entrée dans le bus.",
     "priceAppEnd": "Pour plus d'informations, contactez les compagnies de bus directement.",
     "termsAndConditions": "Termes et Conditions",
-    "privacyPolicy": "Politique de Confidentialité"
+    "privacyPolicy": "Politique de Confidentialité",
+    "confirmationRequired": "Confirmation requise",
+    "confirmationMessage": "Veuillez confirmer l'existence de cette route avec la compagnie de bus avant de voyager."
 }

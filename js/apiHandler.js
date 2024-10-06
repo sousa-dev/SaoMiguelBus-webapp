@@ -13,6 +13,11 @@ document.addEventListener("DOMContentLoaded", function() {
     loadAdBanner('home');
 });
 
+function timeStringToMinutes(timeString) {
+    const [hours, minutes] = timeString.split('h').map(Number);
+    return hours * 60 + minutes;
+}
+
 function getSearchParameters() {
     const originInput = document.getElementById('origin');
     const destinationInput = document.getElementById('destination');
@@ -44,7 +49,7 @@ function getSearchParameters() {
 }
 
 function fetchAndPopulateStops() {
-    const url = 'https://saomiguelbus-api.herokuapp.com/api/v2/stops';
+    const url = 'http://127.0.0.1:8000/api/v2/stops';
     fetch(url, {
         method: 'GET',
         headers: {
@@ -79,7 +84,7 @@ function searchRoutes(origin, destination, day, time) {
     document.getElementById('noRoutesMessage').style.display = 'none';
 
     const parameters = getUrlParameters(origin, destination, day, time);
-    const url = 'https://saomiguelbus-api.herokuapp.com/api/v2/route?origin=' + encodeURIComponent(origin) 
+    const url = 'http://127.0.0.1:8000/api/v2/route?origin=' + encodeURIComponent(origin) 
     + '&destination=' + encodeURIComponent(destination) 
     + '&day=' + encodeURIComponent(day) 
     + '&start=' + encodeURIComponent(time);
@@ -111,7 +116,7 @@ function fetchAndDisplayRoutes(url, parameters) {
 }
 
 function postToStats(parameters) {
-    const url = `https://saomiguelbus-api.herokuapp.com/api/v1/stat?request=get_route&origin=${encodeURIComponent(parameters.origin)}&destination=${encodeURIComponent(parameters.destination)}&time=${encodeURIComponent(parameters.time)}&language=${encodeURIComponent(currentLanguage)}&platform=web&day=${encodeURIComponent(parameters.day)}`;
+    const url = `http://127.0.0.1:8000/api/v1/stat?request=get_route&origin=${encodeURIComponent(parameters.origin)}&destination=${encodeURIComponent(parameters.destination)}&time=${encodeURIComponent(parameters.time)}&language=${encodeURIComponent(currentLanguage)}&platform=web&day=${encodeURIComponent(parameters.day)}`;
     fetch(url, {
         method: 'POST',
         headers: {
@@ -153,6 +158,11 @@ function displayRoutes(routes, originStop, destinationStop) {
     const routesContainer = document.getElementById('routesContainer');
     routesContainer.innerHTML = ''; // Clear previous content
 
+    if (!Array.isArray(routes) || routes.length === 0 || routes.error) {
+        displayNoRoutesMessage(originStop, destinationStop);
+        return;
+    }
+
     // Sort routes by origin time
     routes.sort((a, b) => {
         const aStopsObj = stringToJSON(a.stops);
@@ -163,11 +173,8 @@ function displayRoutes(routes, originStop, destinationStop) {
         return aTime.localeCompare(bTime);
     });
 
-    if (routes.length === 0) {
-        displayNoRoutesMessage(originStop, destinationStop);
-        return;
-    }
 
+    var lastRoute = null;
     routes.forEach(route => {
         let ignoreRoute = false;
         const routeDiv = document.createElement('div');
@@ -180,7 +187,7 @@ function displayRoutes(routes, originStop, destinationStop) {
 
         originStop = originStop.split(' ').map(word => prepositions.includes(word.toLowerCase()) ? word : word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
         const destinationStop = route.destination.split(' ').map(word => prepositions.includes(word.toLowerCase()) ? word : word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-
+    
         // Filter stops to only include stops between the origin and destination
         let stops = {};
         let foundOrigin = false;
@@ -258,9 +265,9 @@ function displayRoutes(routes, originStop, destinationStop) {
                     return match;
             }
         }).split(' ').filter(word => word.trim() !== '' && word !== ' ');
-
+    
         for (const [stop, time] of Object.entries(stopsObj)) {
-
+    
             const stopWords = stop.toLowerCase().replace(/[-áàâãäéèêëíìîïóòôõöúùûüç]/g, match => {
                 switch (match) {
                     case 'á':
@@ -328,8 +335,31 @@ function displayRoutes(routes, originStop, destinationStop) {
             }
         }
 
-        if (!foundOrigin || !foundDestination ) {
+        if (!foundOrigin || !foundDestination) {
             return;
+        }
+
+        if (lastRoute) {
+            const timeDifference = Math.abs(timeStringToMinutes(firstStop[1]) - timeStringToMinutes(lastRoute.firstStop[1]));
+            const sameLastStop = lastStop[0] === lastRoute.lastStop[0];
+            if (timeDifference < 3 || sameLastStop) {
+                const currentHasC = route.route.includes('C');
+                const lastHasC = lastRoute.route.includes('C');
+
+                if (currentHasC && !lastHasC) {
+                    // Prefer the lastRoute over currentRoute, so ignore currentRoute
+                    return;
+                } else if (!currentHasC && lastHasC) {
+                    // Replace lastRoute with currentRoute
+                    // Remove lastRoute's div from DOM
+                    if (lastRoute.div && lastRoute.div.parentNode) {
+                        routesContainer.removeChild(lastRoute.div);
+                    }
+                } else {
+                    // Both have 'C' or neither have 'C', keep the first one (lastRoute)
+                    return;
+                }
+            }
         }
 
         const stopsArray = Object.entries(stops); 
@@ -349,7 +379,13 @@ function displayRoutes(routes, originStop, destinationStop) {
                 <div class="route-header flex items-center justify-between mb-4">
                     <div class="flex items-center">
                         <div class="route-icon text-2xl mr-2"><i class="fa-solid fa-bus"></i></div>
-                        <div class="route-number text-xl font-semibold text-green-600">${route.route}</div>
+                        <!-- <div class="route-number text-xl font-semibold text-green-600">${route.route}</div> -->
+                        ${route.route.includes('C') ? `
+                            <div class="confirmation-banner bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-1 mb-1" role="alert">
+                                <p class="font-bold text-xs">${t('confirmationRequired')}</p>
+                                <p class="text-xs">${t('confirmationMessage')}</p>
+                            </div>
+                        ` : ''}
                     </div>
                     <div class="text-sm text-gray-600">
                         ${transferCount > 0 ? `<i class="fa fa-shuffle mr-1"></i> ${transferCount} ${transferCount === 1 ? t('transfer') : t('transfers')}` : ''}
@@ -402,28 +438,30 @@ function displayRoutes(routes, originStop, destinationStop) {
                             <div class="time font-medium">${time}</div>
                         </div>
                     `).join('')}
-                    <div class="company mt-2 text-right text-sm text-gray-300">
-                        ${(() => {
-                            const routeNumbers = route.route.split('/').map(num => parseInt(num));
-                            const operators = new Set();
-                            
-                            routeNumbers.forEach(routeNumber => {
-                                if (routeNumber >= 200 && routeNumber < 300) {
-                                    operators.add('Auto Viação Micaelense');
-                                } else if (routeNumber >= 300 && routeNumber < 400) {
-                                    operators.add('Varela & Lda.');
-                                } else if (routeNumber >= 100 && routeNumber < 200) {
-                                    operators.add('Caetano Raposo e Pereiras Lda.');
+                    <!-- 
+                        <div class="company mt-2 text-right text-sm text-gray-300">
+                            ${(() => {
+                                const routeNumbers = route.route.split('/').map(num => parseInt(num));
+                                const operators = new Set();
+                                
+                                routeNumbers.forEach(routeNumber => {
+                                    if (routeNumber >= 200 && routeNumber < 300) {
+                                        operators.add('Auto Viação Micaelense');
+                                    } else if (routeNumber >= 300 && routeNumber < 400) {
+                                        operators.add('Varela & Lda.');
+                                    } else if (routeNumber >= 100 && routeNumber < 200) {
+                                        operators.add('Caetano Raposo e Pereiras Lda.');
+                                    }
+                                });
+                                
+                                if (operators.size > 0) {
+                                    return t('operatedBy') + ' ' + Array.from(operators).join(t('and'));
+                                } else {
+                                    return '';
                                 }
-                            });
-                            
-                            if (operators.size > 0) {
-                                return t('operatedBy') + ' ' + Array.from(operators).join(t('and'));
-                            } else {
-                                return '';
-                            }
-                        })()}
-                    </div>
+                            })()}
+                        </div> 
+                    -->
                 </div>
                 <div class="flex space-x-2 mt-2">
                     <button type="submit" class="flex-grow bg-green-500 text-white py-2 rounded-full hover:bg-green-600 transition duration-300 ease-in-out" data-i18n="directionsButton"
@@ -509,7 +547,10 @@ function displayRoutes(routes, originStop, destinationStop) {
         `;
         document.head.appendChild(style);
 
-        routesContainer.appendChild(routeDiv);
+        if (!ignoreRoute) {
+            routesContainer.appendChild(routeDiv);
+        }
+        lastRoute = { firstStop, lastStop, route: route.route, div: routeDiv }; // Store the first and last stop for comparison
     });
 
     routesContainer.style.display = 'block';
@@ -519,7 +560,13 @@ function loadAdBanner(on) {
     const apiUrl = `https://saomiguelbus-api.herokuapp.com/api/v1/ad?on=${on}&platform=web`;  // Replace with your API endpoint
 
     fetch(apiUrl)
-        .then(response => response.json())
+        .then(response => { 
+            if (response.ok) {
+                return response.json();
+            } else {
+                console.warn('There are no ad banners available to display')
+            }
+        })
         .then(ad => {
             if (ad) {
                 let hrefValue;
@@ -551,7 +598,7 @@ function loadAdBanner(on) {
                 if (adImage) {
                     document.getElementById('ad-clickable').addEventListener('click', function(event) {
                         const adId = adImage.getAttribute("data-id");
-                        const URL = "https://saomiguelbus-api.herokuapp.com/api/v1/ad/click?id="+ encodeURIComponent(adId);
+                        const URL = "http://127.0.0.1:8000/api/v1/ad/click?id="+ encodeURIComponent(adId);
                         fetch(URL, {
                             method: 'POST',
                             headers: {
@@ -580,7 +627,7 @@ function getUrlParameters(origin, destination, day, time) {
     const parameters = {
         'origin': origin,
         'destination': destination,
-        'day': day.toUpperCase(),
+        'day': day,
         'time': time
     };
     //00:00 -> 00h00

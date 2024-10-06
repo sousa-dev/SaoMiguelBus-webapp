@@ -90,5 +90,7 @@
     "priceAppDescription": "Los precios de los billetes se determinan por las compañías de autocarros y pueden variar según la distancia, el tipo de billete y otros factores. No tenemos acceso a los precios, pero podemos informar que los billetes se venden en el autocarro mismo y deben ser comprados al conductor con dinero físico al entrar en el autocarro.",
     "priceAppEnd": "Para más información, contacte con las compañías de autocarros directamente.",
     "termsAndConditions": "Términos y Condiciones",
-    "privacyPolicy": "Política de Privacidad"
+    "privacyPolicy": "Política de Privacidad",
+    "confirmationRequired": "Requiere Confirmación",
+    "confirmationMessage": "Por favor, confirme la existencia de esta ruta con la compañía de autobuses antes de viajar."
 }

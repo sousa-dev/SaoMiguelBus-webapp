@@ -142,11 +142,7 @@ function displayRoutes(routes, originStop) {
         let stops = {};
         let foundOrigin = false;
         let foundDestination = false;
-        console.log('Stops:', stopsObj);
         for (const [stop, time] of Object.entries(stopsObj)) {
-            console.log('Stop:', stop);
-            console.log('originStop:', originStop);
-            console.log('destinationStop:', destinationStop);
             if (stop === originStop) {
                 foundOrigin = true;
             }

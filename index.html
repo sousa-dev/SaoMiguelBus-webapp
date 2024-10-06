@@ -1054,6 +1054,7 @@
             
             // Check if the date is valid
             if (!isNaN(selectedDate)) {
+                return dateInput.value
                 const day = selectedDate.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
                 
                 // Determine the day type

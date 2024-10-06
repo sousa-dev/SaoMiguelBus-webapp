@@ -43,7 +43,8 @@ function searchStepByStep(origin, destination, day, time) {
     if (languageCode === 'pt') {
         currentLanguage = 'pt-pt';
     }
-    const url = 'https://saomiguelbus-api.herokuapp.com/api/v1/gmaps?origin=' + encodeURIComponent(parameters.origin) 
+
+    const url = 'http://127.0.0.1:8000/api/v1/gmaps?origin=' + encodeURIComponent(parameters.origin) 
     + '&destination=' + encodeURIComponent(parameters.destination) 
     + '&day=' + encodeURIComponent(parameters.day) 
     + '&start=' + encodeURIComponent(parameters.time)
@@ -57,7 +58,7 @@ function searchStepByStep(origin, destination, day, time) {
 }
 
 function postToStatsStepByStep(parameters) {
-    const url = `https://saomiguelbus-api.herokuapp.com/api/v1/stat?request=get_directions&origin=${encodeURIComponent(parameters.origin)}&destination=${encodeURIComponent(parameters.destination)}&time=${encodeURIComponent(parameters.time)}&language=${encodeURIComponent(currentLanguage)}&platform=web&day=${encodeURIComponent(parameters.day)}`;
+    const url = `http://127.0.0.1:8000/api/v1/stat?request=get_directions&origin=${encodeURIComponent(parameters.origin)}&destination=${encodeURIComponent(parameters.destination)}&time=${encodeURIComponent(parameters.time)}&language=${encodeURIComponent(currentLanguage)}&platform=web&day=${encodeURIComponent(parameters.day)}`;
     fetch(url, {
         method: 'POST',
         headers: {
