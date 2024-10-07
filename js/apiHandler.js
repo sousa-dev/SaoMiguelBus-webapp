@@ -364,17 +364,6 @@ function displayRoutes(routes, originStop, destinationStop) {
         return;
     }
 
-    // Sort routes by origin time
-    routes.sort((a, b) => {
-        const aStopsObj = stringToJSON(a.stops);
-        const bStopsObj = stringToJSON(b.stops);
-
-        const aTime = aStopsObj.hasOwnProperty(originStop) ? aStopsObj[originStop] : aStopsObj[Object.keys(aStopsObj)[0]];
-        const bTime = bStopsObj.hasOwnProperty(originStop) ? bStopsObj[originStop] : bStopsObj[Object.keys(bStopsObj)[0]];
-        return aTime.localeCompare(bTime);
-    });
-
-
     var lastRoute = null;
     routes.forEach(route => {
         let ignoreRoute = false;
@@ -387,7 +376,7 @@ function displayRoutes(routes, originStop, destinationStop) {
         const prepositions = ['de', 'da', 'do', 'dos', 'das'];
 
         originStop = originStop.split(' ').map(word => prepositions.includes(word.toLowerCase()) ? word : word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-        const destinationStop = route.destination.split(' ').map(word => prepositions.includes(word.toLowerCase()) ? word : word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        destinationStop = destinationStop.split(' ').map(word => prepositions.includes(word.toLowerCase()) ? word : word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
     
         // Filter stops to only include stops between the origin and destination
         let stops = {};
@@ -395,77 +384,8 @@ function displayRoutes(routes, originStop, destinationStop) {
         let foundDestination = false;
         let firstStop = null;
         let lastStop = null;
-        const originWords = originStop.toLowerCase().replace(/[-áàâãäéèêëíìîïóòôõöúùûüç]/g, match => {
-            switch (match) {
-                case 'á':
-                case 'à':
-                case 'â':
-                case 'ã':
-                case 'ä':
-                    return 'a';
-                case 'é':
-                case 'è':
-                case 'ê':
-                case 'ë':
-                    return 'e';
-                case 'í':
-                case 'ì':
-                case 'î':
-                case 'ï':
-                    return 'i';
-                case 'ó':
-                case 'ò':
-                case 'ô':
-                case 'õ':
-                case 'ö':
-                    return 'o';
-                case 'ú':
-                case 'ù':
-                case 'û':
-                case 'ü':
-                    return 'u';
-                case 'ç':
-                    return 'c';
-                default:
-                    return match;
-            }
-        }).split(' ').filter(word => word.trim() !== '' && word !== ' ');
-        
-        const destinationWords = destinationStop.toLowerCase().replace(/[-áàâãäéèêëíìîïóòôõöúùûüç]/g, match => {
-            switch (match) {
-                case 'á':
-                case 'à':
-                case 'â':
-                case 'ã':
-                case 'ä':
-                    return 'a';
-                case 'é':
-                case 'è':
-                case 'ê':
-                case 'ë':
-                    return 'e';
-                case 'í':
-                case 'ì':
-                case 'î':
-                case 'ï':
-                    return 'i';
-                case 'ó':
-                case 'ò':
-                case 'ô':
-                case 'õ':
-                case 'ö':
-                    return 'o';
-                case 'ú':
-                case 'ù':
-                case 'û':
-                case 'ü':
-                    return 'u';
-                case 'ç':
-                    return 'c';
-                default:
-                    return match;
-            }
-        }).split(' ').filter(word => word.trim() !== '' && word !== ' ');
+        const originWords = route.origin.split(' ').filter(word => word.trim() !== '' && word !== ' ');
+        const destinationWords = route.destination.split(' ').filter(word => word.trim() !== '' && word !== ' ');
     
         for (const [stop, time] of Object.entries(stopsObj)) {
     
@@ -504,28 +424,25 @@ function displayRoutes(routes, originStop, destinationStop) {
                         return match;
                 }
             }).replace(/-/g, '').split(' ').filter(word => word.trim() !== '' && word !== ' ');
-            
+
+
             if (foundOrigin) {
                 stops[stop] = time;
             } else {
-                for (const word of originWords) {
-                    if (stopWords.some(stopWord => stopWord.includes(word))) {
-                        foundOrigin = true;
-                        firstStop = [stop, time];
-                        stops[stop] = time;
-                        break;
-                    }
+                if (originWords.every(originWord => stopWords.includes(originWord))) {
+                    foundOrigin = true;
+                    firstStop = [stop, time];
+                    stops[stop] = time;
                 }
             }
 
-            for (const word of destinationWords) {
-                if (stopWords.some(stopWord => stopWord.includes(word))) {
-                    foundDestination = true;
-                    lastStop = [stop, time];
-                    stops[stop] = time;
-                    break;
-                }
+            if (destinationWords.every(destinationWord => stopWords.includes(destinationWord))) {
+                foundDestination = true;
+                lastStop = [stop, time];
+                stops[stop] = time;
+                break;
             }
+            
 
             if (foundDestination) {
                 if (!foundOrigin) {
@@ -542,11 +459,10 @@ function displayRoutes(routes, originStop, destinationStop) {
 
         if (lastRoute) {
             const timeDifference = Math.abs(timeStringToMinutes(firstStop[1]) - timeStringToMinutes(lastRoute.firstStop[1]));
-            const sameLastStop = lastStop[0] === lastRoute.lastStop[0];
-            if (timeDifference < 3 || sameLastStop) {
+            if (timeDifference < 3) {
                 const currentHasC = route.route.includes('C');
                 const lastHasC = lastRoute.route.includes('C');
-
+                
                 if (currentHasC && !lastHasC) {
                     // Prefer the lastRoute over currentRoute, so ignore currentRoute
                     return;
@@ -569,8 +485,7 @@ function displayRoutes(routes, originStop, destinationStop) {
         transferCount = Math.min(transferCount, stopsArray.length - 2);
 
         const travelTime = calculateTotalTravelTime(firstStop[1], lastStop[1]);
-
-        if (travelTime.hours > 4) {
+        if (travelTime.hours > 12) {
             ignoreRoute = true;
             return;
         }
@@ -785,6 +700,11 @@ function displayRoutes(routes, originStop, destinationStop) {
         lastRoute = { firstStop, lastStop, route: route.route, div: routeDiv }; // Store the first and last stop for comparison
     });
 
+    if (routesContainer.childElementCount === 0) {
+        displayNoRoutesMessage(originStop, destinationStop);
+        return;
+    }
+
     routesContainer.style.display = 'block';
 }
 
@@ -849,6 +769,10 @@ function loadAdBanner(on) {
 }
 
 function stringToJSON(string) {
+    if (typeof string !== 'string') {
+        console.warn('stringToJSON: input is not a string');
+        return;
+    }
     const validJsonString = string.replace(/'/g, '"');
     // Parse the string to a JavaScript object
     const jsonObj = JSON.parse(validJsonString);
