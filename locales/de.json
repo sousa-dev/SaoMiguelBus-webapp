@@ -93,5 +93,8 @@
     "privacyPolicy": "Datenschutzbestimmungen",
     "confirmationRequired": "Erfordert Bestätigung",
     "confirmationMessage": "Bitte bestätigen Sie die Existenz dieser Route mit der Busunternehmen vor der Reise.",
-    "confirmBusCompaniesDescription": "Wenn Sie nicht sicher sind, ob diese Route existiert, kontaktieren Sie die Busunternehmen direkt, um sie zu bestätigen."
+    "confirmBusCompaniesDescription": "Wenn Sie nicht sicher sind, ob diese Route existiert, kontaktieren Sie die Busunternehmen direkt, um sie zu bestätigen.",
+    "adBannerSubtitleSeen": "Gesehen",
+    "adBannerSubtitleTimes": "mal in den letzten",
+    "adBannerSubtitleDays": "Tage"
 }

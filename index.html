@@ -335,9 +335,15 @@
         <div class="w-full max-w-md mx-auto bg-white rounded-3xl shadow-lg overflow-hidden relative">
             <span class="absolute top-0 left-0 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-tl-lg rounded-br-lg">AD</span>          
             <a href="https://ad.saomiguelbus.com" target="_blank" class="block">
-                <div class="bg-green-600 text-white p-4 text-center">
+                <div class="bg-green-600 text-white p-2 text-center">
                     <p class="font-bold" data-i18n="adBannerTitle">ANUNCIE AQUI</p>
-                    <p class="text-sm" data-i18n="adBannerSubtitle">Saiba mais em <span class="underline">ad.saomiguelbus.com</span></p>
+                    <p class="text-sm"> 
+                        <span data-i18n="adBannerSubtitleSeen">Visto</span> 
+                        <span id="viewCount" class="font-semibold text-md animate-pulse">-</span> 
+                        <span data-i18n="adBannerSubtitleTimes">vezes nos últimos</span> 
+                        <span id="dayCount" class="font-semibold text-md">-</span> 
+                        <span data-i18n="adBannerSubtitleDays">dias</span>
+                    </p>
                 </div>
             </a>
 

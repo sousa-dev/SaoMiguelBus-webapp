@@ -742,6 +742,20 @@ function loadAdBanner(on) {
                         </div>
                     </div>`;
 
+                const viewCountElement = document.getElementById('viewCount');
+                const dayCountElement = document.getElementById('dayCount');
+
+                if (viewCountElement && ad.seen) {
+                    viewCountElement.textContent = ad.seen;
+                }
+
+                if (dayCountElement && ad.start) {
+                    const start_date = ad.start;
+                    const daysAgo = Math.floor((new Date() - new Date(start_date)) / (1000 * 60 * 60 * 24));
+                    
+                    dayCountElement.textContent = daysAgo || 1; // Update days
+                }
+
                 // Insert the ad banner into the DOM
                 document.getElementById('placeHolderForAd').innerHTML = adBannerHTML;
 

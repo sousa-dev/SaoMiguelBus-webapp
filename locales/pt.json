@@ -93,5 +93,8 @@
     "privacyPolicy": "Política de Privacidade",
     "confirmationRequired": "Requer Confirmação",
     "confirmationMessage": "Por favor, confirme a existência desta rota com a companhia de autocarros antes de viajar.",
-    "confirmBusCompaniesDescription": "Se não tem a certeza da existência desta rota, entre em contato com as companhias de autocarros diretamente para confirmá-la."
+    "confirmBusCompaniesDescription": "Se não tem a certeza da existência desta rota, entre em contato com as companhias de autocarros diretamente para confirmá-la.",
+    "adBannerSubtitleSeen": "Visto",
+    "adBannerSubtitleTimes": "vezes nos últimos",
+    "adBannerSubtitleDays": "dias"
 }
