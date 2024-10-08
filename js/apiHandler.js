@@ -338,14 +338,16 @@ function displayNoRoutesMessage(origin, destination) {
     const noRoutesDiv = document.getElementById('noRoutesMessage');
     const message = t('noRoutesMessage').replace('{origin}', origin).replace('{destination}', destination);
     noRoutesDiv.innerHTML = `
-        <div class="container mx-auto px-4 mt-4">
+        <div class="container mx-auto px-4 mt-4" data-umami-event="no-routes-message-displayed">
             <div class="bg-red-100 shadow-md rounded-lg p-6">
                 <div class="flex flex-col items-center">
-                    <h3 class="text-xl font-semibold mb-2 text-center">
+                    <h3 class="text-xl font-semibold mb-2 text-center" data-umami-event="no-routes-message-header">
                         ${message}
                     </h3>
-                    <p class="text-gray-600 text-center">${t('noRoutesSubtitle')}</p>
-                    <button class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="redirectToStepByStepDirections(event)">
+                    <p class="text-gray-600 text-center" data-umami-event="no-routes-message-subtitle">
+                        ${t('noRoutesSubtitle')}
+                    </p>
+                    <button class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="redirectToStepByStepDirections(event)" data-umami-event="try-directions-button-clicked">
                         ${t('tryDirectionsButton')}
                     </button>
                 </div>
@@ -491,22 +493,22 @@ function displayRoutes(routes, originStop, destinationStop) {
         }
 
         routeDiv.innerHTML = `
-            <div id="route-${route.route}" class="bg-white shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-300">
+            <div id="route-${route.route}" class="bg-white shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-300" data-umami-event="route-${route.route}-click">
                 <div class="route-header flex items-center justify-between mb-4">
                     <div class="flex items-center">
                         <div class="route-icon text-2xl mr-2"><i class="fa-solid fa-bus"></i></div>
                         <!-- <div class="route-number text-xl font-semibold text-green-600">${route.route}</div> -->
                         ${route.route.includes('C') ? `
-                            <div class="confirmation-banner bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-1 mb-1 cursor-pointer flex justify-between items-center" onclick="document.getElementById('confirmationModal').classList.remove('hidden');">
+                            <div class="confirmation-banner bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-1 mb-1 cursor-pointer flex justify-between items-center" onclick="document.getElementById('confirmationModal').classList.remove('hidden');" data-umami-event="confirmation-banner-click">
                                 <div>
                                     <p class="font-bold text-xs">${t('confirmationRequired')}</p>
                                     <p class="text-xs">${t('confirmationMessage')}</p>
                                 </div>
                                 <i class="fas fa-phone-alt text-yellow-700 text-lg mr-2"></i>
                             </div>
-                            <div id="confirmationModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden" onclick="document.getElementById('confirmationModal').classList.add('hidden');">
+                            <div id="confirmationModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden" onclick="document.getElementById('confirmationModal').classList.add('hidden');" data-umami-event="confirmation-modal-click">
                                 <div class="bg-white rounded-lg p-6 w-80 relative" onclick="event.stopPropagation();">
-                                    <button id="closeConfirmationModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" onclick="document.getElementById('confirmationModal').classList.add('hidden');">
+                                    <button id="closeConfirmationModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" onclick="document.getElementById('confirmationModal').classList.add('hidden');" data-umami-event="close-confirmation-modal-click">
                                         <i class="fas fa-times text-xl text-right"></i>
                                     </button>
                                     <h3 class="text-xl font-semibold text-green-600 mb-3" data-i18n="contactBusCompaniesTitle">Contato das Companhias de Autocarros</h3>
@@ -570,7 +572,7 @@ function displayRoutes(routes, originStop, destinationStop) {
                     </div>
                 </div>
                 <div class="mt-4 text-center">
-                    <button class="expand-stops flex items-center justify-center w-full text-blue-500 hover:text-blue-700 text-base py-2">
+                    <button class="expand-stops flex items-center justify-center w-full text-blue-500 hover:text-blue-700 text-base py-2" data-umami-event="expand-stops-click">
                         <span class="mr-2">${t('clickToSeeDetails')}</span>
                         <span class="iconify transform transition-transform duration-300 text-xl" data-icon="mdi:chevron-down"></span>
                     </button>
@@ -611,7 +613,7 @@ function displayRoutes(routes, originStop, destinationStop) {
                     -->
                 </div>
                 <div class="flex space-x-2 mt-2">
-                    <button type="submit" class="flex-grow bg-green-500 text-white py-2 rounded-full hover:bg-green-600 transition duration-300 ease-in-out" data-i18n="directionsButton"
+                    <button type="submit" class="flex-grow bg-green-500 text-white py-2 rounded-full hover:bg-green-600 transition duration-300 ease-in-out" data-i18n="directionsButton" data-umami-event="directions-button-click"
                     onclick="redirectToStepByStepDirections(event)">
                         ${t('directionsButton')} <i class="fas fa-route"></i>
                     </button>
@@ -729,13 +731,13 @@ function loadAdBanner(on) {
                 }
                 // Assuming ad object has properties like 'target', 'media', 'entity', 'id'
                 const adBannerHTML = `
-                    <div class="container mx-auto" id="tm-section-2">
+                    <div class="container mx-auto" id="tm-section-2" data-umami-event="ad-banner-display">
                         <span class="absolute top-0 left-0 bg-green-500 text-white font-bold text-[10px] px-1 py-0.5 rounded-br-lg z-10">AD</span>
                         <div class="flex justify-center">
                             <div class="w-full sm:w-2/3 md:w-1/2 lg:w-1/2">
                                 <div class="ad-banner text-center p-1 relative">
-                                    <a href="${hrefValue}" target="_blank" id='ad-clickable'>
-                                        <img src="${ad.media}" alt="${ad.entity}" class="w-full h-auto rounded-lg" id="ad-image" data-id="${ad.id}">
+                                    <a href="${hrefValue}" target="_blank" id='ad-clickable' data-umami-event="ad-click">
+                                        <img src="${ad.media}" alt="${ad.entity}" class="w-full h-auto rounded-lg" id="ad-image" data-id="${ad.id}" data-umami-event="ad-image-view">
                                     </a>
                                 </div>
                             </div>

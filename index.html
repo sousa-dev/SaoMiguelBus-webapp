@@ -267,23 +267,23 @@
     <!-- Bottom Navigation Bar for Mobile -->
     <nav class="fixed bottom-0 left-0 right-0 bg-white lg:hidden z-50">
         <div class="flex">
-            <a href="#" class="flex flex-col items-center justify-center text-gray-600 hover:text-green-600 py-2 flex-1" data-target="home">
+            <a href="#" class="flex flex-col items-center justify-center text-gray-600 hover:text-green-600 py-2 flex-1" data-target="home" data-umami-event="nav-home">
                 <i class="fas fa-bus text-xl"></i>
                 <span id="navBarSearchLabel" class="text-xs" data-i18n="navBarSearchLabel">Rotas</span>
             </a>
-            <a href="#" class="flex flex-col items-center justify-center text-gray-600 hover:text-green-600 py-2 flex-1" data-target="routes">
+            <a href="#" class="flex flex-col items-center justify-center text-gray-600 hover:text-green-600 py-2 flex-1" data-target="routes" data-umami-event="nav-routes">
                 <i class="fas fa-route text-xl"></i>
                 <span id="navBarRoutesLabel" class="text-xs" data-i18n="navBarRoutesLabel">Direções</span>
             </a>
-            <a href="#" class="flex flex-col items-center justify-center text-gray-600 hover:text-green-600 py-2 flex-1" data-target="tours">
+            <a href="#" class="flex flex-col items-center justify-center text-gray-600 hover:text-green-600 py-2 flex-1" data-target="tours" data-umami-event="nav-tours">
                 <i class="fas fa-map-marked-alt text-xl"></i>
                 <span id="navBarToursLabel" class="text-xs" data-i18n="navBarToursLabel">Tours</span>
             </a>
-            <a href="#" class="flex flex-col items-center justify-center text-gray-600 hover:text-green-600 py-2 flex-1" data-target="advert">
+            <a href="#" class="flex flex-col items-center justify-center text-gray-600 hover:text-green-600 py-2 flex-1" data-target="advert" data-umami-event="nav-advert">
                 <i class="fas fa-ad text-xl"></i>
                 <span id="navBarAdvertLabel" class="text-xs" data-i18n="navBarAdvertLabel">Anúncios</span>
             </a>
-            <a href="#" class="flex flex-col items-center justify-center text-gray-600 hover:text-green-600 py-2 flex-1" data-target="info">
+            <a href="#" class="flex flex-col items-center justify-center text-gray-600 hover:text-green-600 py-2 flex-1" data-target="info" data-umami-event="nav-info">
                 <i class="fas fa-info-circle text-xl"></i>
                 <span id="navBarInfoLabel" class="text-xs" data-i18n="navBarInfoLabel">Info</span>
             </a>
@@ -293,32 +293,32 @@
     <!-- Language Selection Modal -->
     <div id="languageModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
         <div class="bg-white rounded-lg p-6 w-80 relative">
-            <button id="closeModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2">
+            <button id="closeModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" data-umami-event="close-language-modal">
                 <i class="fas fa-times text-xl text-right"></i>
             </button>
             <ul>
                 <li>
-                    <button onclick="changeLanguage('pt')" class="w-full text-left py-2">
+                    <button onclick="changeLanguage('pt')" class="w-full text-left py-2" data-umami-event="change-language-pt">
                         <span>🇵🇹</span> Português
                     </button>
                 </li>
                 <li>
-                    <button onclick="changeLanguage('en')" class="w-full text-left py-2">
+                    <button onclick="changeLanguage('en')" class="w-full text-left py-2" data-umami-event="change-language-en">
                         <span>🇬🇧</span> English
                     </button>
                 </li>
                 <li>
-                    <button onclick="changeLanguage('es')" class="w-full text-left py-2">
+                    <button onclick="changeLanguage('es')" class="w-full text-left py-2" data-umami-event="change-language-es">
                         <span>🇪🇸</span> Español
                     </button>
                 </li>
                 <li>
-                    <button onclick="changeLanguage('fr')" class="w-full text-left py-2">
+                    <button onclick="changeLanguage('fr')" class="w-full text-left py-2" data-umami-event="change-language-fr">
                         <span>🇫🇷</span> Français
                     </button>
                 </li>
                 <li>
-                    <button onclick="changeLanguage('de')" class="w-full text-left py-2">
+                    <button onclick="changeLanguage('de')" class="w-full text-left py-2" data-umami-event="change-language-de">
                         <span>🇩🇪</span> Deutsch
                     </button>
                 </li>
@@ -334,7 +334,7 @@
     <section id="home" class="page active bg-white flex flex-col items-center p-2">       
         <div class="w-full max-w-md mx-auto bg-white rounded-3xl shadow-lg overflow-hidden relative">
             <span class="absolute top-0 left-0 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-tl-lg rounded-br-lg">AD</span>          
-            <a href="https://ad.saomiguelbus.com" target="_blank" class="block">
+            <a href="https://ad.saomiguelbus.com" target="_blank" class="block" data-umami-event="ad-banner-click">
                 <div class="bg-green-600 text-white p-2 text-center">
                     <p class="font-bold" data-i18n="adBannerTitle">ANUNCIE AQUI</p>
                     <p class="text-sm"> 
@@ -351,7 +351,7 @@
             <form action="index.html" method="get" class="p-2" role="search" aria-label="Formulário de Pesquisa de Autocarros">
                 <div class="space-y-1">
                     <div class="relative w-full">
-                        <input name="origin" id="origin" type="text" placeholder="Origem" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" data-i18n-placeholder="originPlaceholder" required autocomplete="off">
+                        <input name="origin" id="origin" type="text" placeholder="Origem" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" data-i18n-placeholder="originPlaceholder" required autocomplete="off" data-umami-event="input-origin">
                         <div id="origin-suggestions" style="display: none;" class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-24 overflow-y-auto"></div>
                         <svg class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
@@ -360,14 +360,14 @@
                     </div>                   
                 
                     <!-- Swap Button -->
-                    <button type="button" class="w-full flex justify-end items-center" onclick="swapOriginDestination()">
+                    <button type="button" class="w-full flex justify-end items-center" onclick="swapOriginDestination()" data-umami-event="swap-origin-destination">
                         <div class="bg-green-500 rounded-full w-8 h-8 flex items-center justify-center hover:bg-green-600 transition duration-300 ease-in-out">
                             <i id="swapIcon" class="fas fa-exchange-alt transform rotate-90 text-white text-sm"></i>
                         </div>
                     </button>
 
                     <div class="relative w-full">
-                        <input name="destination" id="destination" type="text" placeholder="Destino" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" data-i18n-placeholder="destinationPlaceholder" required autocomplete="off">
+                        <input name="destination" id="destination" type="text" placeholder="Destino" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" data-i18n-placeholder="destinationPlaceholder" required autocomplete="off" data-umami-event="input-destination">
                         <div id="destination-suggestions" style="display: none;"  class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-24 overflow-y-auto"></div>
                         <svg class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
@@ -389,6 +389,7 @@
                                 style="-webkit-appearance: none; -moz-appearance: none; appearance: none;" 
                                 data-i18n="dayLabel" 
                                 onchange="checkDayType()"
+                                data-umami-event="input-date"
                             >
                             <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
                                 <i class="fas fa-calendar-alt"></i>
@@ -405,6 +406,7 @@
                                 style="-webkit-appearance: none; -moz-appearance: none; appearance: none;" 
                                 data-i18n-placeholder="timePlaceholder" 
                                 required
+                                data-umami-event="input-time"
                             >
                             <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
                                 <i class="fas fa-clock"></i>
@@ -413,10 +415,10 @@
                     </div>
 
                     <div class="flex space-x-2">
-                        <button type="submit" id="btnSubmit" class="flex-grow bg-green-500 text-white py-2 rounded-full hover:bg-green-600 transition duration-300 ease-in-out" data-i18n="searchButton">
+                        <button type="submit" id="btnSubmit" class="flex-grow bg-green-500 text-white py-2 rounded-full hover:bg-green-600 transition duration-300 ease-in-out" data-i18n="searchButton" data-umami-event="search-button">
                             Pesquisar
                         </button>
-                        <button type="button" id="btnRoutes" class="bg-green-500 text-white p-2 rounded-full hover:bg-green-600 transition duration-300 ease-in-out w-10 h-10 flex items-center justify-center">
+                        <button type="button" id="btnRoutes" class="bg-green-500 text-white p-2 rounded-full hover:bg-green-600 transition duration-300 ease-in-out w-10 h-10 flex items-center justify-center" data-umami-event="routes-button">
                             <i class="fas fa-route"></i>
                         </button>
                     </div>
@@ -455,13 +457,13 @@
 
         <!-- Install App Buttons -->
         <div id="installAppButtons" class="w-full max-w-md mx-auto mt-4">
-            <button id="installAndroidApp" class="hidden w-full bg-green-500 text-white py-2 px-4 rounded-full hover:bg-green-600 transition duration-300 ease-in-out mb-2" onclick="window.location.href='https://play.google.com/store/apps/details?id=com.hsousa_apps.Autocarros'">
+            <button id="installAndroidApp" class="hidden w-full bg-green-500 text-white py-2 px-4 rounded-full hover:bg-green-600 transition duration-300 ease-in-out mb-2" onclick="window.location.href='https://play.google.com/store/apps/details?id=com.hsousa_apps.Autocarros'" data-umami-event="install-android-app">
                 <div class="flex items-center"></div>
                     <i class="fab fa-android mr-2 self-center text-xl"></i>
                     <span data-i18n="installAndroidApp" class="flex-grow">Install Android App</span>
                 </div>
             </button>
-            <button id="installIOSApp" class="hidden w-full bg-black text-white py-2 px-4 rounded-full hover:bg-blue-600 transition duration-300 ease-in-out" onclick="window.location.href='/newsletter'">
+            <button id="installIOSApp" class="hidden w-full bg-black text-white py-2 px-4 rounded-full hover:bg-blue-600 transition duration-300 ease-in-out" onclick="window.location.href='/newsletter'" data-umami-event="install-ios-app">
                 <div class="flex items-center">
                     <i class="fab fa-apple mr-2 self-center text-xl"></i>
                     <span data-i18n="registerToDownloadIOSApp" class="flex-grow text-sm">Register to Download iOS App</span>
@@ -475,7 +477,7 @@
     <section id="routes" class="page hidden bg-white flex flex-col items-center p-2">
         <div class="w-full max-w-md mx-auto bg-white rounded-3xl shadow-lg overflow-hidden relative">
             <span class="absolute top-0 left-0 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-tl-lg rounded-br-lg">AD</span>          
-            <a href="https://ad.saomiguelbus.com" target="_blank" class="block">
+            <a href="https://ad.saomiguelbus.com" target="_blank" class="block" data-umami-event="ad-banner-click-routes">
                 <div class="bg-green-600 text-white p-4 text-center">
                     <p class="font-bold" data-i18n="adBannerTitle">ANUNCIE AQUI</p>
                     <p class="text-sm" data-i18n="adBannerSubtitle">Saiba mais em <span class="underline">ad.saomiguelbus.com</span></p>
@@ -486,7 +488,7 @@
             <form action="index.html" method="get" class="p-2" role="search" aria-label="Formulário de Pesquisa de Autocarros">
                 <div class="space-y-1">
                     <div class="relative w-full">
-                        <input name="originStepByStep" id="originStepByStep" type="text" placeholder="Origem" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" data-i18n-placeholder="originPlaceholder" required autocomplete="off">
+                        <input name="originStepByStep" id="originStepByStep" type="text" placeholder="Origem" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" data-i18n-placeholder="originPlaceholder" required autocomplete="off" data-umami-event="input-origin-step-by-step">
                         <div id="originStepByStep-suggestions" style="display: none;"  class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-24 overflow-y-auto"></div>
                         <svg class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
@@ -495,6 +497,7 @@
                     </div>
                 
                     <!-- Swap Button -->
+                    <button type="button" class="w-full flex justify-end items-center" onclick="swapOriginDestination()" data-umami-event="swap-origin-destination-step-by-step">
                     <button type="button" class="w-full flex justify-end items-center" onclick="swapOriginDestination()">
                         <div class="bg-green-500 rounded-full w-8 h-8 flex items-center justify-center hover:bg-green-600 transition duration-300 ease-in-out">
                             <i id="swapIconStepByStep" class="fas fa-exchange-alt transform rotate-90 text-white text-sm"></i>
@@ -502,7 +505,7 @@
                     </button>
 
                     <div class="relative w-full">
-                        <input name="destinationStepByStep" id="destinationStepByStep" type="text" placeholder="Destino" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" data-i18n-placeholder="destinationPlaceholder" required autocomplete="off">
+                        <input name="destinationStepByStep" id="destinationStepByStep" type="text" placeholder="Destino" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500" data-i18n-placeholder="destinationPlaceholder" required autocomplete="off" data-umami-event="input-destination-step-by-step">
                         <div id="destinationStepByStep-suggestions" style="display: none;" class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-24 overflow-y-auto"></div>
                         <svg class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
@@ -523,6 +526,7 @@
                                 style="-webkit-appearance: none; -moz-appearance: none; appearance: none;" 
                                 data-i18n="dayLabel" 
                                 onchange="checkDayType()"
+                                data-umami-event="select-date-step-by-step"
                             >
                             <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
                                 <i class="fas fa-calendar-alt"></i>
@@ -539,6 +543,7 @@
                                 style="-webkit-appearance: none; -moz-appearance: none; appearance: none;" 
                                 data-i18n-placeholder="timePlaceholder" 
                                 required
+                                data-umami-event="select-time-step-by-step"
                             >
                             <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
                                 <i class="fas fa-clock"></i>
@@ -547,10 +552,10 @@
                     </div>
 
                     <div class="flex space-x-2">
-                        <button type="submit" id="btnSubmitStepByStep" class="flex-grow bg-green-500 text-white py-2 rounded-full hover:bg-green-600 transition duration-300 ease-in-out" data-i18n="directionsButton">
+                        <button type="submit" id="btnSubmitStepByStep" class="flex-grow bg-green-500 text-white py-2 rounded-full hover:bg-green-600 transition duration-300 ease-in-out" data-i18n="directionsButton" data-umami-event="submit-step-by-step">
                             Obter Direções
                         </button>
-                        <button type="button" id="btnRoutesStepByStep" class="bg-green-500 text-white p-2 rounded-full hover:bg-green-600 transition duration-300 ease-in-out w-10 h-10 flex items-center justify-center">
+                        <button type="button" id="btnRoutesStepByStep" class="bg-green-500 text-white p-2 rounded-full hover:bg-green-600 transition duration-300 ease-in-out w-10 h-10 flex items-center justify-center" data-umami-event="view-routes-step-by-step">
                             <i class="fas fa-bus"></i>
                         </button>
                     </div>
@@ -560,7 +565,7 @@
         <div id="directionsContainer"></div>
         
         <!-- Instructional Card for Routes Section -->
-        <div id="routesInstructionCard" class="bg-white border-l-4 border-blue-500 text-blue-700 p-4 rounded-lg shadow-md mb-6 mt-4 sm:block max-w-xl mx-auto">
+        <div id="routesInstructionCard" class="bg-white border-l-4 border-blue-500 text-blue-700 p-4 rounded-lg shadow-md mb-6 mt-4 sm:block max-w-xl mx-auto" data-umami-event="view-routes-instructions">
             <div class="flex items-center mb-3">
                 <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -577,15 +582,15 @@
             </div>
         </div>
     </section>
-
+    
     <!-- Tours Page -->
-    <section id="tours" class="page hidden bg-white flex flex-col items-center p-2">
+    <section id="tours" class="page hidden bg-white flex flex-col items-center p-2" data-umami-event="view-tours-page">
         <h2 class="text-2xl text-center font-bold mb-4" data-i18n="toursTitle">Tours</h2>
         <p class="text-center text-lg mb-6" data-i18n="toursSubtitle">Encontre tours turísticos na ilha de São Miguel.</p>
         <div id="viatorWidget"></div>
         
         <!-- Loading Info Section -->
-        <div id="loadingToursInfo" class="bg-white rounded-lg p-4 shadow-md mb-6 max-w-md mx-auto">
+        <div id="loadingToursInfo" class="bg-white rounded-lg p-4 shadow-md mb-6 max-w-md mx-auto" data-umami-event="view-loading-tours-info">
             <h3 class="text-xl font-semibold mb-3 text-center" data-i18n="loadingToursInfoTitle">Carregando Informações</h3>
             <p class="text-gray-700 text-center mb-4" data-i18n="loadingToursInfoDescription">
                 Por favor, aguarde enquanto carregamos as informações dos tours disponíveis.
@@ -598,15 +603,15 @@
             </p>
         </div>
     <div class="flex justify-center">
-        <a href="https://www.viator.com/?pid=P00222801&mcid=42383&medium=link&medium_version=selector&campaign=sao-miguel-tours" target="_blank" class="text-blue-500 hover:underline">São Miguel Tours <i class="fas fa-external-link-alt text-xs ml-1"></i></a>
+        <a href="https://www.viator.com/?pid=P00222801&mcid=42383&medium=link&medium_version=selector&campaign=sao-miguel-tours" target="_blank" class="text-blue-500 hover:underline" data-umami-event="view-viator-website">São Miguel Tours <i class="fas fa-external-link-alt text-xs ml-1"></i></a>
     </div>
     </section>
 
     <!-- Advert Page -->
-    <section id="advert" class="page hidden bg-white flex flex-col items-center p-4">
+    <section id="advert" class="page hidden bg-white flex flex-col items-center p-4" data-umami-event="view-advert-page">
         <h2 class="text-2xl text-center font-bold mb-4" data-i18n="advertiseTitle">Anuncie em São Miguel Bus</h2>
         <!-- <p class="text-center text-lg mb-6" data-i18n="advertiseSubtitle">Anuncie na nossa aplicação a partir de X euros por mês.</p> -->
-        <a href="https://ad.saomiguelbus.com" target="_blank" class="block">
+        <a href="https://ad.saomiguelbus.com" target="_blank" class="block" data-umami-event="view-advertising-opportunity">
             <div class="bg-green-100 rounded-lg p-6 shadow-md max-w-md mx-auto mb-6 hover:bg-green-200 transition-colors duration-300 cursor-pointer">
                 <h3 class="text-xl font-semibold mb-3 text-center" data-i18n="advertisingOpportunity">Oportunidade de Publicidade</h3>
                 <p class="text-gray-700 text-center" data-i18n="advertisingOpportunityDescription">
@@ -618,22 +623,22 @@
         </a>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="bg-white rounded-lg p-4 shadow-md flex flex-col items-center">
+            <div class="bg-white rounded-lg p-4 shadow-md flex flex-col items-center" data-umami-event="view-exact-targeting">
                 <i class="fas fa-cubes text-green-500 text-3xl mb-2"></i>
                 <h3 class="text-xl font-semibold text-center" data-i18n="exactTargeting">Segmentação Precisa</h3>
                 <p class="text-gray-700 text-center mt-2" data-i18n="exactTargetingDescription">Exiba seu anúncio para usuários que pesquisam rotas próximas ao seu estabelecimento.</p>
             </div>
-            <div class="bg-white rounded-lg p-4 shadow-md flex flex-col items-center">
+            <div class="bg-white rounded-lg p-4 shadow-md flex flex-col items-center" data-umami-event="view-directed-interactions">
                 <i class="fas fa-chart-line text-green-500 text-3xl mb-2"></i>
                 <h3 class="text-xl font-semibold text-center" data-i18n="directedInteractions">Interações Direcionadas</h3>
                 <p class="text-gray-700 text-center mt-2" data-i18n="directedInteractionsDescription">Redirecione usuários para seu site ou mapa com direções para seu estabelecimento.</p>
             </div>
-            <div class="bg-white rounded-lg p-4 shadow-md flex flex-col items-center">
+            <div class="bg-white rounded-lg p-4 shadow-md flex flex-col items-center" data-umami-event="view-flexible-pricing">
                 <i class="fas fa-money-bill-wave text-green-500 text-3xl mb-2"></i>
                 <h3 class="text-xl font-semibold text-center" data-i18n="flexiblePricing">Preço Flexível</h3>
                 <p class="text-gray-700 text-center mt-2" data-i18n="flexiblePricingDescription">Opções de preço baseadas em como você deseja promover seus serviços.</p>
             </div>
-            <div class="bg-white rounded-lg p-4 shadow-md flex flex-col items-center">
+            <div class="bg-white rounded-lg p-4 shadow-md flex flex-col items-center" data-umami-event="view-convenient-payment">
                 <i class="fas fa-credit-card text-green-500 text-3xl mb-2"></i>
                 <h3 class="text-xl font-semibold text-center" data-i18n="convenientPayment">Pagamento Conveniente</h3>
                 <p class="text-gray-700 text-center mt-2" data-i18n="convenientPaymentDescription">Aceita-se MBWay ou transferência bancária, com recibo para fins contabilísticos.</p>
@@ -641,7 +646,7 @@
         </div>
 
         <div class="mt-6 flex flex-col items-center">
-            <button class="bg-green-500 text-white py-2 px-4 rounded-full hover:bg-green-600 transition duration-300 ease-in-out flex items-center" onclick="toggleSpoiler()" data-i18n="whyAdsButton">
+            <button class="bg-green-500 text-white py-2 px-4 rounded-full hover:bg-green-600 transition duration-300 ease-in-out flex items-center" onclick="toggleSpoiler()" data-i18n="whyAdsButton" data-umami-event="view-why-ads">
                 Porque é que existem anúncios na aplicação?
             </button>
             <svg class="ml-2 h-4 w-4 transform transition-transform duration-200" id="spoilerArrow" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -668,10 +673,10 @@
     </section>
 
     <!-- Info Page -->
-    <section id="info" class="page hidden bg-white min-h-screen flex flex-col items-center p-4">
+    <section id="info" class="page hidden bg-white min-h-screen flex flex-col items-center p-4" data-umami-event="view-info-page">
         <div class="w-full max-w-md mx-auto">
             <!-- Language Selection Button -->
-            <button id="languageButton" class="bg-white w-auto text-green-600 py-2 px-4 rounded-full shadow-md hover:bg-green-50 transition duration-300 ease-in-out flex items-center border border-green-500 mb-2 float-right">
+            <button id="languageButton" class="bg-white w-auto text-green-600 py-2 px-4 rounded-full shadow-md hover:bg-green-50 transition duration-300 ease-in-out flex items-center border border-green-500 mb-2 float-right" data-umami-event="select-language">
                 <span id="currentLanguage" class="mr-2 text-xl" data-i18n="currentLanguage">🇵🇹</span>
                 <i class="fas fa-chevron-down ml-2 text-green-500"></i>
             </button>
@@ -681,14 +686,14 @@
                 <div><h3 class="font-semibold" data-i18n="infoDevelopedBy">Esta aplicação foi desenvolvida por</h3> <a href="https://www.sousadev.com" target="_blank" class="text-blue-500">Sousa Dev</a></div>
             </div>
 
-            <a href="#" class="block bg-white border border-gray-200 rounded-lg p-4 mb-4 flex items-center justify-between hover:bg-gray-50" onclick="document.getElementById('infoModal').classList.remove('hidden');">
+            <a href="#" class="block bg-white border border-gray-200 rounded-lg p-4 mb-4 flex items-center justify-between hover:bg-gray-50" onclick="document.getElementById('infoModal').classList.remove('hidden');" data-umami-event="view-info-modal">
                 <div class="flex items-center">
                     <span class="iconify text-3xl mr-4" data-icon="mdi:information-outline"></span>
                     <h3 class="font-semibold" data-i18n="infoNotDevelopedByBusCompanies">Aplicação não Desenvolvida pelas Empresas de Autocarros</h3>
                 </div>
                 <span class="iconify" data-icon="mdi:chevron-right"></span>
             </a>
-            <div id="infoModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden" onclick="document.getElementById('infoModal').classList.add('hidden');">
+            <div id="infoModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden" onclick="document.getElementById('infoModal').classList.add('hidden');" data-umami-event="close-info-modal">
                 <div class="bg-white rounded-lg p-6 w-80 relative" onclick="event.stopPropagation();">
                     <button id="closeInfoModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" onclick="document.getElementById('infoModal').classList.add('hidden');">
                         <i class="fas fa-times text-xl text-right"></i>
@@ -701,7 +706,7 @@
                 </div>
             </div>
 
-            <a href="#" class="block bg-white border border-gray-200 rounded-lg p-4 mb-4 flex items-center justify-between hover:bg-gray-50" onclick="document.getElementById('contactCompaniesModal').classList.remove('hidden');">
+            <a href="#" class="block bg-white border border-gray-200 rounded-lg p-4 mb-4 flex items-center justify-between hover:bg-gray-50" onclick="document.getElementById('contactCompaniesModal').classList.remove('hidden');" data-umami-event="view-contact-companies-modal">
                 <div class="flex items-center">
                     <span class="iconify text-3xl mr-4" data-icon="mdi:bus"></span>
                     <h3 class="font-semibold" data-i18n="contactBusCompanies">Contato das Companhias de Autocarros</h3>
@@ -709,7 +714,7 @@
                 <span class="iconify" data-icon="mdi:chevron-right"></span>
             </a>
 
-            <div id="contactCompaniesModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden" onclick="document.getElementById('contactCompaniesModal').classList.add('hidden');">
+            <div id="contactCompaniesModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden" onclick="document.getElementById('contactCompaniesModal').classList.add('hidden');" data-umami-event="close-contact-companies-modal">
                 <div class="bg-white rounded-lg p-6 w-80 relative" onclick="event.stopPropagation();">
                     <button id="closeContactModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" onclick="document.getElementById('contactCompaniesModal').classList.add('hidden');">
                         <i class="fas fa-times text-xl text-right"></i>
@@ -742,7 +747,7 @@
                 </div>
             </div>
 
-            <a href="#" class="block bg-white border border-gray-200 rounded-lg p-4 mb-4 flex items-center justify-between hover:bg-gray-50" onclick="document.getElementById('aluguerModal').classList.remove('hidden');">
+            <a href="#" class="block bg-white border border-gray-200 rounded-lg p-4 mb-4 flex items-center justify-between hover:bg-gray-50" onclick="document.getElementById('aluguerModal').classList.remove('hidden');" data-umami-event="view-aluguer-modal">
                 <div class="flex items-center">
                     <span class="iconify text-3xl mr-4" data-icon="mdi:bus-clock"></span>
                     <h3 class="font-semibold" data-i18n="aluguerTitle">Aluguer de Autocarros</h3>
@@ -750,9 +755,9 @@
                 <span class="iconify" data-icon="mdi:chevron-right"></span>
             </a>
 
-            <div id="aluguerModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden" onclick="document.getElementById('aluguerModal').classList.add('hidden');">
+            <div id="aluguerModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden" onclick="document.getElementById('aluguerModal').classList.add('hidden');" data-umami-event="close-aluguer-modal">
                 <div class="bg-white rounded-lg p-6 w-80 relative" onclick="event.stopPropagation();">
-                    <button id="closeAluguerModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" onclick="document.getElementById('aluguerModal').classList.add('hidden');">
+                    <button id="closeAluguerModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" onclick="document.getElementById('aluguerModal').classList.add('hidden');" data-umami-event="close-aluguer-modal-button">
                         <i class="fas fa-times text-xl text-right"></i>
                     </button>
                     <h3 class="text-xl font-semibold text-green-600 mb-3" data-i18n="aluguerTitle">Aluguer de Autocarros</h3>
@@ -760,7 +765,7 @@
                 </div>
             </div>
 
-            <a href="#" class="block bg-white border border-gray-200 rounded-lg p-4 mb-4 flex items-center justify-between hover:bg-gray-50" onclick="document.getElementById('priceModal').classList.remove('hidden');">
+            <a href="#" class="block bg-white border border-gray-200 rounded-lg p-4 mb-4 flex items-center justify-between hover:bg-gray-50" onclick="document.getElementById('priceModal').classList.remove('hidden');" data-umami-event="view-price-modal">
                 <div class="flex items-center">
                     <span class="iconify text-3xl mr-4" data-icon="mdi:ticket"></span>
                     <h3 class="font-semibold" data-i18n="priceApp">Preço dos Bilhetes</h3>
@@ -768,9 +773,9 @@
                 <span class="iconify" data-icon="mdi:chevron-right"></span>
             </a>
 
-            <div id="priceModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden" onclick="document.getElementById('priceModal').classList.add('hidden');">
+            <div id="priceModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden" onclick="document.getElementById('priceModal').classList.add('hidden');" data-umami-event="close-price-modal">
                 <div class="bg-white rounded-lg p-6 w-80 relative" onclick="event.stopPropagation();">
-                    <button id="closePriceModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" onclick="document.getElementById('priceModal').classList.add('hidden');">
+                    <button id="closePriceModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" onclick="document.getElementById('priceModal').classList.add('hidden');" data-umami-event="close-price-modal-button">
                         <i class="fas fa-times text-xl text-right"></i>
                     </button>
                     <h3 class="text-xl font-semibold text-green-600 mb-3" data-i18n="priceApp">Preço dos Bilhetes</h3>
@@ -779,7 +784,7 @@
                 </div>
             </div>
 
-            <a href="#" class="block bg-white border border-gray-200 rounded-lg p-4 mb-4 flex items-center justify-between hover:bg-gray-50" onclick="document.getElementById('infoModalAds').classList.remove('hidden');">
+            <a href="#" class="block bg-white border border-gray-200 rounded-lg p-4 mb-4 flex items-center justify-between hover:bg-gray-50" onclick="document.getElementById('infoModalAds').classList.remove('hidden');" data-umami-event="view-info-modal-ads">
                 <div class="flex items-center">
                     <span class="text-3xl mr-4"><i class="fas fa-ad"></i></span>
                     <h3 class="font-semibold" data-i18n="whyAdsButton">Por que há anúncios na app?</h3>
@@ -787,9 +792,9 @@
                 <span class="iconify" data-icon="mdi:chevron-right"></span>
             </a>
 
-            <div id="infoModalAds" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden" onclick="document.getElementById('infoModalAds').classList.add('hidden');">
+            <div id="infoModalAds" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden" onclick="document.getElementById('infoModalAds').classList.add('hidden');" data-umami-event="close-info-modal-ads">
                 <div class="bg-white rounded-lg p-6 w-80 relative" onclick="event.stopPropagation();">
-                    <button id="closeInfoModalAds" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" onclick="document.getElementById('infoModalAds').classList.add('hidden');">
+                    <button id="closeInfoModalAds" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" onclick="document.getElementById('infoModalAds').classList.add('hidden');" data-umami-event="close-info-modal-ads-button">
                         <i class="fas fa-times text-xl text-right"></i>
                     </button>
                     <div class="p-6">
@@ -809,26 +814,26 @@
                 </div>
             </div>
 
-            <a href="mailto:info@saomiguelbus.com" class="text-blue-500 text-center block mt-4" data-i18n="contactDeveloper">Contate o Desenvolvedor</a>
+            <a href="mailto:info@saomiguelbus.com" class="text-blue-500 text-center block mt-4" data-i18n="contactDeveloper" data-umami-event="contact-developer">Contate o Desenvolvedor</a>
 
             <p class="text-center text-gray-500 mt-8">Copyright © 2024 
-                <a href="https://www.sousadev.com" target="_blank" class="text-blue-600">Sousa Dev</a>
+                <a href="https://www.sousadev.com" target="_blank" class="text-blue-600" data-umami-event="visit-sousadev">Sousa Dev</a>
             </p>
             <div class="text-center">
-                <a href="https://twitter.com/sousadev" target="_blank" class="mx-2">
+                <a href="https://twitter.com/sousadev" target="_blank" class="mx-2" data-umami-event="visit-twitter">
                     <i class="fab fa-twitter text-2xl"></i>
                 </a>
-                <a href="https://instagram.com/saomiguelbus" target="_blank" class="mx-2">
+                <a href="https://instagram.com/saomiguelbus" target="_blank" class="mx-2" data-umami-event="visit-instagram">
                     <i class="fab fa-instagram text-2xl"></i>
                 </a>
-                <a href="https://linkedin.com/in/henriquecsousa" target="_blank" class="mx-2">
+                <a href="https://linkedin.com/in/henriquecsousa" target="_blank" class="mx-2" data-umami-event="visit-linkedin">
                     <i class="fab fa-linkedin text-2xl"></i>
                 </a>
             </div>
             <p class="text-center text-gray-500 text-sm">
-                <a href="https://sousadev.com/terms-and-conditions.html" target="_blank" rel="noopener noreferrer" data-i18n="termsAndConditions">Termos e Condições</a> 
+                <a href="https://sousadev.com/terms-and-conditions.html" target="_blank" rel="noopener noreferrer" data-i18n="termsAndConditions" data-umami-event="view-terms-and-conditions">Termos e Condições</a> 
                 / 
-                <a href="https://sousadev.com/privacy-policy.html" target="_blank" rel="noopener noreferrer" data-i18n="privacyPolicy">Política de Privacidade</a>
+                <a href="https://sousadev.com/privacy-policy.html" target="_blank" rel="noopener noreferrer" data-i18n="privacyPolicy" data-umami-event="view-privacy-policy">Política de Privacidade</a>
             </p>
         </div>
     </section>
