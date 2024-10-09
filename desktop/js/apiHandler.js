@@ -107,7 +107,7 @@ function postToStats(parameters) {
 
 function displayNoRoutesMessage(parameters) {
     const noRoutesDiv = document.getElementById('noRoutesMessage');
-    noRoutesDiv.innerHTML = `<div class="container"><div class="row"><div class="col-xs-12"><h3>${LANGS[LANG].No_routes1} <b>${parameters.origin}</b> ${LANGS[LANG].No_routes2} <b>${parameters.destination}</b></h3><p>${LANGS[LANG].No_routes_subtitle}</p></div></div></div>`;
+    noRoutesDiv.innerHTML = `<div class="container" data-umami-event="desktop-no-routes-message-displayed"><div class="row"><div class="col-xs-12"><h3>${LANGS[LANG].No_routes1} <b>${parameters.origin}</b> ${LANGS[LANG].No_routes2} <b>${parameters.destination}</b></h3><p>${LANGS[LANG].No_routes_subtitle}</p></div></div></div>`;
     noRoutesDiv.style.display = 'block';
 }
 
@@ -172,7 +172,7 @@ function displayRoutes(routes, originStop) {
         // Generate HTML for the first and last stops and transfer information
         let stopsHtml = `
             <div class="stop"><b>${firstStop[0]}</b>: ${firstStop[1]}</div>
-            <div class="transfer" id="transfer-info"> <span class="arrow-icon">⬇</span> ${stopsArray.length > 2 ? `<span class="transfer-info">+${stopsArray.length - 2} ${stopsArray.length - 2 === 1 ? LANGS[LANG].Transfer : LANGS[LANG].Transfers}</span>` : ''} </div>
+            <div class="transfer" id="transfer-info" data-umami-event="desktop-transfer-info"> <span class="arrow-icon">⬇</span> ${stopsArray.length > 2 ? `<span class="transfer-info">+${stopsArray.length - 2} ${stopsArray.length - 2 === 1 ? LANGS[LANG].Transfer : LANGS[LANG].Transfers}</span>` : ''} </div>
             <div class="intermediate-stops" style="max-height: 0; overflow: hidden; transition: max-height 0.5s ease-out;">
                 ${stopsArray.slice(1, stopsArray.length - 1).map(([stop, time]) => `<div class="stop"><b style="margin-left: 10px">${stop}</b>: ${time}</div>`).join('')}
             </div>
@@ -194,22 +194,24 @@ function displayRoutes(routes, originStop) {
                 </div>
             </div>
         `;
-    
         const intermediateStops = routeDiv.querySelector('.intermediate-stops');
         const transferInfo = routeDiv.querySelector('#transfer-info');
         routeDiv.addEventListener('click', function() {
             if (intermediateStops.style.maxHeight === '0px' || !intermediateStops.style.maxHeight) {
                 intermediateStops.style.maxHeight = intermediateStops.scrollHeight + 'px';
                 transferInfo.style.display = 'none';
+                // Adding data-umami-event with prefix 'desktop-'
+                routeDiv.setAttribute('data-umami-event', 'desktop-intermediate-stops-expand');
             } else {
                 intermediateStops.style.maxHeight = '0px';
                 transferInfo.style.display = 'block';
+                // Adding data-umami-event with prefix 'desktop-'
+                routeDiv.setAttribute('data-umami-event', 'desktop-intermediate-stops-collapse');
             }
         });
     
         routesContainer.appendChild(routeDiv);
     });
-    
     routesContainer.style.display = 'block';
     
     // Helper function to calculate total travel time
@@ -242,12 +244,12 @@ function loadAdBanner(on) {
                 }
                 // Assuming ad object has properties like 'target', 'image', 'entity', 'id'
                 const adBannerHTML = `
-                    <div class="tm-container-outer" id="tm-section-2">
+                    <div class="tm-container-outer" id="tm-section-2" data-umami-event="desktop-ad-banner-display">
                         <div class="row justify-content-center">
                             <div class="col-sm-8 col-md-6 col-lg-6">
                                 <div class="ad-banner text-center p-3">
-                                    <a href="${hrefValue}" target="_blank" id='ad-clickable'>
-                                        <img src="${ad.media}" alt="${ad.entity}" class="img-fluid" id="ad-image" data-id="${ad.id}">
+                                    <a href="${hrefValue}" target="_blank" id='ad-clickable' data-umami-event="desktop-ad-click">
+                                        <img src="${ad.media}" alt="${ad.entity}" class="img-fluid" id="ad-image" data-id="${ad.id}" data-umami-event="desktop-ad-image-view">
                                     </a>
                                 </div>
                             </div>
