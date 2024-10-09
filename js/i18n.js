@@ -18,13 +18,17 @@ function t(key) {
 }
 
 function updatePageContent() {
-    // Update elements with data-i18n attribute (innerText)
+    // Update elements with data-i18n attribute (innerText or innerHTML)
     const textElements = document.querySelectorAll('[data-i18n]');
     textElements.forEach(element => {
         const key = element.getAttribute('data-i18n');
         const translation = t(key);
         if (translation) {
-            element.innerText = translation;
+            if (translation.includes('<') && translation.includes('>')) {
+                element.innerHTML = translation;
+            } else {
+                element.innerText = translation;
+            }
         }
     });
 

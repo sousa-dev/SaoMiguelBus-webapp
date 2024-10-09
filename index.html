@@ -621,38 +621,131 @@
     <!-- Advert Page -->
     <section id="advert" class="page hidden bg-white flex flex-col items-center p-4" data-umami-event="view-advert-page">
         <h2 class="text-2xl text-center font-bold mb-4" data-i18n="advertiseTitle">Anuncie em São Miguel Bus</h2>
-        <!-- <p class="text-center text-lg mb-6" data-i18n="advertiseSubtitle">Anuncie na nossa aplicação a partir de X euros por mês.</p> -->
+    
         <a href="https://ad.saomiguelbus.com" target="_blank" class="block" data-umami-event="view-advertising-opportunity">
             <div class="bg-green-100 rounded-lg p-6 shadow-md max-w-md mx-auto mb-6 hover:bg-green-200 transition-colors duration-300 cursor-pointer">
                 <h3 class="text-xl font-semibold mb-3 text-center" data-i18n="advertisingOpportunity">Oportunidade de Publicidade</h3>
                 <p class="text-gray-700 text-center" data-i18n="advertisingOpportunityDescription">
-                    Pode anunciar o seu negócio para residentes e turistas da ilha de São Miguel. 
-                    <br> <br>
+                    Pode anunciar o seu negócio para residentes e turistas da ilha de São Miguel.
+                    <br><br>
                 </p>
-                <div class="text-green-600 text-center block mt-4"><i class="fas fa-external-link-alt"></i> ad.saomiguelbus.com</div>
+                <div class="text-green-600 text-center block mt-4">
+                    <i class="fas fa-external-link-alt"></i> ad.saomiguelbus.com
+                </div>
             </div>
         </a>
 
+        <div class="flex justify-center w-full">
+            <button id="scrollToPricing" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mb-6 transition duration-300 ease-in-out" data-umami-event="scroll-to-pricing" onclick="document.getElementById('pricingSection').scrollIntoView({behavior: 'smooth'})">
+                <span data-i18n="viewPricingButton">Ver Preços</span>
+                <i class="fas fa-chevron-down ml-2"></i>
+            </button>
+        </div>
+    
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="bg-white rounded-lg p-4 shadow-md flex flex-col items-center" data-umami-event="view-exact-targeting">
                 <i class="fas fa-cubes text-green-500 text-3xl mb-2"></i>
                 <h3 class="text-xl font-semibold text-center" data-i18n="exactTargeting">Segmentação Precisa</h3>
-                <p class="text-gray-700 text-center mt-2" data-i18n="exactTargetingDescription">Exiba seu anúncio para usuários que pesquisam rotas próximas ao seu estabelecimento.</p>
+                <p class="text-gray-700 text-center mt-2" data-i18n="exactTargetingDescription">
+                    Exiba seu anúncio para utilizadores que estão na ilha de São Miguel, perto do seu negócio.
+                </p>
             </div>
             <div class="bg-white rounded-lg p-4 shadow-md flex flex-col items-center" data-umami-event="view-directed-interactions">
                 <i class="fas fa-chart-line text-green-500 text-3xl mb-2"></i>
                 <h3 class="text-xl font-semibold text-center" data-i18n="directedInteractions">Interações Direcionadas</h3>
-                <p class="text-gray-700 text-center mt-2" data-i18n="directedInteractionsDescription">Redirecione usuários para seu site ou mapa com direções para seu estabelecimento.</p>
+                <p class="text-gray-700 text-center mt-2" data-i18n="directedInteractionsDescription">
+                    Redirecione utilizadores para o seu site, rede social ou para um mapa com direções para seu estabelecimento.
+                </p>
             </div>
             <div class="bg-white rounded-lg p-4 shadow-md flex flex-col items-center" data-umami-event="view-flexible-pricing">
                 <i class="fas fa-money-bill-wave text-green-500 text-3xl mb-2"></i>
                 <h3 class="text-xl font-semibold text-center" data-i18n="flexiblePricing">Preço Flexível</h3>
-                <p class="text-gray-700 text-center mt-2" data-i18n="flexiblePricingDescription">Opções de preço baseadas em como você deseja promover seus serviços.</p>
+                <p class="text-gray-700 text-center mt-2" data-i18n="flexiblePricingDescription">
+                    Oferecemos opções de preço baseadas em como deseja promover os seus serviços.
+                </p>
             </div>
             <div class="bg-white rounded-lg p-4 shadow-md flex flex-col items-center" data-umami-event="view-convenient-payment">
                 <i class="fas fa-credit-card text-green-500 text-3xl mb-2"></i>
                 <h3 class="text-xl font-semibold text-center" data-i18n="convenientPayment">Pagamento Conveniente</h3>
-                <p class="text-gray-700 text-center mt-2" data-i18n="convenientPaymentDescription">Aceita-se MBWay ou transferência bancária, com recibo para fins contabilísticos.</p>
+                <p class="text-gray-700 text-center mt-2" data-i18n="convenientPaymentDescription">
+                    Aceita-se diversos métodos de pagamento, com recibo para fins contabilísticos.
+                </p>
+            </div>
+        </div>
+
+        <div id="pricingSection" class="relative grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
+            <!-- 50% off banner -->
+            <div class="absolute top-0 right-0 bg-red-500 text-white py-1 px-3 rounded-bl-lg z-1" style="transform: rotate(45deg) translate(25%, -50%);">
+                <span class="font-bold">50% OFF</span>
+            </div>
+            
+            <!-- Text Ad Plan -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden" data-umami-event="view-text-ad-plan">
+                <div class="bg-green-500 text-white p-6">
+                    <h3 class="text-2xl font-bold mb-2" data-i18n="textAd">Texto</h3>
+                    <div class="text-3xl font-bold">
+                        <span class="line-through text-green-200">€10</span>
+                        <span class="text-4xl">€5</span>
+                        <span class="text-xl">/Slot</span>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="relative mb-4 group">
+                        <img src="static/img/text-ad.png" alt="Anúncio em Texto São Miguel Bus" class="w-full h-auto border-2 border-green-500 rounded-lg p-1">
+                        <i class="fas fa-info-circle absolute top-2 right-2 text-green-500 cursor-pointer" title="Informação adicional disponível" data-umami-event="view-text-ad-info"></i>
+                        <div class="hidden group-hover:block absolute top-0 left-0 bg-white bg-opacity-90 border-2 border-green-500 rounded-lg p-4 shadow-lg">
+                            <p class="text-sm" data-i18n="textAdInfo">Deverá preencher o conteúdo do seu anúncio no formulário de reserva.</p>
+                        </div>
+                    </div>
+                    <ul class="space-y-2 mb-6">
+                        <li><i class="fas fa-times text-red-500 mr-2"></i><span data-i18n="adInImage">Anúncio em <b>imagem</b></span></li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i><span data-i18n="adInText">Anúncio em <b>texto</b></span></li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i><span data-i18n="duration"><b>30</b> dias de duração</span></li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i><span data-i18n="totalSlots"><b>10</b> Slots totais</span></li>
+                        <li><i class="fas fa-minus text-yellow-500 mr-2"></i><span data-i18n="mediumVisibility">Visibilidade <b>Média</b></span></li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i><span data-i18n="unlimitedSupport">Suporte <b>Ilimitado</b></span></li>
+                    </ul>
+                    <a href="https://book.stripe.com/bIY3eJ36t5R6dzidQR?prefilled_promo_code=50offV5" target="_blank" class="block w-full bg-green-500 text-white text-center py-2 rounded-lg hover:bg-green-600 transition duration-300" data-umami-event="reserve-text-slot" data-i18n="reserveSlot">Reservar Slot</a>
+                    <p class="text-xs text-center mt-2 text-gray-500"><i class="fas fa-exclamation-triangle text-yellow-500 mr-1"></i><span data-i18n="readBeforeReserving">Leia antes de reservar</span><i class="fas fa-arrow-down text-yellow-500 ml-1"></i></p>
+                    <a href="https://ad.saomiguelbus.com/termos-e-condicoes.html" target="_blank" class="block text-center text-green-500 text-sm mt-1 hover:underline" data-umami-event="view-terms-text" data-i18n="termsAndConditions">Termos e Condições</a>
+                </div>
+            </div>
+
+            <!-- Banner Ad Plan -->
+            <div class="relative grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- 50% off banner -->
+                <div class="absolute top-0 right-0 bg-red-500 text-white py-1 px-3 rounded-bl-lg z-1" style="transform: rotate(45deg) translate(25%, -50%);">
+                    <span class="font-bold">50% OFF</span>
+                </div>
+                <div class="bg-green-500 text-white p-6">
+                    <h3 class="text-2xl font-bold mb-2" data-i18n="bannerAd">Banner</h3>
+                    <div class="text-3xl font-bold">
+                        <span class="line-through text-green-200">€20</span>
+                        <span class="text-4xl">€10</span>
+                        <span class="text-xl">/Slot</span>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="relative mb-4 group">
+                        <img src="static/img/banner-ad.png" alt="Anúncio em Banner São Miguel Bus" class="w-full h-auto border-2 border-green-500 rounded-lg p-1">
+                        <i class="fas fa-info-circle absolute top-2 right-2 text-green-500 cursor-pointer" title="Informação adicional disponível" data-umami-event="view-banner-ad-info"></i>
+                        <div class="hidden group-hover:block absolute top-0 left-0 bg-white bg-opacity-90 border-2 border-green-500 rounded-lg p-4 shadow-lg">
+                            <p class="text-sm" data-i18n="bannerAdInfo">Poderá enviar o seu banner ou logótipo e/ou escrever algum texto no formulário de reserva que nós tratamos de criar uma banner semelhante ao desta imagem.</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-500 mb-4" data-i18n="bannerDimensions">* Dimensões do Banner: 900x140</p>
+                    <ul class="space-y-2 mb-6">
+                        <li><i class="fas fa-check text-green-500 mr-2"></i><span data-i18n="adInImage">Anúncio em <b>imagem</b></span></li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i><span data-i18n="adInText">Anúncio em <b>texto</b></span></li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i><span data-i18n="duration"><b>30</b> dias de duração</span></li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i><span data-i18n="totalSlots"><b>10</b> Slots totais</span></li>
+                        <li><i class="fas fa-plus text-green-500 mr-2"></i><span data-i18n="highVisibility">Visibilidade <b>Alta</b></span></li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i><span data-i18n="unlimitedSupport">Suporte <b>Ilimitado</b></span></li>
+                    </ul>
+                    <a href="https://book.stripe.com/14kcPj6iF1AQdzi6oo?prefilled_promo_code=50offV5" target="_blank" class="block w-full bg-green-500 text-white text-center py-2 rounded-lg hover:bg-green-600 transition duration-300" data-umami-event="reserve-banner-slot" data-i18n="reserveSlot">Reservar Slot</a>
+                    <p class="text-xs text-center mt-2 text-gray-500"><i class="fas fa-exclamation-triangle text-yellow-500 mr-1"></i><span data-i18n="readBeforeReserving">Leia antes de reservar</span><i class="fas fa-arrow-down text-yellow-500 ml-1"></i></p>
+                    <a href="https://ad.saomiguelbus.com/termos-e-condicoes.html" target="_blank" class="block text-center text-green-500 text-sm mt-1 hover:underline" data-umami-event="view-terms-banner" data-i18n="termsAndConditions">Termos e Condições</a>
+                </div>
             </div>
         </div>
 
