@@ -271,7 +271,7 @@
 
 <body class="bg-white text-gray-800">
     <!-- Ad Placeholder (fixed at the top) -->
-    <div id="placeHolderForAd" class="relative border-b-2 border-gray-300 w-full mb-1 p-1 rounded-lg">
+    <div id="placeHolderForAd" class="relative border-b-2 border-gray-300 w-full mb-1 p-1 rounded-lg" style="min-height: 80px;">
         <!-- The ad banner will be inserted here by JavaScript -->
     </div>
     
@@ -1051,6 +1051,8 @@
                             navLink.classList.add('text-gray-600');
                         }
                     });
+
+                    loadAdBanner('home');
                 });
             });
 

@@ -280,6 +280,7 @@ function fetchStops(filter) {
 
 function searchRoutes(origin, destination, day, time) {
     showLoadingSpinner();
+    loadAdBanner('home');
     // Hide the routes container and the no routes message
     document.getElementById('routesContainer').style.display = 'none';
     document.getElementById('noRoutesMessage').style.display = 'none';
@@ -293,7 +294,6 @@ function searchRoutes(origin, destination, day, time) {
     // postToStats if not in localhost 
     if (window.location.hostname != "localhost" && window.location.hostname != "127.0.0.1")
         postToStats(parameters);
-    loadAdBanner('home');
 }
 
 function fetchAndDisplayRoutes(url, parameters) {
