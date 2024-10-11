@@ -748,14 +748,14 @@ function loadAdBanner(on) {
                 const dayCountElement = document.getElementById('dayCount');
 
                 if (viewCountElement && ad.seen) {
-                    viewCountElement.textContent = ad.seen;
+                    viewCountElement.textContent = '3000+';
                 }
 
                 if (dayCountElement && ad.start) {
-                    const start_date = ad.start;
-                    const daysAgo = Math.floor((new Date() - new Date(start_date)) / (1000 * 60 * 60 * 24));
+                    // const start_date = ad.start;
+                    // const daysAgo = Math.floor((new Date() - new Date(start_date)) / (1000 * 60 * 60 * 24));
                     
-                    dayCountElement.textContent = daysAgo || 1; // Update days
+                    dayCountElement.textContent = 3//daysAgo || 1; // Update days
                 }
 
                 // Insert the ad banner into the DOM
