@@ -497,15 +497,8 @@ function displayRoutes(routes, originStop, destinationStop) {
                 <div class="route-header flex items-center justify-between mb-4">
                     <div class="flex items-center">
                         <div class="route-icon text-2xl mr-2"><i class="fa-solid fa-bus"></i></div>
-                        <!-- <div class="route-number text-xl font-semibold text-green-600">${route.route}</div> -->
                         ${route.route.includes('C') ? `
-                            <div class="confirmation-banner bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-1 mb-1 cursor-pointer flex justify-between items-center" onclick="document.getElementById('confirmationModal').classList.remove('hidden');" data-umami-event="confirmation-banner-click">
-                                <div>
-                                    <p class="font-bold text-xs">${t('confirmationRequired')}</p>
-                                    <p class="text-xs">${t('confirmationMessage')}</p>
-                                </div>
-                                <i class="fas fa-phone-alt text-yellow-700 text-lg mr-2"></i>
-                            </div>
+                            <div class="route-number text-xl font-semibold text-green-600 mr-2">${route.route.replace('C', '')}</div>
                             <div id="confirmationModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden" onclick="document.getElementById('confirmationModal').classList.add('hidden');" data-umami-event="confirmation-modal-click">
                                 <div class="bg-white rounded-lg p-6 w-80 relative" onclick="event.stopPropagation();">
                                     <button id="closeConfirmationModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" onclick="document.getElementById('confirmationModal').classList.add('hidden');" data-umami-event="close-confirmation-modal-click">
@@ -533,6 +526,13 @@ function displayRoutes(routes, originStop, destinationStop) {
                                         </li>
                                     </ul>
                                 </div>
+                            </div>
+                            <div class="confirmation-banner bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-1 mb-1 cursor-pointer flex justify-between items-center" onclick="document.getElementById('confirmationModal').classList.remove('hidden');" data-umami-event="confirmation-banner-click">
+                                <div>
+                                    <p class="font-bold text-xs">${t('confirmationRequired')}</p>
+                                    <p class="text-xs">${t('confirmationMessage')}</p>
+                                </div>
+                                <i class="fas fa-phone-alt text-yellow-700 text-lg mr-2"></i>
                             </div>
                         ` : ''}
                     </div>
@@ -571,10 +571,18 @@ function displayRoutes(routes, originStop, destinationStop) {
                         </div>
                     </div>
                 </div>
-                <div class="mt-4 text-center">
-                    <button class="expand-stops flex items-center justify-center w-full text-blue-500 hover:text-blue-700 text-base py-2" data-umami-event="expand-stops-click">
+                <div id="${route.id}-likes-dislikes" class="mt-4 flex items-center justify-between" data-umami-event="route-summary">
+                    <button class="dislike-button flex items-center text-red-500 hover:text-red-700" onclick="dislike_route(${route.id}, '${route.route}', this)" data-umami-event="dislike-button-click" data-umami-event="dislike-button-interaction">
+                        <i class="fas fa-thumbs-down"></i>
+                    </button>
+                    <span id="dislikes-percent" class="text-gray-500 text-xs mr-2">${route.dislikes_percent}%</span>
+                    <button class="expand-stops flex items-center justify-center text-blue-500 hover:text-blue-700 text-base py-2" data-umami-event="expand-stops-click" data-umami-event="expand-stops-interaction">
                         <span class="mr-2">${t('clickToSeeDetails')}</span>
                         <span class="iconify transform transition-transform duration-300 text-xl" data-icon="mdi:chevron-down"></span>
+                    </button>
+                    <button class="like-button flex items-center text-green-500 hover:text-green-700" onclick="like_route(${route.id}, '${route.route}', this)" data-umami-event="like-button-click" data-umami-event="like-button-interaction">
+                        <span id="likes-percent" class="text-gray-500 text-xs mr-2">${route.likes_percent}%</span>
+                        <i class="fas fa-thumbs-up"></i>
                     </button>
                 </div>
                 <div class="all-stops mt-4 hidden">
@@ -711,6 +719,9 @@ function displayRoutes(routes, originStop, destinationStop) {
 }
 
 function loadAdBanner(on) {
+    if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+        return; // Do nothing if the host is localhost or 127.0.0.1
+    }
     const apiUrl = `https://api.saomiguelbus.com/api/v1/ad?on=${on}&platform=web`;  // Replace with your API endpoint
 
     fetch(apiUrl)
@@ -822,4 +833,57 @@ function clearInput(inputId) {
     const suggestionsContainer = document.getElementById(inputId + '-suggestions');
     suggestionsContainer.innerHTML = ''; // Clear suggestions
     suggestionsContainer.style.display = 'none'; // Hide suggestions
+}
+
+function like_route(trip_id, route_number, routeElement) {
+    const type_route = route_number.includes('C') ? 'route' : 'trip';
+    fetch(`https://api.saomiguelbus.com/api/v2/like/${trip_id}?type_route=${type_route}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        mode: 'cors',
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Update the route values with likes_percent and dislikes_percent
+        if (data.likes_percent !== undefined && data.dislikes_percent !== undefined) {
+            updateRouteLikesDislikes(trip_id+'-likes-dislikes', data.likes_percent, data.dislikes_percent);
+        }
+    })
+    .catch(error => {
+        console.error('Error liking route:', error);
+    });
+}
+
+function dislike_route(trip_id, route_number, routeElement) {
+    const type_route = route_number.includes('C') ? 'route' : 'trip';
+    fetch(`https://api.saomiguelbus.com/api/v2/dislike/${trip_id}?type_route=${type_route}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        mode: 'cors',
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Update the route values with likes_percent and dislikes_percent
+        if (data.likes_percent !== undefined && data.dislikes_percent !== undefined) {
+            updateRouteLikesDislikes(trip_id+'-likes-dislikes', data.likes_percent, data.dislikes_percent);
+        }
+    })
+    .catch(error => {
+        console.error('Error disliking route:', error);
+    });
+}
+
+function updateRouteLikesDislikes(id, likes_percent, dislikes_percent) {
+    const routeElement = document.getElementById(id);
+    // Logic to update the route's likes and dislikes in the UI or state
+    if (routeElement) {
+        const likesElement = routeElement.querySelector('#likes-percent');
+        const dislikesElement = routeElement.querySelector('#dislikes-percent');
+        if (likesElement) likesElement.textContent = `${likes_percent}%`;
+        if (dislikesElement) dislikesElement.textContent = `${dislikes_percent}%`;
+    }
 }

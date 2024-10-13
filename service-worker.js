@@ -24,10 +24,10 @@ self.addEventListener('install', event => {
 // Cache and return requests
 self.addEventListener('fetch', event => {
   event.respondWith(
-    fetch(event.request)
+    fetch(event.request.clone())
       .then(response => {
-        // Don't cache if it's a JavaScript file
-        if (!event.request.url.endsWith('.js')) {
+        // Don't cache if it's a JavaScript file or if it's not a GET request
+        if (!event.request.url.endsWith('.js') && event.request.method === 'GET') {
           const responseToCache = response.clone();
           caches.open(CACHE_NAME)
             .then(cache => {
