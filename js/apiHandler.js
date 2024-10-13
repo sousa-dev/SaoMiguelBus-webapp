@@ -482,7 +482,6 @@ function displayRoutes(routes, originStop, destinationStop) {
         }
 
         const stopsArray = Object.entries(stops); 
-
         var transferCount = route.route.split('/').length - 1;
         transferCount = Math.min(transferCount, stopsArray.length - 2);
 
