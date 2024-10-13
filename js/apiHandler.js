@@ -843,13 +843,13 @@ function like_route(trip_id, route_number, routeElement) {
     const cookieName = `vote_${trip_id}_${type_route}`;
     const currentVote = getCookie(cookieName);
 
-
     let requestCount = 1;
     if (currentVote === 'dislike') {
         requestCount = 2; // Cancel out previous dislike and add a new like
     } else if (currentVote === 'like') {
-        return; // User has already liked this route
+        requestCount = -1; // Remove the previous like
     }
+
     fetch(`https://api.saomiguelbus.com/api/v2/like/${trip_id}?type_route=${type_route}&count=${requestCount}`, {
         method: 'POST',
         headers: {
@@ -861,8 +861,13 @@ function like_route(trip_id, route_number, routeElement) {
     .then(data => {
         if (data.likes_percent !== undefined && data.dislikes_percent !== undefined) {
             updateRouteLikesDislikes(trip_id+'-likes-dislikes', data.likes_percent, data.dislikes_percent);
-            setCookie(cookieName, 'like', 365); // Set cookie for 1 year
-            updateVoteButtonStyles(trip_id+'-likes-dislikes', 'like');
+            if (currentVote === 'like') {
+                deleteCookie(cookieName);
+                updateVoteButtonStyles(trip_id+'-likes-dislikes', 'none');
+            } else {
+                setCookie(cookieName, 'like', 365); // Set cookie for 1 year
+                updateVoteButtonStyles(trip_id+'-likes-dislikes', 'like');
+            }
         }
     })
     .catch(error => {
@@ -879,7 +884,7 @@ function dislike_route(trip_id, route_number, routeElement) {
     if (currentVote === 'like') {
         requestCount = 2; // Cancel out previous like and add a new dislike
     } else if (currentVote === 'dislike') {
-        return; // User has already disliked this route
+        requestCount = -1; // Remove the previous dislike
     }
 
     fetch(`https://api.saomiguelbus.com/api/v2/dislike/${trip_id}?type_route=${type_route}&count=${requestCount}`, {
@@ -893,8 +898,13 @@ function dislike_route(trip_id, route_number, routeElement) {
     .then(data => {
         if (data.likes_percent !== undefined && data.dislikes_percent !== undefined) {
             updateRouteLikesDislikes(trip_id+'-likes-dislikes', data.likes_percent, data.dislikes_percent);
-            setCookie(cookieName, 'dislike', 365); // Set cookie for 1 year
-            updateVoteButtonStyles(trip_id+'-likes-dislikes', 'dislike');
+            if (currentVote === 'dislike') {
+                deleteCookie(cookieName);
+                updateVoteButtonStyles(trip_id+'-likes-dislikes', 'none');
+            } else {
+                setCookie(cookieName, 'dislike', 365); // Set cookie for 1 year
+                updateVoteButtonStyles(trip_id+'-likes-dislikes', 'dislike');
+            }
         }
     })
     .catch(error => {
@@ -928,6 +938,11 @@ function updateVoteButtonStyles(id, voteType) {
             dislikeButton.classList.remove('text-gray-500');
             likeButton.classList.remove('text-green-700');
             likeButton.classList.add('text-gray-500');
+        } else if (voteType === 'none') {
+            likeButton.classList.remove('text-green-700');
+            likeButton.classList.add('text-gray-500');
+            dislikeButton.classList.remove('text-red-700');
+            dislikeButton.classList.add('text-gray-500');
         }
     }
 }
@@ -951,4 +966,8 @@ function getCookie(name) {
         if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
     }
     return null;
+}
+
+function deleteCookie(name) {
+    document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 }
