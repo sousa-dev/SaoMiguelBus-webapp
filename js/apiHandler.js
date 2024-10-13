@@ -492,6 +492,10 @@ function displayRoutes(routes, originStop, destinationStop) {
             return;
         }
 
+        const type_route = route.route.includes('C') ? 'route' : 'trip';
+        const cookieName = `vote_${route.id}_${type_route}`;
+        const currentVote = getCookie(cookieName);
+
         routeDiv.innerHTML = `
             <div id="route-${route.route}" class="bg-white shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-300" data-umami-event="route-${route.route}-click">
                 <div class="route-header flex items-center justify-between mb-4">
@@ -572,7 +576,7 @@ function displayRoutes(routes, originStop, destinationStop) {
                     </div>
                 </div>
                 <div id="${route.id}-likes-dislikes" class="mt-4 flex items-center justify-between" data-umami-event="route-summary">
-                    <button class="dislike-button flex items-center text-red-500 hover:text-red-700" onclick="dislike_route(${route.id}, '${route.route}', this)" data-umami-event="dislike-button-click" data-umami-event="dislike-button-interaction">
+                    <button class="dislike-button flex items-center ${currentVote === 'dislike' ? 'text-red-700' : 'text-gray-500'} hover:text-red-700" onclick="dislike_route(${route.id}, '${route.route}', this)" data-umami-event="dislike-button-click" data-umami-event="dislike-button-interaction">
                         <i class="fas fa-thumbs-down"></i>
                     </button>
                     <span id="dislikes-percent" class="text-gray-500 text-xs mr-2">${route.dislikes_percent}%</span>
@@ -580,7 +584,7 @@ function displayRoutes(routes, originStop, destinationStop) {
                         <span class="mr-2">${t('clickToSeeDetails')}</span>
                         <span class="iconify transform transition-transform duration-300 text-xl" data-icon="mdi:chevron-down"></span>
                     </button>
-                    <button class="like-button flex items-center text-green-500 hover:text-green-700" onclick="like_route(${route.id}, '${route.route}', this)" data-umami-event="like-button-click" data-umami-event="like-button-interaction">
+                    <button class="like-button flex items-center ${currentVote === 'like' ? 'text-green-700' : 'text-gray-500'} hover:text-green-700" onclick="like_route(${route.id}, '${route.route}', this)" data-umami-event="like-button-click" data-umami-event="like-button-interaction">
                         <span id="likes-percent" class="text-gray-500 text-xs mr-2">${route.likes_percent}%</span>
                         <i class="fas fa-thumbs-up"></i>
                     </button>
@@ -837,7 +841,17 @@ function clearInput(inputId) {
 
 function like_route(trip_id, route_number, routeElement) {
     const type_route = route_number.includes('C') ? 'route' : 'trip';
-    fetch(`https://api.saomiguelbus.com/api/v2/like/${trip_id}?type_route=${type_route}`, {
+    const cookieName = `vote_${trip_id}_${type_route}`;
+    const currentVote = getCookie(cookieName);
+
+
+    let requestCount = 1;
+    if (currentVote === 'dislike') {
+        requestCount = 2; // Cancel out previous dislike and add a new like
+    } else if (currentVote === 'like') {
+        return; // User has already liked this route
+    }
+    fetch(`https://api.saomiguelbus.com/api/v2/like/${trip_id}?type_route=${type_route}&count=${requestCount}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -846,9 +860,10 @@ function like_route(trip_id, route_number, routeElement) {
     })
     .then(response => response.json())
     .then(data => {
-        // Update the route values with likes_percent and dislikes_percent
         if (data.likes_percent !== undefined && data.dislikes_percent !== undefined) {
             updateRouteLikesDislikes(trip_id+'-likes-dislikes', data.likes_percent, data.dislikes_percent);
+            setCookie(cookieName, 'like', 365); // Set cookie for 1 year
+            updateVoteButtonStyles(trip_id+'-likes-dislikes', 'like');
         }
     })
     .catch(error => {
@@ -858,7 +873,17 @@ function like_route(trip_id, route_number, routeElement) {
 
 function dislike_route(trip_id, route_number, routeElement) {
     const type_route = route_number.includes('C') ? 'route' : 'trip';
-    fetch(`https://api.saomiguelbus.com/api/v2/dislike/${trip_id}?type_route=${type_route}`, {
+    const cookieName = `vote_${trip_id}_${type_route}`;
+    const currentVote = getCookie(cookieName);
+
+    let requestCount = 1;
+    if (currentVote === 'like') {
+        requestCount = 2; // Cancel out previous like and add a new dislike
+    } else if (currentVote === 'dislike') {
+        return; // User has already disliked this route
+    }
+
+    fetch(`https://api.saomiguelbus.com/api/v2/dislike/${trip_id}?type_route=${type_route}&count=${requestCount}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -867,9 +892,10 @@ function dislike_route(trip_id, route_number, routeElement) {
     })
     .then(response => response.json())
     .then(data => {
-        // Update the route values with likes_percent and dislikes_percent
         if (data.likes_percent !== undefined && data.dislikes_percent !== undefined) {
             updateRouteLikesDislikes(trip_id+'-likes-dislikes', data.likes_percent, data.dislikes_percent);
+            setCookie(cookieName, 'dislike', 365); // Set cookie for 1 year
+            updateVoteButtonStyles(trip_id+'-likes-dislikes', 'dislike');
         }
     })
     .catch(error => {
@@ -879,11 +905,51 @@ function dislike_route(trip_id, route_number, routeElement) {
 
 function updateRouteLikesDislikes(id, likes_percent, dislikes_percent) {
     const routeElement = document.getElementById(id);
-    // Logic to update the route's likes and dislikes in the UI or state
     if (routeElement) {
         const likesElement = routeElement.querySelector('#likes-percent');
         const dislikesElement = routeElement.querySelector('#dislikes-percent');
         if (likesElement) likesElement.textContent = `${likes_percent}%`;
         if (dislikesElement) dislikesElement.textContent = `${dislikes_percent}%`;
     }
+}
+
+function updateVoteButtonStyles(id, voteType) {
+    const routeElement = document.getElementById(id);
+    if (routeElement) {
+        const likeButton = routeElement.querySelector('.like-button');
+        const dislikeButton = routeElement.querySelector('.dislike-button');
+
+        if (voteType === 'like') {
+            likeButton.classList.add('text-green-700');
+            likeButton.classList.remove('text-gray-500');
+            dislikeButton.classList.remove('text-red-700');
+            dislikeButton.classList.add('text-gray-500');
+        } else if (voteType === 'dislike') {
+            dislikeButton.classList.add('text-red-700');
+            dislikeButton.classList.remove('text-gray-500');
+            likeButton.classList.remove('text-green-700');
+            likeButton.classList.add('text-gray-500');
+        }
+    }
+}
+
+function setCookie(name, value, days) {
+    let expires = "";
+    if (days) {
+        const date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+}
+
+function getCookie(name) {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(';');
+    for(let i=0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
 }
