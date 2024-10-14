@@ -18,6 +18,17 @@ function timeStringToMinutes(timeString) {
     return hours * 60 + minutes;
 }
 
+function forceWebLink(event, href) {
+    event.preventDefault(); // Prevent the default behavior of the link
+    // Check if the href contains "fb://", if so, replace it with the web URL
+    if (href.includes("fb://")) {
+        const newUrl = href.replace("fb://", "https://www.facebook.com/");
+        window.open(newUrl, '_self'); // Force the WebView to open the web URL instead of the app link
+    } else {
+        window.open(href, '_self'); // Open the original href if it's not an fb link
+    }
+}
+
 function getSearchParameters() {
     const originInput = document.getElementById('origin');
     const destinationInput = document.getElementById('destination');
@@ -722,9 +733,9 @@ function displayRoutes(routes, originStop, destinationStop) {
 }
 
 function loadAdBanner(on) {
-    if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
-        return; // Do nothing if the host is localhost or 127.0.0.1
-    }
+    // if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+    //     return; // Do nothing if the host is localhost or 127.0.0.1
+    // }
     const apiUrl = `https://api.saomiguelbus.com/api/v1/ad?on=${on}&platform=web`;  // Replace with your API endpoint
 
     fetch(apiUrl)
@@ -750,7 +761,7 @@ function loadAdBanner(on) {
                         <div class="flex justify-center">
                             <div class="w-full sm:w-2/3 md:w-1/2 lg:w-1/2">
                                 <div class="ad-banner text-center p-1 relative">
-                                    <a href="${hrefValue}" target="_blank" id='ad-clickable' data-umami-event="ad-click">
+                                    <a href="${hrefValue}" id="ad-clickable" data-umami-event="ad-click" onclick="forceWebLink(event, '${hrefValue}')">
                                         <img src="${ad.media}" alt="${ad.entity}" class="w-full h-auto rounded-lg" id="ad-image" data-id="${ad.id}" data-umami-event="ad-image-view">
                                     </a>
                                 </div>
