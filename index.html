@@ -274,6 +274,33 @@
     <div id="placeHolderForAd" class="relative border-b-2 border-gray-300 w-full mb-1 p-1 rounded-lg" style="min-height: 80px;">
         <!-- The ad banner will be inserted here by JavaScript -->
     </div>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTopBtn" class="fixed bottom-20 right-4 z-50 bg-green-500 text-white rounded-full p-3 hidden transition-opacity duration-300 ease-in-out opacity-0 lg:bottom-4" aria-label="Scroll to top" data-umami-event="scroll-to-top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <script>
+        // Scroll to Top functionality
+        const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+
+        window.addEventListener("scroll", () => {
+            if (window.pageYOffset > 100) {
+                scrollToTopBtn.classList.remove("hidden", "opacity-0");
+                scrollToTopBtn.classList.add("opacity-100");
+            } else {
+                scrollToTopBtn.classList.remove("opacity-100");
+                scrollToTopBtn.classList.add("opacity-0");
+            }
+        });
+
+        scrollToTopBtn.addEventListener("click", () => {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        });
+    </script>
     
     <!-- Bottom Navigation Bar for Mobile -->
     <nav class="fixed bottom-0 left-0 right-0 bg-white lg:hidden z-50">
@@ -342,7 +369,7 @@
     </div>
 
     <!-- Pesquisar Page -->
-    <section id="home" class="page active bg-white flex flex-col items-center p-2">       
+    <section id="home" class="page active bg-white flex flex-col items-center p-2 h-full overflow-y-auto">       
         <div class="w-full max-w-md mx-auto bg-white rounded-3xl shadow-lg overflow-hidden relative">
             <span class="absolute top-0 left-0 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-tl-lg rounded-br-lg">AD</span>          
             <a href="https://ad.saomiguelbus.com" target="_blank" class="block" data-umami-event="ad-banner-click">
@@ -436,7 +463,7 @@
                 </div>
             </form>
         </div>
-        <div class="tm-container-outer" id="routesDiv" style="max-height: calc(100vh - 56px - 400px); overflow-y: auto;">      
+        <div class="tm-container-outer" id="routesDiv">      
             <!-- Placeholder for No Routes Message -->
             <div id="noRoutesMessage" class="hidden text-center text-lg text-gray-700 mt-4" data-i18n="noRoutesMessage">
                 Nenhuma rota encontrada. Tente novamente com diferentes parâmetros.
@@ -485,7 +512,7 @@
     </section>
 
     <!-- Routes Page -->
-    <section id="routes" class="page hidden bg-white flex flex-col items-center p-2">
+    <section id="routes" class="page hidden bg-white flex flex-col items-center p-2 h-full overflow-y-auto">
         <div class="w-full max-w-md mx-auto bg-white rounded-3xl shadow-lg overflow-hidden relative">
             <span class="absolute top-0 left-0 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-tl-lg rounded-br-lg">AD</span>          
             <a href="https://ad.saomiguelbus.com" target="_blank" class="block" data-umami-event="ad-banner-click-routes">
