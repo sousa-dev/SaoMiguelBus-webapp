@@ -270,7 +270,6 @@ function createRouteCard(route, index) {
      legendContainer.style.position = 'absolute';
      legendContainer.style.bottom = '10px';
      legendContainer.style.right = '10px';
-     legendContainer.style.zIndex = '1000';
 
      // Add legend items
      const legendItems = [
@@ -296,51 +295,48 @@ function createRouteCard(route, index) {
      mapContainer.style.height = '300px';
      detailsContainer.appendChild(mapContainer);
  
-     // Initialize the map after a short delay to ensure the container is fully rendered
-     setTimeout(() => {
+     // Initialize the map after the container is added to the DOM
+     const initMap = () => {
          const map = L.map(mapContainer).setView([37.777903731799725, -25.500576189450747], 9);
  
-         // Add OpenStreetMap tile layer
          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
              attribution: '© OpenStreetMap contributors'
          }).addTo(map);
  
-         // Initialize layer groups for walking and transit
          const walkingLayer = L.layerGroup().addTo(map);
          const transitLayer = L.layerGroup().addTo(map);
  
-         // Iterate through each step to draw polylines with different colors and add icons
+         const bounds = L.latLngBounds();
+ 
          leg.steps.forEach((step) => {
-             if (step.travel_mode === 'WALKING' && step.polyline && step.polyline.points) {
-                 const walkLatLngs = decodePolyline(step.polyline.points);
-                 L.polyline(walkLatLngs, { color: 'red', weight: 5 }).addTo(walkingLayer);
-                 
-                 // Add walking icon at the start of the walking step
-                 L.marker(walkLatLngs[0], {
-                     icon: L.divIcon({
-                         html: '<i class="fas fa-walking text-green-500 text-2xl"></i>',
-                         className: 'custom-div-icon',
-                         iconSize: [24, 24],
-                         iconAnchor: [12, 12]
-                     })
-                 }).addTo(map);
-             } else if (step.travel_mode === 'TRANSIT' && step.polyline && step.polyline.points) {
-                 const transitLatLngs = decodePolyline(step.polyline.points);
-                 L.polyline(transitLatLngs, { color: 'blue', weight: 5 }).addTo(transitLayer);
-                 
-                 // Add bus icon at the start of the transit step
-                 L.marker(transitLatLngs[0], {
-                     icon: L.divIcon({
-                         html: '<i class="fas fa-bus text-green-500 text-2xl"></i>',
-                         className: 'custom-div-icon',
-                         iconSize: [24, 24],
-                         iconAnchor: [12, 12]
-                     })
-                 }).addTo(map);
+             if (step.polyline && step.polyline.points) {
+                 const latLngs = decodePolyline(step.polyline.points);
+                 latLngs.forEach(latLng => bounds.extend(latLng));
+ 
+                 if (step.travel_mode === 'WALKING') {
+                     L.polyline(latLngs, { color: 'red', weight: 5 }).addTo(walkingLayer);
+                     L.marker(latLngs[0], {
+                         icon: L.divIcon({
+                             html: '<i class="fas fa-walking text-green-500 text-2xl"></i>',
+                             className: 'custom-div-icon',
+                             iconSize: [24, 24],
+                             iconAnchor: [12, 12]
+                         })
+                     }).addTo(map);
+                 } else if (step.travel_mode === 'TRANSIT') {
+                     L.polyline(latLngs, { color: 'blue', weight: 5 }).addTo(transitLayer);
+                     L.marker(latLngs[0], {
+                         icon: L.divIcon({
+                             html: '<i class="fas fa-bus text-green-500 text-2xl"></i>',
+                             className: 'custom-div-icon',
+                             iconSize: [24, 24],
+                             iconAnchor: [12, 12]
+                         })
+                     }).addTo(map);
+                 }
              }
          });
  
-         // Add markers for start and end points
          const startPoint = decodePolyline(route.overview_polyline.points)[0];
          const endPoint = decodePolyline(route.overview_polyline.points).slice(-1)[0];
  
@@ -365,9 +361,22 @@ function createRouteCard(route, index) {
          }).addTo(map)
              .bindPopup(leg.end_address.split(',')[0]);
  
-         // Force a resize of the map to ensure it renders correctly
          map.invalidateSize();
-     }, 0);
+     };
+ 
+     // Use MutationObserver to detect when the map container is added to the DOM
+     const observer = new MutationObserver((mutations, obs) => {
+         const mapElement = document.getElementById(mapContainer.id);
+         if (mapElement) {
+             initMap();
+             obs.disconnect(); // Stop observing once the map is initialized
+         }
+     });
+ 
+     observer.observe(document.body, {
+         childList: true,
+         subtree: true
+     });
 
     card.appendChild(header);
     card.appendChild(detailsContainer);
