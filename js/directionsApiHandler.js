@@ -1,4 +1,45 @@
 /**
+ * Decodes a polyline string into an array of [latitude, longitude] pairs.
+ * @param {string} polyline - The encoded polyline string.
+ * @returns {Array} - An array of [latitude, longitude] pairs.
+ */
+function decodePolyline(polyline) {
+    let index = 0, len = polyline.length;
+    const lat = 0, lng = 0;
+    const coordinates = [];
+    let shift = 0, result = 0, byte = null;
+    let currentLat = 0, currentLng = 0;
+
+    while (index < len) {
+        // Decode latitude
+        shift = 0;
+        result = 0;
+        do {
+            byte = polyline.charCodeAt(index++) - 63;
+            result |= (byte & 0x1f) << shift;
+            shift += 5;
+        } while (byte >= 0x20);
+        const deltaLat = (result & 1) ? ~(result >> 1) : (result >> 1);
+        currentLat += deltaLat;
+
+        // Decode longitude
+        shift = 0;
+        result = 0;
+        do {
+            byte = polyline.charCodeAt(index++) - 63;
+            result |= (byte & 0x1f) << shift;
+            shift += 5;
+        } while (byte >= 0x20);
+        const deltaLng = (result & 1) ? ~(result >> 1) : (result >> 1);
+        currentLng += deltaLng;
+
+        coordinates.push([currentLat / 1e5, currentLng / 1e5]);
+    }
+
+    return coordinates;
+}
+
+/**
  * Redirects to the Step By Step Directions page and populates form values.
  */
 function redirectToStepByStepDirections() {
@@ -220,6 +261,59 @@ function createRouteCard(route, index) {
         const stepCard = createStepCard(step, stepIndex + 1);
         detailsContainer.appendChild(stepCard);
     });
+
+    // Create a single map container for the entire route
+    const mapContainer = document.createElement('div');
+    mapContainer.id = `route-map-${leg.start_address}-${leg.end_address}`.replace(/\s+/g, '-');
+    mapContainer.style.height = '300px';
+    mapContainer.style.marginTop = '20px';
+    detailsContainer.appendChild(mapContainer);
+
+    // Initialize the map after a short delay to ensure the container is fully rendered
+    setTimeout(() => {
+        const map = L.map(mapContainer).setView([37.777903731799725, -25.500576189450747], 9);
+
+        // Add OpenStreetMap tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Decode and draw the polyline
+        if (route.overview_polyline && route.overview_polyline.points) {
+            const latLngs = decodePolyline(route.overview_polyline.points);
+
+            // Create and add the polyline to the map
+            const routePath = L.polyline(latLngs, {color: 'green', weight: 5}).addTo(map);
+            
+            // Add markers for start and end points
+            const startPoint = latLngs[0];
+            const endPoint = latLngs[latLngs.length - 1];
+
+            L.marker(startPoint, {
+                icon: L.divIcon({
+                    html: '<i class="fas fa-play-circle text-blue-400 text-xl"></i>',
+                    className: 'custom-div-icon',
+                    iconSize: [32, 32],
+                    iconAnchor: [16, 16]
+                })
+            }).addTo(map)
+                .bindPopup(leg.start_address.split(',')[0])
+                .openPopup();
+
+            L.marker(endPoint, {
+                icon: L.divIcon({
+                    html: '<i class="fas fa-stop-circle text-red-700 text-xl"></i>',
+                    className: 'custom-div-icon',
+                    iconSize: [32, 32],
+                    iconAnchor: [16, 16]
+                })
+            }).addTo(map)
+                .bindPopup(leg.end_address.split(',')[0]);
+
+            // Force a resize of the map to ensure it renders correctly
+            map.invalidateSize();
+        }
+    }, 100);
 
     card.appendChild(header);
     card.appendChild(detailsContainer);
