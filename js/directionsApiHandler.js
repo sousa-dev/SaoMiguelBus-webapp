@@ -348,8 +348,7 @@ function createRouteCard(route, index) {
                  iconAnchor: [16, 16]
              })
          }).addTo(map)
-             .bindPopup(leg.start_address.split(',')[0])
-             .openPopup();
+             .bindPopup(leg.start_address.split(',')[0]);
  
          L.marker(endPoint, {
              icon: L.divIcon({
@@ -361,22 +360,21 @@ function createRouteCard(route, index) {
          }).addTo(map)
              .bindPopup(leg.end_address.split(',')[0]);
  
-         map.invalidateSize();
      };
  
-     // Use MutationObserver to detect when the map container is added to the DOM
-     const observer = new MutationObserver((mutations, obs) => {
-         const mapElement = document.getElementById(mapContainer.id);
-         if (mapElement) {
-             initMap();
-             obs.disconnect(); // Stop observing once the map is initialized
-         }
-     });
- 
-     observer.observe(document.body, {
-         childList: true,
-         subtree: true
-     });
+    // Use MutationObserver to detect when the map container is added to the DOM
+    const observer = new MutationObserver((mutations, obs) => {
+        const mapElement = document.getElementById(mapContainer.id);
+        if (mapElement) {
+            initMap();
+            obs.disconnect(); // Stop observing once the map is initialized
+        }
+    });
+
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
 
     card.appendChild(header);
     card.appendChild(detailsContainer);
