@@ -116,5 +116,9 @@
     "addFavorites": "Zu Favoriten hinzufügen",
     "removeFavorites": "Von Favoriten entfernen",
     "showFavorites": "Favorisierte Routen anzeigen",
-    "noFavoriteRoutes": "Keine Favoriten"
+    "noFavoriteRoutes": "Keine Favoriten",
+    "walking": "Gehen",
+    "transit": "Bus",
+    "start": "Start",
+    "end": "Ende"
 }

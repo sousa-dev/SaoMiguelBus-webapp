@@ -262,58 +262,112 @@ function createRouteCard(route, index) {
         detailsContainer.appendChild(stepCard);
     });
 
-    // Create a single map container for the entire route
-    const mapContainer = document.createElement('div');
-    mapContainer.id = `route-map-${leg.start_address}-${leg.end_address}`.replace(/\s+/g, '-');
-    mapContainer.style.height = '300px';
-    mapContainer.style.marginTop = '20px';
-    detailsContainer.appendChild(mapContainer);
+     // Create a single map container for the entire route
+     const mapContainer = document.createElement('div');
+     // Create a legend container
+     const legendContainer = document.createElement('div');
+     legendContainer.className = 'legend bg-white p-2 rounded shadow-md';
+     legendContainer.style.position = 'absolute';
+     legendContainer.style.bottom = '10px';
+     legendContainer.style.right = '10px';
+     legendContainer.style.zIndex = '1000';
 
-    // Initialize the map after a short delay to ensure the container is fully rendered
-    setTimeout(() => {
-        const map = L.map(mapContainer).setView([37.777903731799725, -25.500576189450747], 9);
+     // Add legend items
+     const legendItems = [
+         { icon: 'fa-square', color: 'red', label: t('walking') },
+         { icon: 'fa-square', color: 'blue', label: t('transit') },
+         { icon: 'fa-play-circle', color: 'green', label: t('start') },
+         { icon: 'fa-stop-circle', color: 'red', label: t('end') }
+     ];
 
-        // Add OpenStreetMap tile layer
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
+     legendItems.forEach(item => {
+         const itemDiv = document.createElement('div');
+         itemDiv.className = 'flex items-center mb-1';
+         itemDiv.innerHTML = `
+             <i class="fas ${item.icon} mr-2" style="color: ${item.color};"></i>
+             <span class="text-sm">${item.label}</span>
+         `;
+         legendContainer.appendChild(itemDiv);
+     });
 
-        // Decode and draw the polyline
-        if (route.overview_polyline && route.overview_polyline.points) {
-            const latLngs = decodePolyline(route.overview_polyline.points);
-
-            // Create and add the polyline to the map
-            const routePath = L.polyline(latLngs, {color: 'green', weight: 5}).addTo(map);
-            
-            // Add markers for start and end points
-            const startPoint = latLngs[0];
-            const endPoint = latLngs[latLngs.length - 1];
-
-            L.marker(startPoint, {
-                icon: L.divIcon({
-                    html: '<i class="fas fa-play-circle text-blue-400 text-xl"></i>',
-                    className: 'custom-div-icon',
-                    iconSize: [32, 32],
-                    iconAnchor: [16, 16]
-                })
-            }).addTo(map)
-                .bindPopup(leg.start_address.split(',')[0])
-                .openPopup();
-
-            L.marker(endPoint, {
-                icon: L.divIcon({
-                    html: '<i class="fas fa-stop-circle text-red-700 text-xl"></i>',
-                    className: 'custom-div-icon',
-                    iconSize: [32, 32],
-                    iconAnchor: [16, 16]
-                })
-            }).addTo(map)
-                .bindPopup(leg.end_address.split(',')[0]);
-
-            // Force a resize of the map to ensure it renders correctly
-            map.invalidateSize();
-        }
-    }, 100);
+     // Append legend to map container
+     mapContainer.appendChild(legendContainer);
+     mapContainer.id = `route-map-${leg.start_address}-${leg.end_address}`.replace(/\s+/g, '-');
+     mapContainer.style.height = '300px';
+     detailsContainer.appendChild(mapContainer);
+ 
+     // Initialize the map after a short delay to ensure the container is fully rendered
+     setTimeout(() => {
+         const map = L.map(mapContainer).setView([37.777903731799725, -25.500576189450747], 9);
+ 
+         // Add OpenStreetMap tile layer
+         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+             attribution: '© OpenStreetMap contributors'
+         }).addTo(map);
+ 
+         // Initialize layer groups for walking and transit
+         const walkingLayer = L.layerGroup().addTo(map);
+         const transitLayer = L.layerGroup().addTo(map);
+ 
+         // Iterate through each step to draw polylines with different colors and add icons
+         leg.steps.forEach((step) => {
+             if (step.travel_mode === 'WALKING' && step.polyline && step.polyline.points) {
+                 const walkLatLngs = decodePolyline(step.polyline.points);
+                 L.polyline(walkLatLngs, { color: 'red', weight: 5 }).addTo(walkingLayer);
+                 
+                 // Add walking icon at the start of the walking step
+                 L.marker(walkLatLngs[0], {
+                     icon: L.divIcon({
+                         html: '<i class="fas fa-walking text-green-500 text-2xl"></i>',
+                         className: 'custom-div-icon',
+                         iconSize: [24, 24],
+                         iconAnchor: [12, 12]
+                     })
+                 }).addTo(map);
+             } else if (step.travel_mode === 'TRANSIT' && step.polyline && step.polyline.points) {
+                 const transitLatLngs = decodePolyline(step.polyline.points);
+                 L.polyline(transitLatLngs, { color: 'blue', weight: 5 }).addTo(transitLayer);
+                 
+                 // Add bus icon at the start of the transit step
+                 L.marker(transitLatLngs[0], {
+                     icon: L.divIcon({
+                         html: '<i class="fas fa-bus text-green-500 text-2xl"></i>',
+                         className: 'custom-div-icon',
+                         iconSize: [24, 24],
+                         iconAnchor: [12, 12]
+                     })
+                 }).addTo(map);
+             }
+         });
+ 
+         // Add markers for start and end points
+         const startPoint = decodePolyline(route.overview_polyline.points)[0];
+         const endPoint = decodePolyline(route.overview_polyline.points).slice(-1)[0];
+ 
+         L.marker([startPoint[0], startPoint[1] + 0.0001], {
+             icon: L.divIcon({
+                 html: '<i class="fas fa-play-circle text-green-300 text-xl"></i>',
+                 className: 'custom-div-icon',
+                 iconSize: [32, 32],
+                 iconAnchor: [16, 16]
+             })
+         }).addTo(map)
+             .bindPopup(leg.start_address.split(',')[0])
+             .openPopup();
+ 
+         L.marker(endPoint, {
+             icon: L.divIcon({
+                 html: '<i class="fas fa-stop-circle text-red-500 text-xl"></i>',
+                 className: 'custom-div-icon',
+                 iconSize: [32, 32],
+                 iconAnchor: [16, 16]
+             })
+         }).addTo(map)
+             .bindPopup(leg.end_address.split(',')[0]);
+ 
+         // Force a resize of the map to ensure it renders correctly
+         map.invalidateSize();
+     }, 0);
 
     card.appendChild(header);
     card.appendChild(detailsContainer);
