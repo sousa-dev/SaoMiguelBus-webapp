@@ -111,5 +111,10 @@
     "bannerAdInfo": "Vous pouvez envoyer votre bannière ou logo et/ou écrire du texte dans le formulaire de réservation que nous traiterons de créer une bannière similaire à celle de cette image.",
     "bannerDimensions": "* Dimensions de la Bannière: 900x140",
     "highVisibility": "Visibilité <b>Elevée</b>",
-    "viewPricingButton": "Voir les Tarifs"
+    "viewPricingButton": "Voir les Tarifs",
+    "favoriteRoutes": "Itinéraires Favoris",
+    "addFavorites": "Ajouter aux Favoris",
+    "removeFavorites": "Supprimer des Favoris",
+    "showFavorites": "Afficher les Favoris",
+    "noFavoriteRoutes": "Aucun itinéraire favori"
 }

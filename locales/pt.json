@@ -111,5 +111,10 @@
     "bannerAdInfo": "Poderá enviar o seu banner ou logótipo e/ou escrever algum texto no formulário de reserva que nós tratamos de criar uma banner semelhante ao desta imagem.",
     "bannerDimensions": "* Dimensões do Banner: 900x140",
     "highVisibility": "Visibilidade <b>Alta</b>",
-    "viewPricingButton": "Ver Preços"
+    "viewPricingButton": "Ver Preços",
+    "favoriteRoutes": "Rotas Favoritas",
+    "addFavorites": "Adicionar aos Favoritos",
+    "removeFavorites": "Remover dos Favoritos",
+    "noFavoriteRoutes": "Não há rotas favoritas",
+    "showFavorites": "Mostrar Favoritos"
 }

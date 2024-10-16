@@ -111,5 +111,10 @@
     "bannerAdInfo": "Sie können Ihre Banner oder Logo und/oder Text im Reservierungsformular senden, das wir verarbeiten, um ein Banner zu erstellen, das ähnlich wie diese Bild ist.",
     "bannerDimensions": "* Banner-Maße: 900x140",
     "highVisibility": "Sichtbarkeit <b>Hoch</b>",
-    "viewPricingButton": "Preise ansehen"
+    "viewPricingButton": "Preise ansehen",
+    "favoriteRoutes": "Favorisierte Routen",
+    "addFavorites": "Zu Favoriten hinzufügen",
+    "removeFavorites": "Von Favoriten entfernen",
+    "showFavorites": "Favorisierte Routen anzeigen",
+    "noFavoriteRoutes": "Keine Favoriten"
 }

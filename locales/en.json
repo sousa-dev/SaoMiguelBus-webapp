@@ -111,5 +111,10 @@
     "bannerAdInfo": "You can send your banner or logo and/or write some text in the reservation form that we will process to create a banner similar to this image.",
     "bannerDimensions": "* Banner Dimensions: 900x140",
     "highVisibility": "Visibility <b>High</b>",
-    "viewPricingButton": "View Pricing"
+    "viewPricingButton": "View Pricing",
+    "favoriteRoutes": "Favorite Routes",
+    "addFavorites": "Add to Favorites",
+    "removeFavorites": "Remove from Favorites",
+    "showFavorites": "Show Favorites",
+    "noFavoriteRoutes": "No favorite routes"
 }

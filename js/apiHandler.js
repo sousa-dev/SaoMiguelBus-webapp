@@ -357,10 +357,112 @@ function displayNoRoutesMessage(origin, destination) {
     noRoutesDiv.style.display = 'block';
 }
 
+// Function to add the current search to favorites
+function toggleFavorite() {
+    const origin = document.getElementById('origin').value;
+    const destination = document.getElementById('destination').value;
+
+    const favorite = {
+        origin: origin.toLowerCase(),
+        destination: destination.toLowerCase(),
+    };
+
+    const favoriteRoutes = JSON.parse(getCookie('favoriteRoutes') || '[]');
+    const isFavorite = favoriteRoutes.some(route => 
+        route.origin.toLowerCase() === origin.toLowerCase() && 
+        route.destination.toLowerCase() === destination.toLowerCase()
+    );
+    const favoriteIcon = document.getElementById('favorite-icon');
+    const favoriteText = document.getElementById('favorite-text');
+    if (isFavorite) {
+        // Remove from favorites
+        const favoriteRoutes = JSON.parse(getCookie('favoriteRoutes') || '[]');
+        const updatedRoutes = favoriteRoutes.filter(route => 
+            route.origin.toLowerCase() !== origin.toLowerCase() && 
+            route.destination.toLowerCase() !== destination.toLowerCase()
+        );
+        setCookie('favoriteRoutes', JSON.stringify(updatedRoutes), 1000);
+
+        // Update the favorite icon
+        favoriteText.textContent = t('addFavorites');
+        favoriteIcon.setAttribute('data-umami-event', 'add-favorite');
+        favoriteIcon.className = 'far fa-star text-yellow-400 cursor-pointer text-xl';
+
+    } else {
+        // Add to favorites
+        const favoriteRoutes = JSON.parse(getCookie('favoriteRoutes') || '[]');
+        favoriteRoutes.push(favorite);
+        setCookie('favoriteRoutes', JSON.stringify(favoriteRoutes), 1000);
+
+        // Update the favorite icon
+        favoriteText.textContent = t('removeFavorites');
+        favoriteIcon.setAttribute('data-umami-event', 'remove-favorite');
+        favoriteIcon.className = 'fas fa-star text-yellow-400 cursor-pointer text-xl';
+    }
+}
+
+
+function createFavouriteIcon() {
+    const container = document.createElement('div');
+    container.className = 'flex justify-between items-center w-full';
+
+    const showFavoritesButton = document.createElement('button');
+    showFavoritesButton.textContent = t('showFavorites');
+    showFavoritesButton.className = 'flex items-center cursor-pointer text-blue-500 hover:text-blue-700';
+    showFavoritesButton.innerHTML = '<i class="fas fa-eye mr-2"></i>' + t('showFavorites');
+    showFavoritesButton.onclick = function() {
+        // Hide the routesContainer
+        document.getElementById('routesContainer').style.display = 'none';
+        displayFavoriteRoutes(checkFavoriteRoutesCookie());
+    };
+
+    const favoriteContainer = document.createElement('div');
+    favoriteContainer.className = 'flex items-center';
+
+    const favoriteText = document.createElement('span');
+    favoriteText.id = 'favorite-text';
+    favoriteText.className = 'mr-2 text-sm text-gray-500';
+
+    const favoriteIcon = document.createElement('i');
+    favoriteIcon.id = 'favorite-icon';
+    favoriteIcon.className = 'cursor-pointer text-xl';
+    
+    const origin = document.getElementById('origin').value;
+    const destination = document.getElementById('destination').value;
+    const favoriteRoutes = JSON.parse(getCookie('favoriteRoutes') || '[]');
+    const isFavorite = favoriteRoutes.some(route => 
+        route.origin.toLowerCase() === origin.toLowerCase() && 
+        route.destination.toLowerCase() === destination.toLowerCase()
+    );
+    
+    if (isFavorite) {
+        favoriteText.textContent = t('removeFavorites');
+        favoriteIcon.setAttribute('data-umami-event', 'remove-favorite');
+        favoriteIcon.className += ' fas fa-star text-yellow-400';
+    } else {
+        favoriteText.textContent = t('addFavorites');
+        favoriteIcon.setAttribute('data-umami-event', 'add-favorite');
+        favoriteIcon.className += ' far fa-star text-yellow-400';
+    }
+
+    favoriteIcon.onclick = function(event) {
+        event.stopPropagation(); // Prevent the click from bubbling up to the route div
+        toggleFavorite();
+    };
+
+    favoriteContainer.appendChild(favoriteText);
+    favoriteContainer.appendChild(favoriteIcon);
+
+    container.appendChild(showFavoritesButton);
+    container.appendChild(favoriteContainer);
+    return container;
+}
+
 function displayRoutes(routes, originStop, destinationStop) {
     const routesContainer = document.getElementById('routesContainer');
     routesContainer.innerHTML = ''; // Clear previous content
 
+    routesContainer.appendChild(createFavouriteIcon());
     if (!Array.isArray(routes) || routes.length === 0 || routes.error) {
         displayNoRoutesMessage(originStop, destinationStop);
         return;
@@ -371,7 +473,7 @@ function displayRoutes(routes, originStop, destinationStop) {
         let ignoreRoute = false;
         const routeDiv = document.createElement('div');
         routeDiv.className = 'container card w-100 center';
-        routeDiv.style.cssText = 'margin-top: 30px; border-radius: 8px; padding: 10px; cursor: pointer;';
+        routeDiv.style.cssText = 'border-radius: 8px; padding: 10px; cursor: pointer;';
     
         // Parse the string to a JavaScript object
         const stopsObj = stringToJSON(route.stops);
@@ -719,6 +821,12 @@ function displayRoutes(routes, originStop, destinationStop) {
     }
 
     routesContainer.style.display = 'block';
+
+    const favouriteRoutesContainer = document.getElementById('favouriteRoutesContainer');
+    favouriteRoutesContainer.style.display = 'none';
+
+    const noRoutesMessage = document.getElementById('noRoutesMessage');
+    noRoutesMessage.style.display = 'none';
 }
 
 function loadAdBanner(on) {
@@ -945,29 +1053,4 @@ function updateVoteButtonStyles(id, voteType) {
             dislikeButton.classList.add('text-gray-500');
         }
     }
-}
-
-function setCookie(name, value, days) {
-    let expires = "";
-    if (days) {
-        const date = new Date();
-        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-        expires = "; expires=" + date.toUTCString();
-    }
-    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
-}
-
-function getCookie(name) {
-    const nameEQ = name + "=";
-    const ca = document.cookie.split(';');
-    for(let i=0; i < ca.length; i++) {
-        let c = ca[i];
-        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
-    }
-    return null;
-}
-
-function deleteCookie(name) {
-    document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 }
