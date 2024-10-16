@@ -293,6 +293,7 @@ function createRouteCard(route, index) {
      mapContainer.appendChild(legendContainer);
      mapContainer.id = `route-map-${leg.start_address}-${leg.end_address}`.replace(/\s+/g, '-');
      mapContainer.style.height = '300px';
+     mapContainer.style.display = 'none';
      detailsContainer.appendChild(mapContainer);
  
      // Initialize the map after the container is added to the DOM
