@@ -120,5 +120,19 @@
     "walking": "Gehen",
     "transit": "Bus",
     "start": "Start",
-    "end": "Ende"
+    "end": "Ende",
+    "chatWindowTitle": "Chat mit mir!",
+    "chatWindowMessage": "Hallo! Ist das die erste Zeit, dass Sie mit mir sprechen?",
+    "chatInputPlaceholder": "Wählen Sie eine Option oben aus...",
+    "question1": "Hallo! Ist das die erste Zeit, dass Sie mit mir sprechen?",
+    "question2": "Bist du ein Einwohner der Insel oder ein Tourist?",
+    "question3": "Möchtest du, dass ich dir helfe, eine Route zu wählen?",
+    "question4": "Möchtest du, dass ich dir helfe, Ihre Reise zu planen und dich während Ihrer Aufenthalt auf der Insel zu führen?",
+    "question5": "Bist du damit einverstanden, eine kleine Gebühr für diese Hilfe zu zahlen?",
+    "question6": "Danke für Ihr Feedback! An diesem Punkt haben wir keine weiteren Fragen für Sie.",
+    "optionYes": "Ja",
+    "optionNo": "Nein",
+    "optionResident": "Einwohner",
+    "optionTourist": "Tourist",
+    "noMoreQuestions": "Danke für Ihre Antwort! An diesem Punkt haben wir keine weiteren Fragen für Sie."
 }

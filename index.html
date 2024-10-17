@@ -272,6 +272,20 @@
             float: right !important;
             margin: 0px !important;
         }
+
+        #chatWindow {
+            /* Ensures the chat window doesn't exceed the viewport height */
+            max-height: 80vh;
+        }
+
+        /* Optional: Smooth transition for showing/hiding elements */
+        #chatWindow.transition {
+            transition: all 0.3s ease-in-out;
+        }
+
+        #feedbackRobotButton.transition {
+            transition: all 0.3s ease-in-out;
+        }
     </style>
 </head>
 
@@ -285,6 +299,40 @@
     <button id="scrollToTopBtn" class="fixed bottom-20 right-4 z-50 bg-green-500 text-white rounded-full p-3 hidden transition-opacity duration-300 ease-in-out opacity-0 lg:bottom-4" aria-label="Scroll to top" data-umami-event="scroll-to-top">
         <i class="fas fa-chevron-up"></i>
     </button>
+
+    <!-- Robot Feedback Button -->
+    <div id="feedbackRobotButton" class="fixed bottom-20 left-4 z-50">
+        <div class="relative">
+            <!-- Robot Icon Button -->
+            <button id="openChatBtn" class="text-green-500 p-2 rounded-full shadow-lg focus:outline-none" data-umami-event="open-chat-window">
+                <i class="fas fa-robot text-2xl"></i>
+            </button>
+            <!-- Dismiss Button -->
+            <button id="closeRobotBtn" class="absolute top-0 right-0 text-black p-1 rounded-full text-xs z-60" onclick="dismissRobotButton()" data-umami-event="close-chat-window">
+                &times;
+            </button>
+        </div>
+    </div>
+
+    <!-- Chat Window -->
+    <div id="chatWindow" class="fixed bottom-28 left-4 right-4 max-w-md bg-white border border-gray-300 rounded-lg shadow-lg p-4 hidden z-50">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-bold" data-i18n="chatWindowTitle">Converse Comigo!</h2>
+            <button id="closeChatBtn" class="text-gray-500 hover:text-gray-700 text-xl">&times;</button>
+        </div>
+        <div id="chatContent" class="mb-4 overflow-y-auto h-40">
+            <!-- Perguntas e respostas aparecerão aqui -->
+        </div>
+        <!-- <div class="flex">
+            <input type="text" id="chatInput" class="flex-grow border rounded-l-lg p-2 focus:outline-none" placeholder="Escolha uma opção acima..." data-i18n-placeholder="chatInputPlaceholder" disabled>
+            <button id="sendChatBtn" class="bg-green-500 text-white rounded-r-lg p-2 hover:bg-green-600 hidden" data-umami-event="send-chat-message" disabled>
+                Enviar
+            </button>
+        </div> -->
+        <div id="answerButtonsContainer" class="flex space-x-2 justify-center">
+            <!-- Botões de resposta aparecerão aqui -->
+        </div>
+    </div>
 
     <script>
         // Scroll to Top functionality
@@ -1272,7 +1320,7 @@
     <script src="js/directionsApiHandler.js" defer></script>
     <script src="js/favoriteHandler.js" defer></script>
     <script src="js/languageModal.js" defer></script>
-
+    <script src="js/agentHandler.js" defer></script>
 
     <script>
         function checkScreenWidth() {

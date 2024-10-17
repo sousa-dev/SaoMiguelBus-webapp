@@ -120,5 +120,19 @@
     "walking": "A pé",
     "transit": "Autocarro",
     "start": "Départ",
-    "end": "Arrivée"
+    "end": "Arrivée",
+    "chatWindowTitle": "Conversez avec moi!",
+    "chatWindowMessage": "Bonjour! Est-ce la première fois que vous parlez avec moi?",
+    "chatInputPlaceholder": "Choisissez une option ci-dessus...",
+    "question1": "Bonjour! Est-ce la première fois que vous parlez avec moi?",
+    "question2": "Êtes-vous un habitant de l'île ou un touriste?",
+    "question3": "Voulez-vous que je vous aide à choisir un itinéraire?",
+    "question4": "Voulez-vous que je vous aide à planifier votre voyage et vous guider tout au long de votre séjour à l'île?",
+    "question5": "Êtes-vous d'accord pour payer un petit tarif pour cette aide?",
+    "question6": "Merci pour votre retour! De moment, nous n'avons plus de questions pour vous!",
+    "optionYes": "Oui",
+    "optionNo": "Non",
+    "optionResident": "Habitant",
+    "optionTourist": "Touriste",
+    "noMoreQuestions": "Merci pour votre réponse. A ce stade, nous n'avons plus de questions pour vous!"
 }
