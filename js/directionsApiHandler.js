@@ -5,7 +5,6 @@
  */
 function decodePolyline(polyline) {
     let index = 0, len = polyline.length;
-    const lat = 0, lng = 0;
     const coordinates = [];
     let shift = 0, result = 0, byte = null;
     let currentLat = 0, currentLng = 0;
@@ -262,145 +261,103 @@ function createRouteCard(route, index) {
         detailsContainer.appendChild(stepCard);
     });
 
-     // Create a single map container for the entire route
-     const mapContainer = document.createElement('div');
-     // Create a legend container
-     const legendContainer = document.createElement('div');
-     legendContainer.className = 'legend bg-white p-2 rounded shadow-md';
-     legendContainer.style.position = 'absolute';
-     legendContainer.style.bottom = '10px';
-     legendContainer.style.right = '10px';
+    // Create a single map container for the entire route when details are expanded
+    const mapContainer = document.createElement('div');
+    mapContainer.className = 'hidden map-container mt-4';
+    mapContainer.id = `route-map-${index}`;
+    mapContainer.style.height = '300px';
+    mapContainer.style.width = '100%';
+    detailsContainer.appendChild(mapContainer);
 
-     // Add legend items
-     const legendItems = [
-         { icon: 'fa-square', color: 'red', label: t('walking') },
-         { icon: 'fa-square', color: 'blue', label: t('transit') },
-         { icon: 'fa-play-circle', color: 'green', label: t('start') },
-         { icon: 'fa-stop-circle', color: 'red', label: t('end') }
-     ];
+    // Function to initialize the map
+    const initMap = () => {
+        const map = L.map(mapContainer).setView([37.777903731799725, -25.500576189450747], 9);
 
-     legendItems.forEach(item => {
-         const itemDiv = document.createElement('div');
-         itemDiv.className = 'flex items-center mb-1';
-         itemDiv.innerHTML = `
-             <i class="fas ${item.icon} mr-2" style="color: ${item.color};"></i>
-             <span class="text-sm">${item.label}</span>
-         `;
-         legendContainer.appendChild(itemDiv);
-     });
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
 
-     // Append legend to map container
-     mapContainer.appendChild(legendContainer);
-     mapContainer.id = `route-map-${leg.start_address}-${leg.end_address}`.replace(/\s+/g, '-');
-     mapContainer.style.height = '300px';
-     mapContainer.style.display = 'none';
-     detailsContainer.appendChild(mapContainer);
- 
-     // Initialize the map after the container is added to the DOM
-     const initMap = () => {
-         const map = L.map(mapContainer).setView([37.777903731799725, -25.500576189450747], 9);
- 
-         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-             attribution: '© OpenStreetMap contributors'
-         }).addTo(map);
- 
-         const walkingLayer = L.layerGroup().addTo(map);
-         const transitLayer = L.layerGroup().addTo(map);
- 
-         const bounds = L.latLngBounds();
- 
-         leg.steps.forEach((step) => {
-             if (step.polyline && step.polyline.points) {
-                 const latLngs = decodePolyline(step.polyline.points);
-                 latLngs.forEach(latLng => bounds.extend(latLng));
- 
-                 if (step.travel_mode === 'WALKING') {
-                     L.polyline(latLngs, { color: 'red', weight: 5 }).addTo(walkingLayer);
-                     L.marker(latLngs[0], {
-                         icon: L.divIcon({
-                             html: '<i class="fas fa-walking text-green-500 text-2xl"></i>',
-                             className: 'custom-div-icon',
-                             iconSize: [24, 24],
-                             iconAnchor: [12, 12]
-                         })
-                     }).addTo(map);
-                 } else if (step.travel_mode === 'TRANSIT') {
-                     L.polyline(latLngs, { color: 'blue', weight: 5 }).addTo(transitLayer);
-                     L.marker(latLngs[0], {
-                         icon: L.divIcon({
-                             html: '<i class="fas fa-bus text-green-500 text-2xl"></i>',
-                             className: 'custom-div-icon',
-                             iconSize: [24, 24],
-                             iconAnchor: [12, 12]
-                         })
-                     }).addTo(map);
-                 }
-             }
-         });
- 
-         const startPoint = decodePolyline(route.overview_polyline.points)[0];
-         const endPoint = decodePolyline(route.overview_polyline.points).slice(-1)[0];
- 
-         L.marker([startPoint[0], startPoint[1] + 0.0001], {
-             icon: L.divIcon({
-                 html: '<i class="fas fa-play-circle text-green-300 text-xl"></i>',
-                 className: 'custom-div-icon',
-                 iconSize: [32, 32],
-                 iconAnchor: [16, 16]
-             })
-         }).addTo(map)
-             .bindPopup(leg.start_address.split(',')[0]);
- 
-         L.marker(endPoint, {
-             icon: L.divIcon({
-                 html: '<i class="fas fa-stop-circle text-red-500 text-xl"></i>',
-                 className: 'custom-div-icon',
-                 iconSize: [32, 32],
-                 iconAnchor: [16, 16]
-             })
-         }).addTo(map)
-             .bindPopup(leg.end_address.split(',')[0]);
- 
-     };
- 
-    // Use MutationObserver to detect when the map container is added to the DOM
-    const observer = new MutationObserver((mutations, obs) => {
-        const mapElement = document.getElementById(mapContainer.id);
-        if (mapElement) {
-            initMap();
-            obs.disconnect(); // Stop observing once the map is initialized
-        }
-    });
+        const walkingLayer = L.layerGroup().addTo(map);
+        const transitLayer = L.layerGroup().addTo(map);
 
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true
-    });
+        const bounds = L.latLngBounds();
+
+        leg.steps.forEach((step) => {
+            if (step.polyline && step.polyline.points) {
+                const latLngs = decodePolyline(step.polyline.points);
+                latLngs.forEach(latLng => bounds.extend(latLng));
+
+                if (step.travel_mode === 'WALKING') {
+                    L.polyline(latLngs, { color: 'red', weight: 5 }).addTo(walkingLayer);
+                    L.marker(latLngs[0], {
+                        icon: L.divIcon({
+                            html: '<i class="fas fa-walking text-green-500 text-2xl"></i>',
+                            className: 'custom-div-icon',
+                            iconSize: [24, 24],
+                            iconAnchor: [12, 12]
+                        })
+                    }).addTo(map);
+                } else if (step.travel_mode === 'TRANSIT') {
+                    L.polyline(latLngs, { color: 'blue', weight: 5 }).addTo(transitLayer);
+                    L.marker(latLngs[0], {
+                        icon: L.divIcon({
+                            html: '<i class="fas fa-bus text-green-500 text-2xl"></i>',
+                            className: 'custom-div-icon',
+                            iconSize: [24, 24],
+                            iconAnchor: [12, 12]
+                        })
+                    }).addTo(map);
+                }
+            }
+        });
+
+        const startPoint = decodePolyline(route.overview_polyline.points)[0];
+        const endPoint = decodePolyline(route.overview_polyline.points).slice(-1)[0];
+
+        L.marker([startPoint[0], startPoint[1] + 0.0001], {
+            icon: L.divIcon({
+                html: '<i class="fas fa-play-circle text-green-300 text-xl"></i>',
+                className: 'custom-div-icon',
+                iconSize: [32, 32],
+                iconAnchor: [16, 16]
+            })
+        }).addTo(map)
+            .bindPopup(leg.start_address.split(',')[0]);
+
+        L.marker(endPoint, {
+            icon: L.divIcon({
+                html: '<i class="fas fa-stop-circle text-red-500 text-xl"></i>',
+                className: 'custom-div-icon',
+                iconSize: [32, 32],
+                iconAnchor: [16, 16]
+            })
+        }).addTo(map)
+            .bindPopup(leg.end_address.split(',')[0]);
+
+        map.fitBounds(bounds);
+    };
 
     card.appendChild(header);
     card.appendChild(detailsContainer);
 
-    // Add click event to toggle details
+    // Add click event to toggle details and load map on first expansion
     header.addEventListener('click', () => {
+        const isHidden = detailsContainer.classList.contains('hidden');
         detailsContainer.classList.toggle('hidden');
-        header.querySelector('.iconify').classList.toggle('mdi:chevron-up');
-        header.querySelector('.iconify').classList.toggle('mdi:chevron-down');
-    });
-
-    // Add click event to expand/collapse route details
-    card.addEventListener('click', function(event) {
-        // Prevent the click event from triggering on buttons inside the card
-        if (event.target.tagName === 'BUTTON' || event.target.closest('button')) {
-            return;
+        mapContainer.classList.toggle('hidden');
+        const iconElement = header.querySelector('.iconify');
+        if (iconElement) {
+            if (isHidden) {
+                iconElement.setAttribute('data-icon', 'mdi:chevron-up');
+            } else {
+                iconElement.setAttribute('data-icon', 'mdi:chevron-down');
+            }
         }
-        
-        toggleStepByStepDetails(this);
-    });
 
-    // Add click event to the expand button
-    const expandButton = card.querySelector('.expand-stops');
-    expandButton.addEventListener('click', function(event) {
-        toggleStepByStepDetails(card);
+        if (isHidden && !mapContainer.dataset.loaded) {
+            initMap();
+            mapContainer.dataset.loaded = 'true';
+        }
     });
 
     return card;
