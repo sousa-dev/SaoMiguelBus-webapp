@@ -121,7 +121,7 @@
     "transit": "By Bus",
     "start": "Start",
     "end": "End",
-    "chatWindowTitle": "Chat with me!",
+    "chatWindowTitle": "Chat with the São Miguel Bus AI!",
     "chatWindowMessage": "Hello! Is this the first time you're talking to me?",
     "chatInputPlaceholder": "Choose an option above...",
     "question1": "Hello! Is this the first time you're talking to me?",

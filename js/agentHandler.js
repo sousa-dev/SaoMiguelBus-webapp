@@ -1,12 +1,11 @@
 // Inicializar armazenamento de respostas
 let userResponses = {
+    language: getCookie('language') || null,
     firstTime: null,
     residenceStatus: null,
     guidePreference: null,
     paymentWillingness: null
 };
-
-console.log("User Responses Inicializado:", userResponses);
 
 // Definir as perguntas e suas opções
 const questions = [
@@ -66,8 +65,7 @@ function showNextQuestion() {
     // Limpar botões anteriores
     const answerButtonsDiv = document.getElementById('answerButtonsContainer');
     answerButtonsDiv.innerHTML = '';
-    console.log("currentQuestionIndex: ", currentQuestionIndex);
-    console.log("userResponses: ", userResponses);
+
     // Se o usuário respondeu "não" na primeira pergunta, mostrar mensagem e encerrar
     if (currentQuestionIndex === 1 && userResponses.firstTime === "nao") {
         displayNoMoreQuestions();
@@ -123,6 +121,7 @@ function displayQuestion(question) {
             'ease-in-out'
         );
         button.setAttribute('data-i18n', option.label);
+        button.setAttribute('data-umami-event', `chat-answer-${question.id}-${option.value}`);
         button.textContent = t(option.label); // ou use t(option.label) se aplicar tradução
         button.addEventListener('click', () => handleAnswer(question.id, option.value));
         answerButtonsDiv.appendChild(button);
@@ -157,8 +156,6 @@ function handleAnswer(questionId, answerValue) {
             break;
     }
 
-    console.log(`Resposta para a pergunta ${questionId}: ${answerValue}`);
-
     // Exibir a resposta do usuário no chat
     const chatContent = document.getElementById('chatContent');
     const userResponse = document.createElement('p');
@@ -187,10 +184,8 @@ function displayThankYou() {
     answerButtonsDiv.innerHTML = '';
     chatContent.scrollTop = chatContent.scrollHeight;
 
-    console.log("userResponses: ", userResponses);
-
     // Enviar as respostas para o backend via fetch (opcional)
-    fetch('/save-feedback', {
+    fetch('https://api.saomiguelbus.com/ai/api/v1/feedback', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -226,7 +221,6 @@ function displayNoMoreQuestions() {
 
 // Função para limpar o chat
 function clearChat() {
-    console.log("Limpando chat.");
     const chatContent = document.getElementById('chatContent');
     const answerButtonsDiv = document.getElementById('answerButtonsContainer');
 
@@ -245,7 +239,6 @@ function clearChat() {
 function dismissRobotButton() {
     const feedbackRobotButton = document.getElementById('feedbackRobotButton');
     feedbackRobotButton.style.display = 'none';
-    console.log("Botão do robô descartado.");
 }
 
 // Função para exibir a próxima pergunta quando o chat for aberto
