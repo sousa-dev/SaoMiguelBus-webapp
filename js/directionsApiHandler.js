@@ -263,7 +263,7 @@ function createRouteCard(route, index) {
 
     // Create a single map container for the entire route when details are expanded
     const mapContainer = document.createElement('div');
-    mapContainer.className = 'hidden map-container mt-4';
+    mapContainer.className = 'hidden map-container mt-4 z-0';
     mapContainer.id = `route-map-${index}`;
     mapContainer.style.height = '300px';
     mapContainer.style.width = '100%';
