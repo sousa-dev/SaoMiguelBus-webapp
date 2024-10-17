@@ -4,6 +4,11 @@ function capitalizeEveryWord(string) {
 function fillOriginDestination(origin, destination) {
     document.getElementById('origin').value = origin;
     document.getElementById('destination').value = destination;
+    // Scroll to the top of the page
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
 }
 function createFavoriteCard(route) {
     const origin = capitalizeEveryWord(route.origin);
