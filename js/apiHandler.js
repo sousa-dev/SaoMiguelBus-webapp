@@ -699,7 +699,7 @@ function displayRoutes(routes, originStop, destinationStop) {
                         </div>
                     </div>
                 </div>
-                <div id="${route.id}-likes-dislikes" class="mt-4 flex items-center justify-between" data-umami-event="route-summary">
+                <div id="${route.id}-likes-dislikes" class="mt-4 flex items-center justify-between" data-umami-event="route-summary" data-offline="false">
                     <button class="dislike-button flex items-center ${currentVote === 'dislike' ? 'text-red-700' : 'text-gray-500'} hover:text-red-700" onclick="dislike_route(${route.id}, '${route.route}', this)" data-umami-event="dislike-button-click" data-umami-event="dislike-button-interaction">
                         <i class="fas fa-thumbs-down"></i>
                     </button>
@@ -748,7 +748,7 @@ function displayRoutes(routes, originStop, destinationStop) {
                         </div> 
                     -->
                 </div>
-                <div class="flex space-x-2 mt-2">
+                <div class="flex space-x-2 mt-2" data-offline="false">
                     <button type="submit" class="flex-grow bg-green-500 text-white py-2 rounded-full hover:bg-green-600 transition duration-300 ease-in-out" data-i18n="directionsButton" data-umami-event="directions-button-click"
                     onclick="redirectToStepByStepDirections(event)">
                         ${t('directionsButton')} <i class="fas fa-route"></i>
@@ -850,6 +850,10 @@ function displayRoutes(routes, originStop, destinationStop) {
 
     const noRoutesMessage = document.getElementById('noRoutesMessage');
     noRoutesMessage.style.display = 'none';
+
+    if (!isOnline()) {
+        toggleVisibilityOffline(false);
+    }
 }
 
 function loadAdBanner(on) {

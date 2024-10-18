@@ -88,13 +88,27 @@ function isOnline() {
     return navigator.onLine;
 }
 
+function toggleVisibilityOffline(isOnline) {
+    const offlineElements = document.querySelectorAll('[data-offline="false"]');
+    const navDirectionsButton = document.getElementById('navDirectionsButton');
+    const visibility = isOnline ? 'block' : 'none';
+    offlineElements.forEach(element => {
+        element.style.display = visibility;
+    });
+    if (navDirectionsButton) {
+        navDirectionsButton.classList.toggle('hidden', !isOnline);
+    }
+}
+
 // Function to handle online/offline events
 function handleConnectivityChange() {
     if (isOnline()) {
         console.log('Device is online. Attempting to fetch fresh API data.');
+        toggleVisibilityOffline(true);
         loadAPIData();
     } else {
         console.log('Device is offline. Using cached data if available.');
+        toggleVisibilityOffline(false);
         const cachedData = getAPIDataFromCache();
         if (cachedData) {
             apiData = cachedData;
