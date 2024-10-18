@@ -141,7 +141,7 @@ function getRoutes(origin, destination, date, time) {
     // Convert origin and destination to lowercase and replace special characters
     const replaceSpecialChars = (str) => {
         return str.toLowerCase().replace(/[-áàâãäéèêëíìîïóòôõöúùûüç]/g, match => {
-            return 'aaaaaeeeeiiiioooooouuuuc'['áàâãäéèêëíìîïóòôõöúùûüç'.indexOf(match)] || match;
+            return 'aaaaaeeeeiiiiooooouuuuc'['áàâãäéèêëíìîïóòôõöúùûüç'.indexOf(match)] || match;
         }).replace(/-/g, '');
     };
     

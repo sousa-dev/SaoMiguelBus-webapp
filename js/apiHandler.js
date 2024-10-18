@@ -208,7 +208,7 @@ function initializeAutocomplete(inputId, suggestionsContainer) {
         fetchStops(filter).then(stopsList => {
             stopsList.forEach((stop, index) => {
                 const stopDiv = document.createElement('div');
-                stopDiv.textContent = stop['name'];
+                stopDiv.textContent = stop;
                 stopDiv.classList.add('suggestion-item');
                 stopDiv.addEventListener('click', function() {
                     input.value = this.textContent; // Set the input value to the selected suggestion
@@ -285,7 +285,7 @@ function fetchStops(filter) {
         const apiData = getAPIData();
         if (apiData && getStops()) {
             const allStops = getStops();
-            const filteredStops = allStops.filter(stop => stop.name.toLowerCase().includes(filter));
+            const filteredStops = allStops.filter(stop => stop.toLowerCase().includes(filter));
             resolve(filteredStops);
         } else {
             reject('No API data available');
@@ -544,7 +544,7 @@ function displayRoutes(routes, originStop, destinationStop) {
         let lastStop = null;
         const replaceSpecialChars = (str) => {
             return str.toLowerCase().replace(/[-áàâãäéèêëíìîïóòôõöúùûüç]/g, match => {
-                return 'aaaaaeeeeiiiioooooouuuuc'['áàâãäéèêëíìîïóòôõöúùûüç'.indexOf(match)] || match;
+                return 'aaaaaeeeeiiiiooooouuuuc'['áàâãäéèêëíìîïóòôõöúùûüç'.indexOf(match)] || match;
             }).replace(/-/g, '');
         };
 
