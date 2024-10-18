@@ -1,6 +1,6 @@
 // Inicializar armazenamento de respostas
 let userResponses = {
-    language: getCookie('language') || null,
+    language: currentLanguage,
     firstTime: null,
     residenceStatus: null,
     guidePreference: null,
