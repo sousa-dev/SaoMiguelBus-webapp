@@ -188,7 +188,7 @@ function displayThankYou() {
     answerButtonsDiv.innerHTML = '';
     chatContent.scrollTop = chatContent.scrollHeight;
 
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
         // Enviar as respostas para o backend via fetch (opcional)
         fetch('https://api.saomiguelbus.com/ai/api/v1/feedback', {
             method: 'POST',
