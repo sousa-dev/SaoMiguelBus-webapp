@@ -190,7 +190,7 @@ function displayThankYou() {
 
     if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
         // Enviar as respostas para o backend via fetch (opcional)
-        fetch('https://api.saomiguelbus.com/ai/api/v1/feedback', {
+        fetch('http://127.0.0.1:8000/ai/api/v1/feedback', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

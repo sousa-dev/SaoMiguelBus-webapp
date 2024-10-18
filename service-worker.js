@@ -1,14 +1,21 @@
 const CACHE_NAME = 'sao-miguel-bus-v2'; // Increment this version
-
 const urlsToCache = [
   //'/',
-  //'/index.html',
+  '/index.html',
   '/offline.html',
   '/static/img/logo.png',
   '/js/i18n.js',
-  //'/js/apiHandler.js',
-  //'/js/directionsApiHandler.js',
-  '/js/languageModal.js'
+  '/js/apiHandler.js',
+  '/js/directionsApiHandler.js',
+  '/js/offlineHandler.js',
+  '/js/languageModal.js',
+  '/js/agentHandler.js',
+  '/js/favoriteHandler.js',
+  '/locales/en.json',
+  '/locales/pt.json',
+  '/locales/es.json',
+  '/locales/fr.json',
+  '/locales/de.json',
 ];
 
 // Install the service worker and cache resources
