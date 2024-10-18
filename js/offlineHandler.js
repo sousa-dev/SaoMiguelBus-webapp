@@ -69,14 +69,10 @@ async function loadAPIData() {
             console.log('No API data available');
         }
     }
-    console.log('apiData', apiData);
     first_element = apiData[0];
     stops = first_element.stops;
     holidays = first_element.holidays;
     routes = apiData.slice(1);
-    console.log('stops', stops);
-    console.log('holidays', holidays);
-    console.log('routes', routes);
 }
 
 // Call the function when the script loads
@@ -122,12 +118,21 @@ function getStops() {
 
 // Function to get routes based on origin, destination, date, and time
 function getRoutes(origin, destination, date, time) {
-    // Convert input time to 24-hour format for comparison
-    const inputTime = convertTo24Hour(time);
-    
-    // Get day of the week from the input date
+    const originalOrigin = origin;
+    const originalDestination = destination;
+    const inputTime = time;
     const inputDate = new Date(date);
     let dayOfWeek;
+    
+    // Convert origin and destination to lowercase and replace special characters
+    const replaceSpecialChars = (str) => {
+        return str.toLowerCase().replace(/[-áàâãäéèêëíìîïóòôõöúùûüç]/g, match => {
+            return 'aaaaaeeeeiiiioooooouuuuc'['áàâãäéèêëíìîïóòôõöúùûüç'.indexOf(match)] || match;
+        }).replace(/-/g, '');
+    };
+    
+    origin = replaceSpecialChars(origin);
+    destination = replaceSpecialChars(destination);
     
     // Check if the date is a holiday
     const isHoliday = holidays.some(holiday => {
@@ -150,36 +155,40 @@ function getRoutes(origin, destination, date, time) {
         }
     }
     
-    // Filter routes based on criteria
+    // Filter and format routes based on criteria
     const filteredRoutes = routes.filter(route => {
-        // Check if the route includes both origin and destination
-        const includesOrigin = route.stops.includes(origin);
-        const includesDestination = route.stops.includes(destination);
-        
-        // Check if origin comes before destination in the route
-        const originIndex = route.stops.indexOf(origin);
-        const destinationIndex = route.stops.indexOf(destination);
+        const includesOrigin = route.stops.map(replaceSpecialChars).includes(origin);
+        const includesDestination = route.stops.map(replaceSpecialChars).includes(destination);
+        const originIndex = route.stops.map(replaceSpecialChars).indexOf(origin);
+        const destinationIndex = route.stops.map(replaceSpecialChars).indexOf(destination);
         const correctOrder = originIndex < destinationIndex;
-        
-        // Check if the route operates on the given day
         const operatesOnDay = route.weekday === dayOfWeek;
-        
-        // Check if the route's departure time is after the input time
-        const routeTime = convertTo24Hour(route.times[originIndex]);
+        const routeTime = route.times[originIndex];
         const isAfterInputTime = routeTime >= inputTime;
         
         return includesOrigin && includesDestination && correctOrder && operatesOnDay && isAfterInputTime;
+    }).map(route => {
+        const originIndex = route.stops.map(replaceSpecialChars).indexOf(origin);
+        const destinationIndex = route.stops.map(replaceSpecialChars).indexOf(destination);
+        const stopsObj = {};
+        for (let i = originIndex; i <= destinationIndex; i++) {
+            stopsObj[replaceSpecialChars(route.stops[i])] = route.times[i];
+        }
+        
+        return {
+            id: route.id,
+            route: 'C' + route.route,
+            origin: originalOrigin,
+            destination: originalDestination,
+            start: route.times[originIndex],
+            end: route.times[destinationIndex],
+            stops: JSON.stringify(stopsObj).replace(/"/g, "'"),
+            type_of_day: dayOfWeek,
+            information: route.information || 'None',
+            likes_percent: route.likes_percent || 0,
+            dislikes_percent: route.dislikes_percent || 0
+        };
     });
     
     return filteredRoutes;
-}
-
-// Helper function to convert time to 24-hour format
-function convertTo24Hour(time) {
-    const [hours, minutes] = time.split('h');
-    let hour = parseInt(hours);
-    if (time.toLowerCase().includes('pm') && hour !== 12) {
-        hour += 12;
-    }
-    return `${hour.toString().padStart(2, '0')}:${minutes}`;
 }

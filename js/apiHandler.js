@@ -69,6 +69,7 @@ function fetchAndPopulateStops() {
             } else {
                 console.error('No stops data available from offline.');
                 // Optionally, display a message to the user.
+                displayNoStopsMessage();
             }
         });
 }
@@ -226,6 +227,9 @@ function initializeAutocomplete(inputId, suggestionsContainer) {
 
             // Show suggestions if there are any visible
             suggestionsContainer.style.display = visibleCount > 0 ? 'block' : 'none';
+        }).catch(error => {
+            console.error('Error fetching filtered stops:', error);
+            // Optionally, handle the error or inform the user
         });
     });
 
@@ -290,8 +294,11 @@ function fetchStops(filter) {
 }
 
 function searchRoutes(origin, destination, day, time) {
+    console.log("Searching routes from", origin, "to", destination);
+
+    // Show loading spinner if applicable
     showLoadingSpinner();
-    loadAdBanner('home');
+
     // Hide the routes container and the no routes message
     document.getElementById('routesContainer').style.display = 'none';
     document.getElementById('noRoutesMessage').style.display = 'none';
@@ -302,9 +309,13 @@ function searchRoutes(origin, destination, day, time) {
     + '&day=' + encodeURIComponent(day) 
     + '&start=' + encodeURIComponent(time);
     fetchAndDisplayRoutes(url, parameters);
+
     // postToStats if not in localhost 
-    if (window.location.hostname != "localhost" && window.location.hostname != "127.0.0.1")
+    if (window.location.hostname !== "localhost" && window.location.hostname !== "127.0.0.1") {
         postToStats(parameters);
+    }
+
+    loadAdBanner('home');
 }
 
 function fetchAndDisplayRoutes(url, parameters) {
@@ -317,12 +328,24 @@ function fetchAndDisplayRoutes(url, parameters) {
     })
     .then(response => response.json())
     .then(data => {
-        displayRoutes(data, parameters.origin, parameters.destination);
+        console.log('Routes fetched:', data);
+        if (data && data.length > 0) {
+            console.log('Displaying routes...');
+            displayRoutes(data, parameters.origin, parameters.destination);
+        } else {
+            displayNoRoutesMessage(parameters.origin, parameters.destination);
+        }
         hideLoadingSpinner();
     })
     .catch(error => {
-        console.error('Error:', error);
-        displayNoRoutesMessage(parameters.origin, parameters.destination);
+        // Attempt to fetch routes from offlineHandler.js
+        const offlineRoutes = getRoutes(parameters.origin, parameters.destination, parameters.day, parameters.time);
+        if (offlineRoutes && offlineRoutes.length > 0) {
+            console.log('Displaying routes from offline data...');
+            displayRoutes(offlineRoutes, parameters.origin, parameters.destination);
+        } else {
+            displayNoRoutesMessage(parameters.origin, parameters.destination);
+        }
         hideLoadingSpinner();
     });
 }
@@ -366,6 +389,26 @@ function displayNoRoutesMessage(origin, destination) {
         </div>
     `;
     noRoutesDiv.style.display = 'block';
+}
+
+/**
+ * Function to display a user-friendly message when stops cannot be loaded.
+ */
+function displayNoStopsMessage() {
+    const stopsContainer = document.getElementById('stopsContainer'); // Change to appropriate container ID
+    stopsContainer.innerHTML = `
+        <div class="container mx-auto px-4 mt-4">
+            <div class="bg-red-100 shadow-md rounded-lg p-6">
+                <div class="flex flex-col items-center">
+                    <h3 class="text-xl font-semibold mb-2 text-center">
+                        Unable to load stops data.
+                    </h3>
+                    <p class="text-gray-600 text-center">Please check your internet connection or try again later.</p>
+                </div>
+            </div>
+        </div>
+    `;
+    stopsContainer.style.display = 'block';
 }
 
 // Function to add the current search to favorites
@@ -499,47 +542,16 @@ function displayRoutes(routes, originStop, destinationStop) {
         let foundDestination = false;
         let firstStop = null;
         let lastStop = null;
-        const originWords = route.origin.split(' ').filter(word => word.trim() !== '' && word !== ' ');
-        const destinationWords = route.destination.split(' ').filter(word => word.trim() !== '' && word !== ' ');
-    
-        for (const [stop, time] of Object.entries(stopsObj)) {
-    
-            const stopWords = stop.toLowerCase().replace(/[-áàâãäéèêëíìîïóòôõöúùûüç]/g, match => {
-                switch (match) {
-                    case 'á':
-                    case 'à':
-                    case 'â':
-                    case 'ã':
-                    case 'ä':
-                        return 'a';
-                    case 'é':
-                    case 'è':
-                    case 'ê':
-                    case 'ë':
-                        return 'e';
-                    case 'í':
-                    case 'ì':
-                    case 'î':
-                    case 'ï':
-                        return 'i';
-                    case 'ó':
-                    case 'ò':
-                    case 'ô':
-                    case 'õ':
-                    case 'ö':
-                        return 'o';
-                    case 'ú':
-                    case 'ù':
-                    case 'û':
-                    case 'ü':
-                        return 'u';
-                    case 'ç':
-                        return 'c';
-                    default:
-                        return match;
-                }
-            }).replace(/-/g, '').split(' ').filter(word => word.trim() !== '' && word !== ' ');
+        const replaceSpecialChars = (str) => {
+            return str.toLowerCase().replace(/[-áàâãäéèêëíìîïóòôõöúùûüç]/g, match => {
+                return 'aaaaaeeeeiiiioooooouuuuc'['áàâãäéèêëíìîïóòôõöúùûüç'.indexOf(match)] || match;
+            }).replace(/-/g, '');
+        };
 
+        const originWords = replaceSpecialChars(route.origin).split(' ').filter(word => word.trim() !== '' && word !== ' ');
+        const destinationWords = replaceSpecialChars(route.destination).split(' ').filter(word => word.trim() !== '' && word !== ' ');
+        for (const [stop, time] of Object.entries(stopsObj)) {
+            const stopWords = replaceSpecialChars(stop).split(' ').filter(word => word.trim() !== '' && word !== ' ');
 
             if (foundOrigin) {
                 stops[stop] = time;
