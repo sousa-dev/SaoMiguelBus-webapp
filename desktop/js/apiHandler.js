@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function fetchAndPopulateStops() {
-    const url = 'http://127.0.0.1:8000/api/v1/stops';
+    const url = 'https://api.saomiguelbus.com/api/v1/stops';
     fetch(url, {
         method: 'GET',
         headers: {
@@ -52,7 +52,7 @@ function searchRoutes(origin, destination, day, time) {
     document.getElementById('noRoutesMessage').style.display = 'none';
 
     const parameters = getUrlParameters(origin, destination, day, time);
-    const url = 'http://127.0.0.1:8000/api/v1/route?origin=' + parameters.origin 
+    const url = 'https://api.saomiguelbus.com/api/v1/route?origin=' + parameters.origin 
     + '&destination=' + parameters.destination 
     + '&day=' + parameters.day 
     + '&start=' + parameters.time
@@ -87,7 +87,7 @@ function fetchAndDisplayRoutes(url, parameters) {
 
 function postToStats(parameters) {
     console.log("Posting to stats...");
-    const url = `http://127.0.0.1:8000/api/v1/stat?request=get_route&origin=${parameters.origin}&destination=${parameters.destination}&time=${parameters.time}&language=${LANG}&platform=web&day=${parameters.day}`;
+    const url = `https://api.saomiguelbus.com/api/v1/stat?request=get_route&origin=${parameters.origin}&destination=${parameters.destination}&time=${parameters.time}&language=${LANG}&platform=web&day=${parameters.day}`;
     fetch(url, {
         method: 'POST',
         headers: {
@@ -230,7 +230,7 @@ function displayRoutes(routes, originStop) {
 }
 
 function loadAdBanner(on) {
-    const apiUrl = `http://127.0.0.1:8000/api/v1/ad?on=${on}&platform=web`;  // Replace with your API endpoint
+    const apiUrl = `https://api.saomiguelbus.com/api/v1/ad?on=${on}&platform=web`;  // Replace with your API endpoint
 
     fetch(apiUrl)
         .then(response => response.json())
@@ -264,7 +264,7 @@ function loadAdBanner(on) {
                 if (adImage) {
                     document.getElementById('ad-clickable').addEventListener('click', function(event) {
                         const adId = adImage.getAttribute("data-id");
-                        const URL = "http://127.0.0.1:8000/api/v1/ad/click?id="+ adId
+                        const URL = "https://api.saomiguelbus.com/api/v1/ad/click?id="+ adId
                         fetch(URL, {
                             method: 'POST',
                             headers: {
