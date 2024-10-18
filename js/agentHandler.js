@@ -160,7 +160,11 @@ function handleAnswer(questionId, answerValue) {
     const chatContent = document.getElementById('chatContent');
     const userResponse = document.createElement('p');
     userResponse.classList.add('text-right', 'text-blue-500', 'mt-2');
-    userResponse.textContent = answerValue === 'sim' ? t("optionYes") : t("optionNo");
+    if (answerValue === 'sim' || answerValue === 'nao') {
+        userResponse.textContent = answerValue === 'sim' ? t("optionYes") : t("optionNo");
+    } else if (answerValue === 'residente' || answerValue === 'turista') {
+        userResponse.textContent = answerValue === 'residente' ? t("optionResident") : t("optionTourist");
+    }
     chatContent.appendChild(userResponse);
 
     // Mostrar a próxima pergunta
@@ -184,21 +188,23 @@ function displayThankYou() {
     answerButtonsDiv.innerHTML = '';
     chatContent.scrollTop = chatContent.scrollHeight;
 
-    // Enviar as respostas para o backend via fetch (opcional)
-    fetch('https://api.saomiguelbus.com/ai/api/v1/feedback', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(userResponses)
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Feedback salvo com sucesso:', data);
-    })
-    .catch((error) => {
-        console.error('Erro ao salvar feedback:', error);
-    });
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        // Enviar as respostas para o backend via fetch (opcional)
+        fetch('https://api.saomiguelbus.com/ai/api/v1/feedback', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userResponses)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Feedback salvo com sucesso:', data);
+        })
+        .catch((error) => {
+            console.error('Erro ao salvar feedback:', error);
+        });
+    }
 }
 
 // Função para exibir mensagem quando não há mais perguntas
