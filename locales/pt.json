@@ -136,5 +136,7 @@
     "optionTourist": "Turista",
     "noMoreQuestions": "Obrigado por teres deixado o teu feedback! De momento, não temos mais perguntas para ti!",
     "alertModalTitle": "Alertas",
-    "alertModalEnd": "Estes avisos foram publicados pelas companhias de autocarros e/ou entidades competentes."
+    "alertModalEnd": "Estes avisos foram publicados pelas companhias de autocarros e/ou entidades competentes.",
+    "showMore": "Mostrar Mais",
+    "showLess": "Mostrar Menos"
 }

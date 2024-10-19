@@ -136,5 +136,7 @@
     "optionTourist": "Turista",
     "noMoreQuestions": "¡Gracias por tu respuesta! En este momento, no tenemos más preguntas para ti.",
     "alertModalTitle": "Alertas",
-    "alertModalEnd": "Estos avisos fueron publicados por las compañías de autobuses y/o entidades competentes."
+    "alertModalEnd": "Estos avisos fueron publicados por las compañías de autobuses y/o entidades competentes.",
+    "showMore": "Mostrar Más",
+    "showLess": "Mostrar Menos"
 }

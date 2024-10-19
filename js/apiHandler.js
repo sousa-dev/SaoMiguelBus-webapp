@@ -328,9 +328,7 @@ function fetchAndDisplayRoutes(url, parameters) {
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Routes fetched:', data);
         if (data && data.length > 0) {
-            console.log('Displaying routes...');
             displayRoutes(data, parameters.origin, parameters.destination);
         } else {
             displayNoRoutesMessage(parameters.origin, parameters.destination);
@@ -341,7 +339,6 @@ function fetchAndDisplayRoutes(url, parameters) {
         // Attempt to fetch routes from offlineHandler.js
         const offlineRoutes = getRoutes(parameters.origin, parameters.destination, parameters.day, parameters.time);
         if (offlineRoutes && offlineRoutes.length > 0) {
-            console.log('Displaying routes from offline data...');
             displayRoutes(offlineRoutes, parameters.origin, parameters.destination);
         } else {
             displayNoRoutesMessage(parameters.origin, parameters.destination);

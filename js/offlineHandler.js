@@ -141,7 +141,6 @@ async function loadAPIData() {
         // If fetch successful, update apiData and cache
         apiData = newData;
         storeAPIDataInCache(newData);
-        console.log('API data fetched and stored successfully');
     } else {
         // If fetch fails, try to load from cache
         const cachedData = getAPIDataFromCache();
