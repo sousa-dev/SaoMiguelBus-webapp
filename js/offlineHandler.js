@@ -3,6 +3,7 @@ let apiData = null;
 let stops = [];
 let routes = [];
 let holidays = [];
+let infos = [];
 
 // Function to fetch API data
 async function fetchAPIData() {
@@ -49,6 +50,88 @@ function getAPIDataFromCache() {
     return null;
 }
 
+function updateAlertBadge() {
+    const alertMessages = document.getElementById('alertMessages');
+    const alertBadge = document.getElementById('alertBadge');
+    if (infos.length > 0) {
+        alertBadge.textContent = infos.length;
+        alertMessages.classList.remove('hidden');
+    } else {
+        alertMessages.classList.add('hidden');
+    }
+
+    // Update alert content
+    const alertContent = document.getElementById('alertContent');
+    alertContent.innerHTML = '';
+    infos.forEach(info => {
+        let title;
+        let message;
+        
+        switch (currentLanguage) {
+            case 'pt':
+                title = info.titlePT;
+                message = info.messagePT;
+                break;
+            case 'es':
+                title = info.titleES;
+                message = info.messageES;
+                break;
+            case 'fr':
+                title = info.titleFR;
+                message = info.messageFR;
+                break;
+            case 'de':
+                title = info.titleDE;
+                message = info.messageDE;
+                break;
+            default:
+                title = info.titleEN;
+                message = info.messageEN;
+                break;
+
+        }
+
+        const source = info.source;
+        const company = info.company;
+        const alertMessage = document.createElement('div');
+        const charactersLimit = 250;
+        const truncatedMessage = message.length > charactersLimit ? message.slice(0, charactersLimit) + '...' : message;
+        alertMessage.innerHTML = `
+            <strong>${title}</strong><br>
+            <span class="truncated-message text-xs">${truncatedMessage}</span>
+            ${message.length > charactersLimit ? `<button class="show-more-btn text-blue-500 text-xs">${t('showMore')}</button>` : ''}<br>
+            <div class="full-message text-xs" style="display: none;">
+                <span>${message}</span>
+                <button class="show-less-btn text-blue-500">${t('showLess')}</button>
+            </div>
+            <div style="display: flex; justify-content: flex-end; align-items: center;">
+                <a href="${source}" target="_blank" rel="noopener noreferrer" class="flex text-gray-500">
+                    <small>${company}</small>
+                    <i class="fas fa-external-link-alt ml-1"></i>
+                </a>
+            </div>
+            <hr>
+        `;
+        if (message.length > charactersLimit) {
+            const showMoreBtn = alertMessage.querySelector('.show-more-btn');
+            const showLessBtn = alertMessage.querySelector('.show-less-btn');
+            const truncatedMsg = alertMessage.querySelector('.truncated-message');
+            const fullMsg = alertMessage.querySelector('.full-message');
+            showMoreBtn.addEventListener('click', () => {
+                truncatedMsg.style.display = 'none';
+                fullMsg.style.display = 'block';
+                showMoreBtn.style.display = 'none';
+            });
+            showLessBtn.addEventListener('click', () => {
+                truncatedMsg.style.display = 'block';
+                fullMsg.style.display = 'none';
+                showMoreBtn.style.display = 'block';
+            });
+        }
+        alertContent.appendChild(alertMessage);
+    });
+}
+
 // Function to load API data
 async function loadAPIData() {
     // Try to fetch new data
@@ -72,7 +155,11 @@ async function loadAPIData() {
     first_element = apiData[0];
     stops = first_element.stops;
     holidays = first_element.holidays;
+    infos = first_element.infos;
     routes = apiData.slice(1);
+
+    // Update alert badge
+    updateAlertBadge();
 }
 
 // Call the function when the script loads

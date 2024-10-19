@@ -134,5 +134,7 @@
     "optionNo": "Nein",
     "optionResident": "Einwohner",
     "optionTourist": "Tourist",
-    "noMoreQuestions": "Danke für Ihre Antwort! An diesem Punkt haben wir keine weiteren Fragen für Sie."
+    "noMoreQuestions": "Danke für Ihre Antwort! An diesem Punkt haben wir keine weiteren Fragen für Sie.",
+    "alertModalTitle": "Alertes",
+    "alertModalEnd": "Diese Warnungen wurden von Busunternehmen und/oder zuständigen Einrichtungen veröffentlicht."
 }

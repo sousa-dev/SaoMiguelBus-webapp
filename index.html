@@ -300,6 +300,36 @@
         <i class="fas fa-chevron-up"></i>
     </button>
 
+    <!-- Alert Messages -->
+    <div id="alertMessages" class="fixed top-20 right-4 z-50 hidden">
+        <!-- Alert Icon Button -->
+        <button id="alertButton" class="fixed top-20 right-4 z-50 bg-red-500 text-white rounded-full px-4 shadow-lg focus:outline-none" onclick="toggleAlertModal()">
+            <i class="fas fa-bell text-xs"></i>
+            <span id="alertBadge" class="absolute -top-1 -right-1 bg-yellow-500 text-[10px] text-white rounded-full w-4 h-4 flex items-center justify-center">0</span>
+        </button>
+
+        <!-- Alert Messages Modal -->
+        <div id="alertModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden">
+            <div class="bg-white rounded-lg p-6 w-80 relative">
+                <button onclick="toggleAlertModal()" id="closeModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" data-umami-event="close-language-modal">
+                    <i class="fas fa-times text-xl text-right"></i>
+                </button>
+                <h3 class="text-xl font-semibold text-green-600 mb-3" data-i18n="alertModalTitle">Alertas</h3>
+                <div id="alertContent" class="mb-4 overflow-y-auto h-60">
+                    <!-- Alert messages will be inserted here -->
+                </div>
+                <p class="text-sm text-gray-500" data-i18n="alertModalEnd">Estes avisos foram publicados pelas companhias de autocarros e/ou entidades competentes.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleAlertModal() {
+            const alertModal = document.getElementById('alertModal');
+            alertModal.classList.toggle('hidden');
+        }
+    </script>
+
     <!-- Robot Feedback Button -->
     <div id="feedbackRobotButton" class="fixed bottom-20 left-4 z-50" data-offline="false">
         <div class="relative">

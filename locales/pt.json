@@ -134,5 +134,7 @@
     "optionNo": "Não",
     "optionResident": "Residente",
     "optionTourist": "Turista",
-    "noMoreQuestions": "Obrigado por teres deixado o teu feedback! De momento, não temos mais perguntas para ti!"
+    "noMoreQuestions": "Obrigado por teres deixado o teu feedback! De momento, não temos mais perguntas para ti!",
+    "alertModalTitle": "Alertas",
+    "alertModalEnd": "Estes avisos foram publicados pelas companhias de autocarros e/ou entidades competentes."
 }
