@@ -134,5 +134,7 @@
     "optionNo": "Non",
     "optionResident": "Habitant",
     "optionTourist": "Touriste",
-    "noMoreQuestions": "Merci pour votre réponse. A ce stade, nous n'avons plus de questions pour vous!"
+    "noMoreQuestions": "Merci pour votre réponse. A ce stade, nous n'avons plus de questions pour vous!",
+    "alertModalTitle": "Alertes",
+    "alertModalEnd": "Ces alertes ont été publiés par les compagnies de bus et/ou entités compétentes."
 }
