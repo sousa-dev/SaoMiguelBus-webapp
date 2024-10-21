@@ -99,13 +99,13 @@ function updateAlertBadge() {
         alertMessage.innerHTML = `
             <strong>${title}</strong><br>
             <span class="truncated-message text-xs">${truncatedMessage}</span>
-            ${message.length > charactersLimit ? `<button class="show-more-btn text-blue-500 text-xs">${t('showMore')}</button>` : ''}<br>
+            ${message.length > charactersLimit ? `<button class="show-more-btn text-blue-500 text-xs" data-umami-event="show-more-alert">${t('showMore')}</button>` : ''}<br>
             <div class="full-message text-xs" style="display: none;">
                 <span>${message}</span>
-                <button class="show-less-btn text-blue-500">${t('showLess')}</button>
+                <button class="show-less-btn text-blue-500" data-umami-event="show-less-alert">${t('showLess')}</button>
             </div>
             <div style="display: flex; justify-content: flex-end; align-items: center;">
-                <a href="${source}" target="_blank" rel="noopener noreferrer" class="flex text-gray-500">
+                <a href="${source}" target="_blank" rel="noopener noreferrer" class="flex text-gray-500" data-umami-event="open-alert-source">
                     <small>${company}</small>
                     <i class="fas fa-external-link-alt ml-1"></i>
                 </a>
