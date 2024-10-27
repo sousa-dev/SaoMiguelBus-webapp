@@ -138,5 +138,6 @@
     "alertModalTitle": "Alertas",
     "alertModalEnd": "Estes avisos foram publicados pelas companhias de autocarros e/ou entidades competentes.",
     "showMore": "Mostrar Mais",
-    "showLess": "Mostrar Menos"
+    "showLess": "Mostrar Menos",
+    "desktopBannerText": "Este Website está desenvolvido para ser usado em dispositivos móveis. Pode usá-lo no computador, mas a experiência será melhor no telemóvel. Aceda a saomiguelbus.com no navegador do seu smartphone!"
 }

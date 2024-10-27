@@ -880,7 +880,7 @@ function loadAdBanner(on) {
                     <div class="container mx-auto" id="tm-section-2" data-umami-event="ad-banner-display">
                         <span class="absolute top-0 left-0 bg-green-500 text-white font-bold text-[10px] px-1 py-0.5 rounded-br-lg z-10">AD</span>
                         <div class="flex justify-center">
-                            <div class="w-full sm:w-2/3 md:w-1/2 lg:w-1/2">
+                            <div class="w-full ">
                                 <div class="ad-banner text-center p-1 relative">
                                     <a href="${hrefValue}" target="_blank" id='ad-clickable' data-umami-event="ad-click">
                                         <img src="${ad.media}" alt="${ad.entity}" class="w-full h-auto rounded-lg" id="ad-image" data-id="${ad.id}" data-umami-event="ad-image-view">
