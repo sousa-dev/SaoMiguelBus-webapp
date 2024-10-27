@@ -1,12 +1,4 @@
-# robots.txt for São Miguel Bus
-
-# Allow all search engines to crawl the entire site
 User-agent: *
 Disallow:
 
-# Optional: Disallow specific folders or files
-# Uncomment and modify the lines below if needed
-# Disallow: /admin/
-# Disallow: /private/
-# Disallow: /static/js/
-# Disallow: /static/css/
+Sitemap: https://www.saomiguelbus.com/sitemap.xml
