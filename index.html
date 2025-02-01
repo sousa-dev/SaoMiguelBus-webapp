@@ -202,7 +202,6 @@
             bottom: 0;
             background-color: rgba(0, 0, 0, 0.5);
             z-index: 1000;
-
         }
 
         #languageModal .bg-white {
@@ -273,20 +272,6 @@
             margin: 0px !important;
         }
 
-        #chatWindow {
-            /* Ensures the chat window doesn't exceed the viewport height */
-            max-height: 80vh;
-        }
-
-        /* Optional: Smooth transition for showing/hiding elements */
-        #chatWindow.transition {
-            transition: all 0.3s ease-in-out;
-        }
-
-        #feedbackRobotButton.transition {
-            transition: all 0.3s ease-in-out;
-        }
-
         /* Desktop styles */
         @media (min-width: 1025px) {
             body {
@@ -308,15 +293,6 @@
             #scrollToTopBtn {
                 bottom: 20px;
                 right: calc(50% - 400px - 60px); /* Adjust based on page max-width */
-            }
-            #feedbackRobotButton {
-                bottom: 20px;
-                left: calc(50% - 400px - 60px); /* Adjust based on page max-width */
-            }
-            #chatWindow {
-                bottom: 80px;
-                left: calc(50% - 400px - 60px); /* Adjust based on page max-width */
-                width: 350px;
             }
             #alertButton {
                 top: 20px;
@@ -385,39 +361,21 @@
         }
     </script>
 
-    <!-- Robot Feedback Button -->
-    <div id="feedbackRobotButton" class="fixed bottom-20 left-4 z-50" data-offline="false">
-        <div class="relative">
-            <!-- Robot Icon Button -->
-            <button id="openChatBtn" class="text-green-500 p-2 rounded-full shadow-lg focus:outline-none" data-umami-event="open-chat-window">
-                <i class="fas fa-robot text-2xl"></i>
-            </button>
-            <!-- Dismiss Button -->
-            <button id="closeRobotBtn" class="absolute top-0 right-0 text-black p-1 rounded-full text-xs z-60" onclick="dismissRobotButton()" data-umami-event="close-chat-window">
-                &times;
-            </button>
-        </div>
-    </div>
-
-    <!-- Chat Window -->
-    <div id="chatWindow" class="fixed bottom-28 left-4 right-4 max-w-md bg-white border border-gray-300 rounded-lg shadow-lg p-4 hidden z-50">
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-lg font-bold" data-i18n="chatWindowTitle">Converse Comigo!</h2>
-            <button id="closeChatBtn" class="text-gray-500 hover:text-gray-700 text-xl" data-umami-event="close-chat-window">&times;</button>
-        </div>
-        <div id="chatContent" class="mb-4 overflow-y-auto h-40">
-            <!-- Perguntas e respostas aparecerão aqui -->
-        </div>
-        <!-- <div class="flex">
-            <input type="text" id="chatInput" class="flex-grow border rounded-l-lg p-2 focus:outline-none" placeholder="Escolha uma opção acima..." data-i18n-placeholder="chatInputPlaceholder" disabled>
-            <button id="sendChatBtn" class="bg-green-500 text-white rounded-r-lg p-2 hover:bg-green-600 hidden" data-umami-event="send-chat-message" disabled>
-                Enviar
-            </button>
-        </div> -->
-        <div id="answerButtonsContainer" class="flex space-x-2 justify-center">
-            <!-- Botões de resposta aparecerão aqui -->
-        </div>
-    </div>
+    <script src="https://chat.yourgenlab.com/v1/embed.js"></script>
+    <script>
+        initAIChatWidget({
+                "agentId": "42",
+                "themeVariant": "forest",
+                "theme": "light",
+                "fontFamilt": "Poppins, sans-serif",
+                "introMessage": "Olá, posso planear o seu dia em São Miguel! Como posso ajudar?",
+                "height": "70vh",
+                "width": "80vw",
+                "position": "bottom-right",
+                "yOffset": "7%",
+                "xOffset": "2%"
+            });
+    </script>
 
     <script>
         // Scroll to Top functionality
@@ -1391,7 +1349,6 @@
     <script src="js/directionsApiHandler.js" defer></script>
     <script src="js/favoriteHandler.js" defer></script>
     <script src="js/languageModal.js" defer></script>
-    <script src="js/agentHandler.js" defer></script>
 
     <!-- Add this script within your existing JavaScript block -->
     <script>
