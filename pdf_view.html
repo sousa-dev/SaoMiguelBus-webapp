@@ -41,7 +41,7 @@
         }
         .back-button {
             position: fixed;
-            top: 10px;
+            top: 150px; /* Adjusted to be below the warning banner */
             left: 10px;
             z-index: 1001;
             background: #4CAF50;
@@ -65,15 +65,15 @@
             
             switch(company) {
                 case 'avm':
-                    imagePath = '/static/old/smiAVM/smiAVM.jpeg';
+                    imagePath = '/static/old/smiAVM/smiAVM.jpg';
                     companyName = 'Autoviação Micaelense';
                     break;
                 case 'varela':
-                    imagePath = '/static/old/smiVarela/smiVarela.jpeg';
+                    imagePath = '/static/old/smiVarela/smiVarela.jpg';
                     companyName = 'Varelas';
                     break;
                 case 'crp':
-                    imagePath = '/static/old/smiCRP/smiCRP.jpeg';
+                    imagePath = '/static/old/smiCRP/smiCRP.jpg';
                     companyName = 'CRP';
                     break;
                 default:
@@ -89,6 +89,9 @@
 <body>
     <div class="warning-banner">
         ⚠️ Estes horários são os horários fornecidos pelas companhias e podem estar bastante desatualizados. Por favor, confirme estes horários antes de apanhar o seu autocarro.
+    </div>
+    <div class="back-button-container">
+        <button onclick="window.location.href='/'" class="back-button">← Voltar</button>
     </div>
     <div class="image-container">
         <img id="image-viewer" class="image-viewer" alt="Horários">
