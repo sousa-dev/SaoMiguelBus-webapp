@@ -361,7 +361,7 @@
         }
     </script>
 
-    <script src="https://chat.yourgenlab.com/v1/embed.js?agent=42"></script>
+    <!-- <script src="https://chat.yourgenlab.com/v1/embed.js?agent=42"></script>
     <script>
         initAIChatWidget({
                 "agentId": "42",
@@ -377,7 +377,7 @@
                 "xOffset": "2%",
                 "webhookURL": "https://chat.yourgenlab.com/ai/api/webhook/",
             });
-    </script>
+    </script> -->
 
     <script>
         // Scroll to Top functionality
@@ -467,22 +467,163 @@
         <div class="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-green-500"></div>
     </div>
 
+    <!-- Pricing Selection Modal -->
+    <div id="pricingModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg p-6 w-96 relative max-w-md mx-auto">
+            <button id="closePricingModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2">
+                <i class="fas fa-times text-xl text-right"></i>
+            </button>
+            
+            <div class="text-center mb-6">
+                <i class="fas fa-crown text-4xl text-yellow-500 mb-4"></i>
+                <h3 class="text-xl font-semibold text-green-600 mb-2" data-i18n="removeAdsTitle">Remove Ads</h3>
+                <p class="text-gray-700 mb-4" data-i18n="pricingDescription">
+                    Choose your plan to remove all advertisements and enjoy an ad-free experience.
+                </p>
+                <p class="text-sm text-green-600 font-medium" data-i18n="supportDeveloper">
+                    Bonus: Support an Azorean Solo Developer. (Yes, this app is not developed by any company, it is just one guy)
+                </p>
+            </div>
+            
+            <!-- Pricing Options -->
+            <div class="space-y-3 mb-6">
+                <div id="pricing-option-weekly" class="pricing-option border-2 border-gray-200 bg-white rounded-lg p-4 cursor-pointer hover:border-green-300 transition-colors" onclick="selectPricingOption('weekly')">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="w-4 h-4 border-2 border-gray-300 rounded-full mr-3"></div>
+                            <div>
+                                <div class="font-semibold text-lg">€0.50<span class="text-sm text-gray-500">/week</span></div>
+                                <div class="text-sm text-gray-600" data-i18n="weeklyDescription">Perfect for tourists</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="pricing-option-monthly" class="pricing-option border-2 border-gray-200 bg-white rounded-lg p-4 cursor-pointer hover:border-green-300 transition-colors" onclick="selectPricingOption('monthly')">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="w-4 h-4 border-2 border-gray-300 rounded-full mr-3"></div>
+                            <div>
+                                <div class="font-semibold text-lg">€1.99<span class="text-sm text-gray-500">/month</span></div>
+                                <div class="text-sm text-gray-600" data-i18n="monthlyDescription">Most popular</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="pricing-option-yearly" class="pricing-option border-2 border-gray-200 bg-white rounded-lg p-4 cursor-pointer hover:border-green-300 transition-colors" onclick="selectPricingOption('yearly')">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="w-4 h-4 border-2 border-gray-300 rounded-full mr-3"></div>
+                            <div>
+                                <div class="font-semibold text-lg">€19.99<span class="text-sm text-gray-500">/year</span></div>
+                                <div class="text-sm text-gray-600" data-i18n="yearlyDescription">Save 17%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Subscribe Button -->
+            <button onclick="subscribeToSelectedPlan()" 
+                    class="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition duration-300 mb-4"
+                    data-umami-event="subscribe-premium">
+                <i class="fas fa-crown mr-2"></i>
+                <span data-i18n="removeAdsButton">Remove Ads</span>
+            </button>
+            
+            <!-- Already Subscribed Link -->
+            <div class="text-center">
+                <button onclick="showEmailVerificationModal()" 
+                        class="text-blue-500 hover:text-blue-700 text-sm underline"
+                        data-umami-event="already-subscribed-link">
+                    <span data-i18n="alreadySubscribed">I already have a subscription enabled</span>
+                </button>
+            </div>
+            
+            <p class="text-xs text-gray-500 text-center mt-4" data-i18n="premiumTerms">
+                By subscribing, you agree to our Terms of Service and Privacy Policy.
+            </p>
+        </div>
+    </div>
+
+    <!-- Email Verification Modal -->
+    <div id="emailVerificationModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg p-6 w-80 relative max-w-md mx-auto">
+            <button id="closeEmailVerificationModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2">
+                <i class="fas fa-times text-xl text-right"></i>
+            </button>
+            
+            <div class="text-center mb-6">
+                <i class="fas fa-envelope text-4xl text-blue-500 mb-4"></i>
+                <h3 class="text-xl font-semibold text-green-600 mb-2" data-i18n="verifySubscriptionTitle">Verify Subscription</h3>
+                <p class="text-gray-700 mb-4" data-i18n="verifySubscriptionDescription">
+                    Enter the email address associated with your subscription to activate premium features.
+                </p>
+            </div>
+            
+            <div class="space-y-4">
+                <div>
+                    <input type="email" id="verificationEmail" 
+                           placeholder="Enter your subscription email" 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                           data-i18n-placeholder="emailPlaceholder"
+                           oninput="clearVerificationError()">
+                </div>
+                
+                <!-- Error Message -->
+                <div id="verificationError" class="hidden bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded text-sm"></div>
+                
+                <button onclick="verifyExistingSubscription()" 
+                        class="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+                        data-umami-event="verify-subscription">
+                    <span data-i18n="verifyButton">Verify Subscription</span>
+                </button>
+                
+                <!-- Subscription Delay Warning -->
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mt-4">
+                    <div class="flex items-start">
+                        <i class="fas fa-clock text-yellow-600 mt-0.5 mr-2"></i>
+                        <p class="text-sm text-yellow-800" data-i18n="subscriptionDelayWarning">
+                            Subscriptions may take up to 24 hours to take effect. If you just subscribed, please try again later.
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <p class="text-sm text-gray-600 mb-2" data-i18n="verificationHelp">Think this is a mistake?</p>
+                    <a href="mailto:info@saomiguelbus.com" 
+                       class="text-blue-500 hover:text-blue-700 text-sm underline"
+                       data-umami-event="contact-support">
+                        <span data-i18n="contactSupport">Contact us at info@saomiguelbus.com</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Pesquisar Page -->
     <section id="home" class="page active bg-white flex flex-col items-center p-2 h-full overflow-y-auto">       
         <div class="w-full max-w-md mx-auto bg-white rounded-3xl shadow-lg overflow-hidden relative">
-            <span class="absolute top-0 left-0 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-tl-lg rounded-br-lg">AD</span>          
-            <a href="https://ad.saomiguelbus.com" target="_blank" class="block" data-umami-event="ad-banner-click">
-                <div class="bg-green-600 text-white p-2 text-center">
-                    <p class="font-bold" data-i18n="adBannerTitle">ANUNCIE AQUI</p>
-                    <p class="text-sm"> 
-                        <span data-i18n="adBannerSubtitleSeen">Visto</span> 
-                        <span id="viewCount" class="font-semibold text-md animate-pulse">-</span> 
-                        <span data-i18n="adBannerSubtitleTimes">vezes nos últimos</span> 
-                        <span id="dayCount" class="font-semibold text-md">-</span> 
-                        <span data-i18n="adBannerSubtitleDays">dias</span>
-                    </p>
-                </div>
-            </a>
+            <!-- Ad Banner for Non-Premium Users -->
+            <div id="homeAdBanner" class="ad-banner">
+                <span class="absolute top-0 left-0 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-tl-lg rounded-br-lg">AD</span>          
+                <a href="#" class="block" onclick="showPricingModal(); return false;" data-umami-event="remove-ads-banner-click">
+                    <div class="bg-gradient-to-r from-yellow-400 to-orange-500 text-white p-3 text-center">
+                        <div class="flex items-center justify-center mb-1">
+                            <i class="fas fa-crown text-xl mr-2"></i>
+                            <p class="font-bold text-lg" data-i18n="removeAdsTitle">REMOVE ADS</p>
+                        </div>
+                        <p class="text-sm opacity-90">
+                            <span data-i18n="removeAdsBannerSubtitle">Enjoy an ad-free experience from €0.50/week</span>
+                        </p>
+                        <div class="mt-2 text-xs opacity-80">
+                            <i class="fas fa-hand-pointer mr-1"></i>
+                            <span data-i18n="clickToRemoveAds">Click to remove ads</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
 
             <!-- Search Form -->
             <form action="index.html" method="get" class="p-2" role="search" aria-label="Formulário de Pesquisa de Autocarros">
@@ -618,13 +759,25 @@
     <!-- Routes Page -->
     <section id="routes" class="page hidden bg-white flex flex-col items-center p-2 h-full overflow-y-auto">
         <div class="w-full max-w-md mx-auto bg-white rounded-3xl shadow-lg overflow-hidden relative">
-            <span class="absolute top-0 left-0 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-tl-lg rounded-br-lg">AD</span>          
-            <a href="https://ad.saomiguelbus.com" target="_blank" class="block" data-umami-event="ad-banner-click-routes">
-                <div class="bg-green-600 text-white p-4 text-center">
-                    <p class="font-bold" data-i18n="adBannerTitle">ANUNCIE AQUI</p>
-                    <p class="text-sm" data-i18n="adBannerSubtitle">Saiba mais em <span class="underline">ad.saomiguelbus.com</span></p>
-                </div>
-            </a>
+            <!-- Ad Banner for Non-Premium Users -->
+            <div id="routesAdBanner" class="ad-banner">
+                <span class="absolute top-0 left-0 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-tl-lg rounded-br-lg">AD</span>          
+                <a href="#" class="block" onclick="showPricingModal(); return false;" data-umami-event="remove-ads-banner-click-routes">
+                    <div class="bg-gradient-to-r from-yellow-400 to-orange-500 text-white p-3 text-center">
+                        <div class="flex items-center justify-center mb-1">
+                            <i class="fas fa-crown text-xl mr-2"></i>
+                            <p class="font-bold text-lg" data-i18n="removeAdsTitle">REMOVE ADS</p>
+                        </div>
+                        <p class="text-sm opacity-90">
+                            <span data-i18n="removeAdsBannerSubtitle">Enjoy an ad-free experience from €0.50/week</span>
+                        </p>
+                        <div class="mt-2 text-xs opacity-80">
+                            <i class="fas fa-hand-pointer mr-1"></i>
+                            <span data-i18n="clickToRemoveAds">Click to remove ads</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
 
             <!-- Search Form -->
             <form action="index.html" method="get" class="p-2" role="search" aria-label="Formulário de Pesquisa de Autocarros">
@@ -749,151 +902,157 @@
     </div>
     </section>
 
-    <!-- Advert Page -->
-    <section id="advert" class="page hidden bg-white flex flex-col items-center p-4" data-umami-event="view-advert-page">
-        <h2 class="text-2xl text-center font-bold mb-4" data-i18n="advertiseTitle">Anuncie em São Miguel Bus</h2>
-    
-        <a href="https://ad.saomiguelbus.com" target="_blank" class="block" data-umami-event="view-advertising-opportunity">
-            <div class="bg-green-100 rounded-lg p-6 shadow-md max-w-md mx-auto mb-6 hover:bg-green-200 transition-colors duration-300 cursor-pointer">
-                <h3 class="text-xl font-semibold mb-3 text-center" data-i18n="advertisingOpportunity">Oportunidade de Publicidade</h3>
-                <p class="text-gray-700 text-center" data-i18n="advertisingOpportunityDescription">
-                    Pode anunciar o seu negócio para residentes e turistas da ilha de São Miguel.
-                    <br><br>
+    <!-- Advert Page - Now Premium Subscription Page -->
+    <section id="advert" class="page hidden bg-white flex flex-col items-center p-4" data-umami-event="view-premium-page">
+        <!-- Content for users WITHOUT premium (ads active) -->
+        <div id="premiumSubscriptionContent" class="w-full max-w-md mx-auto">
+            <div class="text-center mb-6">
+                <i class="fas fa-crown text-5xl text-yellow-500 mb-4"></i>
+                <h2 class="text-2xl font-bold mb-2" data-i18n="removeAdsTitle">Remove Ads</h2>
+                <p class="text-gray-700 mb-4" data-i18n="premiumPageDescription">
+                    Enjoy an ad-free experience and support the development of São Miguel Bus.
                 </p>
-                <div class="text-green-600 text-center block mt-4">
-                    <i class="fas fa-external-link-alt"></i> ad.saomiguelbus.com
-                </div>
-            </div>
-        </a>
-
-        <div class="flex justify-center w-full">
-            <button id="scrollToPricing" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mb-6 transition duration-300 ease-in-out" data-umami-event="scroll-to-pricing" onclick="document.getElementById('pricingSection').scrollIntoView({behavior: 'smooth'})">
-                <span data-i18n="viewPricingButton">Ver Preços</span>
-                <i class="fas fa-chevron-down ml-2"></i>
-            </button>
-        </div>
-    
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="bg-white rounded-lg p-4 shadow-md flex flex-col items-center" data-umami-event="view-exact-targeting">
-                <i class="fas fa-cubes text-green-500 text-3xl mb-2"></i>
-                <h3 class="text-xl font-semibold text-center" data-i18n="exactTargeting">Segmentação Precisa</h3>
-                <p class="text-gray-700 text-center mt-2" data-i18n="exactTargetingDescription">
-                    Exiba seu anúncio para utilizadores que estão na ilha de São Miguel, perto do seu negócio.
+                <p class="text-sm text-green-600 font-medium" data-i18n="supportDeveloper">
+                    Bonus: Support an Azorean Solo Developer. (Yes, this app is not developed by any company, it is just one guy)
                 </p>
             </div>
-            <div class="bg-white rounded-lg p-4 shadow-md flex flex-col items-center" data-umami-event="view-directed-interactions">
-                <i class="fas fa-chart-line text-green-500 text-3xl mb-2"></i>
-                <h3 class="text-xl font-semibold text-center" data-i18n="directedInteractions">Interações Direcionadas</h3>
-                <p class="text-gray-700 text-center mt-2" data-i18n="directedInteractionsDescription">
-                    Redirecione utilizadores para o seu site, rede social ou para um mapa com direções para seu estabelecimento.
-                </p>
-            </div>
-            <div class="bg-white rounded-lg p-4 shadow-md flex flex-col items-center" data-umami-event="view-flexible-pricing">
-                <i class="fas fa-money-bill-wave text-green-500 text-3xl mb-2"></i>
-                <h3 class="text-xl font-semibold text-center" data-i18n="flexiblePricing">Preço Flexível</h3>
-                <p class="text-gray-700 text-center mt-2" data-i18n="flexiblePricingDescription">
-                    Oferecemos opções de preço baseadas em como deseja promover os seus serviços.
-                </p>
-            </div>
-            <div class="bg-white rounded-lg p-4 shadow-md flex flex-col items-center" data-umami-event="view-convenient-payment">
-                <i class="fas fa-credit-card text-green-500 text-3xl mb-2"></i>
-                <h3 class="text-xl font-semibold text-center" data-i18n="convenientPayment">Pagamento Conveniente</h3>
-                <p class="text-gray-700 text-center mt-2" data-i18n="convenientPaymentDescription">
-                    Aceita-se diversos métodos de pagamento, com recibo para fins contabilísticos.
-                </p>
-            </div>
-        </div>
-
-        <div id="pricingSection" class="relative grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">            
-            <!-- Text Ad Plan -->
-            <div class="bg-white rounded-lg shadow-md overflow-hidden md:flex" data-umami-event="view-text-ad-plan">
-                <div class="bg-green-500 text-white p-6 md:w-1/3 md:flex md:flex-col md:justify-center">
-                    <h3 class="text-2xl font-bold mb-2" data-i18n="textAd">Texto</h3>
-                    <div class="text-3xl font-bold">
-                        <span class="line-through text-green-200">€10</span>
-                        <span class="text-4xl">€5</span>
-                        <span class="text-xl">/Slot</span>
-                    </div>
-                </div>
-                <div class="p-6 md:w-2/3">
-                    <div class="relative mb-4 group">
-                        <img src="static/img/text-ad.png" alt="Anúncio em Texto São Miguel Bus" class="w-full h-auto border-2 border-green-500 rounded-lg p-1">
-                        <i class="fas fa-info-circle absolute top-2 right-2 text-green-500 cursor-pointer" title="Informação adicional disponível" data-umami-event="view-text-ad-info"></i>
-                        <div class="hidden group-hover:block absolute top-0 left-0 bg-white bg-opacity-90 border-2 border-green-500 rounded-lg p-4 shadow-lg">
-                            <p class="text-sm" data-i18n="textAdInfo">Deverá preencher o conteúdo do seu anúncio no formulário de reserva.</p>
+            
+            <!-- Pricing Options -->
+            <div class="space-y-3 mb-6">
+                <div id="premium-page-weekly" class="pricing-option border-2 border-gray-200 bg-white rounded-lg p-4 cursor-pointer hover:border-green-300 transition-colors" onclick="selectPricingOptionPage('weekly')">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="w-4 h-4 border-2 border-gray-300 rounded-full mr-3"></div>
+                            <div>
+                                <div class="font-semibold text-lg">€0.50<span class="text-sm text-gray-500">/week</span></div>
+                                <div class="text-sm text-gray-600" data-i18n="weeklyDescription">Perfect for tourists</div>
+                            </div>
                         </div>
                     </div>
-                    <ul class="space-y-2 mb-6">
-                        <li><i class="fas fa-times text-red-500 mr-2"></i><span data-i18n="adInImage">Anúncio em <b>imagem</b></span></li>
-                        <li><i class="fas fa-check text-green-500 mr-2"></i><span data-i18n="adInText">Anúncio em <b>texto</b></span></li>
-                        <li><i class="fas fa-check text-green-500 mr-2"></i><span data-i18n="duration"><b>30</b> dias de duração</span></li>
-                        <li><i class="fas fa-check text-green-500 mr-2"></i><span data-i18n="totalSlots"><b>10</b> Slots totais</span></li>
-                        <li><i class="fas fa-minus text-yellow-500 mr-2"></i><span data-i18n="mediumVisibility">Visibilidade <b>Média</b></span></li>
-                        <li><i class="fas fa-check text-green-500 mr-2"></i><span data-i18n="unlimitedSupport">Suporte <b>Ilimitado</b></span></li>
-                    </ul>
-                    <a href="https://book.stripe.com/bIY3eJ36t5R6dzidQR?prefilled_promo_code=50offV5" target="_blank" class="block w-full bg-green-500 text-white text-center py-2 rounded-lg hover:bg-green-600 transition duration-300" data-umami-event="reserve-text-slot" data-i18n="reserveSlot">Reservar Slot</a>
-                    <p class="text-xs text-center mt-2 text-gray-500"><i class="fas fa-exclamation-triangle text-yellow-500 mr-1"></i><span data-i18n="readBeforeReserving">Leia antes de reservar</span><i class="fas fa-arrow-down text-yellow-500 ml-1"></i></p>
-                    <a href="https://ad.saomiguelbus.com/termos-e-condicoes.html" target="_blank" class="block text-center text-green-500 text-sm mt-1 hover:underline" data-umami-event="view-terms-text" data-i18n="termsAndConditions">Termos e Condições</a>
                 </div>
-            </div>
-
-            <!-- Banner Ad Plan -->
-            <div class="bg-white rounded-lg shadow-md overflow-hidden md:flex" data-umami-event="view-banner-ad-plan">
-                <div class="relative bg-green-500 text-white p-6 md:w-1/3 md:flex md:flex-col md:justify-center">
-                    <h3 class="text-2xl font-bold mb-2" data-i18n="bannerAd">Banner</h3>
-                    <div class="text-3xl font-bold">
-                        <span class="line-through text-green-200">€20</span>
-                        <span class="text-4xl">€10</span>
-                        <span class="text-xl">/Slot</span>
-                    </div>
-                </div>
-                <div class="p-6 md:w-2/3">
-                    <div class="relative mb-4 group">
-                        <img src="static/img/banner-ad.png" alt="Anúncio em Banner São Miguel Bus" class="w-full h-auto border-2 border-green-500 rounded-lg p-1">
-                        <i class="fas fa-info-circle absolute top-2 right-2 text-green-500 cursor-pointer" title="Informação adicional disponível" data-umami-event="view-banner-ad-info"></i>
-                        <div class="hidden group-hover:block absolute top-0 left-0 bg-white bg-opacity-90 border-2 border-green-500 rounded-lg p-4 shadow-lg">
-                            <p class="text-sm" data-i18n="bannerAdInfo">Poderá enviar o seu banner ou logótipo e/ou escrever algum texto no formulário de reserva que nós tratamos de criar uma banner semelhante ao desta imagem.</p>
+                
+                <div id="premium-page-monthly" class="pricing-option border-2 border-gray-200 bg-white rounded-lg p-4 cursor-pointer hover:border-green-300 transition-colors" onclick="selectPricingOptionPage('monthly')">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="w-4 h-4 border-2 border-gray-300 rounded-full mr-3"></div>
+                            <div>
+                                <div class="font-semibold text-lg">€1.99<span class="text-sm text-gray-500">/month</span></div>
+                                <div class="text-sm text-gray-600" data-i18n="monthlyDescription">Most popular</div>
+                            </div>
                         </div>
                     </div>
-                    <p class="text-xs text-gray-500 mb-4" data-i18n="bannerDimensions">* Dimensões do Banner: 900x140</p>
-                    <ul class="space-y-2 mb-6">
-                        <li><i class="fas fa-check text-green-500 mr-2"></i><span data-i18n="adInImage">Anúncio em <b>imagem</b></span></li>
-                        <li><i class="fas fa-check text-green-500 mr-2"></i><span data-i18n="adInText">Anúncio em <b>texto</b></span></li>
-                        <li><i class="fas fa-check text-green-500 mr-2"></i><span data-i18n="duration"><b>30</b> dias de duração</span></li>
-                        <li><i class="fas fa-check text-green-500 mr-2"></i><span data-i18n="totalSlots"><b>10</b> Slots totais</span></li>
-                        <li><i class="fas fa-plus text-green-500 mr-2"></i><span data-i18n="highVisibility">Visibilidade <b>Alta</b></span></li>
-                        <li><i class="fas fa-check text-green-500 mr-2"></i><span data-i18n="unlimitedSupport">Suporte <b>Ilimitado</b></span></li>
-                    </ul>
-                    <a href="https://book.stripe.com/14kcPj6iF1AQdzi6oo?prefilled_promo_code=50offV5" target="_blank" class="block w-full bg-green-500 text-white text-center py-2 rounded-lg hover:bg-green-600 transition duration-300" data-umami-event="reserve-banner-slot" data-i18n="reserveSlot">Reservar Slot</a>
-                    <p class="text-xs text-center mt-2 text-gray-500"><i class="fas fa-exclamation-triangle text-yellow-500 mr-1"></i><span data-i18n="readBeforeReserving">Leia antes de reservar</span><i class="fas fa-arrow-down text-yellow-500 ml-1"></i></p>
-                    <a href="https://ad.saomiguelbus.com/termos-e-condicoes.html" target="_blank" class="block text-center text-green-500 text-sm mt-1 hover:underline" data-umami-event="view-terms-banner" data-i18n="termsAndConditions">Termos e Condições</a>
+                </div>
+                
+                <div id="premium-page-yearly" class="pricing-option border-2 border-gray-200 bg-white rounded-lg p-4 cursor-pointer hover:border-green-300 transition-colors" onclick="selectPricingOptionPage('yearly')">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="w-4 h-4 border-2 border-gray-300 rounded-full mr-3"></div>
+                            <div>
+                                <div class="font-semibold text-lg">€19.99<span class="text-sm text-gray-500">/year</span></div>
+                                <div class="text-sm text-gray-600" data-i18n="yearlyDescription">Save 17%</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <div class="mt-6 flex flex-col items-center">
-            <button class="bg-green-500 text-white py-2 px-4 rounded-full hover:bg-green-600 transition duration-300 ease-in-out flex items-center" onclick="toggleSpoiler()" data-i18n="whyAdsButton" data-umami-event="view-why-ads">
-                Porque é que existem anúncios na aplicação?
+            
+            <!-- Subscribe Button -->
+            <button onclick="subscribeToSelectedPlanPage()" 
+                    class="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition duration-300 mb-4"
+                    data-umami-event="subscribe-premium-page">
+                <i class="fas fa-crown mr-2"></i>
+                <span data-i18n="removeAdsButton">Remove Ads</span>
             </button>
-            <svg class="ml-2 h-4 w-4 transform transition-transform duration-200" id="spoilerArrow" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-            </svg>
-            <div id="spoilerContent" class="hidden mt-4 bg-white shadow-md rounded-lg w-full overflow-hidden transition-all duration-300 ease-in-out">
-                <div class="p-6">
-                    <h4 class="text-xl font-semibold text-green-600 mb-3" data-i18n="aboutAdsTitle">Sobre os Anúncios</h4>
-                    <p class="text-gray-700 leading-relaxed" data-i18n="aboutAdsParagraph1">
-                        A aplicação São Miguel Bus foi desenvolvida por apenas uma pessoa, sem qualquer apoio externo ou associação com companhias ou entidades. Os anúncios desempenham um papel crucial:
-                    </p>
-                    <h4 class="text-xl font-semibold text-green-600 mb-3" data-i18n="aboutAdsListTitle">Como os anúncios ajudam a São Miguel Bus</h4>
-                    <ul class="list-disc list-inside text-gray-700 mt-2 space-y-2">
-                        <li data-i18n="aboutAdsList1">Ajudam a cobrir os custos do servidor da aplicação</li>
-                        <li data-i18n="aboutAdsList2">Permitem manter a aplicação totalmente gratuita para todos os utilizadores</li>
-                        <li data-i18n="aboutAdsList3">Contribuem para o contínuo desenvolvimento e melhoria da plataforma</li>
-                    </ul>
-                    <p class="text-gray-700 mt-4 italic" data-i18n="supportThankYou">
-                        Agradecemos a sua compreensão e apoio ao utilizar a São Miguel Bus!
-                    </p>
+            
+            <!-- Already Subscribed Link -->
+            <div class="text-center mb-6">
+                <button onclick="showEmailVerificationModal()" 
+                        class="text-blue-500 hover:text-blue-700 text-sm underline"
+                        data-umami-event="already-subscribed-page">
+                    <span data-i18n="alreadySubscribed">I already have a subscription enabled</span>
+                </button>
+            </div>
+            
+            <!-- Premium Features -->
+            <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+                <h4 class="font-semibold text-green-800 mb-3" data-i18n="premiumFeaturesTitle">Premium Features:</h4>
+                <ul class="text-sm text-green-700 space-y-2">
+                    <li><i class="fas fa-check text-green-500 mr-2"></i><span data-i18n="premiumFeature1">No advertisements</span></li>
+                    <li><i class="fas fa-check text-green-500 mr-2"></i><span data-i18n="premiumFeature2">Priority support</span></li>
+                    <li><i class="fas fa-check text-green-500 mr-2"></i><span data-i18n="premiumFeature3">Early access to new features</span></li>
+                </ul>
+            </div>
+            
+            <p class="text-xs text-gray-500 text-center" data-i18n="premiumTerms">
+                By subscribing, you agree to our Terms of Service and Privacy Policy.
+            </p>
+        </div>
+        
+        <!-- Content for users WITH premium (ads removed) -->
+        <div id="premiumThankYouContent" class="w-full max-w-md mx-auto hidden">
+            <div class="text-center mb-6">
+                <i class="fas fa-heart text-5xl text-red-500 mb-4"></i>
+                <h2 class="text-2xl font-bold mb-2" data-i18n="thankYouTitle">Thank You!</h2>
+                <p class="text-gray-700 mb-4" data-i18n="thankYouDescription">
+                    You're enjoying an ad-free experience and supporting the development of São Miguel Bus.
+                </p>
+            </div>
+            
+            <!-- Premium Status Card -->
+            <div class="bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-lg p-4 mb-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <i class="fas fa-crown text-2xl mr-3"></i>
+                        <div>
+                            <h3 class="font-semibold" data-i18n="premiumActive">Premium Active</h3>
+                            <!-- <p class="text-sm opacity-90" data-i18n="premiumExpires">Expires: <span id="premiumExpiryDatePage"></span></p> -->
+                        </div>
+                    </div>
                 </div>
+            </div>
+            
+            <!-- Manage Subscription Card -->
+            <div class="bg-white border border-blue-200 rounded-lg p-4 mb-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <i class="fas fa-cog text-2xl mr-3 text-blue-500"></i>
+                        <div>
+                            <h3 class="font-semibold text-gray-800" data-i18n="manageSubscriptionTitle">Manage Subscription</h3>
+                            <p class="text-sm text-gray-600" data-i18n="manageSubscriptionDescription">Update payment method, view invoices, or cancel subscription</p>
+                        </div>
+                    </div>
+                    <a href="https://billing.stripe.com/p/login/3cIaEW8jJ3UR4hvbeFgUM00" target="_blank" 
+                       class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300 text-sm"
+                       data-umami-event="manage-subscription-ads-page">
+                        <span data-i18n="manageButton">Manage</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Cancel Subscription Card -->
+            <div class="bg-white border border-gray-200 rounded-lg p-4 mb-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <i class="fas fa-credit-card text-2xl mr-3 text-red-500"></i>
+                        <div>
+                            <h3 class="font-semibold text-gray-800" data-i18n="cancelSubscriptionTitle">Cancel Subscription</h3>
+                            <p class="text-sm text-gray-600" data-i18n="cancelSubscriptionDescription">Manage or cancel your premium subscription</p>
+                        </div>
+                    </div>
+                    <a href="https://billing.stripe.com/p/login/3cIaEW8jJ3UR4hvbeFgUM00" target="_blank" 
+                       class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300 text-sm"
+                       data-umami-event="cancel-subscription-page">
+                        <span data-i18n="cancelSubscriptionButton">Cancel</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Support Message -->
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <h4 class="font-semibold text-blue-800 mb-2" data-i18n="supportMessageTitle">Your Support Matters</h4>
+                <p class="text-sm text-blue-700" data-i18n="supportMessageDescription">
+                    Thank you for supporting an independent developer. Your subscription helps keep São Miguel Bus free for everyone and enables continuous improvements.
+                </p>
             </div>
         </div>
     </section>
@@ -911,6 +1070,68 @@
                 <img src="static/img/logo.png" alt="Logo" class="w-8 h-8 mr-4">
                 <div><h3 class="font-semibold" data-i18n="infoDevelopedBy">Esta aplicação foi desenvolvida por</h3> <a href="https://www.sousadev.com" target="_blank" class="text-blue-500">Sousa Dev</a></div>
             </div>
+
+            <!-- Premium Status Card (shown when premium is active) -->
+            <div id="premiumStatusCard" class="hidden bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-lg p-4 mb-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <i class="fas fa-crown text-2xl mr-3"></i>
+                        <div>
+                            <h3 class="font-semibold" data-i18n="premiumActive">Premium Active</h3>
+                            <!-- <p class="text-sm opacity-90" data-i18n="premiumExpires">Expires: <span id="premiumExpiryDate"></span></p> -->
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <a href="https://billing.stripe.com/p/login/3cIaEW8jJ3UR4hvbeFgUM00" target="_blank" 
+                           class="text-white hover:text-gray-200 text-sm underline"
+                           data-umami-event="manage-subscription">
+                            <span data-i18n="manageSubscription">Manage</span>
+                        </a>
+                        <button onclick="deactivatePremium()" class="text-white hover:text-gray-200">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cancel Subscription Card (shown when premium is active)
+            <div id="cancelSubscriptionCard" class="hidden bg-white border border-gray-200 rounded-lg p-4 mb-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <i class="fas fa-credit-card text-2xl mr-3 text-red-500"></i>
+                        <div>
+                            <h3 class="font-semibold text-gray-800" data-i18n="cancelSubscriptionTitle">Cancel Subscription</h3>
+                            <p class="text-sm text-gray-600" data-i18n="cancelSubscriptionDescription">Manage or cancel your premium subscription</p>
+                        </div>
+                    </div>
+                    <a href="https://billing.stripe.com/p/login/3cIaEW8jJ3UR4hvbeFgUM00" target="_blank" 
+                       class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300 text-sm"
+                       data-umami-event="cancel-subscription">
+                        <span data-i18n="cancelSubscriptionButton">Cancel</span>
+                    </a>
+                </div>
+            </div> -->
+
+            <!-- Premium Button (shown when premium is not active) -->
+            <a href="#" id="premiumButton" class="block bg-white border border-gray-200 rounded-lg p-4 mb-4 flex items-center justify-between hover:bg-gray-50" 
+               onclick="showPricingModal();" data-umami-event="view-premium-modal">
+                <div class="flex items-center">
+                    <i class="fas fa-crown text-3xl mr-4 text-yellow-500"></i>
+                    <h3 class="font-semibold" data-i18n="removeAdsTitle">Remove Ads</h3>
+                </div>
+                <span class="iconify" data-icon="mdi:chevron-right"></span>
+            </a>
+
+            <!-- Manage Subscription Button (shown when premium is active) -->
+            <!-- <a href="https://billing.stripe.com/p/login/3cIaEW8jJ3UR4hvbeFgUM00" target="_blank" 
+               id="manageSubscriptionButton" class="hidden block bg-white border border-gray-200 rounded-lg p-4 mb-4 flex items-center justify-between hover:bg-gray-50" 
+               data-umami-event="manage-subscription-info">
+                <div class="flex items-center">
+                    <i class="fas fa-cog text-3xl mr-4 text-blue-500"></i>
+                    <h3 class="font-semibold" data-i18n="manageSubscriptionTitle">Manage Subscription</h3>
+                </div>
+                <span class="iconify" data-icon="mdi:chevron-right"></span>
+            </a> -->
 
             <a href="#" class="block bg-white border border-gray-200 rounded-lg p-4 mb-4 flex items-center justify-between hover:bg-gray-50" onclick="document.getElementById('infoModal').classList.remove('hidden');" data-umami-event="view-info-modal">
                 <div class="flex items-center">
@@ -1154,6 +1375,7 @@
         // Page switching logic
         document.addEventListener('DOMContentLoaded', function() {
             setTodayDate();
+            initializeAdRemoval(); // Initialize ad removal system
             const pages = document.querySelectorAll('.page');
             const navLinks = document.querySelectorAll('.bottom-0 a');
 
@@ -1351,6 +1573,7 @@
     <script src="js/directionsApiHandler.js" defer></script>
     <script src="js/favoriteHandler.js" defer></script>
     <script src="js/languageModal.js" defer></script>
+    <script src="js/adRemovalHandler.js" defer></script>
 
     <!-- Add this script within your existing JavaScript block -->
     <script>

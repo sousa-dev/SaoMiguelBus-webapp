@@ -1,5 +1,9 @@
 document.addEventListener("DOMContentLoaded", function() {
     fetchAndPopulateStops();
+    
+    // Initialize ad removal system
+    initializeAdRemoval();
+    
     const searchBtn = document.getElementById('btnSubmit')
     searchBtn.addEventListener('click', function(event) {
         event.preventDefault();  // Prevents the default form submission action
@@ -854,6 +858,12 @@ function displayRoutes(routes, originStop, destinationStop) {
 }
 
 function loadAdBanner(on) {
+    // Check if user has active premium subscription
+    if (adRemovalState && adRemovalState.isActive) {
+        console.log('Ads hidden for premium user');
+        return;
+    }
+    
     if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
         return; // Do nothing if the host is localhost or 127.0.0.1
     }
