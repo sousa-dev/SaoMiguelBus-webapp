@@ -1029,7 +1029,7 @@ function createInlineAdBanner(on, adIndex) {
                                     class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs px-3 py-1 rounded-full border border-gray-300 transition duration-200"
                                     data-umami-event="inline-ad-remove-ads-${adIndex}">
                                 <i class="fas fa-crown text-yellow-500 mr-1"></i>
-stat                                <span>${t('getRidOfAds', 'Get rid of ads')}</span>
+                                <span>${t('getRidOfAds', 'Get rid of ads')}</span>
                             </button>
                         </div>`;
 
