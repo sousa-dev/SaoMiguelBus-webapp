@@ -187,5 +187,9 @@
     "subscriptionDelayWarning": "Les abonnements peuvent prendre jusqu'à 24 heures pour prendre effet. Si vous venez de vous abonner, veuillez réessayer plus tard.",
     "manageSubscriptionTitle": "Gérer l'Abonnement",
     "manageSubscriptionDescription": "Mettre à jour le mode de paiement, voir les factures ou annuler l'abonnement",
-    "manageButton": "Gérer"
+    "manageButton": "Gérer",
+    "getRidOfAds": "Supprimer les publicités",
+    "perWeek": "/semaine",
+    "perMonth": "/mois",
+    "perYear": "/an"
 }

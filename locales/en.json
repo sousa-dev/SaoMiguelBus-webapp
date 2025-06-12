@@ -187,5 +187,9 @@
     "subscriptionDelayWarning": "Subscriptions may take up to 24 hours to take effect. If you just subscribed, please try again later.",
     "manageSubscriptionTitle": "Manage Subscription",
     "manageSubscriptionDescription": "Update payment method, view invoices, or cancel subscription",
-    "manageButton": "Manage"
+    "manageButton": "Manage",
+    "getRidOfAds": "Get rid of ads",
+    "perWeek": "/week",
+    "perMonth": "/month",
+    "perYear": "/year"
 }

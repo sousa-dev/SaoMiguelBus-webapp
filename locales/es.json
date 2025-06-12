@@ -187,5 +187,9 @@
     "subscriptionDelayWarning": "Las suscripciones pueden tardar hasta 24 horas en hacer efecto. Si acaba de suscribirse, inténtelo de nuevo más tarde.",
     "manageSubscriptionTitle": "Gestionar Suscripción",
     "manageSubscriptionDescription": "Actualizar método de pago, ver facturas o cancelar suscripción",
-    "manageButton": "Gestionar"
+    "manageButton": "Gestionar",
+    "getRidOfAds": "Eliminar anuncios",
+    "perWeek": "/semana",
+    "perMonth": "/mes",
+    "perYear": "/año"
 }

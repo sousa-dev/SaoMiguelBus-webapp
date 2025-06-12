@@ -187,5 +187,9 @@
     "subscriptionDelayWarning": "Abonnements können bis zu 24 Stunden dauern, bis sie wirksam werden. Wenn Sie gerade abonniert haben, versuchen Sie es später erneut.",
     "manageSubscriptionTitle": "Abonnement Verwalten",
     "manageSubscriptionDescription": "Zahlungsmethode aktualisieren, Rechnungen einsehen oder Abonnement kündigen",
-    "manageButton": "Verwalten"
+    "manageButton": "Verwalten",
+    "getRidOfAds": "Werbung entfernen",
+    "perWeek": "/Woche",
+    "perMonth": "/Monat",
+    "perYear": "/Jahr"
 }
