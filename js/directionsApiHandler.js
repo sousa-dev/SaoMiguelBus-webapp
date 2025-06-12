@@ -166,11 +166,27 @@ function displayDirections(data) {
         return;
     }
 
-    // Create cards for each route
-    data.routes.forEach((route, index) => {
-        const routeCard = createRouteCard(route, index);
-        directionsContainer.appendChild(routeCard);
-    });
+    // Process routes and insert ads asynchronously
+    const processDirectionsWithAds = async () => {
+        let adIndex = 0;
+        
+        for (let index = 0; index < data.routes.length; index++) {
+            const route = data.routes[index];
+            const routeCard = createRouteCard(route, index);
+            directionsContainer.appendChild(routeCard);
+            
+            // Insert ad after every 2 routes
+            if ((index + 1) % 2 === 0 && (index + 1) < data.routes.length) {
+                const adBanner = await createInlineAdBanner('routes', adIndex++);
+                if (adBanner) {
+                    directionsContainer.appendChild(adBanner);
+                }
+            }
+        }
+    };
+    
+    // Start the async processing
+    processDirectionsWithAds();
 }
 
 /**

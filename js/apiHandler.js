@@ -524,337 +524,371 @@ function displayRoutes(routes, originStop, destinationStop) {
     }
 
     var lastRoute = null;
-    routes.forEach(route => {
-        let ignoreRoute = false;
-        const routeDiv = document.createElement('div');
-        routeDiv.className = 'container card w-100 center';
-        routeDiv.style.cssText = 'border-radius: 8px; padding: 10px; cursor: pointer;';
+    let adIndex = 0;
+    let routeCount = 0;
     
-        // Parse the string to a JavaScript object
-        const stopsObj = stringToJSON(route.stops);
-        const prepositions = ['de', 'da', 'do', 'dos', 'das'];
-
-        originStop = originStop.split(' ').map(word => prepositions.includes(word.toLowerCase()) ? word : word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-        destinationStop = destinationStop.split(' ').map(word => prepositions.includes(word.toLowerCase()) ? word : word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-    
-        // Filter stops to only include stops between the origin and destination
-        let stops = {};
-        let foundOrigin = false;
-        let foundDestination = false;
-        let firstStop = null;
-        let lastStop = null;
-        const replaceSpecialChars = (str) => {
-            return str.toLowerCase().replace(/[-áàâãäéèêëíìîïóòôõöúùûüç]/g, match => {
-                return 'aaaaaeeeeiiiiooooouuuuc'['áàâãäéèêëíìîïóòôõöúùûüç'.indexOf(match)] || match;
-            }).replace(/-/g, '');
-        };
-
-        const originWords = replaceSpecialChars(route.origin).split(' ').filter(word => word.trim() !== '' && word !== ' ');
-        const destinationWords = replaceSpecialChars(route.destination).split(' ').filter(word => word.trim() !== '' && word !== ' ');
-        for (const [stop, time] of Object.entries(stopsObj)) {
-            const stopWords = replaceSpecialChars(stop).split(' ').filter(word => word.trim() !== '' && word !== ' ');
-
-            if (foundOrigin) {
-                stops[stop] = time;
-            } else {
-                if (originWords.every(originWord => stopWords.includes(originWord))) {
-                    foundOrigin = true;
-                    firstStop = [stop, time];
-                    stops[stop] = time;
-                }
-            }
-
-            if (destinationWords.every(destinationWord => stopWords.includes(destinationWord))) {
-                foundDestination = true;
-                lastStop = [stop, time];
-                stops[stop] = time;
-                break;
-            }
+    // Process routes and insert ads asynchronously
+    const processRoutesWithAds = async () => {
+        for (let i = 0; i < routes.length; i++) {
+            const route = routes[i];
+            const routeDiv = await createRouteDiv(route, originStop, destinationStop, lastRoute);
             
-
-            if (foundDestination) {
-                if (!foundOrigin) {
-                    ignoreRoute = true;
-                    continue;
-                }
-                break;
-            }
-        }
-
-        if (!foundOrigin || !foundDestination) {
-            return;
-        }
-
-        if (lastRoute) {
-            const timeDifference = Math.abs(timeStringToMinutes(firstStop[1]) - timeStringToMinutes(lastRoute.firstStop[1]));
-            if (timeDifference < 3) {
-                const currentHasC = route.route.includes('C');
-                const lastHasC = lastRoute.route.includes('C');
+            if (routeDiv) {
+                routesContainer.appendChild(routeDiv);
+                routeCount++;
+                lastRoute = routeDiv.lastRouteData;
                 
-                if (currentHasC && !lastHasC) {
-                    // Prefer the lastRoute over currentRoute, so ignore currentRoute
-                    return;
-                } else if (!currentHasC && lastHasC) {
-                    // Replace lastRoute with currentRoute
-                    // Remove lastRoute's div from DOM
-                    if (lastRoute.div && lastRoute.div.parentNode) {
-                        routesContainer.removeChild(lastRoute.div);
+                // Insert ad after every 2 routes
+                if (routeCount % 2 === 0 && routeCount < routes.length) {
+                    const adBanner = await createInlineAdBanner('home', adIndex++);
+                    if (adBanner) {
+                        routesContainer.appendChild(adBanner);
                     }
-                } else {
-                    // Both have 'C' or neither have 'C', keep the first one (lastRoute)
-                    return;
                 }
             }
         }
-
-        const stopsArray = Object.entries(stops); 
-        var transferCount = route.route.split('/').length - 1;
-        transferCount = Math.min(transferCount, stopsArray.length - 2);
-
-        const travelTime = calculateTotalTravelTime(firstStop[1], lastStop[1]);
-        if (travelTime.hours > 12) {
-            ignoreRoute = true;
+        
+        // Final setup after all routes are processed
+        if (routesContainer.childElementCount === 0) {
+            displayNoRoutesMessage(originStop, destinationStop);
             return;
         }
 
-        const type_route = route.route.includes('C') ? 'route' : 'trip';
-        const cookieName = `vote_${route.id}_${type_route}`;
-        const currentVote = getCookie(cookieName);
+        routesContainer.style.display = 'block';
 
-        routeDiv.innerHTML = `
-            <div id="route-${route.route}" class="bg-white shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-300" data-umami-event="route-${route.route}-click">
-                <div class="route-header flex items-center justify-between mb-4">
-                    <div class="flex items-center">
-                        <div class="route-icon text-2xl mr-2"><i class="fa-solid fa-bus"></i></div>
-                        ${route.route.includes('C') ? `
-                            <div class="route-number text-xl font-semibold text-green-600 mr-2">${route.route.replace('C', '')}</div>
-                            <div id="confirmationModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden" onclick="document.getElementById('confirmationModal').classList.add('hidden');" data-umami-event="confirmation-modal-click">
-                                <div class="bg-white rounded-lg p-6 w-80 relative" onclick="event.stopPropagation();">
-                                    <button id="closeConfirmationModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" onclick="document.getElementById('confirmationModal').classList.add('hidden');" data-umami-event="close-confirmation-modal-click">
-                                        <i class="fas fa-times text-xl text-right"></i>
-                                    </button>
-                                    <h3 class="text-xl font-semibold text-green-600 mb-3" data-i18n="contactBusCompaniesTitle">Contato das Companhias de Autocarros</h3>
-                                    <p class="text-gray-700 text-sm" data-i18n="confirmBusCompaniesDescription">
-                                    Se não tem a certeza da existência desta rota, entre em contato com as companhias de autocarros diretamente para confirmá-la.
-                                    </p>
-                                    <ul class="list-disc list-inside text-gray-700 mt-2 space-y-2">
-                                        <li>
-                                            <strong class="text-sm">Auto Viação Micaelense, Lda.</strong>
-                                            <br>
-                                            <span class="text-gray-500 text-xs ml-4">Telefone: <a href="tel:+351296301358" class="text-blue-500 hover:underline">+351 296 301 358</a></span>
-                                        </li>
-                                        <li>
-                                            <strong class="text-sm">Varela & Companhia, Lda.</strong>
-                                            <br>
-                                            <span class="text-gray-500 text-xs ml-4">Telefone: <a href="tel:+351296301800" class="text-blue-500 hover:underline">+351 296 301 800</a></span>
-                                        </li>
-                                        <li>
-                                            <strong class="text-sm">Caetano Raposo e Pereiras, Lda.</strong>
-                                            <br>
-                                            <span class="text-gray-500 text-xs ml-4">Telefone: <a href="tel:+351296304260" class="text-blue-500 hover:underline">+351 296 304 260</a></span>
-                                        </li>
-                                    </ul>
-                                </div>
+        const favouriteRoutesContainer = document.getElementById('favouriteRoutesContainer');
+        favouriteRoutesContainer.style.display = 'none';
+
+        const noRoutesMessage = document.getElementById('noRoutesMessage');
+        noRoutesMessage.style.display = 'none';
+
+        if (!isOnline()) {
+            toggleVisibilityOffline(false);
+        }
+    };
+    
+    // Start the async processing
+    processRoutesWithAds();
+}
+
+// Helper function to create a route div
+async function createRouteDiv(route, originStop, destinationStop, lastRoute) {
+    let ignoreRoute = false;
+    const routeDiv = document.createElement('div');
+    routeDiv.className = 'container card w-100 center';
+    routeDiv.style.cssText = 'border-radius: 8px; padding: 10px; cursor: pointer;';
+
+    // Parse the string to a JavaScript object
+    const stopsObj = stringToJSON(route.stops);
+    const prepositions = ['de', 'da', 'do', 'dos', 'das'];
+
+    originStop = originStop.split(' ').map(word => prepositions.includes(word.toLowerCase()) ? word : word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    destinationStop = destinationStop.split(' ').map(word => prepositions.includes(word.toLowerCase()) ? word : word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+
+    // Filter stops to only include stops between the origin and destination
+    let stops = {};
+    let foundOrigin = false;
+    let foundDestination = false;
+    let firstStop = null;
+    let lastStop = null;
+    const replaceSpecialChars = (str) => {
+        return str.toLowerCase().replace(/[-áàâãäéèêëíìîïóòôõöúùûüç]/g, match => {
+            return 'aaaaaeeeeiiiiooooouuuuc'['áàâãäéèêëíìîïóòôõöúùûüç'.indexOf(match)] || match;
+        }).replace(/-/g, '');
+    };
+
+    const originWords = replaceSpecialChars(route.origin).split(' ').filter(word => word.trim() !== '' && word !== ' ');
+    const destinationWords = replaceSpecialChars(route.destination).split(' ').filter(word => word.trim() !== '' && word !== ' ');
+    for (const [stop, time] of Object.entries(stopsObj)) {
+        const stopWords = replaceSpecialChars(stop).split(' ').filter(word => word.trim() !== '' && word !== ' ');
+
+        if (foundOrigin) {
+            stops[stop] = time;
+        } else {
+            if (originWords.every(originWord => stopWords.includes(originWord))) {
+                foundOrigin = true;
+                firstStop = [stop, time];
+                stops[stop] = time;
+            }
+        }
+
+        if (destinationWords.every(destinationWord => stopWords.includes(destinationWord))) {
+            foundDestination = true;
+            lastStop = [stop, time];
+            stops[stop] = time;
+            break;
+        }
+        
+
+        if (foundDestination) {
+            if (!foundOrigin) {
+                ignoreRoute = true;
+                continue;
+            }
+            break;
+        }
+    }
+
+    if (!foundOrigin || !foundDestination) {
+        return null;
+    }
+
+    if (lastRoute) {
+        const timeDifference = Math.abs(timeStringToMinutes(firstStop[1]) - timeStringToMinutes(lastRoute.firstStop[1]));
+        if (timeDifference < 3) {
+            const currentHasC = route.route.includes('C');
+            const lastHasC = lastRoute.route.includes('C');
+            
+            if (currentHasC && !lastHasC) {
+                // Prefer the lastRoute over currentRoute, so ignore currentRoute
+                return null;
+            } else if (!currentHasC && lastHasC) {
+                // Replace lastRoute with currentRoute
+                // Remove lastRoute's div from DOM
+                if (lastRoute.div && lastRoute.div.parentNode) {
+                    lastRoute.div.parentNode.removeChild(lastRoute.div);
+                }
+            } else {
+                // Both have 'C' or neither have 'C', keep the first one (lastRoute)
+                return null;
+            }
+        }
+    }
+
+    const stopsArray = Object.entries(stops); 
+    var transferCount = route.route.split('/').length - 1;
+    transferCount = Math.min(transferCount, stopsArray.length - 2);
+
+    const travelTime = calculateTotalTravelTime(firstStop[1], lastStop[1]);
+    if (travelTime.hours > 12) {
+        ignoreRoute = true;
+        return null;
+    }
+
+    const type_route = route.route.includes('C') ? 'route' : 'trip';
+    const cookieName = `vote_${route.id}_${type_route}`;
+    const currentVote = getCookie(cookieName);
+
+    routeDiv.innerHTML = `
+        <div id="route-${route.route}" class="bg-white shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-300" data-umami-event="route-${route.route}-click">
+            <div class="route-header flex items-center justify-between mb-4">
+                <div class="flex items-center">
+                    <div class="route-icon text-2xl mr-2"><i class="fa-solid fa-bus"></i></div>
+                    ${route.route.includes('C') ? `
+                        <div class="route-number text-xl font-semibold text-green-600 mr-2">${route.route.replace('C', '')}</div>
+                        <div id="confirmationModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden" onclick="document.getElementById('confirmationModal').classList.add('hidden');" data-umami-event="confirmation-modal-click">
+                            <div class="bg-white rounded-lg p-6 w-80 relative" onclick="event.stopPropagation();">
+                                <button id="closeConfirmationModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" onclick="document.getElementById('confirmationModal').classList.add('hidden');" data-umami-event="close-confirmation-modal-click">
+                                    <i class="fas fa-times text-xl text-right"></i>
+                                </button>
+                                <h3 class="text-xl font-semibold text-green-600 mb-3" data-i18n="contactBusCompaniesTitle">Contato das Companhias de Autocarros</h3>
+                                <p class="text-gray-700 text-sm" data-i18n="confirmBusCompaniesDescription">
+                                Se não tem a certeza da existência desta rota, entre em contato com as companhias de autocarros diretamente para confirmá-la.
+                                </p>
+                                <ul class="list-disc list-inside text-gray-700 mt-2 space-y-2">
+                                    <li>
+                                        <strong class="text-sm">Auto Viação Micaelense, Lda.</strong>
+                                        <br>
+                                        <span class="text-gray-500 text-xs ml-4">Telefone: <a href="tel:+351296301358" class="text-blue-500 hover:underline">+351 296 301 358</a></span>
+                                    </li>
+                                    <li>
+                                        <strong class="text-sm">Varela & Companhia, Lda.</strong>
+                                        <br>
+                                        <span class="text-gray-500 text-xs ml-4">Telefone: <a href="tel:+351296301800" class="text-blue-500 hover:underline">+351 296 301 800</a></span>
+                                    </li>
+                                    <li>
+                                        <strong class="text-sm">Caetano Raposo e Pereiras, Lda.</strong>
+                                        <br>
+                                        <span class="text-gray-500 text-xs ml-4">Telefone: <a href="tel:+351296304260" class="text-blue-500 hover:underline">+351 296 304 260</a></span>
+                                    </li>
+                                </ul>
                             </div>
-                            <div class="confirmation-banner bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-1 mb-1 cursor-pointer flex justify-between items-center" onclick="document.getElementById('confirmationModal').classList.remove('hidden');" data-umami-event="confirmation-banner-click">
-                                <div>
-                                    <p class="font-bold text-xs">${t('confirmationRequired')}</p>
-                                    <p class="text-xs">${t('confirmationMessage')}</p>
-                                </div>
-                                <i class="fas fa-phone-alt text-yellow-700 text-lg mr-2"></i>
+                        </div>
+                        <div class="confirmation-banner bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-1 mb-1 cursor-pointer flex justify-between items-center" onclick="document.getElementById('confirmationModal').classList.remove('hidden');" data-umami-event="confirmation-banner-click">
+                            <div>
+                                <p class="font-bold text-xs">${t('confirmationRequired')}</p>
+                                <p class="text-xs">${t('confirmationMessage')}</p>
                             </div>
-                        ` : ''}
-                    </div>
-                    <div class="text-sm text-gray-600">
-                        ${transferCount > 0 ? `<i class="fa fa-shuffle mr-1"></i> ${transferCount} ${transferCount === 1 ? t('transfer') : t('transfers')}` : ''}
-                    </div>
+                            <i class="fas fa-phone-alt text-yellow-700 text-lg mr-2"></i>
+                        </div>
+                    ` : ''}
                 </div>
-                <div class="stops-summary flex flex-col">
-                    <div class="time-line flex items-center justify-between mb-2">
-                        <div class="time text-2xl font-bold text-center w-1/4">${firstStop[1]}</div>
-                        <div class="route-line flex-grow mx-4 relative">
-                            <div class="absolute inset-0 flex items-center">
-                                <div class="h-0.5 w-full bg-gray-300 relative dashed-line">
-                                    <div class="absolute inset-0 flex items-center justify-center">
-                                        <span class="bg-white px-2 text-sm font-medium text-gray-500 travel-time rounded border">
-                                            ${travelTime.formatted}
-                                        </span>
-                                    </div>
+                <div class="text-sm text-gray-600">
+                    ${transferCount > 0 ? `<i class="fa fa-shuffle mr-1"></i> ${transferCount} ${transferCount === 1 ? t('transfer') : t('transfers')}` : ''}
+                </div>
+            </div>
+            <div class="stops-summary flex flex-col">
+                <div class="time-line flex items-center justify-between mb-2">
+                    <div class="time text-2xl font-bold text-center w-1/4">${firstStop[1]}</div>
+                    <div class="route-line flex-grow mx-4 relative">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="h-0.5 w-full bg-gray-300 relative dashed-line">
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <span class="bg-white px-2 text-sm font-medium text-gray-500 travel-time rounded border">
+                                        ${travelTime.formatted}
+                                    </span>
                                 </div>
                             </div>
                         </div>
-                        <div class="time text-2xl font-bold text-center w-1/4">${lastStop[1]}</div>
                     </div>
-                    <div class="stops flex justify-between">
-                        <div class="start-stop w-1/4 pr-2">
-                            <div class="location text-center">
-                                <div class="text-base">${firstStop[0].split(' - ')[0]}</div>
-                                <div class="text-sm text-gray-600">${firstStop[0].split(' - ').slice(1).join(' - ')}</div>
-                            </div>
+                    <div class="time text-2xl font-bold text-center w-1/4">${lastStop[1]}</div>
+                </div>
+                <div class="stops flex justify-between">
+                    <div class="start-stop w-1/4 pr-2">
+                        <div class="location text-center">
+                            <div class="text-base">${firstStop[0].split(' - ')[0]}</div>
+                            <div class="text-sm text-gray-600">${firstStop[0].split(' - ').slice(1).join(' - ')}</div>
                         </div>
-                        <div class="end-stop w-1/4 pl-2">
-                            <div class="location text-center">
-                                <div class="text-base">${lastStop[0].split(' - ')[0]}</div>
-                                <div class="text-sm text-gray-600">${lastStop[0].split(' - ').slice(1).join(' - ')}</div>
-                            </div>
+                    </div>
+                    <div class="end-stop w-1/4 pl-2">
+                        <div class="location text-center">
+                            <div class="text-base">${lastStop[0].split(' - ')[0]}</div>
+                            <div class="text-sm text-gray-600">${lastStop[0].split(' - ').slice(1).join(' - ')}</div>
                         </div>
                     </div>
                 </div>
-                <div id="${route.id}-likes-dislikes" class="mt-4 flex items-center justify-between" data-umami-event="route-summary" data-offline="false">
-                    <button class="dislike-button flex items-center ${currentVote === 'dislike' ? 'text-red-700' : 'text-gray-500'} hover:text-red-700" onclick="dislike_route(${route.id}, '${route.route}', this)" data-umami-event="dislike-button-click" data-umami-event="dislike-button-interaction">
-                        <i class="fas fa-thumbs-down"></i>
-                    </button>
-                    <span id="dislikes-percent" class="text-gray-500 text-xs mr-2">${route.dislikes_percent}%</span>
-                    <button class="expand-stops flex items-center justify-center text-blue-500 hover:text-blue-700 text-base py-2" data-umami-event="expand-stops-click" data-umami-event="expand-stops-interaction">
-                        <span class="mr-2">${t('clickToSeeDetails')}</span>
-                        <span class="iconify transform transition-transform duration-300 text-xl" data-icon="mdi:chevron-down"></span>
-                    </button>
-                    <button class="like-button flex items-center ${currentVote === 'like' ? 'text-green-700' : 'text-gray-500'} hover:text-green-700" onclick="like_route(${route.id}, '${route.route}', this)" data-umami-event="like-button-click" data-umami-event="like-button-interaction">
-                        <span id="likes-percent" class="text-gray-500 text-xs mr-2">${route.likes_percent}%</span>
-                        <i class="fas fa-thumbs-up"></i>
-                    </button>
-                </div>
-                <div class="all-stops mt-4 hidden">
+            </div>
+            <div id="${route.id}-likes-dislikes" class="mt-4 flex items-center justify-between" data-umami-event="route-summary" data-offline="false">
+                <button class="dislike-button flex items-center ${currentVote === 'dislike' ? 'text-red-700' : 'text-gray-500'} hover:text-red-700" onclick="dislike_route(${route.id}, '${route.route}', this)" data-umami-event="dislike-button-click" data-umami-event="dislike-button-interaction">
+                    <i class="fas fa-thumbs-down"></i>
+                </button>
+                <span id="dislikes-percent" class="text-gray-500 text-xs mr-2">${route.dislikes_percent}%</span>
+                <button class="expand-stops flex items-center justify-center text-blue-500 hover:text-blue-700 text-base py-2" data-umami-event="expand-stops-click" data-umami-event="expand-stops-interaction">
+                    <span class="mr-2">${t('clickToSeeDetails')}</span>
+                    <span class="iconify transform transition-transform duration-300 text-xl" data-icon="mdi:chevron-down"></span>
+                </button>
+                <span id="likes-percent" class="text-gray-500 text-xs ml-2">${route.likes_percent}%</span>
+                <button class="like-button flex items-center ${currentVote === 'like' ? 'text-green-700' : 'text-gray-500'} hover:text-green-700" onclick="like_route(${route.id}, '${route.route}', this)" data-umami-event="like-button-click" data-umami-event="like-button-interaction">
+                    <i class="fas fa-thumbs-up"></i>
+                </button>
+            </div>
+            <div class="all-stops hidden mt-4 bg-gray-50 rounded-lg p-3">
+                <h4 class="font-semibold mb-2 text-gray-700">${t('allStops')}</h4>
+                <div class="space-y-2">
                     ${stopsArray.map(([stop, time]) => `
-                        <div class="stop-item flex justify-between items-center py-1">
-                            <div class="location">
-                                <div class="text-sm">${stop.split(' - ')[0]}</div>
-                                <div class="text-xs text-gray-600">${stop.split(' - ').slice(1).join(' - ')}</div>
-                            </div>
-                            <div class="time font-medium">${time}</div>
+                        <div class="flex justify-between items-center py-1 border-b border-gray-200 last:border-b-0">
+                            <span class="text-sm text-gray-600">${stop}</span>
+                            <span class="text-sm font-medium text-gray-800">${time}</span>
                         </div>
                     `).join('')}
-                    <!-- 
-                        <div class="company mt-2 text-right text-sm text-gray-300">
-                            ${(() => {
-                                const routeNumbers = route.route.split('/').map(num => parseInt(num));
-                                const operators = new Set();
-                                
-                                routeNumbers.forEach(routeNumber => {
-                                    if (routeNumber >= 200 && routeNumber < 300) {
-                                        operators.add('Auto Viação Micaelense');
-                                    } else if (routeNumber >= 300 && routeNumber < 400) {
-                                        operators.add('Varela & Lda.');
-                                    } else if (routeNumber >= 100 && routeNumber < 200) {
-                                        operators.add('Caetano Raposo e Pereiras Lda.');
-                                    }
-                                });
-                                
-                                if (operators.size > 0) {
-                                    return t('operatedBy') + ' ' + Array.from(operators).join(t('and'));
-                                } else {
-                                    return '';
+                </div>
+                <!-- 
+                    <div class="mt-3 text-xs text-gray-500">
+                        ${(() => {
+                            const routeNumbers = route.route.split('/').map(num => parseInt(num));
+                            const operators = new Set();
+                            
+                            routeNumbers.forEach(routeNumber => {
+                                if (routeNumber >= 200 && routeNumber < 300) {
+                                    operators.add('Auto Viação Micaelense');
+                                } else if (routeNumber >= 300 && routeNumber < 400) {
+                                    operators.add('Varela & Lda.');
+                                } else if (routeNumber >= 100 && routeNumber < 200) {
+                                    operators.add('Caetano Raposo e Pereiras Lda.');
                                 }
-                            })()}
-                        </div> 
-                    -->
-                </div>
-                <div class="flex space-x-2 mt-2" data-offline="false">
-                    <button type="submit" class="flex-grow bg-green-500 text-white py-2 rounded-full hover:bg-green-600 transition duration-300 ease-in-out" data-i18n="directionsButton" data-umami-event="directions-button-click"
-                    onclick="redirectToStepByStepDirections(event)">
-                        ${t('directionsButton')} <i class="fas fa-route"></i>
-                    </button>
-                </div>
-        </div>
-        `;
+                            });
+                            
+                            if (operators.size > 0) {
+                                return t('operatedBy') + ' ' + Array.from(operators).join(t('and'));
+                            } else {
+                                return '';
+                            }
+                        })()}
+                    </div> 
+                -->
+            </div>
+            <div class="flex space-x-2 mt-2" data-offline="false">
+                <button type="submit" class="flex-grow bg-green-500 text-white py-2 rounded-full hover:bg-green-600 transition duration-300 ease-in-out" data-i18n="directionsButton" data-umami-event="directions-button-click"
+                onclick="redirectToStepByStepDirections(event)">
+                    ${t('directionsButton')} <i class="fas fa-route"></i>
+                </button>
+            </div>
+    </div>
+    `;
 
-        // Function to toggle route details
-        function toggleRouteDetails(routeDiv) {
-            const allStopsDiv = routeDiv.querySelector('.all-stops');
-            const expandButton = routeDiv.querySelector('.expand-stops');
-            const icon = expandButton.querySelector('.iconify');
-            
-            allStopsDiv.classList.toggle('hidden');
-            icon.classList.toggle('rotate-180');
-            
-            // Smooth transition for expanding/collapsing
-            if (allStopsDiv.classList.contains('hidden')) {
-                allStopsDiv.style.maxHeight = '0px';
-            } else {
-                allStopsDiv.style.maxHeight = allStopsDiv.scrollHeight + 'px';
-            }
-        }
-
-        // Add click event to expand/collapse route details
-        routeDiv.addEventListener('click', function(event) {
-            // Prevent the click event from triggering on buttons inside the card
-            if (event.target.tagName === 'BUTTON' || event.target.closest('button')) {
-                return;
-            }
-            
-            toggleRouteDetails(this);
-        });
-
-        // Add click event to the expand button
+    // Function to toggle route details
+    function toggleRouteDetails(routeDiv) {
+        const allStopsDiv = routeDiv.querySelector('.all-stops');
         const expandButton = routeDiv.querySelector('.expand-stops');
-        expandButton.addEventListener('click', function(event) {
-            event.stopPropagation();
-            toggleRouteDetails(routeDiv);
-        });
-
-        // Update the CSS
-        const style = document.createElement('style');
-        style.textContent = `
-            .dashed-line {
-                background-image: linear-gradient(to right, #CBD5E0 50%, transparent 50%);
-                background-size: 8px 1px;
-                background-repeat: repeat-x;
-            }
-            .travel-time {
-                position: relative;
-            }
-            .travel-time::before,
-            .travel-time::after {
-                content: '';
-                position: absolute;
-                top: 50%;
-                width: 20px;
-                height: 1px;
-                background-image: linear-gradient(to right, #CBD5E0 50%, transparent 50%);
-                background-size: 4px 1px;
-                background-repeat: repeat-x;
-            }
-            .travel-time::before {
-                right: 100%;
-                margin-right: 5px;
-            }
-            .travel-time::after {
-                left: 100%;
-                margin-left: 5px;
-            }
-            .all-stops {
-                max-height: 0;
-                overflow: hidden;
-                transition: max-height 0.3s ease-out;
-            }
-            .all-stops:not(.hidden) {
-                max-height: 1000px; /* Adjust this value as needed */
-            }
-        `;
-        document.head.appendChild(style);
-
-        if (!ignoreRoute) {
-            routesContainer.appendChild(routeDiv);
+        const icon = expandButton.querySelector('.iconify');
+        
+        allStopsDiv.classList.toggle('hidden');
+        icon.classList.toggle('rotate-180');
+        
+        // Smooth transition for expanding/collapsing
+        if (allStopsDiv.classList.contains('hidden')) {
+            allStopsDiv.style.maxHeight = '0px';
+        } else {
+            allStopsDiv.style.maxHeight = allStopsDiv.scrollHeight + 'px';
         }
-        lastRoute = { firstStop, lastStop, route: route.route, div: routeDiv }; // Store the first and last stop for comparison
+    }
+
+    // Add click event to expand/collapse route details
+    routeDiv.addEventListener('click', function(event) {
+        // Prevent the click event from triggering on buttons inside the card
+        if (event.target.tagName === 'BUTTON' || event.target.closest('button')) {
+            return;
+        }
+        
+        toggleRouteDetails(this);
     });
 
-    if (routesContainer.childElementCount === 0) {
-        displayNoRoutesMessage(originStop, destinationStop);
-        return;
+    // Add click event to the expand button
+    const expandButton = routeDiv.querySelector('.expand-stops');
+    expandButton.addEventListener('click', function(event) {
+        event.stopPropagation();
+        toggleRouteDetails(routeDiv);
+    });
+
+    // Update the CSS
+    const style = document.createElement('style');
+    style.textContent = `
+        .dashed-line {
+            background-image: linear-gradient(to right, #CBD5E0 50%, transparent 50%);
+            background-size: 8px 1px;
+            background-repeat: repeat-x;
+        }
+        .travel-time {
+            position: relative;
+        }
+        .travel-time::before,
+        .travel-time::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 20px;
+            height: 1px;
+            background-image: linear-gradient(to right, #CBD5E0 50%, transparent 50%);
+            background-size: 4px 1px;
+            background-repeat: repeat-x;
+        }
+        .travel-time::before {
+            right: 100%;
+            margin-right: 5px;
+        }
+        .travel-time::after {
+            left: 100%;
+            margin-left: 5px;
+        }
+        .all-stops {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .all-stops:not(.hidden) {
+            max-height: 1000px; /* Adjust this value as needed */
+        }
+    `;
+    document.head.appendChild(style);
+
+    if (ignoreRoute) {
+        return null;
     }
-
-    routesContainer.style.display = 'block';
-
-    const favouriteRoutesContainer = document.getElementById('favouriteRoutesContainer');
-    favouriteRoutesContainer.style.display = 'none';
-
-    const noRoutesMessage = document.getElementById('noRoutesMessage');
-    noRoutesMessage.style.display = 'none';
-
-    if (!isOnline()) {
-        toggleVisibilityOffline(false);
-    }
+    
+    // Store route data for comparison
+    routeDiv.lastRouteData = { firstStop, lastStop, route: route.route, div: routeDiv };
+    
+    return routeDiv;
 }
 
 function loadAdBanner(on) {
@@ -938,6 +972,88 @@ function loadAdBanner(on) {
             }
         })
         .catch(error => console.error('Error loading ad banner:', error));
+}
+
+// Function to create inline ad banners for insertion between results
+function createInlineAdBanner(on, adIndex) {
+    return new Promise((resolve, reject) => {
+        // Check if user has active premium subscription
+        if (adRemovalState && adRemovalState.isActive) {
+            console.log('Ads hidden for premium user');
+            resolve(null);
+            return;
+        }
+        
+        if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+            resolve(null);
+            return;
+        }
+
+        const apiUrl = `https://api.saomiguelbus.com/api/v1/ad?on=${on}&platform=web`;
+
+        fetch(apiUrl)
+            .then(response => { 
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    console.warn('There are no ad banners available to display');
+                    resolve(null);
+                }
+            })
+            .then(ad => {
+                if (ad) {
+                    let hrefValue;
+                    if (ad.action === 'directions') {
+                        hrefValue = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(ad.target)}`;
+                    } else {
+                        hrefValue = ad.target;
+                    }
+
+                    const adDiv = document.createElement('div');
+                    adDiv.className = 'inline-ad-banner my-4 mx-auto max-w-md';
+                    adDiv.innerHTML = `
+                        <div class="container mx-auto relative" data-umami-event="inline-ad-banner-display-${adIndex}">
+                            <span class="absolute top-0 left-0 bg-green-500 text-white font-bold text-[10px] px-1 py-0.5 rounded-br-lg z-10">AD</span>
+                            <div class="flex justify-center">
+                                <div class="w-full">
+                                    <div class="ad-banner text-center p-1 relative">
+                                        <a href="${hrefValue}" target="_blank" class="inline-ad-clickable" data-ad-id="${ad.id}" data-umami-event="inline-ad-click-${adIndex}">
+                                            <img src="${ad.media}" alt="${ad.entity}" class="w-full h-auto rounded-lg inline-ad-image" data-id="${ad.id}" data-umami-event="inline-ad-image-view-${adIndex}">
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+
+                    // Add click tracking
+                    const adClickable = adDiv.querySelector('.inline-ad-clickable');
+                    if (adClickable) {
+                        adClickable.addEventListener('click', function(event) {
+                            const adId = this.getAttribute("data-ad-id");
+                            const URL = "https://api.saomiguelbus.com/api/v1/ad/click?id=" + encodeURIComponent(adId);
+                            fetch(URL, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                mode: 'cors',
+                            })
+                            .then(response => response.json())
+                            .then(data => console.log(data))
+                            .catch(error => console.error(error));
+                        });
+                    }
+
+                    resolve(adDiv);
+                } else {
+                    resolve(null);
+                }
+            })
+            .catch(error => {
+                console.error('Error loading inline ad banner:', error);
+                resolve(null);
+            });
+    });
 }
 
 function stringToJSON(string) {
