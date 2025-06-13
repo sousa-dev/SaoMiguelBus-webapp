@@ -80,7 +80,7 @@ function searchStepByStep(origin, destination, day, time) {
     showLoadingSpinner();
     loadAdBanner('home');
     const parameters = getUrlParametersStepByStep(origin, destination, day, time);
-    const languageCode = getCookie('language') || (['pt', 'en', 'es'].includes(navigator.language.split('-')[0]) ? navigator.language.split('-')[0] : 'pt');
+    const languageCode = getCookie('language') || (['pt', 'en', 'es', 'de', 'fr', 'it', 'uk', 'zh'].includes(navigator.language.split('-')[0]) ? navigator.language.split('-')[0] : 'pt');
     if (languageCode === 'pt') {
         currentLanguage = 'pt-pt';
     }
