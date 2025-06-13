@@ -191,5 +191,8 @@
     "getRidOfAds": "Werbung entfernen",
     "perWeek": "/Woche",
     "perMonth": "/Monat",
-    "perYear": "/Jahr"
+    "perYear": "/Jahr",
+      "allStops": "Alle Haltestellen",
+  "timePlaceholder": "Zeit auswählen (optional)",
+  "machineTranslationWarning": "Sprachen sind maschinell übersetzt. Es können Fehler auftreten."
 }

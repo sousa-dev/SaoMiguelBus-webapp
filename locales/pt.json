@@ -191,5 +191,8 @@
     "getRidOfAds": "Remover anúncios",
     "perWeek": "/semana",
     "perMonth": "/mês",
-    "perYear": "/ano"
+    "perYear": "/ano",
+      "allStops": "Todas as Paragens",
+  "timePlaceholder": "Selecionar hora (opcional)",
+  "machineTranslationWarning": "Os idiomas são traduzidos automaticamente. Podem estar presentes erros."
 }

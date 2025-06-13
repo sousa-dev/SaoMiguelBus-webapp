@@ -191,5 +191,8 @@
     "getRidOfAds": "Get rid of ads",
     "perWeek": "/week",
     "perMonth": "/month",
-    "perYear": "/year"
+    "perYear": "/year",
+      "allStops": "All Stops",
+  "timePlaceholder": "Select time (optional)",
+  "machineTranslationWarning": "Languages are machine-translated. Errors may be present."
 }

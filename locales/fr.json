@@ -191,5 +191,8 @@
     "getRidOfAds": "Supprimer les publicités",
     "perWeek": "/semaine",
     "perMonth": "/mois",
-    "perYear": "/an"
+    "perYear": "/an",
+      "allStops": "Tous les Arrêts",
+  "timePlaceholder": "Sélectionner l'heure (optionnel)",
+  "machineTranslationWarning": "Les langues sont traduites automatiquement. Des erreurs peuvent être présentes."
 }

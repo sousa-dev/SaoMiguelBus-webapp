@@ -1,4 +1,4 @@
-let availableLanguages = ['pt', 'en', 'es', 'de', 'fr'];
+let availableLanguages = ['pt', 'en', 'es', 'de', 'fr', 'it', 'uk', 'zh'];
 let currentLanguage = getCookie('language') || (availableLanguages.includes(navigator.language.split('-')[0]) ? navigator.language.split('-')[0] : 'pt');
 let translations = {};
 

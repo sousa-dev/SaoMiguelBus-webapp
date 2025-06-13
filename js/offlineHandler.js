@@ -84,6 +84,18 @@ function updateAlertBadge() {
                 title = info.titleDE;
                 message = info.messageDE;
                 break;
+            case 'it':
+                title = info.titleIT || info.titleEN;
+                message = info.messageIT || info.messageEN;
+                break;
+            case 'uk':
+                title = info.titleUK || info.titleEN;
+                message = info.messageUK || info.messageEN;
+                break;
+            case 'zh':
+                title = info.titleZH || info.titleEN;
+                message = info.messageZH || info.messageEN;
+                break;
             default:
                 title = info.titleEN;
                 message = info.messageEN;

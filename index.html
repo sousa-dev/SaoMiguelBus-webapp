@@ -342,7 +342,7 @@
         <!-- Alert Messages Modal -->
         <div id="alertModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden">
             <div class="bg-white rounded-lg p-6 w-80 relative">
-                <button onclick="toggleAlertModal()" id="closeModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" data-umami-event="close-alert-modal">
+                <button onclick="toggleAlertModal()" id="closeAlertModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" data-umami-event="close-alert-modal">
                     <i class="fas fa-times text-xl text-right"></i>
                 </button>
                 <h3 class="text-xl font-semibold text-green-600 mb-3" data-i18n="alertModalTitle">Alertas</h3>
@@ -428,12 +428,23 @@
     </nav>
 
     <!-- Language Selection Modal -->
-    <div id="languageModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
-        <div class="bg-white rounded-lg p-6 w-80 relative">
+    <div id="languageModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg p-6 w-80 relative max-h-[90vh] overflow-y-auto">
             <button id="closeModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" data-umami-event="close-language-modal">
                 <i class="fas fa-times text-xl text-right"></i>
             </button>
-            <ul>
+            
+            <!-- Machine Translation Warning -->
+            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
+                <div class="flex items-center">
+                    <i class="fas fa-exclamation-triangle text-yellow-600 mr-2"></i>
+                    <span class="text-sm text-yellow-800">
+                        <span data-i18n="machineTranslationWarning">Languages are machine-translated. Errors may be present.</span>
+                    </span>
+                </div>
+            </div>
+            
+            <ul class="max-h-60 overflow-y-auto space-y-1">
                 <li>
                     <button onclick="changeLanguage('pt')" class="w-full text-left py-2" data-umami-event="change-language-pt">
                         <span>🇵🇹</span> Português
@@ -457,6 +468,21 @@
                 <li>
                     <button onclick="changeLanguage('de')" class="w-full text-left py-2" data-umami-event="change-language-de">
                         <span>🇩🇪</span> Deutsch
+                    </button>
+                </li>
+                <li>
+                    <button onclick="changeLanguage('it')" class="w-full text-left py-2" data-umami-event="change-language-it">
+                        <span>🇮🇹</span> Italiano
+                    </button>
+                </li>
+                <li>
+                    <button onclick="changeLanguage('uk')" class="w-full text-left py-2" data-umami-event="change-language-uk">
+                        <span>🇺🇦</span> Українська
+                    </button>
+                </li>
+                <li>
+                    <button onclick="changeLanguage('zh')" class="w-full text-left py-2" data-umami-event="change-language-zh">
+                        <span>🇨🇳</span> 中文
                     </button>
                 </li>
             </ul>
