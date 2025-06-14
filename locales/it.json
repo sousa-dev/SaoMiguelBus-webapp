@@ -333,5 +333,7 @@
     "unlockTrackingText": "Sblocca funzioni di tracciamento",
     "getPremiumText": "Ottieni Premium",
     "unlockButton": "SBLOCCA",
-    "enableButton": "ATTIVA"
+    "enableButton": "ATTIVA",
+    "pinnedRoutesSubtitle": "I tuoi percorsi preferiti",
+    "pinnedCount": "0 fissati"
 } 

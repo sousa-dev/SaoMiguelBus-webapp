@@ -716,14 +716,16 @@ class BusTrackingHandler {
         // Update active tracking section (now separate from widget)
         this.updateActiveTrackingSection(data.activeTracking);
         
-        // Update pinned routes widget
+        // Update pinned routes display (separate from widget)
+        this.updatePinnedRoutesDisplay(data.pinnedRoutes);
+        
+        // Update pinned routes widget (legacy support)
         if (!widget) return;
 
         const hasPinnedRoutes = data.pinnedRoutes.length > 0;
         
         if (hasPinnedRoutes) {
             widget.classList.remove('hidden');
-            this.updatePinnedRoutesDisplay(data.pinnedRoutes);
         } else {
             widget.classList.add('hidden');
         }
@@ -747,8 +749,8 @@ class BusTrackingHandler {
         // Update count text
         const count = activeTracking.length;
         const countText = count === 1 ? 
-            t('trackingCountSingular', '1 route') : 
-            t('trackingCountPlural', '{count} routes').replace('{count}', count);
+            '1 ' + (t('trackingCount', '0 routes').replace('0 ', '') || 'route') : 
+            `${count} ` + (t('trackingCount', '0 routes').replace('0 ', '') || 'routes');
         countElement.textContent = countText;
         
         // Clear and populate container
@@ -770,6 +772,7 @@ class BusTrackingHandler {
     static updatePinnedRoutesDisplay(pinnedRoutes) {
         const container = document.getElementById('pinnedRoutesList');
         const section = document.getElementById('pinnedRoutesSection');
+        const countElement = document.getElementById('pinnedRoutesCount');
         
         if (!container || !section) return;
 
@@ -779,6 +782,16 @@ class BusTrackingHandler {
         }
 
         section.style.display = 'block';
+        
+        // Update count text
+        if (countElement) {
+            const count = pinnedRoutes.length;
+            const countText = count === 1 ? 
+                '1 ' + (t('pinnedCount', '0 pinned').replace('0 ', '') || 'pinned') : 
+                `${count} ` + (t('pinnedCount', '0 pinned').replace('0 ', '') || 'pinned');
+            countElement.textContent = countText;
+        }
+        
         container.innerHTML = '';
 
         pinnedRoutes.forEach(route => {

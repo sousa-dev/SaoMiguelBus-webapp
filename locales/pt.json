@@ -333,5 +333,7 @@
     "unlockTrackingText": "Desbloqueie funcionalidades de rastreamento",
     "getPremiumText": "Obter Premium",
     "unlockButton": "DESBLOQUEAR",
-    "enableButton": "ATIVAR"
+    "enableButton": "ATIVAR",
+    "pinnedRoutesSubtitle": "As suas rotas favoritas",
+    "pinnedCount": "0 fixadas"
 }

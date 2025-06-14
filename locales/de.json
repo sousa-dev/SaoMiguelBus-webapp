@@ -333,5 +333,7 @@
     "unlockTrackingText": "Verfolgungsfunktionen freischalten",
     "getPremiumText": "Premium erhalten",
     "unlockButton": "FREISCHALTEN",
-    "enableButton": "AKTIVIEREN"
+    "enableButton": "AKTIVIEREN",
+    "pinnedRoutesSubtitle": "Ihre Lieblingsrouten",
+    "pinnedCount": "0 angeheftet"
 }

@@ -316,5 +316,17 @@
     "routeProgress": "路线进度",
     "stopTrackingQuestion": "停止跟踪？",
     "stopTrackingConfirmation": "您确定要停止跟踪此路线吗？",
-    "yesStop": "是的，停止"
+    "yesStop": "是的，停止",
+    "trackBusesTitle": "跟踪巴士",
+    "pinRoutesTitle": "固定路线",
+    "smartNotificationsTitle": "智能通知",
+    "realTimeTrackingText": "实时到达估计",
+    "dailyTrackingText": "跟踪您的日常路线",
+    "busNotificationsText": "获取您的巴士通知",
+    "unlockTrackingText": "解锁跟踪功能",
+    "getPremiumText": "获取高级版",
+    "unlockButton": "解锁",
+    "enableButton": "启用",
+    "pinnedRoutesSubtitle": "您最喜欢的路线",
+    "pinnedCount": "0 个已固定"
 } 

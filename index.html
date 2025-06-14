@@ -828,6 +828,43 @@
               </div>
           </div>
 
+          <!-- Pinned Routes Section (Above Search Form) -->
+          <div id="pinnedRoutesSection" class="container mx-auto px-4 mb-4 max-w-md" style="display: none;">
+              <div class="bg-white rounded-lg shadow-md border border-gray-200 p-3">
+                  <!-- Top Row: Premium Badge (left) and Count/Toggle (right) -->
+                  <div class="flex items-center justify-between mb-3">
+                      <!-- Premium Badge on the left -->
+                      <span class="bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs font-bold px-2 py-0.5 rounded-full flex items-center">
+                          <i class="fas fa-crown mr-1 text-xs"></i>
+                          <span data-i18n="premium">PREMIUM</span>
+                      </span>
+                      
+                      <!-- Route Count and Toggle on the right -->
+                      <div class="flex items-center space-x-2">
+                          <span id="pinnedRoutesCount" class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-semibold" data-i18n="pinnedCount">0 pinned</span>
+                          <div class="bg-gray-100 rounded-full p-1.5 cursor-pointer" onclick="togglePinnedRoutesSection()" data-umami-event="toggle-pinned-routes">
+                              <i id="pinnedRoutesToggleIcon" class="fas fa-chevron-down transition-transform duration-300 text-gray-600 text-sm"></i>
+                          </div>
+                      </div>
+                  </div>
+                  
+                  <!-- Main Content Row: Icon, Title, and Subtitle -->
+                  <div class="flex items-center mb-2 cursor-pointer" onclick="togglePinnedRoutesSection()" data-umami-event="toggle-pinned-routes">
+                      <div class="bg-blue-500 rounded-full p-1.5 mr-3">
+                          <i class="fas fa-thumbtack text-white text-sm"></i>
+                      </div>
+                      <div class="flex-1 min-w-0">
+                          <h3 class="text-base font-bold text-gray-800 truncate" data-i18n="pinnedRoutes">My Daily Routes</h3>
+                          <p class="text-xs text-gray-600 truncate" data-i18n="pinnedRoutesSubtitle">Your favorite routes</p>
+                      </div>
+                  </div>
+                  
+                  <div id="pinnedRoutesList" class="space-y-2 max-h-0 overflow-hidden transition-all duration-300">
+                      <!-- Pinned routes populated here -->
+                  </div>
+              </div>
+          </div>
+
         <div class="w-full max-w-md mx-auto bg-white rounded-3xl shadow-lg overflow-hidden relative">
             <!-- Ad Banner for Non-Premium Users -->
             <div id="homeAdBanner" class="ad-banner">
@@ -934,23 +971,9 @@
             </div>
         </div>
 
-        <!-- Bus Tracking Widget (Pinned Routes Only) -->
+        <!-- Bus Tracking Widget (can be used for future features) -->
         <div id="busTrackingWidget" class="container mx-auto px-4 mb-4 hidden max-w-md">
-            <!-- Pinned Routes Section -->
-            <div id="pinnedRoutesSection" class="bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-lg p-4 mb-4" style="display: none;">
-                <div class="flex items-center justify-between mb-3">
-                    <h3 class="text-lg font-semibold">
-                        <i class="fas fa-thumbtack mr-2"></i>
-                        <span data-i18n="pinnedRoutes">My Daily Routes</span>
-                    </h3>
-                    <button onclick="managePinnedRoutes()" class="text-white hover:text-gray-200" data-umami-event="manage-pinned-routes">
-                        <i class="fas fa-cog"></i>
-                    </button>
-                </div>
-                <div id="pinnedRoutesList" class="space-y-2">
-                    <!-- Pinned routes populated here -->
-                </div>
-            </div>
+            <!-- Future bus tracking features can be added here -->
         </div>
 
         <!-- Instructional Card for Home Section -->
@@ -2177,7 +2200,7 @@
         };
     </script>
 
-    <!-- Toggle active tracking section -->
+    <!-- Toggle sections -->
     <script>
         function toggleActiveTrackingSection() {
             const list = document.getElementById('activeTrackingList');
@@ -2198,8 +2221,28 @@
             }
         }
 
-        // Make toggle function globally accessible
+        function togglePinnedRoutesSection() {
+            const list = document.getElementById('pinnedRoutesList');
+            const icon = document.getElementById('pinnedRoutesToggleIcon');
+            
+            if (list.classList.contains('max-h-0')) {
+                // Expand
+                list.classList.remove('max-h-0');
+                list.classList.add('max-h-96');
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+            } else {
+                // Collapse
+                list.classList.remove('max-h-96');
+                list.classList.add('max-h-0');
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+            }
+        }
+
+        // Make toggle functions globally accessible
         window.toggleActiveTrackingSection = toggleActiveTrackingSection;
+        window.togglePinnedRoutesSection = togglePinnedRoutesSection;
     </script>
 </body>
 </html>

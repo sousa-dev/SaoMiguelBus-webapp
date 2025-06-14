@@ -316,5 +316,17 @@
     "routeProgress": "Прогрес Маршруту",
     "stopTrackingQuestion": "Зупинити Відстеження?",
     "stopTrackingConfirmation": "Ви впевнені, що хочете зупинити відстеження цього маршруту?",
-    "yesStop": "Так, Зупинити"
+    "yesStop": "Так, Зупинити",
+    "trackBusesTitle": "ВІДСТЕЖУВАТИ АВТОБУСИ",
+    "pinRoutesTitle": "ЗАКРІПИТИ МАРШРУТИ",
+    "smartNotificationsTitle": "РОЗУМНІ СПОВІЩЕННЯ",
+    "realTimeTrackingText": "Оцінки прибуття в реальному часі",
+    "dailyTrackingText": "Відстежуйте ваші щоденні маршрути",
+    "busNotificationsText": "Отримуйте сповіщення про ваші автобуси",
+    "unlockTrackingText": "Розблокуйте функції відстеження",
+    "getPremiumText": "Отримати Преміум",
+    "unlockButton": "РОЗБЛОКУВАТИ",
+    "enableButton": "УВІМКНУТИ",
+    "pinnedRoutesSubtitle": "Ваші улюблені маршрути",
+    "pinnedCount": "0 закріплено"
 } 

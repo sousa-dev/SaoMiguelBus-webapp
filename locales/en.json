@@ -333,5 +333,7 @@
     "unlockTrackingText": "Unlock tracking features",
     "getPremiumText": "Get Premium",
     "unlockButton": "UNLOCK",
-    "enableButton": "ENABLE"
+    "enableButton": "ENABLE",
+    "pinnedRoutesSubtitle": "Your favorite routes",
+    "pinnedCount": "0 pinned"
 }

@@ -401,9 +401,10 @@ class BusTrackingUI {
         }
         
         // Update count
-        const countText = activeTracking.length === 1 ? 
-            t('oneRoute', '1 route') : 
-            t('multipleRoutes', '{count} routes').replace('{count}', activeTracking.length);
+        const count = activeTracking.length;
+        const countText = count === 1 ? 
+            '1 ' + (t('trackingCount', '0 routes').replace('0 ', '') || 'route') : 
+            `${count} ` + (t('trackingCount', '0 routes').replace('0 ', '') || 'routes');
         activeTrackingCount.textContent = countText;
         
         // Clear and rebuild list with detailed status
