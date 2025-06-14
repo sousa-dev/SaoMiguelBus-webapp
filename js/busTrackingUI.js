@@ -386,7 +386,10 @@ class BusTrackingUI {
     // Initialize the bus tracking UI
     static init() {
         this.updateActiveTrackingDisplay();
-        this.updatePinnedRoutesDisplay();
+        if (typeof BusTrackingHandler !== 'undefined' && BusTrackingHandler.updatePinnedRoutesDisplay) {
+            const data = BusTrackingHandler.loadTrackingData();
+            BusTrackingHandler.updatePinnedRoutesDisplay(data.pinnedRoutes);
+        }
         
         // Set up periodic updates for real-time status
         if (BusTrackingHandler.startPeriodicUpdates) {

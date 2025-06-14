@@ -228,6 +228,10 @@
         .page {
             flex: 1;
             overflow-y: auto;
+            display: none;
+        }
+        .page.active {
+            display: block;
         }
 
         /* Improved language picker styling */
@@ -1451,14 +1455,20 @@
         }
 
         function showPage(pageId) {
+            console.log('🔍 showPage called with pageId:', pageId);
             const pages = document.querySelectorAll('.page');
+            console.log('📄 Found pages:', pages.length, Array.from(pages).map(p => p.id));
+            
             pages.forEach(page => {
                 if (page.id === pageId) {
-                    page.classList.remove('hidden');
+                    console.log('✅ Activating page:', page.id);
                     page.classList.add('active');
+                    page.classList.remove('hidden');
+                    console.log('📝 Page classes after activation:', page.className);
                 } else {
-                    page.classList.add('hidden');
+                    console.log('❌ Deactivating page:', page.id);
                     page.classList.remove('active');
+                    page.classList.add('hidden');
                 }
             });
             // Scroll to the top of the page
@@ -1502,12 +1512,20 @@
             }
             
             const pages = document.querySelectorAll('.page');
-            const navLinks = document.querySelectorAll('.bottom-0 a');
+            const navLinks = document.querySelectorAll('nav a[data-target]');
+            
+            console.log('🚀 Navigation initialization');
+            console.log('📄 Found pages:', pages.length);
+            console.log('🔗 Found nav links:', navLinks.length);
+            console.log('🔗 Nav link targets:', Array.from(navLinks).map(link => link.getAttribute('data-target')));
 
             navLinks.forEach(link => {
+                console.log('➕ Adding click listener to:', link.getAttribute('data-target'));
                 link.addEventListener('click', function(e) {
+                    console.log('🖱️ Click detected on nav link:', this.getAttribute('data-target'));
                     e.preventDefault();
                     const targetPage = this.getAttribute('data-target');
+                    console.log('🎯 Target page:', targetPage);
                     showPage(targetPage);
 
                     // Update active state of nav links
@@ -1515,6 +1533,7 @@
                         if (navLink === this) {
                             navLink.classList.add('text-green-600');
                             navLink.classList.remove('text-gray-600');
+                            console.log('🟢 Activated nav link:', navLink.getAttribute('data-target'));
                         } else {
                             navLink.classList.remove('text-green-600');
                             navLink.classList.add('text-gray-600');
@@ -1599,6 +1618,7 @@
 
         // Initial Load: Show 'home' page
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('📱 DOM Content Loaded - Initial page load');
             showPage('home');
         });
 
