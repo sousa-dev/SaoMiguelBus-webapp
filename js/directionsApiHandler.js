@@ -63,6 +63,11 @@ function redirectToStepByStepDirections() {
 document.getElementById('btnSubmitStepByStep').addEventListener('click', function(event) {
     event.preventDefault(); // Prevent form submission
 
+    // Track step-by-step search event
+    if (typeof umami !== 'undefined') {
+        umami.track('step-by-step-search');
+    }
+
     const parameters = getStepByStepSearchParameters();
     if (parameters) {
         searchStepByStep(parameters.origin, parameters.destination, parameters.day, parameters.time);
@@ -359,6 +364,12 @@ function createRouteCard(route, index) {
     // Add click event to toggle details and load map on first expansion
     header.addEventListener('click', () => {
         const isHidden = detailsContainer.classList.contains('hidden');
+        
+        // Track route details toggle
+        if (typeof umami !== 'undefined') {
+            umami.track(isHidden ? 'expand-route-details' : 'collapse-route-details');
+        }
+        
         detailsContainer.classList.toggle('hidden');
         mapContainer.classList.toggle('hidden');
         const iconElement = header.querySelector('.iconify');

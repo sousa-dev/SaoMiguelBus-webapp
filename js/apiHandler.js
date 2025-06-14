@@ -470,6 +470,10 @@ function createFavouriteIcon() {
     showFavoritesButton.className = 'flex items-center cursor-pointer text-blue-500 hover:text-blue-700';
     showFavoritesButton.innerHTML = '<i class="fas fa-eye mr-2"></i>' + t('showFavorites');
     showFavoritesButton.onclick = function() {
+        // Track show favorites event
+        if (typeof umami !== 'undefined') {
+            umami.track('show-favorite-routes');
+        }
         // Hide the routesContainer
         document.getElementById('routesContainer').style.display = 'none';
         displayFavoriteRoutes(checkFavoriteRoutesCookie());
@@ -817,7 +821,8 @@ async function createRouteDiv(route, originStop, destinationStop, lastRoute) {
             </div>
             <div class="flex space-x-2 mt-2" data-offline="false">
                 <button type="submit" class="flex-grow bg-green-500 text-white py-2 rounded-full hover:bg-green-600 transition duration-300 ease-in-out" data-i18n="directionsButton" data-umami-event="directions-button-click"
-                onclick="redirectToStepByStepDirections(event)">
+                onclick="redirectToStepByStepDirections(event)"
+                data-umami-event="directions-button-clicked">
                     ${t('directionsButton')} <i class="fas fa-route"></i>
                 </button>
             </div>

@@ -1001,7 +1001,7 @@ class BusTrackingHandler {
                                 <p class="text-sm text-gray-600">${route.origin} → ${route.destination}</p>
                             </div>
                         </div>
-                        <button onclick="BusTrackingHandler.closeRouteDetails()" class="text-gray-500 hover:text-gray-700 p-1">
+                        <button onclick="BusTrackingHandler.closeRouteDetails()" class="text-gray-500 hover:text-gray-700 p-1" data-umami-event="close-route-details">
                             <i class="fas fa-times text-lg"></i>
                         </button>
                     </div>
@@ -1066,7 +1066,7 @@ class BusTrackingHandler {
                 </div>
                 
                 <div class="px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 border-t flex justify-end">
-                    <button onclick="BusTrackingHandler.closeRouteDetails()" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 text-sm sm:text-base">
+                    <button onclick="BusTrackingHandler.closeRouteDetails()" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 text-sm sm:text-base" data-umami-event="close-route-details-modal">
                         ${t('close', 'Close')}
                     </button>
                 </div>
@@ -1152,10 +1152,10 @@ class BusTrackingHandler {
                         </div>
                     </div>
                     <div class="flex space-x-3">
-                        <button onclick="BusTrackingHandler.closeStopTrackingModal()" class="flex-1 px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition duration-200">
+                        <button onclick="BusTrackingHandler.closeStopTrackingModal()" class="flex-1 px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition duration-200" data-umami-event="cancel-stop-tracking">
                             ${t('cancel', 'Cancel')}
                         </button>
-                        <button onclick="BusTrackingHandler.confirmStopTracking('${trackingId}')" class="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-200">
+                        <button onclick="BusTrackingHandler.confirmStopTracking('${trackingId}')" class="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-200" data-umami-event="confirm-stop-tracking">
                             ${t('stopTracking', 'Stop Tracking')}
                         </button>
                     </div>
@@ -1215,11 +1215,13 @@ class BusTrackingHandler {
                 
                 <div class="flex space-x-2">
                     <button onclick="BusTrackingHandler.stopTracking('${trackingId}'); this.parentElement.parentElement.parentElement.remove();" 
-                            class="flex-1 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition duration-300">
+                            class="flex-1 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition duration-300"
+                            data-umami-event="confirm-stop-tracking-inline">
                         ${t('yesStop', 'Yes, Stop')}
                     </button>
                     <button onclick="this.parentElement.parentElement.parentElement.remove()" 
-                            class="flex-1 bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600 transition duration-300">
+                            class="flex-1 bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600 transition duration-300"
+                            data-umami-event="cancel-stop-tracking-inline">
                         ${t('cancel', 'Cancel')}
                     </button>
                 </div>
@@ -1569,11 +1571,13 @@ class BusTrackingHandler {
                 
                 <div class="mt-6 flex space-x-2">
                     <button onclick="BusTrackingHandler.confirmStopTracking('${trackingId}'); this.parentElement.parentElement.parentElement.remove();" 
-                            class="flex-1 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition duration-300">
+                            class="flex-1 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition duration-300"
+                            data-umami-event="stop-tracking-from-details">
                         <i class="fas fa-stop mr-2"></i>${t('stopTracking', 'Stop Tracking')}
                     </button>
                     <button onclick="this.parentElement.parentElement.parentElement.remove()" 
-                            class="flex-1 bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600 transition duration-300">
+                            class="flex-1 bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600 transition duration-300"
+                            data-umami-event="close-tracking-details">
                         ${t('close', 'Close')}
                     </button>
                 </div>

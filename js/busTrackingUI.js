@@ -311,9 +311,9 @@ class BusTrackingUI {
             <div class="bg-white rounded-lg w-full max-w-md mx-4 max-h-[90vh] overflow-hidden">
                 <div class="flex items-center justify-between p-3 sm:p-4 border-b">
                     <h2 class="text-lg sm:text-xl font-semibold" data-i18n="managePinnedRoutes">Manage Pinned Routes</h2>
-                    <button onclick="BusTrackingUI.closePinnedRouteManager()" class="text-gray-500 hover:text-gray-700 p-1">
-                        <i class="fas fa-times text-lg"></i>
-                    </button>
+                                            <button onclick="BusTrackingUI.closePinnedRouteManager()" class="text-gray-500 hover:text-gray-700 p-1" data-umami-event="close-pinned-route-manager">
+                            <i class="fas fa-times text-lg"></i>
+                        </button>
                 </div>
                 
                 <div class="p-3 sm:p-4 max-h-80 overflow-y-auto">
@@ -331,7 +331,7 @@ class BusTrackingUI {
                             <span>${data.pinnedRoutes.length}</span> / <span>${BusTrackingHandler.MAX_PINNED_ROUTES}</span> pinned
                         </span>
                         ${data.pinnedRoutes.length > 0 ? `
-                            <button onclick="BusTrackingUI.clearAllPinnedRoutes()" class="text-red-600 hover:text-red-800 text-xs sm:text-sm">
+                            <button onclick="BusTrackingUI.clearAllPinnedRoutes()" class="text-red-600 hover:text-red-800 text-xs sm:text-sm" data-umami-event="clear-all-pinned-routes">
                                 <i class="fas fa-trash mr-1"></i>
                                 <span data-i18n="clearAll">Clear All</span>
                             </button>
@@ -353,7 +353,7 @@ class BusTrackingUI {
                         <i class="fas fa-thumbtack text-green-500 mr-2"></i>
                         <span class="font-medium text-sm sm:text-base">${route.routeNumber}</span>
                     </div>
-                    <button onclick="BusTrackingHandler.removePinnedRoute('${route.id}')" class="text-red-500 hover:text-red-700 p-1">
+                    <button onclick="BusTrackingHandler.removePinnedRoute('${route.id}')" class="text-red-500 hover:text-red-700 p-1" data-umami-event="remove-individual-pinned-route">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>

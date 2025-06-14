@@ -116,21 +116,33 @@ function setupModalEventListeners() {
     const closePricingModal = document.getElementById('closePricingModal');
     if (closePricingModal) {
         closePricingModal.addEventListener('click', hidePricingModal);
+        closePricingModal.setAttribute('data-umami-event', 'close-pricing-modal');
     }
     
     // Email verification modal close button
     const closeEmailVerificationModal = document.getElementById('closeEmailVerificationModal');
     if (closeEmailVerificationModal) {
         closeEmailVerificationModal.addEventListener('click', hideEmailVerificationModal);
+        closeEmailVerificationModal.setAttribute('data-umami-event', 'close-email-verification-modal');
     }
     
     // Close modals when clicking outside
     document.getElementById('pricingModal')?.addEventListener('click', function(e) {
-        if (e.target === this) hidePricingModal();
+        if (e.target === this) {
+            if (typeof umami !== 'undefined') {
+                umami.track('close-pricing-modal-outside-click');
+            }
+            hidePricingModal();
+        }
     });
     
     document.getElementById('emailVerificationModal')?.addEventListener('click', function(e) {
-        if (e.target === this) hideEmailVerificationModal();
+        if (e.target === this) {
+            if (typeof umami !== 'undefined') {
+                umami.track('close-email-verification-modal-outside-click');
+            }
+            hideEmailVerificationModal();
+        }
     });
 }
 
@@ -170,6 +182,7 @@ function addPremiumIndicator() {
         indicator.className = 'absolute -top-1 -right-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center';
         indicator.innerHTML = '👑';
         indicator.style.fontSize = '8px';
+        indicator.setAttribute('data-umami-event', 'premium-indicator-displayed');
         
         // Make the ads tab link relative positioned to contain the absolute indicator
         adsTabLink.style.position = 'relative';
@@ -230,6 +243,10 @@ function selectPricingOption(optionId) {
 function subscribeToSelectedPlan() {
     const selectedOption = pricingOptions.find(option => option.id === window.selectedPricingOption);
     if (selectedOption) {
+        // Track subscription plan selection
+        if (typeof umami !== 'undefined') {
+            umami.track('subscribe-to-plan', { plan: selectedOption.id });
+        }
         window.open(selectedOption.stripeLink, '_blank');
         hidePricingModal();
     }
@@ -334,6 +351,7 @@ function showNotification(message, type = 'info') {
         'bg-blue-500 text-white'
     }`;
     notification.textContent = message;
+    notification.setAttribute('data-umami-event', `notification-${type}-shown`);
     
     document.body.appendChild(notification);
     
@@ -409,6 +427,10 @@ function selectPricingOptionPage(optionId) {
 function subscribeToSelectedPlanPage() {
     const selectedOption = pricingOptions.find(option => option.id === window.selectedPricingOptionPage);
     if (selectedOption) {
+        // Track subscription plan selection from advert page
+        if (typeof umami !== 'undefined') {
+            umami.track('subscribe-to-plan-from-advert-page', { plan: selectedOption.id });
+        }
         window.open(selectedOption.stripeLink, '_blank');
     }
 }
@@ -486,6 +508,10 @@ function updatePremiumStatusDisplay() {
 // Deactivate premium
 function deactivatePremium() {
     if (confirm(t('deactivatePremium', 'Are you sure you want to deactivate premium?'))) {
+        // Track premium deactivation
+        if (typeof umami !== 'undefined') {
+            umami.track('deactivate-premium');
+        }
         clearPremiumCookies();
         location.reload(); // Reload to show ads again
     }
@@ -511,20 +537,34 @@ function debugDeactivatePremium() {
 // Event listeners
 document.addEventListener('DOMContentLoaded', function() {
     // Close pricing modal
-    document.getElementById('closePricingModal')?.addEventListener('click', hidePricingModal);
+    const closePricingModal = document.getElementById('closePricingModal');
+    if (closePricingModal) {
+        closePricingModal.addEventListener('click', hidePricingModal);
+        closePricingModal.setAttribute('data-umami-event', 'close-pricing-modal');
+    }
     
     // Close email verification modal
-    document.getElementById('closeEmailVerificationModal')?.addEventListener('click', hideEmailVerificationModal);
+    const closeEmailVerificationModal = document.getElementById('closeEmailVerificationModal');
+    if (closeEmailVerificationModal) {
+        closeEmailVerificationModal.addEventListener('click', hideEmailVerificationModal);
+        closeEmailVerificationModal.setAttribute('data-umami-event', 'close-email-verification-modal');
+    }
     
     // Close modals when clicking outside
     document.getElementById('pricingModal')?.addEventListener('click', function(e) {
         if (e.target === this) {
+            if (typeof umami !== 'undefined') {
+                umami.track('close-pricing-modal-outside-click');
+            }
             hidePricingModal();
         }
     });
     
     document.getElementById('emailVerificationModal')?.addEventListener('click', function(e) {
         if (e.target === this) {
+            if (typeof umami !== 'undefined') {
+                umami.track('close-email-verification-modal-outside-click');
+            }
             hideEmailVerificationModal();
         }
     });
