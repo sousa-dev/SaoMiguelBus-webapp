@@ -261,7 +261,7 @@ function createRouteCard(route, index) {
                 </div>
             </div>
             <div class="mt-4 text-center">
-                <button class="expand-stops flex items-center justify-center w-full text-blue-500 hover:text-blue-700 text-base py-2">
+                <button class="expand-stops flex items-center justify-center w-full text-blue-500 hover:text-blue-700 text-base py-2" data-umami-event="expand-direction-details">
                     <span class="mr-2">${t('clickToSeeDetails')}</span>
                     <span class="iconify transform transition-transform duration-300 text-xl" data-icon="mdi:chevron-down"></span>
                 </button>

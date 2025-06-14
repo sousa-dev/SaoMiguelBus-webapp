@@ -66,6 +66,10 @@ class BusTrackingHandler {
     static startTracking(routeData) {
         if (!this.checkPremiumAccess()) {
             showPricingModal();
+            // Track premium required event
+            if (typeof umami !== 'undefined') {
+                umami.track('tracking-premium-required');
+            }
             return false;
         }
 
@@ -81,12 +85,20 @@ class BusTrackingHandler {
 
         if (existingTracking) {
             this.showMessage(t('alreadyTracking', 'This route is already being tracked'), 'info');
+            // Track already tracking event
+            if (typeof umami !== 'undefined') {
+                umami.track('tracking-already-active');
+            }
             return false;
         }
 
         // Check tracking limits
         if (data.activeTracking.length >= this.MAX_ACTIVE_TRACKING) {
             this.showMessage(t('trackingLimitReached', 'Maximum tracking limit reached'), 'warning');
+            // Track limit reached event
+            if (typeof umami !== 'undefined') {
+                umami.track('tracking-limit-reached');
+            }
             return false;
         }
 
@@ -98,6 +110,17 @@ class BusTrackingHandler {
         this.updateHomepageWidget();
 
         this.showMessage(t('trackingStarted', 'Bus tracking started'), 'success');
+        
+        // Track successful tracking start
+        if (typeof umami !== 'undefined') {
+            umami.track('tracking-started', {
+                routeId: routeData.routeId,
+                routeNumber: routeData.routeNumber,
+                origin: routeData.origin,
+                destination: routeData.destination
+            });
+        }
+        
         return true;
     }
 
@@ -388,6 +411,10 @@ class BusTrackingHandler {
     static pinRoute(routeData, pinOptions) {
         if (!this.checkPremiumAccess()) {
             showPricingModal();
+            // Track premium required event
+            if (typeof umami !== 'undefined') {
+                umami.track('pin-route-premium-required');
+            }
             return false;
         }
 
@@ -402,50 +429,95 @@ class BusTrackingHandler {
 
         if (existingPinned) {
             this.showMessage(t('alreadyPinned', 'This route is already pinned'), 'info');
+            // Track already pinned event
+            if (typeof umami !== 'undefined') {
+                umami.track('pin-route-already-pinned');
+            }
             return false;
         }
 
         // Check pinned routes limit
         if (data.pinnedRoutes.length >= this.MAX_PINNED_ROUTES) {
             this.showMessage(t('pinnedLimitReached', 'Maximum pinned routes limit reached'), 'warning');
+            // Track limit reached event
+            if (typeof umami !== 'undefined') {
+                umami.track('pin-route-limit-reached');
+            }
             return false;
         }
 
-        // Create pinned route
-        const pinnedRoute = this.createTrackedBus({
-            ...routeData,
-            pinnedDays: pinOptions.days,
-            autoTrackTime: pinOptions.autoTrackTime
-        }, true);
-
+        // Create and add pinned route
+        const pinnedRoute = this.createTrackedBus(routeData, true);
+        pinnedRoute.pinnedDays = pinOptions.days || ['weekday'];
+        pinnedRoute.autoTrackTime = pinOptions.autoTrackTime || '08:00';
+        
         data.pinnedRoutes.push(pinnedRoute);
         this.saveTrackingData(data);
         this.updateHomepageWidget();
 
-        this.showMessage(t('routePinned', 'Route pinned for daily tracking'), 'success');
+        this.showMessage(t('routePinned', 'Route pinned successfully'), 'success');
+        
+        // Track successful pin
+        if (typeof umami !== 'undefined') {
+            umami.track('route-pinned', {
+                routeId: routeData.routeId,
+                routeNumber: routeData.routeNumber,
+                origin: routeData.origin,
+                destination: routeData.destination,
+                pinnedDays: pinnedRoute.pinnedDays.join(','),
+                autoTrackTime: pinnedRoute.autoTrackTime
+            });
+        }
+        
         return true;
     }
 
-    // Remove pinned route
+    // Remove a pinned route
     static removePinnedRoute(pinnedId) {
         const data = this.loadTrackingData();
+        const routeIndex = data.pinnedRoutes.findIndex(route => route.id === pinnedId);
         
-        data.pinnedRoutes = data.pinnedRoutes.filter(route => route.id !== pinnedId);
-        
-        this.saveTrackingData(data);
-        this.updateHomepageWidget();
-        
-        this.showMessage(t('pinnedRouteRemoved', 'Pinned route removed'), 'success');
+        if (routeIndex !== -1) {
+            const removedRoute = data.pinnedRoutes[routeIndex];
+            data.pinnedRoutes.splice(routeIndex, 1);
+            this.saveTrackingData(data);
+            this.updateHomepageWidget();
+            
+            // Track removal
+            if (typeof umami !== 'undefined') {
+                umami.track('pinned-route-removed', {
+                    routeId: removedRoute.routeId,
+                    routeNumber: removedRoute.routeNumber
+                });
+            }
+            
+            return true;
+        }
+        return false;
     }
 
-    // Remove tracking
+    // Remove active tracking
     static removeTracking(trackingId) {
         const data = this.loadTrackingData();
+        const trackingIndex = data.activeTracking.findIndex(track => track.id === trackingId);
         
-        data.activeTracking = data.activeTracking.filter(track => track.id !== trackingId);
-        
-        this.saveTrackingData(data);
-        this.updateHomepageWidget();
+        if (trackingIndex !== -1) {
+            const removedTracking = data.activeTracking[trackingIndex];
+            data.activeTracking.splice(trackingIndex, 1);
+            this.saveTrackingData(data);
+            this.updateHomepageWidget();
+            
+            // Track removal
+            if (typeof umami !== 'undefined') {
+                umami.track('tracking-removed', {
+                    routeId: removedTracking.routeId,
+                    routeNumber: removedTracking.routeNumber
+                });
+            }
+            
+            return true;
+        }
+        return false;
     }
 
     // Update homepage widget

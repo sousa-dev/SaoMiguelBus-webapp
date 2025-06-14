@@ -16,7 +16,13 @@ function createFavoriteCard(route) {
     const favoriteCard = document.createElement('div');
     favoriteCard.setAttribute('data-umami-event', 'favorite-route-card');
     favoriteCard.classList.add('bg-white', 'rounded-lg', 'shadow-md', 'p-4', 'mb-4', 'flex', 'flex-col', 'items-center', 'cursor-pointer');
-    favoriteCard.onclick = () => fillOriginDestination(origin, destination);
+    favoriteCard.onclick = () => {
+        fillOriginDestination(origin, destination);
+        // Track the click event
+        if (typeof umami !== 'undefined') {
+            umami.track('favorite-route-click', { origin: origin, destination: destination });
+        }
+    };
     favoriteCard.innerHTML = `
         <div class="flex flex-col items-center w-full cursor-pointer">
             <p class="text-lg font-semibold text-gray-500">${origin}</p>

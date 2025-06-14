@@ -107,6 +107,7 @@ function populateSuggestions(stopsList) {
             document.getElementById('origin').value = this.textContent;
             originSuggestions.innerHTML = ''; // Clear suggestions on selection
         });
+        stopName.setAttribute('data-umami-event', 'select-origin-suggestion');
         originDiv.appendChild(stopName);
         originSuggestions.appendChild(originDiv);
 
@@ -129,6 +130,7 @@ function populateSuggestions(stopsList) {
             document.getElementById('destination').value = this.textContent;
             destinationSuggestions.innerHTML = ''; // Clear suggestions on selection
         });
+        stopNameDest.setAttribute('data-umami-event', 'select-destination-suggestion');
         destinationDiv.appendChild(stopNameDest);
         destinationSuggestions.appendChild(destinationDiv);
 
@@ -151,6 +153,7 @@ function populateSuggestions(stopsList) {
             document.getElementById('originStepByStep').value = this.textContent;
             originStepByStepSuggestions.innerHTML = ''; // Clear suggestions on selection
         });
+        stopNameStepByStep.setAttribute('data-umami-event', 'select-origin-step-suggestion');
         originStepByStepDiv.appendChild(stopNameStepByStep);
         originStepByStepSuggestions.appendChild(originStepByStepDiv);
 
@@ -173,6 +176,7 @@ function populateSuggestions(stopsList) {
             document.getElementById('destinationStepByStep').value = this.textContent;
             destinationStepByStepSuggestions.innerHTML = ''; // Clear suggestions on selection
         });
+        stopNameDestStepByStep.setAttribute('data-umami-event', 'select-destination-step-suggestion');
         destinationStepByStepDiv.appendChild(stopNameDestStepByStep);
         destinationStepByStepSuggestions.appendChild(destinationStepByStepDiv);
 
@@ -763,16 +767,16 @@ async function createRouteDiv(route, originStop, destinationStop, lastRoute) {
                 </div>
             </div>
             <div id="${route.id}-likes-dislikes" class="mt-4 flex items-center justify-between" data-umami-event="route-summary" data-offline="false">
-                <button class="dislike-button flex items-center ${currentVote === 'dislike' ? 'text-red-700' : 'text-gray-500'} hover:text-red-700" onclick="dislike_route(${route.id}, '${route.route}', this)" data-umami-event="dislike-button-click" data-umami-event="dislike-button-interaction">
+                <button class="dislike-button flex items-center ${currentVote === 'dislike' ? 'text-red-700' : 'text-gray-500'} hover:text-red-700" onclick="dislike_route(${route.id}, '${route.route}', this)" data-umami-event="dislike-route">
                     <i class="fas fa-thumbs-down"></i>
                 </button>
                 <span id="dislikes-percent" class="text-gray-500 text-xs mr-2">${route.dislikes_percent}%</span>
-                <button class="expand-stops flex items-center justify-center text-blue-500 hover:text-blue-700 text-base py-2" data-umami-event="expand-stops-click" data-umami-event="expand-stops-interaction">
+                <button class="expand-stops flex items-center justify-center text-blue-500 hover:text-blue-700 text-base py-2" data-umami-event="expand-route-details">
                     <span class="mr-2">${t('clickToSeeDetails')}</span>
                     <span class="iconify transform transition-transform duration-300 text-xl" data-icon="mdi:chevron-down"></span>
                 </button>
                 <span id="likes-percent" class="text-gray-500 text-xs ml-2">${route.likes_percent}%</span>
-                <button class="like-button flex items-center ${currentVote === 'like' ? 'text-green-700' : 'text-gray-500'} hover:text-green-700" onclick="like_route(${route.id}, '${route.route}', this)" data-umami-event="like-button-click" data-umami-event="like-button-interaction">
+                <button class="like-button flex items-center ${currentVote === 'like' ? 'text-green-700' : 'text-gray-500'} hover:text-green-700" onclick="like_route(${route.id}, '${route.route}', this)" data-umami-event="like-route">
                     <i class="fas fa-thumbs-up"></i>
                 </button>
             </div>
@@ -905,7 +909,7 @@ async function createRouteDiv(route, originStop, destinationStop, lastRoute) {
     }
     
     // Add tracking buttons for premium users
-    if (typeof adRemovalState !== 'undefined' && adRemovalState && adRemovalState.isActive) {
+    if (typeof adRemovalState !== 'undefined' && adRemovalState.isActive) {
         const trackingButtonsContainer = routeDiv.querySelector(`#trackingButtons-${route.id}`);
         if (trackingButtonsContainer) {
             trackingButtonsContainer.style.display = 'block';

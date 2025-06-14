@@ -315,7 +315,7 @@
     <div id="desktopBanner" class="hidden lg:block fixed left-4 top-1/2 transform -translate-y-1/2 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 max-w-xs shadow-lg rounded-r-lg z-50">
         <p class="font-bold" data-i18n="alertModalTitle">Alertas</p>
         <p class="text-sm" data-i18n="desktopBannerText">Este Website está desenvolvido para ser usado em dispositivos móveis. Pode usá-lo no computador, mas a experiência será melhor no telemóvel. Aceda a saomiguelbus.com no navegador do seu smartphone!</p>
-        <button onclick="dismissBanner()" class="absolute top-2 right-2 text-yellow-700 hover:text-yellow-900" aria-label="Fechar aviso">
+        <button onclick="dismissBanner()" class="absolute top-2 right-2 text-yellow-700 hover:text-yellow-900" aria-label="Fechar aviso" data-umami-event="dismiss-desktop-banner">
             <i class="fas fa-times"></i>
         </button>
     </div>
@@ -442,7 +442,7 @@
                     <button onclick="event.stopPropagation(); showPricingModal()" class="bg-white text-red-500 px-3 py-1 rounded text-xs font-bold hover:bg-gray-100" data-umami-event="bottom-sticky-ad-upgrade">
                         <span data-i18n="upgradeButton">UPGRADE</span>
                     </button>
-                    <button onclick="event.stopPropagation(); dismissBottomAd()" class="text-white hover:text-gray-200" aria-label="Close ad">
+                    <button onclick="event.stopPropagation(); dismissBottomAd()" class="text-white hover:text-gray-200" aria-label="Close ad" data-umami-event="dismiss-bottom-ad">
                         <i class="fas fa-times text-sm"></i>
                     </button>
                 </div>
@@ -552,7 +552,7 @@
             
             <!-- Pricing Options -->
             <div class="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
-                <div id="pricing-option-weekly" class="pricing-option border-2 border-gray-200 bg-white rounded-lg p-3 sm:p-4 cursor-pointer hover:border-green-300 transition-colors" onclick="selectPricingOption('weekly')">
+                <div id="pricing-option-weekly" class="pricing-option border-2 border-gray-200 bg-white rounded-lg p-3 sm:p-4 cursor-pointer hover:border-green-300 transition-colors" onclick="selectPricingOption('weekly')" data-umami-event="select-pricing-weekly">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
                             <div class="w-4 h-4 border-2 border-gray-300 rounded-full mr-3"></div>
@@ -564,7 +564,7 @@
                     </div>
                 </div>
                 
-                <div id="pricing-option-monthly" class="pricing-option border-2 border-gray-200 bg-white rounded-lg p-3 sm:p-4 cursor-pointer hover:border-green-300 transition-colors" onclick="selectPricingOption('monthly')">
+                <div id="pricing-option-monthly" class="pricing-option border-2 border-gray-200 bg-white rounded-lg p-3 sm:p-4 cursor-pointer hover:border-green-300 transition-colors" onclick="selectPricingOption('monthly')" data-umami-event="select-pricing-monthly">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
                             <div class="w-4 h-4 border-2 border-gray-300 rounded-full mr-3"></div>
@@ -576,7 +576,7 @@
                     </div>
                 </div>
                 
-                <div id="pricing-option-yearly" class="pricing-option border-2 border-gray-200 bg-white rounded-lg p-3 sm:p-4 cursor-pointer hover:border-green-300 transition-colors" onclick="selectPricingOption('yearly')">
+                <div id="pricing-option-yearly" class="pricing-option border-2 border-gray-200 bg-white rounded-lg p-3 sm:p-4 cursor-pointer hover:border-green-300 transition-colors" onclick="selectPricingOption('yearly')" data-umami-event="select-pricing-yearly">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
                             <div class="w-4 h-4 border-2 border-gray-300 rounded-full mr-3"></div>
@@ -680,7 +680,7 @@
                     </span>
                 </div>
                 
-                <div class="flex items-center justify-between mb-2 cursor-pointer" onclick="toggleActiveTrackingSection()">
+                <div class="flex items-center justify-between mb-2 cursor-pointer" onclick="toggleActiveTrackingSection()" data-umami-event="toggle-active-tracking">
                     <div class="flex items-center flex-1">
                         <div class="bg-green-500 rounded-full p-1.5 mr-2">
                             <i class="fas fa-location-arrow text-white text-sm"></i>
@@ -818,7 +818,7 @@
                         <i class="fas fa-thumbtack mr-2"></i>
                         <span data-i18n="pinnedRoutes">My Daily Routes</span>
                     </h3>
-                    <button onclick="managePinnedRoutes()" class="text-white hover:text-gray-200">
+                    <button onclick="managePinnedRoutes()" class="text-white hover:text-gray-200" data-umami-event="manage-pinned-routes">
                         <i class="fas fa-cog"></i>
                     </button>
                 </div>
@@ -891,7 +891,6 @@
                 
                     <!-- Swap Button -->
                     <button type="button" class="w-full flex justify-end items-center" onclick="swapOriginDestination()" data-umami-event="swap-origin-destination-step-by-step">
-                    <button type="button" class="w-full flex justify-end items-center" onclick="swapOriginDestination()">
                         <div class="bg-green-500 rounded-full w-8 h-8 flex items-center justify-center hover:bg-green-600 transition duration-300 ease-in-out">
                             <i id="swapIconStepByStep" class="fas fa-exchange-alt transform rotate-90 text-white text-sm"></i>
                         </div>
@@ -1034,7 +1033,7 @@
             
             <!-- Pricing Options -->
             <div class="space-y-3 mb-6">
-                <div id="premium-page-weekly" class="pricing-option border-2 border-gray-200 bg-white rounded-lg p-4 cursor-pointer hover:border-green-300 transition-colors" onclick="selectPricingOptionPage('weekly')">
+                <div id="premium-page-weekly" class="pricing-option border-2 border-gray-200 bg-white rounded-lg p-4 cursor-pointer hover:border-green-300 transition-colors" onclick="selectPricingOptionPage('weekly')" data-umami-event="select-pricing-page-weekly">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
                             <div class="w-4 h-4 border-2 border-gray-300 rounded-full mr-3"></div>
@@ -1046,7 +1045,7 @@
                     </div>
                 </div>
                 
-                <div id="premium-page-monthly" class="pricing-option border-2 border-gray-200 bg-white rounded-lg p-4 cursor-pointer hover:border-green-300 transition-colors" onclick="selectPricingOptionPage('monthly')">
+                <div id="premium-page-monthly" class="pricing-option border-2 border-gray-200 bg-white rounded-lg p-4 cursor-pointer hover:border-green-300 transition-colors" onclick="selectPricingOptionPage('monthly')" data-umami-event="select-pricing-page-monthly">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
                             <div class="w-4 h-4 border-2 border-gray-300 rounded-full mr-3"></div>
@@ -1058,7 +1057,7 @@
                     </div>
                 </div>
                 
-                <div id="premium-page-yearly" class="pricing-option border-2 border-gray-200 bg-white rounded-lg p-4 cursor-pointer hover:border-green-300 transition-colors" onclick="selectPricingOptionPage('yearly')">
+                <div id="premium-page-yearly" class="pricing-option border-2 border-gray-200 bg-white rounded-lg p-4 cursor-pointer hover:border-green-300 transition-colors" onclick="selectPricingOptionPage('yearly')" data-umami-event="select-pricing-page-yearly">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
                             <div class="w-4 h-4 border-2 border-gray-300 rounded-full mr-3"></div>
@@ -1202,7 +1201,7 @@
                            data-umami-event="manage-subscription">
                             <span data-i18n="manageSubscription">Manage</span>
                         </a>
-                        <button onclick="deactivatePremium()" class="text-white hover:text-gray-200">
+                        <button onclick="deactivatePremium()" class="text-white hover:text-gray-200" data-umami-event="deactivate-premium">
                             <i class="fas fa-sign-out-alt"></i>
                         </button>
                     </div>
@@ -1257,7 +1256,7 @@
             </a>
             <div id="infoModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden" onclick="document.getElementById('infoModal').classList.add('hidden');" data-umami-event="close-info-modal">
                 <div class="bg-white rounded-lg p-6 w-80 relative" onclick="event.stopPropagation();">
-                    <button id="closeInfoModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" onclick="document.getElementById('infoModal').classList.add('hidden');">
+                    <button id="closeInfoModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" onclick="document.getElementById('infoModal').classList.add('hidden');" data-umami-event="close-info-modal-button">
                         <i class="fas fa-times text-xl text-right"></i>
                     </button>
                     <h3 class="text-xl font-semibold text-green-600 mb-3" data-i18n="infoModalTitle">Informações Importantes</h3>
@@ -1278,7 +1277,7 @@
 
             <div id="contactCompaniesModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden" onclick="document.getElementById('contactCompaniesModal').classList.add('hidden');" data-umami-event="close-contact-companies-modal">
                 <div class="bg-white rounded-lg p-6 w-80 relative" onclick="event.stopPropagation();">
-                    <button id="closeContactModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" onclick="document.getElementById('contactCompaniesModal').classList.add('hidden');">
+                    <button id="closeContactModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" onclick="document.getElementById('contactCompaniesModal').classList.add('hidden');" data-umami-event="close-contact-modal-button">
                         <i class="fas fa-times text-xl text-right"></i>
                     </button>
                     <h3 class="text-xl font-semibold text-green-600 mb-3" data-i18n="contactBusCompaniesTitle">Contato das Companhias de Autocarros</h3>
@@ -1809,7 +1808,7 @@
     <!-- Interstitial Ad Modal -->
     <div id="interstitialAdModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden p-4">
         <div class="bg-white rounded-lg p-4 sm:p-6 w-full max-w-sm sm:max-w-md mx-auto relative max-h-[90vh] overflow-y-auto">
-            <button id="closeInterstitialAd" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" onclick="closeInterstitialAd()">
+            <button id="closeInterstitialAd" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" onclick="closeInterstitialAd()" data-umami-event="close-interstitial-ad">
                 <i class="fas fa-times text-xl text-right"></i>
             </button>
             

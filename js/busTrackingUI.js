@@ -6,6 +6,7 @@ class BusTrackingUI {
         const button = document.createElement('button');
         button.className = 'bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300 text-sm mr-2';
         button.innerHTML = '<i class="fas fa-location-arrow mr-2"></i>' + t('trackBus', 'Track Bus');
+        button.setAttribute('data-umami-event', 'track-bus-button');
         
         button.onclick = (event) => {
             event.stopPropagation();
@@ -20,6 +21,7 @@ class BusTrackingUI {
         const button = document.createElement('button');
         button.className = 'bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-300 text-sm';
         button.innerHTML = '<i class="fas fa-thumbtack mr-2"></i>' + t('trackEveryDay', 'Track Every Day');
+        button.setAttribute('data-umami-event', 'pin-route-button');
         
         button.onclick = (event) => {
             event.stopPropagation();
@@ -81,10 +83,10 @@ class BusTrackingUI {
                 </div>
                 
                 <div class="px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 border-t flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3">
-                    <button onclick="BusTrackingUI.cancelTracking()" class="px-4 py-2 text-gray-600 hover:text-gray-800 text-sm sm:text-base order-2 sm:order-1">
+                    <button onclick="BusTrackingUI.cancelTracking()" class="px-4 py-2 text-gray-600 hover:text-gray-800 text-sm sm:text-base order-2 sm:order-1" data-umami-event="cancel-tracking">
                         ${t('cancel')}
                     </button>
-                    <button onclick="BusTrackingUI.acceptTrackingDisclaimer('${btoa(JSON.stringify(routeData))}')" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm sm:text-base order-1 sm:order-2">
+                    <button onclick="BusTrackingUI.acceptTrackingDisclaimer('${btoa(JSON.stringify(routeData))}')" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm sm:text-base order-1 sm:order-2" data-umami-event="accept-tracking-disclaimer">
                         ${t('iUnderstand')}
                     </button>
                 </div>
@@ -166,10 +168,10 @@ class BusTrackingUI {
                 </div>
                 
                 <div class="px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 border-t flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3">
-                    <button onclick="BusTrackingUI.cancelPinning()" class="px-4 py-2 text-gray-600 hover:text-gray-800 text-sm sm:text-base order-2 sm:order-1">
+                    <button onclick="BusTrackingUI.cancelPinning()" class="px-4 py-2 text-gray-600 hover:text-gray-800 text-sm sm:text-base order-2 sm:order-1" data-umami-event="cancel-pin-route">
                         ${t('cancel')}
                     </button>
-                    <button onclick="BusTrackingUI.confirmPinRoute('${btoa(JSON.stringify(routeData))}')" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 text-sm sm:text-base order-1 sm:order-2">
+                    <button onclick="BusTrackingUI.confirmPinRoute('${btoa(JSON.stringify(routeData))}')" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 text-sm sm:text-base order-1 sm:order-2" data-umami-event="confirm-pin-route">
                         ${t('pinRoute')}
                     </button>
                 </div>
