@@ -48,7 +48,7 @@ function checkFavoriteRoutesCookie() {
 function displayFavoriteRoutes(routes) {
     // You might want to update a specific element in your HTML to show these routes
     const favoriteRoutesContainer = document.getElementById('favouriteRoutesContainer');
-    favoriteRoutesContainer.innerHTML = '<h2 class="text-2xl font-bold mb-4 text-gray-800" data-i18n="favoriteRoutes">Rotas Favoritas</h2>';
+    favoriteRoutesContainer.innerHTML = '<h2 class="text-2xl font-bold mb-4 text-gray-800" data-i18n="favoriteSearches">Rotas Favoritas</h2>';
     if (routes.length > 0) {
         routes.forEach(route => {
             favoriteRoutesContainer.appendChild(createFavoriteCard(route));
@@ -57,7 +57,7 @@ function displayFavoriteRoutes(routes) {
     else {
         const noFavouriteCard = document.createElement('div');
         noFavouriteCard.classList.add('bg-white', 'rounded-lg', 'shadow-md', 'p-4', 'mb-4', 'flex', 'flex-col', 'items-center', 'cursor-pointer');
-        noFavouriteCard.innerHTML = '<p class="text-lg text-gray-500" data-i18n="noFavoriteRoutes">Não há rotas favoritas</p>';
+        noFavouriteCard.innerHTML = '<p class="text-lg text-gray-500" data-i18n="noFavoriteSearches">Não há rotas favoritas</p>';
         favoriteRoutesContainer.appendChild(noFavouriteCard);
     }
     favoriteRoutesContainer.style.display = 'block';

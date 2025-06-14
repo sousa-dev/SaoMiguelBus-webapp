@@ -420,6 +420,7 @@ function updatePremiumStatusDisplay() {
     const premiumButton = document.getElementById('premiumButton');
     const manageSubscriptionButton = document.getElementById('manageSubscriptionButton');
     const premiumExpiryDate = document.getElementById('premiumExpiryDate');
+    const premiumAccountEmailDisplay = document.getElementById('premiumAccountEmailDisplay');
     
     if (adRemovalState.isActive) {
         // Show premium status elements
@@ -446,6 +447,11 @@ function updatePremiumStatusDisplay() {
             const expiryDate = new Date(adRemovalState.subscriptionExpiresAt);
             premiumExpiryDate.textContent = expiryDate.toLocaleDateString();
         }
+        
+        // Update premium account email display
+        if (premiumAccountEmailDisplay && adRemovalState.userEmail) {
+            premiumAccountEmailDisplay.textContent = adRemovalState.userEmail;
+        }
     } else {
         // Hide premium status elements
         if (premiumStatusCard) {
@@ -466,6 +472,11 @@ function updatePremiumStatusDisplay() {
         
         // Remove premium indicator
         removePremiumIndicator();
+        
+        // Clear email display
+        if (premiumAccountEmailDisplay) {
+            premiumAccountEmailDisplay.textContent = '';
+        }
     }
     
     // Update advert page content
