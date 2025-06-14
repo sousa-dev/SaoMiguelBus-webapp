@@ -11,9 +11,9 @@
     "destinationLabel": "To",
     "destinationPlaceholder": "Choose your destination...",
     "dayLabel": "Day of the Week",
-    "weekday": "Weekday",
-    "saturday": "Saturday",
-    "sunday": "Sunday/Holiday",
+    "weekday": "Weekdays only",
+    "saturday": "Saturdays only",
+    "sunday": "Sundays only",
     "timeLabel": "What time?",
     "optionalLabel": "Optional",
     "searchButton": "Search",
@@ -336,5 +336,11 @@
     "unlockButton": "UNLOCK",
     "enableButton": "ENABLE",
     "pinnedRoutesSubtitle": "Your favorite routes",
-    "pinnedCount": "0 pinned"
+    "pinnedCount": "0 pinned",
+    "availableOn": "Available on",
+    "autoTrackingTitle": "Smart Auto-Tracking",
+    "autoTrackingDescription": "This route will be automatically tracked on all days it operates.",
+    "smartScheduling": "Smart scheduling based on route availability",
+    "dayAwareTracking": "Day-aware countdown calculations",
+    "unknown": "Unknown"
 }

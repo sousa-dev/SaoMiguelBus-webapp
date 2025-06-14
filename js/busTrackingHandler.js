@@ -129,8 +129,12 @@ class BusTrackingHandler {
         const now = Date.now();
         const trackingId = `track_${now}_${Math.random().toString(36).substr(2, 9)}`;
         
+        // Auto-detect the route's available days if not specified or for pinned routes
+        const routeAvailableDays = this.detectRouteAvailableDays(routeData);
+        const searchDay = isPinned ? routeAvailableDays : (routeData.searchDay || routeAvailableDays);
+        
         // Calculate next departure time
-        const nextDeparture = this.calculateNextDeparture(routeData.allStops, routeData.origin, routeData.searchDay);
+        const nextDeparture = this.calculateNextDeparture(routeData.allStops, routeData.origin, searchDay);
         
         // Calculate estimated arrival with fallback
         const estimatedArrival = this.calculateEstimatedArrival(routeData.allStops, routeData.origin, routeData.destination, nextDeparture) || '--:--';
@@ -141,7 +145,8 @@ class BusTrackingHandler {
             routeNumber: routeData.routeNumber,
             origin: routeData.origin,
             destination: routeData.destination,
-            searchDay: routeData.searchDay,
+            searchDay: searchDay,
+            availableDays: routeAvailableDays, // Store what days the route actually runs
             searchDate: routeData.searchDate || new Date().toISOString().split('T')[0],
             allStops: routeData.allStops,
             userStops: this.extractUserStops(routeData.allStops, routeData.origin, routeData.destination),
@@ -153,9 +158,56 @@ class BusTrackingHandler {
             type: routeData.type,
             notificationsEnabled: true,
             isPinned: isPinned,
-            pinnedDays: isPinned ? routeData.pinnedDays || ['weekday'] : [],
+            pinnedDays: isPinned ? [routeAvailableDays] : [], // Use detected days for pinned routes
             autoTrackTime: isPinned ? routeData.autoTrackTime || '08:00' : null
         };
+    }
+    
+    // Auto-detect what days a route is available based on the original search
+    static detectRouteAvailableDays(routeData) {
+        // If searchDay is already a proper day type (not a date string), use it
+        if (routeData.searchDay && ['weekday', 'saturday', 'sunday', 'both'].includes(routeData.searchDay)) {
+            return routeData.searchDay;
+        }
+        
+        // Convert searchDay from date string to day type if needed
+        if (routeData.searchDay && routeData.searchDay.includes('-')) {
+            // searchDay is a date string like "2024-01-15"
+            const dayType = this.convertDateToDayType(routeData.searchDay);
+            if (dayType) return dayType;
+        }
+        
+        // Try to detect from route data
+        const routeNumber = routeData.routeNumber?.toLowerCase() || '';
+        const routeName = routeData.routeName?.toLowerCase() || '';
+        
+        // Some routes might have indicators in their names
+        if (routeNumber.includes('saturday') || routeName.includes('saturday')) {
+            return 'saturday';
+        }
+        if (routeNumber.includes('sunday') || routeName.includes('sunday')) {
+            return 'sunday';
+        }
+        if (routeNumber.includes('weekend') || routeName.includes('weekend')) {
+            return 'saturday'; // Default weekend to Saturday for now
+        }
+        
+        // Check if route was searched on a specific day type using searchDate
+        const searchDate = routeData.searchDate || routeData.searchDay || new Date().toISOString().split('T')[0];
+        return this.convertDateToDayType(searchDate);
+    }
+    
+    // Convert a date string to day type (weekday/saturday/sunday)
+    static convertDateToDayType(dateString) {
+        if (!dateString) return 'weekday'; // Default fallback
+        
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) return 'weekday'; // Invalid date fallback
+        
+        const dayOfWeek = date.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+        if (dayOfWeek === 0) return 'sunday';
+        if (dayOfWeek === 6) return 'saturday';
+        return 'weekday';
     }
 
     // Calculate next departure time based on current time and schedule
@@ -196,10 +248,12 @@ class BusTrackingHandler {
         return this.getNextOccurrenceTime(allStops, origin, searchDay);
     }
 
-    // Get current day type (weekday/weekend)
+    // Get current day type (weekday/saturday/sunday)
     static getCurrentDayType() {
-        const day = new Date().getDay();
-        return (day === 0 || day === 6) ? 'weekend' : 'weekday';
+        const day = new Date().getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+        if (day === 0) return 'sunday';
+        if (day === 6) return 'saturday';
+        return 'weekday';
     }
 
     // Extract departure times from stops object
@@ -318,11 +372,14 @@ class BusTrackingHandler {
             if (currentDay === 0) daysToAdd = 1; // Sunday -> Monday
             else if (currentDay === 6) daysToAdd = 2; // Saturday -> Monday
             else daysToAdd = 1; // Next weekday
-        } else if (searchDay === 'weekend') {
-            // Next weekend (Saturday or Sunday)
-            if (currentDay === 0) daysToAdd = 6; // Sunday -> Saturday
-            else if (currentDay === 6) daysToAdd = 1; // Saturday -> Sunday
-            else daysToAdd = 6 - currentDay; // Weekday -> Saturday
+        } else if (searchDay === 'saturday') {
+            // Next Saturday
+            if (currentDay === 6) daysToAdd = 7; // Saturday -> next Saturday
+            else daysToAdd = 6 - currentDay; // Any other day -> Saturday
+        } else if (searchDay === 'sunday') {
+            // Next Sunday
+            if (currentDay === 0) daysToAdd = 7; // Sunday -> next Sunday
+            else daysToAdd = 7 - currentDay; // Any other day -> Sunday
         } else {
             // 'both' or any other case - next day
             daysToAdd = 1;
@@ -454,42 +511,60 @@ class BusTrackingHandler {
     static parseDepartureTime(departureTime, searchDay = null) {
         const [hours, minutes] = departureTime.split('h').map(Number);
         const now = new Date();
+        const currentDay = this.getCurrentDayType();
+        
+        // Create departure time for today
         const departure = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
         
-        // If departure time has passed today, calculate next valid day
-        if (departure <= now) {
-            if (searchDay && searchDay !== 'both') {
-                const currentDay = this.getCurrentDayType();
-                if (searchDay !== currentDay) {
-                    // Route doesn't run today, find next valid day
-                    const daysToAdd = this.calculateDaysToNextValidDay(searchDay);
-                    departure.setDate(departure.getDate() + daysToAdd);
-                } else {
-                    // Route runs today but time has passed, next occurrence
-                    departure.setDate(departure.getDate() + 1);
-                }
-            } else {
-                departure.setDate(departure.getDate() + 1);
-            }
+        // Check if route runs today
+        const runsToday = searchDay === 'both' || searchDay === currentDay;
+        
+        if (runsToday && departure > now) {
+            // Route runs today and time hasn't passed yet
+            return departure;
         }
+        
+        // Either route doesn't run today OR time has passed
+        // Find next valid day for this route
+        const daysToAdd = this.calculateDaysToNextValidDay(searchDay, currentDay);
+        departure.setDate(departure.getDate() + daysToAdd);
         
         return departure;
     }
     
     // Calculate days to next valid day for route
-    static calculateDaysToNextValidDay(searchDay) {
+    static calculateDaysToNextValidDay(searchDay, currentDayType = null) {
         const currentDay = new Date().getDay(); // 0 = Sunday, 6 = Saturday
+        const currentType = currentDayType || this.getCurrentDayType();
         
         if (searchDay === 'weekday') {
             // Next weekday (Monday-Friday)
             if (currentDay === 0) return 1; // Sunday -> Monday
             else if (currentDay === 6) return 2; // Saturday -> Monday
-            else return 1; // Next weekday
-        } else if (searchDay === 'weekend') {
-            // Next weekend (Saturday or Sunday)
-            if (currentDay === 0) return 6; // Sunday -> Saturday
-            else if (currentDay === 6) return 1; // Saturday -> Sunday
-            else return 6 - currentDay; // Weekday -> Saturday
+            else if (currentDay === 5) return 3; // Friday -> Monday
+            else return 1; // Other weekdays -> next weekday
+        } else if (searchDay === 'saturday') {
+            // Next Saturday
+            if (currentDay === 6) return 7; // Saturday -> next Saturday
+            else return 6 - currentDay; // Any other day -> Saturday
+        } else if (searchDay === 'sunday') {
+            // Next Sunday
+            if (currentDay === 0) return 7; // Sunday -> next Sunday
+            else return 7 - currentDay; // Any other day -> Sunday
+        } else if (searchDay === 'both') {
+            // Route runs every day, so next day
+            return 1;
+        }
+        
+        // If searchDay matches current day type, but time has passed, go to next occurrence
+        if (searchDay === currentType) {
+            if (searchDay === 'weekday') {
+                return currentDay === 5 ? 3 : 1; // Friday -> Monday, otherwise next day
+            } else if (searchDay === 'saturday') {
+                return 7; // Saturday -> next Saturday
+            } else if (searchDay === 'sunday') {
+                return 7; // Sunday -> next Sunday
+            }
         }
         
         return 1; // Default to next day
@@ -1120,7 +1195,7 @@ class BusTrackingHandler {
         
         // Format all stops for display
         const stopsList = this.formatStopsForDisplay(route.allStops);
-        const countdown = this.calculateCountdown(route.nextDeparture);
+        const countdown = this.calculateCountdown(route.nextDeparture, route.searchDay);
         const countdownText = countdown || t('scheduleUnavailable', 'Schedule unavailable');
         
         modal.innerHTML = `
@@ -1227,8 +1302,9 @@ class BusTrackingHandler {
     // Format day type for display
     static formatDayType(dayType) {
         switch (dayType) {
-            case 'weekday': return t('weekday', 'Weekday');
-            case 'weekend': return t('weekend', 'Weekend');
+            case 'weekday': return t('weekday', 'Weekdays only');
+            case 'saturday': return t('saturday', 'Saturdays only');
+            case 'sunday': return t('sunday', 'Sundays only');
             case 'both': return t('everyDay', 'Every Day');
             default: return this.formatDate(dayType);
         }

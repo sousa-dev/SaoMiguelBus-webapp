@@ -11,9 +11,9 @@
     "destinationLabel": "Destino",
     "destinationPlaceholder": "Escolhe o teu destino...",
     "dayLabel": "Dia da Semana",
-    "weekday": "Dia útil",
-    "saturday": "Sábado",
-    "sunday": "Domingo/Feriado",
+    "weekday": "Apenas dias úteis",
+    "saturday": "Apenas sábados",
+    "sunday": "Apenas domingos",
     "timeLabel": "A que horas?",
     "optionalLabel": "Opcional",
     "searchButton": "Pesquisar",
@@ -336,5 +336,11 @@
     "unlockButton": "DESBLOQUEAR",
     "enableButton": "ATIVAR",
     "pinnedRoutesSubtitle": "As suas rotas favoritas",
-    "pinnedCount": "0 fixadas"
+    "pinnedCount": "0 fixadas",
+    "availableOn": "Disponível em",
+    "autoTrackingTitle": "Rastreamento Automático Inteligente",
+    "autoTrackingDescription": "Esta rota será automaticamente rastreada em todos os dias que opera.",
+    "smartScheduling": "Agendamento inteligente baseado na disponibilidade da rota",
+    "dayAwareTracking": "Cálculos de contagem regressiva conscientes do dia",
+    "unknown": "Desconhecido"
 }

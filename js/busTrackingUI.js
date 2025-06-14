@@ -164,6 +164,10 @@ class BusTrackingUI {
         modal.id = 'pinRouteModal';
         modal.className = 'fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-2 sm:p-4';
         
+        // Auto-detect route available days
+        const availableDays = BusTrackingHandler.detectRouteAvailableDays(routeData);
+        const dayTypeText = this.formatDayTypeText(availableDays);
+        
         modal.innerHTML = `
             <div class="bg-white rounded-lg w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto">
                 <div class="p-4 sm:p-6">
@@ -179,38 +183,34 @@ class BusTrackingUI {
                                 <i class="fas fa-bus text-gray-500 mr-2"></i>
                                 <span class="font-medium text-sm sm:text-base">${routeData.routeNumber}</span>
                             </div>
-                            <div class="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                            <div class="text-xs sm:text-sm text-gray-600 leading-relaxed mb-2">
                                 ${routeData.origin} → ${routeData.destination}
                             </div>
-                        </div>
-                    </div>
-                    
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">${t('trackOnDays')}</label>
-                            <div class="space-y-2">
-                                <label class="flex items-center">
-                                    <input type="radio" name="pinnedDays" value="weekday" checked class="mr-2">
-                                    <span class="text-sm">${t('weekdaysOnly')}</span>
-                                </label>
-                                <label class="flex items-center">
-                                    <input type="radio" name="pinnedDays" value="weekend" class="mr-2">
-                                    <span class="text-sm">${t('weekendsOnly')}</span>
-                                </label>
-                                <label class="flex items-center">
-                                    <input type="radio" name="pinnedDays" value="both" class="mr-2">
-                                    <span class="text-sm">${t('everyDay')}</span>
-                                </label>
+                            <div class="flex items-center text-xs text-blue-600">
+                                <i class="fas fa-calendar-alt mr-1"></i>
+                                <span>${t('availableOn', 'Available on')}: ${dayTypeText}</span>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="mt-6 bg-blue-50 border-l-4 border-blue-400 p-3 sm:p-4">
+                    <div class="bg-green-50 border-l-4 border-green-400 p-3 sm:p-4 mb-4">
+                        <h4 class="font-medium text-green-800 mb-1 text-sm sm:text-base">${t('autoTrackingTitle', 'Smart Auto-Tracking')}</h4>
+                        <p class="text-xs sm:text-sm text-green-700 mb-2">
+                            ${t('autoTrackingDescription', 'This route will be automatically tracked on all days it operates.')}
+                        </p>
+                        <div class="text-xs text-green-600">
+                            <i class="fas fa-magic mr-1"></i>
+                            ${t('smartScheduling', 'Smart scheduling based on route availability')}
+                        </div>
+                    </div>
+                    
+                    <div class="bg-blue-50 border-l-4 border-blue-400 p-3 sm:p-4">
                         <h4 class="font-medium text-blue-800 mb-1 text-sm sm:text-base">${t('pinnedRouteFeatures')}</h4>
                         <ul class="text-xs sm:text-sm text-blue-700 space-y-1">
                             <li>• ${t('autoTrackingFeature')}</li>
                             <li>• ${t('homepageWidgetFeature')}</li>
                             <li>• ${t('smartNotificationsFeature')}</li>
+                            <li>• ${t('dayAwareTracking', 'Day-aware countdown calculations')}</li>
                         </ul>
                     </div>
                 </div>
@@ -257,11 +257,11 @@ class BusTrackingUI {
     static confirmPinRoute(routeDataBase64) {
         const routeData = JSON.parse(atob(routeDataBase64));
         
-        // Get pinning options from form
-        const selectedDays = document.querySelector('input[name="pinnedDays"]:checked')?.value || 'weekday';
+        // Auto-detect available days (no user selection needed)
+        const availableDays = BusTrackingHandler.detectRouteAvailableDays(routeData);
         
         const pinOptions = {
-            days: [selectedDays]
+            days: [availableDays]
         };
         
         // Pin the route
@@ -269,6 +269,20 @@ class BusTrackingUI {
         
         // Close modal
         this.cancelPinning();
+    }
+    
+    // Format day type text for display
+    static formatDayTypeText(dayType) {
+        switch (dayType) {
+            case 'weekday':
+                return t('weekdaysOnly', 'Weekdays only');
+            case 'weekend':
+                return t('weekendsOnly', 'Weekends only');
+            case 'both':
+                return t('everyDay', 'Every day');
+            default:
+                return t('unknown', 'Unknown');
+        }
     }
 
     // Cancel tracking
