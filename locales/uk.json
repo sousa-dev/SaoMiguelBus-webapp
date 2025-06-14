@@ -192,7 +192,19 @@
     "perWeek": "/тиждень",
     "perMonth": "/місяць",
     "perYear": "/рік",
-      "allStops": "Всі Зупинки",
-  "timePlaceholder": "Виберіть час (необов'язково)",
-  "machineTranslationWarning": "Мови перекладені автоматично. Можуть бути присутні помилки."
+    "allStops": "Всі Зупинки",
+    "timePlaceholder": "Виберіть час (необов'язково)",
+    "machineTranslationWarning": "Мови перекладені автоматично. Можуть бути присутні помилки.",
+    "tiredOfAdsTitle": "ВТОМИЛИСЯ ВІД РЕКЛАМИ?",
+    "upgradeNowSubtitle": "Перейти на Преміум - Від €0,50/тиждень",
+    "premiumExperienceTitle": "ПРЕМІУМ ДОСВІД",
+    "noAdsExperienceText": "Переглядайте тури без реклами - Оновіться зараз!",
+    "fromPriceText": "Від €0,50/тиждень",
+    "upgradeButton": "ОНОВИТИ",
+    "upgradeForBetterTitle": "Оновіться для кращого досвіду!",
+    "interstitialAdDescription": "Видаліть всю рекламу та насолоджуйтесь безперервним пошуком розкладу автобусів.",
+    "perfectForTourists": "Ідеально для туристів!",
+    "upgradeNowButton": "Оновити Зараз",
+    "continueWithAdsButton": "Продовжити з рекламою",
+    "upgradeForAdsFreTitle": "Оновіться для досвіду без реклами"
 } 

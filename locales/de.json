@@ -192,7 +192,19 @@
     "perWeek": "/Woche",
     "perMonth": "/Monat",
     "perYear": "/Jahr",
-      "allStops": "Alle Haltestellen",
-  "timePlaceholder": "Zeit auswählen (optional)",
-  "machineTranslationWarning": "Sprachen sind maschinell übersetzt. Es können Fehler auftreten."
+    "allStops": "Alle Haltestellen",
+    "timePlaceholder": "Zeit auswählen (optional)",
+    "machineTranslationWarning": "Sprachen sind maschinell übersetzt. Es können Fehler auftreten.",
+    "tiredOfAdsTitle": "MÜDE VON WERBUNG?",
+    "upgradeNowSubtitle": "Auf Premium upgraden - Ab €0,50/Woche",
+    "premiumExperienceTitle": "PREMIUM-ERFAHRUNG",
+    "noAdsExperienceText": "Durchsuchen Sie Touren ohne Werbung - Jetzt upgraden!",
+    "fromPriceText": "Ab €0,50/Woche",
+    "upgradeButton": "UPGRADE",
+    "upgradeForBetterTitle": "Upgrade für bessere Erfahrung!",
+    "interstitialAdDescription": "Entfernen Sie alle Anzeigen und genießen Sie ununterbrochene Busfahrplan-Suchen.",
+    "perfectForTourists": "Perfekt für Touristen!",
+    "upgradeNowButton": "Jetzt Upgraden",
+    "continueWithAdsButton": "Mit Werbung fortfahren",
+    "upgradeForAdsFreTitle": "Upgrade für werbefreie Erfahrung"
 }

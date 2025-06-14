@@ -192,7 +192,19 @@
     "perWeek": "/semaine",
     "perMonth": "/mois",
     "perYear": "/an",
-      "allStops": "Tous les Arrêts",
-  "timePlaceholder": "Sélectionner l'heure (optionnel)",
-  "machineTranslationWarning": "Les langues sont traduites automatiquement. Des erreurs peuvent être présentes."
+    "allStops": "Tous les Arrêts",
+    "timePlaceholder": "Sélectionner l'heure (optionnel)",
+    "machineTranslationWarning": "Les langues sont traduites automatiquement. Des erreurs peuvent être présentes.",
+    "tiredOfAdsTitle": "FATIGUÉ DES PUBLICITÉS ?",
+    "upgradeNowSubtitle": "Passez au Premium - À partir de €0,50/semaine",
+    "premiumExperienceTitle": "EXPÉRIENCE PREMIUM",
+    "noAdsExperienceText": "Naviguez dans les tours sans publicités - Passez au niveau supérieur maintenant !",
+    "fromPriceText": "À partir de €0,50/semaine",
+    "upgradeButton": "MISE À NIVEAU",
+    "upgradeForBetterTitle": "Mise à niveau pour une meilleure expérience !",
+    "interstitialAdDescription": "Supprimez toutes les publicités et profitez de recherches d'horaires de bus ininterrompues.",
+    "perfectForTourists": "Parfait pour les touristes !",
+    "upgradeNowButton": "Mettre à Niveau Maintenant",
+    "continueWithAdsButton": "Continuer avec les publicités",
+    "upgradeForAdsFreTitle": "Mise à niveau pour une expérience sans publicité"
 }

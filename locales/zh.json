@@ -192,7 +192,19 @@
     "perWeek": "/周",
     "perMonth": "/月",
     "perYear": "/年",
-      "allStops": "所有站点",
-  "timePlaceholder": "选择时间（可选）",
-  "machineTranslationWarning": "语言是机器翻译的。可能存在错误。"
+    "allStops": "所有站点",
+    "timePlaceholder": "选择时间（可选）",
+    "machineTranslationWarning": "语言是机器翻译的。可能存在错误。",
+    "tiredOfAdsTitle": "厌倦广告了吗？",
+    "upgradeNowSubtitle": "升级到高级版 - 从每周€0.50开始",
+    "premiumExperienceTitle": "高级体验",
+    "noAdsExperienceText": "无广告浏览旅游 - 立即升级！",
+    "fromPriceText": "从每周€0.50开始",
+    "upgradeButton": "升级",
+    "upgradeForBetterTitle": "升级获得更好体验！",
+    "interstitialAdDescription": "移除所有广告，享受不间断的巴士时刻表搜索。",
+    "perfectForTourists": "非常适合游客！",
+    "upgradeNowButton": "立即升级",
+    "continueWithAdsButton": "继续使用广告",
+    "upgradeForAdsFreTitle": "升级享受无广告体验"
 } 
