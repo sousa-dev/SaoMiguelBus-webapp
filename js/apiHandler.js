@@ -908,38 +908,39 @@ async function createRouteDiv(route, originStop, destinationStop, lastRoute) {
         return null;
     }
     
-    // Add tracking buttons for premium users
-    if (typeof adRemovalState !== 'undefined' && adRemovalState.isActive) {
-        const trackingButtonsContainer = routeDiv.querySelector(`#trackingButtons-${route.id}`);
-        if (trackingButtonsContainer) {
-            trackingButtonsContainer.style.display = 'block';
-            
-            const routeData = {
-                routeId: route.id,
-                routeNumber: route.route,
-                origin: originStop,
-                destination: destinationStop,
-                allStops: stringToJSON(route.stops),
-                searchDay: checkDayType(),
-                type: 'route'
-            };
-            
-            // Create tracking button
-            const trackingButton = BusTrackingUI.createTrackingButton(routeData);
-            trackingButton.className = 'w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-300 text-sm';
-            
-            // Create pin route button
-            const pinButton = BusTrackingUI.createPinRouteButton(routeData);
-            pinButton.className = 'w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition duration-300 text-sm';
-            
-            // Create button container with flex layout
-            const buttonContainer = document.createElement('div');
-            buttonContainer.className = 'flex space-x-2';
-            buttonContainer.appendChild(trackingButton);
-            buttonContainer.appendChild(pinButton);
-            
-            trackingButtonsContainer.appendChild(buttonContainer);
-        }
+    // Add tracking buttons for all users (premium check handled in UI)
+    const trackingButtonsContainer = routeDiv.querySelector(`#trackingButtons-${route.id}`);
+    if (trackingButtonsContainer) {
+        trackingButtonsContainer.style.display = 'block';
+        
+        const routeData = {
+            routeId: route.id,
+            routeNumber: route.route,
+            origin: originStop,
+            destination: destinationStop,
+            allStops: stringToJSON(route.stops),
+            searchDay: checkDayType(),
+            type: 'route'
+        };
+        
+        // Check if user has premium access
+        const isPremium = typeof adRemovalState !== 'undefined' && adRemovalState.isActive;
+        
+        // Create tracking button (always visible, behavior changes based on premium status)
+        const trackingButton = BusTrackingUI.createTrackingButton(routeData, isPremium);
+        trackingButton.className = 'w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-300 text-sm';
+        
+        // Create pin route button (always visible, behavior changes based on premium status)
+        const pinButton = BusTrackingUI.createPinRouteButton(routeData, isPremium);
+        pinButton.className = 'w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition duration-300 text-sm';
+        
+        // Create button container with flex layout
+        const buttonContainer = document.createElement('div');
+        buttonContainer.className = 'flex space-x-2';
+        buttonContainer.appendChild(trackingButton);
+        buttonContainer.appendChild(pinButton);
+        
+        trackingButtonsContainer.appendChild(buttonContainer);
     }
     
     // Store route data for comparison

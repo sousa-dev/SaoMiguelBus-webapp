@@ -2,31 +2,85 @@
 class BusTrackingUI {
     
     // Create tracking button for route cards
-    static createTrackingButton(routeData) {
+    static createTrackingButton(routeData, isPremium = false) {
         const button = document.createElement('button');
-        button.className = 'bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300 text-sm mr-2';
-        button.innerHTML = '<i class="fas fa-location-arrow mr-2"></i>' + t('trackBus', 'Track Bus');
-        button.setAttribute('data-umami-event', 'track-bus-button');
+        button.className = 'bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300 text-sm mr-2 relative';
         
-        button.onclick = (event) => {
-            event.stopPropagation();
-            this.showTrackingDisclaimer(routeData);
-        };
+        if (isPremium) {
+            button.innerHTML = '<i class="fas fa-location-arrow mr-2"></i>' + t('trackBus', 'Track Bus');
+            button.setAttribute('data-umami-event', 'track-bus-button');
+            
+            button.onclick = (event) => {
+                event.stopPropagation();
+                this.showTrackingDisclaimer(routeData);
+            };
+        } else {
+            button.innerHTML = `
+                <div class="flex items-center justify-center relative">
+                    <i class="fas fa-location-arrow mr-2"></i>
+                    <span>${t('trackBus', 'Track Bus')}</span>
+                    <span class="absolute -top-2 -right-2 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full flex items-center">
+                        <i class="fas fa-crown mr-1 text-xs"></i>
+                        <span style="font-size: 9px;">${t('premium', 'PREMIUM')}</span>
+                    </span>
+                </div>
+            `;
+            button.setAttribute('data-umami-event', 'track-bus-button-premium-required');
+            
+            button.onclick = (event) => {
+                event.stopPropagation();
+                // Open premium modal instead of tracking
+                if (typeof showPricingModal === 'function') {
+                    showPricingModal();
+                }
+                // Track premium required event
+                if (typeof umami !== 'undefined') {
+                    umami.track('tracking-premium-required');
+                }
+            };
+        }
         
         return button;
     }
 
     // Create pin route button for "track every day" functionality
-    static createPinRouteButton(routeData) {
+    static createPinRouteButton(routeData, isPremium = false) {
         const button = document.createElement('button');
-        button.className = 'bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-300 text-sm';
-        button.innerHTML = '<i class="fas fa-thumbtack mr-2"></i>' + t('trackEveryDay', 'Track Every Day');
-        button.setAttribute('data-umami-event', 'pin-route-button');
+        button.className = 'bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-300 text-sm relative';
         
-        button.onclick = (event) => {
-            event.stopPropagation();
-            this.showPinRouteModal(routeData);
-        };
+        if (isPremium) {
+            button.innerHTML = '<i class="fas fa-thumbtack mr-2"></i>' + t('trackEveryDay', 'Track Every Day');
+            button.setAttribute('data-umami-event', 'pin-route-button');
+            
+            button.onclick = (event) => {
+                event.stopPropagation();
+                this.showPinRouteModal(routeData);
+            };
+        } else {
+            button.innerHTML = `
+                <div class="flex items-center justify-center relative">
+                    <i class="fas fa-thumbtack mr-2"></i>
+                    <span>${t('trackEveryDay', 'Track Every Day')}</span>
+                    <span class="absolute -top-2 -right-2 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full flex items-center">
+                        <i class="fas fa-crown mr-1 text-xs"></i>
+                        <span style="font-size: 9px;">${t('premium', 'PREMIUM')}</span>
+                    </span>
+                </div>
+            `;
+            button.setAttribute('data-umami-event', 'pin-route-button-premium-required');
+            
+            button.onclick = (event) => {
+                event.stopPropagation();
+                // Open premium modal instead of pinning
+                if (typeof showPricingModal === 'function') {
+                    showPricingModal();
+                }
+                // Track premium required event
+                if (typeof umami !== 'undefined') {
+                    umami.track('pin-route-premium-required');
+                }
+            };
+        }
         
         return button;
     }

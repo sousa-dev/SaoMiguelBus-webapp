@@ -432,42 +432,156 @@
     </nav>
 
     <!-- Bottom Sticky Ad Banner -->
-    <div id="bottomStickyAd" class="ad-banner fixed bottom-14 left-0 right-0 z-40 max-w-md mx-auto">
-        <div class="bg-gradient-to-r from-red-500 to-orange-500 text-white p-2 mx-2 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition-shadow duration-200" onclick="showPricingModal()" data-umami-event="bottom-sticky-ad-click">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                    <i class="fas fa-crown text-lg mr-2"></i>
-                    <div>
-                        <p class="font-bold text-xs" data-i18n="removeAdsTitle">REMOVE ADS</p>
-                        <p class="text-xs opacity-90" data-i18n="clickToRemoveAds">Click to remove ads</p>
-                    </div>
-                </div>
-                <div class="flex items-center space-x-2">
-                    <button onclick="event.stopPropagation(); showPricingModal()" class="bg-white text-red-500 px-3 py-1 rounded text-xs font-bold hover:bg-gray-100" data-umami-event="bottom-sticky-ad-upgrade">
-                        <span data-i18n="upgradeButton">UPGRADE</span>
-                    </button>
-                    <button onclick="event.stopPropagation(); dismissBottomAd()" class="text-white hover:text-gray-200" aria-label="Close ad" data-umami-event="dismiss-bottom-ad">
-                        <i class="fas fa-times text-sm"></i>
-                    </button>
-                </div>
-            </div>
+    <div id="bottomStickyAd" class="ad-banner fixed bottom-14 left-0 right-0 z-40 max-w-md mx-auto" style="display: none;">
+        <div id="bottomStickyAdContent" class="bg-gradient-to-r from-red-500 to-orange-500 text-white p-2 mx-2 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition-shadow duration-200" onclick="showPricingModal()" data-umami-event="bottom-sticky-ad-click">
+            <!-- Content will be dynamically inserted here -->
         </div>
     </div>
 
     <script>
+        // Function to set random bottom sticky ad styles
+        function setRandomBottomStickyAdStyles() {
+            const contentElement = document.getElementById('bottomStickyAdContent');
+            if (!contentElement) return;
+
+            const adVariations = [
+                {
+                    // Original remove ads variation
+                    gradient: 'bg-gradient-to-r from-red-500 to-orange-500',
+                    content: `
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <i class="fas fa-crown text-lg mr-2"></i>
+                                <div>
+                                    <p class="font-bold text-xs" data-i18n="removeAdsTitle">REMOVE ADS</p>
+                                    <p class="text-xs opacity-90" data-i18n="clickToRemoveAds">Click to remove ads</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button onclick="event.stopPropagation(); showPricingModal()" class="bg-white text-red-500 px-3 py-1 rounded text-xs font-bold hover:bg-gray-100" data-umami-event="bottom-sticky-ad-upgrade">
+                                    <span data-i18n="upgradeButton">UPGRADE</span>
+                                </button>
+                                <button onclick="event.stopPropagation(); dismissBottomAd()" class="text-white hover:text-gray-200" aria-label="Close ad" data-umami-event="dismiss-bottom-ad">
+                                    <i class="fas fa-times text-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `
+                },
+                {
+                    // New bus tracking variation
+                    gradient: 'bg-gradient-to-r from-blue-500 to-teal-500',
+                    content: `
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <i class="fas fa-location-arrow text-lg mr-2"></i>
+                                <div>
+                                    <p class="font-bold text-xs" data-i18n="trackBusesTitle">TRACK BUSES</p>
+                                    <p class="text-xs opacity-90" data-i18n="realTimeTrackingText">Real-time arrival estimates</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button onclick="event.stopPropagation(); showPricingModal()" class="bg-white text-blue-500 px-3 py-1 rounded text-xs font-bold hover:bg-gray-100" data-umami-event="bottom-sticky-ad-tracking">
+                                    <span data-i18n="unlockButton">UNLOCK</span>
+                                </button>
+                                <button onclick="event.stopPropagation(); dismissBottomAd()" class="text-white hover:text-gray-200" aria-label="Close ad" data-umami-event="dismiss-bottom-ad">
+                                    <i class="fas fa-times text-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `
+                },
+                {
+                    // New pin routes variation
+                    gradient: 'bg-gradient-to-r from-green-500 to-emerald-500',
+                    content: `
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <i class="fas fa-thumbtack text-lg mr-2"></i>
+                                <div>
+                                    <p class="font-bold text-xs" data-i18n="pinRoutesTitle">PIN ROUTES</p>
+                                    <p class="text-xs opacity-90" data-i18n="dailyTrackingText">Track your daily routes</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button onclick="event.stopPropagation(); showPricingModal()" class="bg-white text-green-500 px-3 py-1 rounded text-xs font-bold hover:bg-gray-100" data-umami-event="bottom-sticky-ad-pin">
+                                    <span data-i18n="getPremiumText">GET PRO</span>
+                                </button>
+                                <button onclick="event.stopPropagation(); dismissBottomAd()" class="text-white hover:text-gray-200" aria-label="Close ad" data-umami-event="dismiss-bottom-ad">
+                                    <i class="fas fa-times text-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `
+                },
+                {
+                    // New smart notifications variation
+                    gradient: 'bg-gradient-to-r from-purple-500 to-violet-500',
+                    content: `
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <i class="fas fa-bell text-lg mr-2"></i>
+                                <div>
+                                    <p class="font-bold text-xs" data-i18n="smartNotificationsTitle">SMART ALERTS</p>
+                                    <p class="text-xs opacity-90" data-i18n="busNotificationsText">Get notified about your buses</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button onclick="event.stopPropagation(); showPricingModal()" class="bg-white text-purple-500 px-3 py-1 rounded text-xs font-bold hover:bg-gray-100" data-umami-event="bottom-sticky-ad-notifications">
+                                    <span data-i18n="enableButton">ENABLE</span>
+                                </button>
+                                <button onclick="event.stopPropagation(); dismissBottomAd()" class="text-white hover:text-gray-200" aria-label="Close ad" data-umami-event="dismiss-bottom-ad">
+                                    <i class="fas fa-times text-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `
+                }
+            ];
+
+            // Randomly choose a variation
+            const randomVariation = adVariations[Math.floor(Math.random() * adVariations.length)];
+            
+            // Apply the gradient class and content
+            contentElement.className = `text-white p-2 mx-2 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition-shadow duration-200 ${randomVariation.gradient}`;
+            contentElement.innerHTML = randomVariation.content;
+
+            // Update translations if they're loaded
+            if (typeof updatePageContent === 'function') {
+                updatePageContent();
+            }
+        }
+
         function dismissBottomAd() {
             document.getElementById('bottomStickyAd').style.display = 'none';
             // Set a session flag to prevent showing again this session
             sessionStorage.setItem('bottomAdDismissed', 'true');
         }
         
+        // Initialize bottom sticky ad content immediately on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set initial random style immediately so content is ready
+            setRandomBottomStickyAdStyles();
+        });
+
         // Show bottom ad after 10 seconds if not dismissed and not premium
         // Only show once per session
         setTimeout(() => {
             if (!sessionStorage.getItem('bottomAdDismissed') && !(adRemovalState && adRemovalState.isActive)) {
-                document.getElementById('bottomStickyAd').style.display = 'block';
+                // Small delay to ensure content is rendered, then show
+                setTimeout(() => {
+                    document.getElementById('bottomStickyAd').style.display = 'block';
+                }, 100);
             }
         }, 10000);
+
+        // Change bottom sticky ad style every 45 seconds if it's visible
+        setInterval(() => {
+            const bottomAd = document.getElementById('bottomStickyAd');
+            if (bottomAd && bottomAd.style.display !== 'none' && !sessionStorage.getItem('bottomAdDismissed') && !(adRemovalState && adRemovalState.isActive)) {
+                setRandomBottomStickyAdStyles();
+            }
+        }, 45000);
     </script>
 
     <!-- Language Selection Modal -->
@@ -545,9 +659,9 @@
             
             <div class="text-center mb-4 sm:mb-6">
                 <i class="fas fa-crown text-3xl sm:text-4xl text-yellow-500 mb-3 sm:mb-4"></i>
-                <h3 class="text-lg sm:text-xl font-semibold text-green-600 mb-2" data-i18n="removeAdsTitle">Remove Ads</h3>
-                <p class="text-sm sm:text-base text-gray-700 mb-3 sm:mb-4" data-i18n="pricingDescription">
-                    Choose your plan to remove all advertisements and enjoy an ad-free experience.
+                <h3 class="text-lg sm:text-xl font-semibold text-green-600 mb-2" data-i18n="getPremiumTitle">Get Premium</h3>
+                <p class="text-sm sm:text-base text-gray-700 mb-3 sm:mb-4" data-i18n="premiumDescription">
+                    Unlock advanced bus tracking features and enjoy an ad-free experience.
                 </p>
                 <p class="text-xs sm:text-sm text-green-600 font-medium" data-i18n="supportDeveloper">
                     Bonus: Support an Azorean Solo Developer. (Yes, this app is not developed by any company, it is just one guy)
@@ -598,7 +712,7 @@
                     class="w-full bg-green-500 text-white py-2 sm:py-3 rounded-lg hover:bg-green-600 transition duration-300 mb-3 sm:mb-4 text-sm sm:text-base"
                     data-umami-event="subscribe-premium">
                 <i class="fas fa-crown mr-2"></i>
-                <span data-i18n="removeAdsButton">Remove Ads</span>
+                <span data-i18n="getPremiumButton">Get Premium</span>
             </button>
             
             <!-- Already Subscribed Link -->
@@ -608,6 +722,33 @@
                         data-umami-event="already-subscribed-link">
                     <span data-i18n="alreadySubscribed">I already have a subscription enabled</span>
                 </button>
+            </div>
+            
+            <!-- Premium Features List -->
+            <div class="bg-green-50 border border-green-200 rounded-lg p-3 sm:p-4 mb-4 sm:mb-6">
+                <h4 class="font-semibold text-green-800 mb-3 text-sm sm:text-base" data-i18n="premiumFeaturesTitle">Premium Features:</h4>
+                <ul class="text-xs sm:text-sm text-green-700 space-y-2">
+                    <li class="flex items-start">
+                        <i class="fas fa-location-arrow text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                        <span data-i18n="premiumFeatureBusTracking">Real-time bus tracking and arrival estimates</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-thumbtack text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                        <span data-i18n="premiumFeaturePinnedRoutes">Pin favorite routes for daily tracking</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-ad text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                        <span data-i18n="premiumFeature1">No advertisements</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-headset text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                        <span data-i18n="premiumFeature2">Priority support</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-star text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                        <span data-i18n="premiumFeature3">Early access to new features</span>
+                    </li>
+                </ul>
             </div>
             
             <p class="text-xs text-gray-500 text-center" data-i18n="premiumTerms">
@@ -672,40 +813,41 @@
     </div>
 
     <!-- Pesquisar Page -->
-    <section id="home" class="page active bg-white flex flex-col items-center p-2 h-full overflow-y-auto">       
-        <!-- Active Tracking Section (Above Search Form) -->
-        <div id="activeTrackingSection" class="container mx-auto px-4 mb-4 max-w-md" style="display: none;">
-            <div class="bg-white rounded-lg shadow-md border border-gray-200 p-3">
-                <!-- Premium Badge -->
-                <div class="flex justify-end mb-1">
-                    <span class="bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs font-bold px-2 py-0.5 rounded-full flex items-center">
-                        <i class="fas fa-crown mr-1 text-xs"></i>
-                        <span data-i18n="premium">PREMIUM</span>
-                    </span>
-                </div>
-                
-                <div class="flex items-center justify-between mb-2 cursor-pointer" onclick="toggleActiveTrackingSection()" data-umami-event="toggle-active-tracking">
-                    <div class="flex items-center flex-1">
-                        <div class="bg-green-500 rounded-full p-1.5 mr-2">
-                            <i class="fas fa-location-arrow text-white text-sm"></i>
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <h3 class="text-base font-bold text-gray-800 truncate" data-i18n="activeTracking">Active Tracking</h3>
-                            <p class="text-xs text-gray-600 truncate" data-i18n="activeTrackingSubtitle">Track your bus routes</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center ml-2">
-                        <span id="activeTrackingCount" class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-semibold mr-2" data-i18n="trackingCount">0 routes</span>
-                        <div class="bg-gray-100 rounded-full p-1.5">
-                            <i id="activeTrackingToggleIcon" class="fas fa-chevron-down transition-transform duration-300 text-gray-600 text-sm"></i>
-                        </div>
-                    </div>
-                </div>
-                <div id="activeTrackingList" class="space-y-2 max-h-0 overflow-hidden transition-all duration-300">
-                    <!-- Active tracking items populated here -->
-                </div>
-            </div>
-        </div>
+          <section id="home" class="page active bg-white flex flex-col items-center p-2 h-full overflow-y-auto">       
+          <!-- Active Tracking Section (Above Search Form) -->
+          <div id="activeTrackingSection" class="container mx-auto px-4 mb-4 max-w-md" style="display: none;">
+              <div class="bg-white rounded-lg shadow-md border border-gray-200 p-3">
+                  <!-- Premium Badge -->
+                  <div class="flex justify-end mb-1">
+                      <span class="bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs font-bold px-2 py-0.5 rounded-full flex items-center">
+                          <i class="fas fa-crown mr-1 text-xs"></i>
+                          <span data-i18n="premium">PREMIUM</span>
+                      </span>
+                  </div>
+                  
+                  <div class="flex items-center justify-between mb-2 cursor-pointer" onclick="toggleActiveTrackingSection()" data-umami-event="toggle-active-tracking">
+                      <div class="flex items-center flex-1">
+                          <div class="bg-green-500 rounded-full p-1.5 mr-2">
+                              <i class="fas fa-location-arrow text-white text-sm"></i>
+                          </div>
+                          <div class="flex-1 min-w-0">
+                              <h3 class="text-base font-bold text-gray-800 truncate" data-i18n="activeTracking">Active Tracking</h3>
+                              <p class="text-xs text-gray-600 truncate" data-i18n="activeTrackingSubtitle">Track your bus routes</p>
+                          </div>
+                      </div>
+                      <div class="flex items-center ml-2">
+                          <span id="activeTrackingCount" class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-semibold mr-2" data-i18n="trackingCount">0 routes</span>
+                          <div class="bg-gray-100 rounded-full p-1.5">
+                              <i id="activeTrackingToggleIcon" class="fas fa-chevron-down transition-transform duration-300 text-gray-600 text-sm"></i>
+                          </div>
+                      </div>
+                  </div>
+                  
+                  <div id="activeTrackingList" class="space-y-2 max-h-0 overflow-hidden transition-all duration-300">
+                      <!-- Active tracking items populated here -->
+                  </div>
+              </div>
+          </div>
 
         <div class="w-full max-w-md mx-auto bg-white rounded-3xl shadow-lg overflow-hidden relative">
             <!-- Ad Banner for Non-Premium Users -->
@@ -1095,9 +1237,30 @@
             <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
                 <h4 class="font-semibold text-green-800 mb-3" data-i18n="premiumFeaturesTitle">Premium Features:</h4>
                 <ul class="text-sm text-green-700 space-y-2">
-                    <li><i class="fas fa-check text-green-500 mr-2"></i><span data-i18n="premiumFeature1">No advertisements</span></li>
-                    <li><i class="fas fa-check text-green-500 mr-2"></i><span data-i18n="premiumFeature2">Priority support</span></li>
-                    <li><i class="fas fa-check text-green-500 mr-2"></i><span data-i18n="premiumFeature3">Early access to new features</span></li>
+                    <li class="flex items-start">
+                        <i class="fas fa-location-arrow text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                        <span data-i18n="premiumFeatureBusTracking">Real-time bus tracking and arrival estimates</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-thumbtack text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                        <span data-i18n="premiumFeaturePinnedRoutes">Pin favorite routes for daily tracking</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-bell text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                        <span data-i18n="premiumFeatureNotifications">Smart notifications for tracked buses</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-ad text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                        <span data-i18n="premiumFeature1">No advertisements</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-headset text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                        <span data-i18n="premiumFeature2">Priority support</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-star text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                        <span data-i18n="premiumFeature3">Early access to new features</span>
+                    </li>
                 </ul>
             </div>
             
@@ -1747,6 +1910,40 @@
                         <div class="mt-2 text-xs opacity-80">
                             <i class="fas fa-hand-pointer mr-1"></i>
                             <span data-i18n="clickToRemoveAds">Click to remove ads</span>
+                        </div>
+                    `
+                },
+                {
+                    // Blue/teal tracking style
+                    gradient: 'bg-gradient-to-r from-blue-400 to-teal-500',
+                    content: `
+                        <div class="flex items-center justify-center mb-1">
+                            <i class="fas fa-bus text-xl mr-2"></i>
+                            <p class="font-bold text-lg" data-i18n="trackBusesTitle">TRACK BUSES</p>
+                        </div>
+                        <p class="text-sm opacity-90">
+                            <span data-i18n="realTimeTrackingText">Real-time arrival estimates</span>
+                        </p>
+                        <div class="mt-2 text-xs opacity-80">
+                            <i class="fas fa-crown mr-1"></i>
+                            <span data-i18n="unlockTrackingText">Unlock tracking</span>
+                        </div>
+                    `
+                },
+                {
+                    // Green/emerald pin routes style
+                    gradient: 'bg-gradient-to-r from-green-400 to-emerald-500',
+                    content: `
+                        <div class="flex items-center justify-center mb-1">
+                            <i class="fas fa-thumbtack text-xl mr-2"></i>
+                            <p class="font-bold text-lg" data-i18n="pinRoutesTitle">PIN ROUTES</p>
+                        </div>
+                        <p class="text-sm opacity-90">
+                            <span data-i18n="dailyTrackingText">Track your daily routes</span>
+                        </p>
+                        <div class="mt-2 text-xs opacity-80">
+                            <i class="fas fa-crown mr-1"></i>
+                            <span data-i18n="unlockButton">Unlock</span>
                         </div>
                     `
                 }
