@@ -337,6 +337,64 @@ class BusTrackingUI {
             this.closePinnedRouteManager();
         }
     }
+
+    // Update active tracking display with detailed status
+    static updateActiveTrackingDisplay() {
+        const activeTracking = BusTrackingHandler.getActiveTracking();
+        const activeTrackingSection = document.getElementById('activeTrackingSection');
+        const activeTrackingList = document.getElementById('activeTrackingList');
+        const activeTrackingCount = document.getElementById('activeTrackingCount');
+        
+        if (!activeTrackingSection || !activeTrackingList || !activeTrackingCount) return;
+        
+        if (activeTracking.length === 0) {
+            activeTrackingSection.style.display = 'none';
+            return;
+        }
+        
+        // Update count
+        const countText = activeTracking.length === 1 ? 
+            t('oneRoute', '1 route') : 
+            t('multipleRoutes', '{count} routes').replace('{count}', activeTracking.length);
+        activeTrackingCount.textContent = countText;
+        
+        // Clear and rebuild list with detailed status
+        activeTrackingList.innerHTML = '';
+        
+        activeTracking.forEach(track => {
+            const trackingElementHTML = BusTrackingHandler.createActiveTrackingElement(track);
+            // Convert HTML string to DOM element
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = trackingElementHTML;
+            const trackingElement = tempDiv.firstElementChild;
+            
+            if (trackingElement) {
+                activeTrackingList.appendChild(trackingElement);
+            }
+        });
+        
+        activeTrackingSection.style.display = 'block';
+        
+        // Track analytics
+        if (typeof umami !== 'undefined') {
+            umami.track('active-tracking-display-updated', {
+                count: activeTracking.length
+            });
+        }
+    }
+
+    // Initialize the bus tracking UI
+    static init() {
+        this.updateActiveTrackingDisplay();
+        this.updatePinnedRoutesDisplay();
+        
+        // Set up periodic updates for real-time status
+        if (BusTrackingHandler.startPeriodicUpdates) {
+            BusTrackingHandler.startPeriodicUpdates();
+        }
+        
+        console.log('Bus Tracking UI initialized with enhanced status system');
+    }
 }
 
 // Global function to manage pinned routes (called from homepage widget)

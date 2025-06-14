@@ -1490,6 +1490,17 @@
         document.addEventListener('DOMContentLoaded', function() {
             setTodayDate();
             initializeAdRemoval(); // Initialize ad removal system
+            
+            // Initialize bus tracking system with enhanced status display
+            if (typeof BusTrackingHandler !== 'undefined') {
+                BusTrackingHandler.init();
+            }
+            
+            // Initialize bus tracking UI with enhanced display
+            if (typeof BusTrackingUI !== 'undefined') {
+                BusTrackingUI.init();
+            }
+            
             const pages = document.querySelectorAll('.page');
             const navLinks = document.querySelectorAll('.bottom-0 a');
 
