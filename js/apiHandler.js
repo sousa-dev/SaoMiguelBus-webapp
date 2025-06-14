@@ -928,15 +928,13 @@ async function createRouteDiv(route, originStop, destinationStop, lastRoute) {
         
         // Create tracking button (always visible, behavior changes based on premium status)
         const trackingButton = BusTrackingUI.createTrackingButton(routeData, isPremium);
-        trackingButton.className = 'w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-300 text-sm';
         
         // Create pin route button (always visible, behavior changes based on premium status)
         const pinButton = BusTrackingUI.createPinRouteButton(routeData, isPremium);
-        pinButton.className = 'w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition duration-300 text-sm';
         
-        // Create button container with flex layout
+        // Create button container with responsive flex layout
         const buttonContainer = document.createElement('div');
-        buttonContainer.className = 'flex space-x-2';
+        buttonContainer.className = 'flex flex-col sm:flex-row gap-2 sm:gap-2';
         buttonContainer.appendChild(trackingButton);
         buttonContainer.appendChild(pinButton);
         

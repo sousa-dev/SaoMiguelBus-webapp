@@ -4,10 +4,10 @@ class BusTrackingUI {
     // Create tracking button for route cards
     static createTrackingButton(routeData, isPremium = false) {
         const button = document.createElement('button');
-        button.className = 'bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300 text-sm mr-2 relative';
+        button.className = 'bg-blue-500 text-white px-3 py-2 rounded-lg hover:bg-blue-600 transition duration-300 text-xs sm:text-sm relative flex-1 min-w-0';
         
         if (isPremium) {
-            button.innerHTML = '<i class="fas fa-location-arrow mr-2"></i>' + t('trackBus', 'Track Bus');
+            button.innerHTML = '<i class="fas fa-location-arrow mr-1 sm:mr-2"></i><span class="truncate">' + t('trackBus', 'Track Bus') + '</span>';
             button.setAttribute('data-umami-event', 'track-bus-button');
             
             button.onclick = (event) => {
@@ -16,13 +16,10 @@ class BusTrackingUI {
             };
         } else {
             button.innerHTML = `
-                <div class="flex items-center justify-center relative">
-                    <i class="fas fa-location-arrow mr-2"></i>
-                    <span>${t('trackBus', 'Track Bus')}</span>
-                    <span class="absolute -top-2 -right-2 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full flex items-center">
-                        <i class="fas fa-crown mr-1 text-xs"></i>
-                        <span style="font-size: 9px;">${t('premium', 'PREMIUM')}</span>
-                    </span>
+                <div class="flex items-center justify-center relative w-full">
+                    <i class="fas fa-location-arrow mr-1 sm:mr-2 flex-shrink-0"></i>
+                    <span class="truncate">${t('trackBus', 'Track Bus')}</span>
+                    <i class="fas fa-crown absolute -top-1.5 -right-1.5 bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-full w-4 h-4 flex items-center justify-center" style="font-size: 7px;"></i>
                 </div>
             `;
             button.setAttribute('data-umami-event', 'track-bus-button-premium-required');
@@ -46,10 +43,10 @@ class BusTrackingUI {
     // Create pin route button for "track every day" functionality
     static createPinRouteButton(routeData, isPremium = false) {
         const button = document.createElement('button');
-        button.className = 'bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-300 text-sm relative';
+        button.className = 'bg-green-500 text-white px-3 py-2 rounded-lg hover:bg-green-600 transition duration-300 text-xs sm:text-sm relative flex-1 min-w-0';
         
         if (isPremium) {
-            button.innerHTML = '<i class="fas fa-thumbtack mr-2"></i>' + t('trackEveryDay', 'Track Every Day');
+            button.innerHTML = '<i class="fas fa-thumbtack mr-1 sm:mr-2"></i><span class="truncate">' + t('trackEveryDay', 'Track Every Day') + '</span>';
             button.setAttribute('data-umami-event', 'pin-route-button');
             
             button.onclick = (event) => {
@@ -58,13 +55,10 @@ class BusTrackingUI {
             };
         } else {
             button.innerHTML = `
-                <div class="flex items-center justify-center relative">
-                    <i class="fas fa-thumbtack mr-2"></i>
-                    <span>${t('trackEveryDay', 'Track Every Day')}</span>
-                    <span class="absolute -top-2 -right-2 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full flex items-center">
-                        <i class="fas fa-crown mr-1 text-xs"></i>
-                        <span style="font-size: 9px;">${t('premium', 'PREMIUM')}</span>
-                    </span>
+                <div class="flex items-center justify-center relative w-full">
+                    <i class="fas fa-thumbtack mr-1 sm:mr-2 flex-shrink-0"></i>
+                    <span class="truncate">${t('trackEveryDay', 'Track Every Day')}</span>
+                    <i class="fas fa-crown absolute -top-1.5 -right-1.5 bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-full w-4 h-4 flex items-center justify-center" style="font-size: 7px;"></i>
                 </div>
             `;
             button.setAttribute('data-umami-event', 'pin-route-button-premium-required');
