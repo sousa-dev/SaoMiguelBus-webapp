@@ -63,5 +63,28 @@ function displayFavoriteRoutes(routes) {
     favoriteRoutesContainer.style.display = 'block';
 }
 
+// Renew favorite routes cookie to extend its lifetime
+function renewFavoriteRoutesCache() {
+    try {
+        const favoriteRoutes = getCookie('favoriteRoutes');
+        if (favoriteRoutes) {
+            // Renew the cookie with fresh 30-day expiration
+            setCookie('favoriteRoutes', favoriteRoutes, 30);
+            console.log('Favorite routes cache renewed successfully');
+        }
+    } catch (error) {
+        console.error('Failed to renew favorite routes cache:', error);
+    }
+}
+
+// Initialize favorite routes and renew cache
+function initializeFavoriteRoutes() {
+    // Renew cache to extend lifetime
+    renewFavoriteRoutesCache();
+    
+    // Display favorite routes
+    displayFavoriteRoutes(checkFavoriteRoutesCookie());
+}
+
 // Call the function to check for favorite routes when the page loads
-document.addEventListener('DOMContentLoaded', displayFavoriteRoutes(checkFavoriteRoutesCookie()));
+document.addEventListener('DOMContentLoaded', initializeFavoriteRoutes);

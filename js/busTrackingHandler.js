@@ -7,6 +7,10 @@ class BusTrackingHandler {
     // Initialize bus tracking system
     static init() {
         this.checkPremiumAccess();
+        
+        // Renew storage cache for pinned routes and active tracking to extend their lifetime
+        this.renewTrackingDataCache();
+        
         this.loadTrackingData();
         this.startAutoTrackingScheduler();
         this.updateHomepageWidget();
@@ -58,6 +62,51 @@ class BusTrackingHandler {
         } catch (error) {
             console.error('Failed to save tracking data:', error);
             this.handleStorageError(error);
+        }
+    }
+
+    // Renew tracking data cache to extend lifetime of pinned routes and active tracking
+    static renewTrackingDataCache() {
+        try {
+            const data = this.loadTrackingData();
+            let hasChanges = false;
+            const now = Date.now();
+            const extensionTime = 30 * 24 * 60 * 60 * 1000; // 30 days in milliseconds
+            
+            // Extend expiration time for pinned routes (they should persist longer)
+            if (data.pinnedRoutes && data.pinnedRoutes.length > 0) {
+                data.pinnedRoutes.forEach(route => {
+                    if (route.expiresAt) {
+                        // Extend expiration by 30 days from now
+                        route.expiresAt = now + extensionTime;
+                        hasChanges = true;
+                    }
+                });
+            }
+            
+            // Extend expiration time for active tracking (extend by tracking duration)
+            if (data.activeTracking && data.activeTracking.length > 0) {
+                data.activeTracking.forEach(track => {
+                    if (track.expiresAt && track.expiresAt > now) {
+                        // Only extend if not already expired, extend by the tracking duration
+                        track.expiresAt = now + this.TRACKING_DURATION;
+                        hasChanges = true;
+                    }
+                });
+            }
+            
+            // Update last renewal timestamp
+            data.lastCacheRenewal = now;
+            hasChanges = true;
+            
+            // Save the updated data if there were changes
+            if (hasChanges) {
+                this.saveTrackingData(data);
+                console.log('Bus tracking cache renewed successfully');
+            }
+            
+        } catch (error) {
+            console.error('Failed to renew tracking data cache:', error);
         }
     }
 
