@@ -817,6 +817,11 @@ async function createRouteDiv(route, originStop, destinationStop, lastRoute) {
                     ${t('directionsButton')} <i class="fas fa-route"></i>
                 </button>
             </div>
+            
+            <!-- Premium Tracking Buttons -->
+            <div id="trackingButtons-${route.id}" class="mt-2 space-y-2" style="display: none;">
+                <!-- Tracking buttons will be inserted here for premium users -->
+            </div>
     </div>
     `;
 
@@ -897,6 +902,40 @@ async function createRouteDiv(route, originStop, destinationStop, lastRoute) {
 
     if (ignoreRoute) {
         return null;
+    }
+    
+    // Add tracking buttons for premium users
+    if (typeof adRemovalState !== 'undefined' && adRemovalState && adRemovalState.isActive) {
+        const trackingButtonsContainer = routeDiv.querySelector(`#trackingButtons-${route.id}`);
+        if (trackingButtonsContainer) {
+            trackingButtonsContainer.style.display = 'block';
+            
+            const routeData = {
+                routeId: route.id,
+                routeNumber: route.route,
+                origin: originStop,
+                destination: destinationStop,
+                allStops: stringToJSON(route.stops),
+                searchDay: checkDayType(),
+                type: 'route'
+            };
+            
+            // Create tracking button
+            const trackingButton = BusTrackingUI.createTrackingButton(routeData);
+            trackingButton.className = 'w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition duration-300 text-sm';
+            
+            // Create pin route button
+            const pinButton = BusTrackingUI.createPinRouteButton(routeData);
+            pinButton.className = 'w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition duration-300 text-sm';
+            
+            // Create button container with flex layout
+            const buttonContainer = document.createElement('div');
+            buttonContainer.className = 'flex space-x-2';
+            buttonContainer.appendChild(trackingButton);
+            buttonContainer.appendChild(pinButton);
+            
+            trackingButtonsContainer.appendChild(buttonContainer);
+        }
     }
     
     // Store route data for comparison

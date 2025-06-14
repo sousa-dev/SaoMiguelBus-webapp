@@ -460,7 +460,7 @@
         // Show bottom ad after 10 seconds if not dismissed and not premium
         // Only show once per session
         setTimeout(() => {
-            if (!sessionStorage.getItem('bottomAdDismissed') && !getCookie('premiumUser')) {
+            if (!sessionStorage.getItem('bottomAdDismissed') && !(adRemovalState && adRemovalState.isActive)) {
                 document.getElementById('bottomStickyAd').style.display = 'block';
             }
         }, 10000);
@@ -669,6 +669,40 @@
 
     <!-- Pesquisar Page -->
     <section id="home" class="page active bg-white flex flex-col items-center p-2 h-full overflow-y-auto">       
+        <!-- Active Tracking Section (Above Search Form) -->
+        <div id="activeTrackingSection" class="container mx-auto px-4 mb-4 max-w-md" style="display: none;">
+            <div class="bg-white rounded-lg shadow-md border border-gray-200 p-3">
+                <!-- Premium Badge -->
+                <div class="flex justify-end mb-1">
+                    <span class="bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs font-bold px-2 py-0.5 rounded-full flex items-center">
+                        <i class="fas fa-crown mr-1 text-xs"></i>
+                        <span data-i18n="premium">PREMIUM</span>
+                    </span>
+                </div>
+                
+                <div class="flex items-center justify-between mb-2 cursor-pointer" onclick="toggleActiveTrackingSection()">
+                    <div class="flex items-center flex-1">
+                        <div class="bg-green-500 rounded-full p-1.5 mr-2">
+                            <i class="fas fa-location-arrow text-white text-sm"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-base font-bold text-gray-800 truncate" data-i18n="activeTracking">Active Tracking</h3>
+                            <p class="text-xs text-gray-600 truncate" data-i18n="activeTrackingSubtitle">Track your bus routes</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center ml-2">
+                        <span id="activeTrackingCount" class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-semibold mr-2" data-i18n="trackingCount">0 routes</span>
+                        <div class="bg-gray-100 rounded-full p-1.5">
+                            <i id="activeTrackingToggleIcon" class="fas fa-chevron-down transition-transform duration-300 text-gray-600 text-sm"></i>
+                        </div>
+                    </div>
+                </div>
+                <div id="activeTrackingList" class="space-y-2 max-h-0 overflow-hidden transition-all duration-300">
+                    <!-- Active tracking items populated here -->
+                </div>
+            </div>
+        </div>
+
         <div class="w-full max-w-md mx-auto bg-white rounded-3xl shadow-lg overflow-hidden relative">
             <!-- Ad Banner for Non-Premium Users -->
             <div id="homeAdBanner" class="ad-banner">
@@ -772,6 +806,25 @@
             <!-- Placeholder for favourite Routes -->
             <div id="favouriteRoutesContainer" class="hidden mt-4">
                 <!-- Favourite Routes will be added dynamically -->
+            </div>
+        </div>
+
+        <!-- Bus Tracking Widget (Pinned Routes Only) -->
+        <div id="busTrackingWidget" class="container mx-auto px-4 mb-4 hidden max-w-md">
+            <!-- Pinned Routes Section -->
+            <div id="pinnedRoutesSection" class="bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-lg p-4 mb-4" style="display: none;">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-lg font-semibold">
+                        <i class="fas fa-thumbtack mr-2"></i>
+                        <span data-i18n="pinnedRoutes">My Daily Routes</span>
+                    </h3>
+                    <button onclick="managePinnedRoutes()" class="text-white hover:text-gray-200">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                </div>
+                <div id="pinnedRoutesList" class="space-y-2">
+                    <!-- Pinned routes populated here -->
+                </div>
             </div>
         </div>
 
@@ -1705,6 +1758,8 @@
     <script src="js/favoriteHandler.js" defer></script>
     <script src="js/languageModal.js" defer></script>
     <script src="js/adRemovalHandler.js" defer></script>
+    <script src="js/busTrackingHandler.js" defer></script>
+    <script src="js/busTrackingUI.js" defer></script>
 
     <!-- Add this script within your existing JavaScript block -->
     <script>
@@ -1795,7 +1850,7 @@
     <script>
         function showInterstitialAd() {
             // Only show if not premium user
-            const isPremium = getCookie('premiumUser');
+            const isPremium = adRemovalState && adRemovalState.isActive;
             const isDismissed = getCookie('interstitialDismissed');
             const hasSearched = sessionStorage.getItem('hasSearchedThisSession');
             const sessionDismissed = sessionStorage.getItem('interstitialDismissedThisSession');
@@ -1918,6 +1973,31 @@
             loadInterstitialBannerAd();
             document.getElementById('interstitialAdModal').classList.remove('hidden');
         };
+    </script>
+
+    <!-- Toggle active tracking section -->
+    <script>
+        function toggleActiveTrackingSection() {
+            const list = document.getElementById('activeTrackingList');
+            const icon = document.getElementById('activeTrackingToggleIcon');
+            
+            if (list.classList.contains('max-h-0')) {
+                // Expand
+                list.classList.remove('max-h-0');
+                list.classList.add('max-h-96');
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+            } else {
+                // Collapse
+                list.classList.remove('max-h-96');
+                list.classList.add('max-h-0');
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+            }
+        }
+
+        // Make toggle function globally accessible
+        window.toggleActiveTrackingSection = toggleActiveTrackingSection;
     </script>
 </body>
 </html>
