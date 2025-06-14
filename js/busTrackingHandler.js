@@ -179,14 +179,16 @@ class BusTrackingHandler {
         
         // Check if today matches the search day
         if (searchDay !== 'both' && currentDay !== searchDay) {
-            // Not today, return next occurrence
+            // Not today, return next occurrence with proper day calculation
             return this.getNextOccurrenceTime(allStops, origin, searchDay);
         }
         
-        // Find the next departure time today
-        for (let time of departureTimes) {
-            if (time > currentTime) {
-                return this.minutesToTimeString(time);
+        // Find the next departure time today (if route runs today)
+        if (searchDay === 'both' || currentDay === searchDay) {
+            for (let time of departureTimes) {
+                if (time > currentTime) {
+                    return this.minutesToTimeString(time);
+                }
             }
         }
         
@@ -241,11 +243,31 @@ class BusTrackingHandler {
         return times.sort((a, b) => a - b);
     }
 
-    // Check if stop matches origin
+    // Check if stop matches origin (improved matching)
     static stopMatchesOrigin(stop, origin) {
-        const stopWords = stop.toLowerCase().split(' ');
-        const originWords = origin.toLowerCase().split(' ');
-        return originWords.every(word => stopWords.includes(word));
+        if (!stop || !origin) return false;
+        
+        const stopLower = stop.toLowerCase();
+        const originLower = origin.toLowerCase();
+        
+        // Direct match
+        if (stopLower.includes(originLower) || originLower.includes(stopLower)) {
+            return true;
+        }
+        
+        // Word-based matching
+        const stopWords = stopLower.split(/\s+/);
+        const originWords = originLower.split(/\s+/).filter(word => word.length > 2);
+        
+        // Check if most significant words match
+        const matchingWords = originWords.filter(originWord => 
+            stopWords.some(stopWord => 
+                stopWord.includes(originWord) || originWord.includes(stopWord)
+            )
+        );
+        
+        // Consider it a match if at least 60% of significant words match
+        return matchingWords.length >= Math.max(1, Math.ceil(originWords.length * 0.6));
     }
 
     // Convert time string to minutes (improved)
@@ -287,12 +309,39 @@ class BusTrackingHandler {
             return allTimes.length > 0 ? allTimes[0] : '08h00';
         }
         
-        // Return the first departure time of the day
+        // Calculate days until next valid day
+        const currentDay = new Date().getDay(); // 0 = Sunday, 6 = Saturday
+        let daysToAdd = 0;
+        
+        if (searchDay === 'weekday') {
+            // Next weekday (Monday-Friday)
+            if (currentDay === 0) daysToAdd = 1; // Sunday -> Monday
+            else if (currentDay === 6) daysToAdd = 2; // Saturday -> Monday
+            else daysToAdd = 1; // Next weekday
+        } else if (searchDay === 'weekend') {
+            // Next weekend (Saturday or Sunday)
+            if (currentDay === 0) daysToAdd = 6; // Sunday -> Saturday
+            else if (currentDay === 6) daysToAdd = 1; // Saturday -> Sunday
+            else daysToAdd = 6 - currentDay; // Weekday -> Saturday
+        } else {
+            // 'both' or any other case - next day
+            daysToAdd = 1;
+        }
+        
+        // Return the first departure time of the next valid day
         return this.minutesToTimeString(departureTimes[0]);
     }
 
     // Calculate estimated arrival time
     static calculateEstimatedArrival(allStops, origin, destination, departureTime) {
+        // Find the actual arrival time at the destination stop
+        const destinationTime = this.findDestinationTime(allStops, origin, destination);
+        
+        if (destinationTime !== null) {
+            return destinationTime;
+        }
+        
+        // Fallback: calculate using travel time if direct lookup fails
         const departureMinutes = this.timeStringToMinutes(departureTime);
         const travelTime = this.calculateTravelTime(allStops, origin, destination);
         
@@ -303,12 +352,11 @@ class BusTrackingHandler {
         const arrivalMinutes = departureMinutes + travelTime;
         return this.minutesToTimeString(arrivalMinutes);
     }
-
-    // Calculate travel time between origin and destination
-    static calculateTravelTime(allStops, origin, destination) {
+    
+    // Find the actual time at destination stop
+    static findDestinationTime(allStops, origin, destination) {
         let originTime = null;
         let destinationTime = null;
-        let foundOrigin = false;
         
         // Convert stops object to array and sort by time
         const stopsArray = Object.entries(allStops).map(([stop, time]) => ({
@@ -317,14 +365,53 @@ class BusTrackingHandler {
             originalTime: time
         })).filter(item => item.time !== null).sort((a, b) => a.time - b.time);
         
+        // Find origin time first
         for (const stopData of stopsArray) {
-            if (this.stopMatchesOrigin(stopData.stop, origin) && !foundOrigin) {
+            if (this.stopMatchesOrigin(stopData.stop, origin)) {
                 originTime = stopData.time;
-                foundOrigin = true;
-            }
-            if (this.stopMatchesOrigin(stopData.stop, destination) && foundOrigin) {
-                destinationTime = stopData.time;
                 break;
+            }
+        }
+        
+        // Find destination time (must be after origin time)
+        for (const stopData of stopsArray) {
+            if (this.stopMatchesOrigin(stopData.stop, destination)) {
+                if (originTime !== null && stopData.time > originTime) {
+                    return stopData.originalTime; // Return the actual time string
+                }
+            }
+        }
+        
+        return null;
+    }
+
+    // Calculate travel time between origin and destination
+    static calculateTravelTime(allStops, origin, destination) {
+        let originTime = null;
+        let destinationTime = null;
+        
+        // Convert stops object to array and sort by time
+        const stopsArray = Object.entries(allStops).map(([stop, time]) => ({
+            stop,
+            time: this.timeStringToMinutes(time),
+            originalTime: time
+        })).filter(item => item.time !== null).sort((a, b) => a.time - b.time);
+        
+        // Find origin time
+        for (const stopData of stopsArray) {
+            if (this.stopMatchesOrigin(stopData.stop, origin)) {
+                originTime = stopData.time;
+                break;
+            }
+        }
+        
+        // Find destination time (must be after origin time)
+        for (const stopData of stopsArray) {
+            if (this.stopMatchesOrigin(stopData.stop, destination)) {
+                if (originTime !== null && stopData.time > originTime) {
+                    destinationTime = stopData.time;
+                    break;
+                }
             }
         }
         
@@ -336,11 +423,11 @@ class BusTrackingHandler {
     }
 
     // Calculate countdown to next departure
-    static calculateCountdown(nextDeparture) {
+    static calculateCountdown(nextDeparture, searchDay = null) {
         if (!nextDeparture) return null;
         
         const now = new Date();
-        const departureTime = this.parseDepartureTime(nextDeparture);
+        const departureTime = this.parseDepartureTime(nextDeparture, searchDay);
         const timeDiff = departureTime - now;
         
         if (timeDiff <= 0) return null;
@@ -364,17 +451,48 @@ class BusTrackingHandler {
     }
 
     // Parse departure time string to Date object
-    static parseDepartureTime(departureTime) {
+    static parseDepartureTime(departureTime, searchDay = null) {
         const [hours, minutes] = departureTime.split('h').map(Number);
         const now = new Date();
         const departure = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
         
-        // If departure time has passed today, it's for tomorrow
+        // If departure time has passed today, calculate next valid day
         if (departure <= now) {
-            departure.setDate(departure.getDate() + 1);
+            if (searchDay && searchDay !== 'both') {
+                const currentDay = this.getCurrentDayType();
+                if (searchDay !== currentDay) {
+                    // Route doesn't run today, find next valid day
+                    const daysToAdd = this.calculateDaysToNextValidDay(searchDay);
+                    departure.setDate(departure.getDate() + daysToAdd);
+                } else {
+                    // Route runs today but time has passed, next occurrence
+                    departure.setDate(departure.getDate() + 1);
+                }
+            } else {
+                departure.setDate(departure.getDate() + 1);
+            }
         }
         
         return departure;
+    }
+    
+    // Calculate days to next valid day for route
+    static calculateDaysToNextValidDay(searchDay) {
+        const currentDay = new Date().getDay(); // 0 = Sunday, 6 = Saturday
+        
+        if (searchDay === 'weekday') {
+            // Next weekday (Monday-Friday)
+            if (currentDay === 0) return 1; // Sunday -> Monday
+            else if (currentDay === 6) return 2; // Saturday -> Monday
+            else return 1; // Next weekday
+        } else if (searchDay === 'weekend') {
+            // Next weekend (Saturday or Sunday)
+            if (currentDay === 0) return 6; // Sunday -> Saturday
+            else if (currentDay === 6) return 1; // Saturday -> Sunday
+            else return 6 - currentDay; // Weekday -> Saturday
+        }
+        
+        return 1; // Default to next day
     }
 
     // Update countdown displays and all time-sensitive content
@@ -399,7 +517,7 @@ class BusTrackingHandler {
             }
             
             // Update countdown
-            const countdown = this.calculateCountdown(track.nextDeparture);
+            const countdown = this.calculateCountdown(track.nextDeparture, track.searchDay);
             if (countdown !== track.countdown) {
                 track.countdown = countdown;
                 hasUpdates = true;
@@ -430,7 +548,7 @@ class BusTrackingHandler {
             }
             
             // Update countdown
-            const countdown = this.calculateCountdown(route.nextDeparture);
+            const countdown = this.calculateCountdown(route.nextDeparture, route.searchDay);
             if (countdown !== route.countdown) {
                 route.countdown = countdown;
                 hasUpdates = true;
@@ -811,29 +929,39 @@ class BusTrackingHandler {
     }
 
     static createPinnedRouteElement(route) {
-        const countdown = this.calculateCountdown(route.nextDeparture);
+        const countdown = this.calculateCountdown(route.nextDeparture, route.searchDay);
         const countdownText = countdown || t('scheduleUnavailable', 'Schedule unavailable');
+        
+        // Determine day type display
+        const dayTypeText = this.formatDayType(route.searchDay);
+        const dayTypeColor = route.searchDay === 'weekday' ? 'bg-blue-100 text-blue-800' : 
+                            route.searchDay === 'weekend' ? 'bg-purple-100 text-purple-800' : 
+                            'bg-gray-100 text-gray-800';
+        
         const element = document.createElement('div');
-        element.className = 'bg-white bg-opacity-20 rounded-lg p-3 flex items-center justify-between cursor-pointer hover:bg-opacity-30 transition-all duration-200';
+        element.className = 'bg-white rounded-lg border border-gray-200 shadow-sm p-3 mb-2 flex items-center justify-between cursor-pointer hover:shadow-md transition-all duration-200';
         element.setAttribute('data-pinned-id', route.id);
         element.innerHTML = `
             <div class="flex-1" onclick="BusTrackingHandler.showRouteDetails('${route.id}', 'pinned')" data-umami-event="view-pinned-route-details">
                 <div class="flex items-center mb-1">
                     <div class="status-indicator w-3 h-3 rounded-full bg-green-500 mr-2"></div>
-                    <i class="fas fa-thumbtack text-yellow-300 mr-2"></i>
-                    <span class="font-medium">${route.routeNumber}</span>
+                    <i class="fas fa-thumbtack text-blue-500 mr-2"></i>
+                    <span class="font-medium text-gray-800">${route.routeNumber}</span>
+                    <span class="ml-2 px-2 py-0.5 rounded-full text-xs font-medium ${dayTypeColor}">
+                        ${dayTypeText}
+                    </span>
                 </div>
-                <div class="text-sm opacity-90 mb-1">
+                <div class="text-sm text-gray-600 mb-1">
                     ${route.origin} → ${route.destination}
                 </div>
-                <div class="text-xs opacity-75 flex items-center space-x-2">
+                <div class="text-xs text-gray-500 flex items-center space-x-2">
                     <span class="countdown-display">${countdownText}</span>
                     <span class="text-gray-400">•</span>
                     <span class="next-departure">${route.nextDeparture || '--:--'}</span>
                     ${route.estimatedArrival ? `<span class="text-gray-400">→</span><span class="estimated-arrival">${route.estimatedArrival}</span>` : ''}
                 </div>
             </div>
-            <button onclick="BusTrackingHandler.removePinnedRoute('${route.id}')" class="text-red-400 hover:text-red-300 ml-2 p-1" data-umami-event="remove-pinned-route">
+            <button onclick="BusTrackingHandler.removePinnedRoute('${route.id}')" class="text-red-500 hover:text-red-700 ml-2 p-1" data-umami-event="remove-pinned-route">
                 <i class="fas fa-times"></i>
             </button>
         `;
@@ -858,9 +986,14 @@ class BusTrackingHandler {
                         </div>
                         <div class="flex-1 min-w-0">
                             <div class="flex items-center justify-between mb-1">
-                                <h4 class="font-semibold text-sm text-gray-800 truncate">
-                                    ${displayTitle}
-                                </h4>
+                                <div class="flex items-center">
+                                    <h4 class="font-semibold text-sm text-gray-800 truncate mr-2">
+                                        ${displayTitle}
+                                    </h4>
+                                    <span class="px-2 py-0.5 rounded-full text-xs font-medium ${track.searchDay === 'weekday' ? 'bg-blue-100 text-blue-800' : track.searchDay === 'weekend' ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800'}">
+                                        ${this.formatDayType(track.searchDay)}
+                                    </span>
+                                </div>
                                 <span class="status-indicator px-2 py-1 rounded-full text-xs font-medium ${statusColor} bg-gray-100">
                                     ${busStatus.statusText}
                                 </span>
@@ -1447,28 +1580,7 @@ class BusTrackingHandler {
         }
     }
 
-    // Helper method to check if a stop matches the origin/destination
-    static stopMatchesOrigin(stopName, targetLocation) {
-        if (!stopName || !targetLocation) return false;
-        
-        const stopLower = stopName.toLowerCase();
-        const targetLower = targetLocation.toLowerCase();
-        
-        // Direct match
-        if (stopLower.includes(targetLower) || targetLower.includes(stopLower)) {
-            return true;
-        }
-        
-        // Check if stop name contains target location words
-        const targetWords = targetLower.split(/\s+/);
-        const stopWords = stopLower.split(/\s+/);
-        
-        return targetWords.some(targetWord => 
-            targetWord.length > 2 && stopWords.some(stopWord => 
-                stopWord.includes(targetWord) || targetWord.includes(stopWord)
-            )
-        );
-    }
+
 
     // View detailed tracking information
     static viewTrackingDetails(trackingId) {
