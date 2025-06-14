@@ -342,7 +342,7 @@ class BusTrackingUI {
                 <div class="p-3 sm:p-4 border-t bg-gray-50">
                     <div class="flex flex-col sm:flex-row justify-between items-center text-xs sm:text-sm text-gray-600 space-y-2 sm:space-y-0">
                         <span>
-                            <span>${data.pinnedRoutes.length}</span> / <span>${BusTrackingHandler.MAX_PINNED_ROUTES}</span> pinned
+                            <span>${data.pinnedRoutes.length}</span> pinned
                         </span>
                         ${data.pinnedRoutes.length > 0 ? `
                             <button onclick="BusTrackingUI.clearAllPinnedRoutes()" class="text-red-600 hover:text-red-800 text-xs sm:text-sm" data-umami-event="clear-all-pinned-routes">
@@ -367,7 +367,7 @@ class BusTrackingUI {
                         <i class="fas fa-thumbtack text-green-500 mr-2"></i>
                         <span class="font-medium text-sm sm:text-base">${route.routeNumber}</span>
                     </div>
-                    <button onclick="BusTrackingHandler.removePinnedRoute('${route.id}')" class="text-red-500 hover:text-red-700 p-1" data-umami-event="remove-individual-pinned-route">
+                                                <button onclick="BusTrackingHandler.showRemovePinnedRouteConfirmation('${route.id}')" class="text-red-500 hover:text-red-700 p-1" data-umami-event="remove-individual-pinned-route">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>

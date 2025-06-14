@@ -2,7 +2,6 @@
 class BusTrackingHandler {
     static STORAGE_KEY = 'busTracking';
     static MAX_ACTIVE_TRACKING = 5;
-    static MAX_PINNED_ROUTES = 3;
     static TRACKING_DURATION = 4 * 60 * 60 * 1000; // 4 hours in milliseconds
 
     // Initialize bus tracking system
@@ -817,15 +816,7 @@ class BusTrackingHandler {
             return false;
         }
 
-        // Check pinned routes limit
-        if (data.pinnedRoutes.length >= this.MAX_PINNED_ROUTES) {
-            this.showMessage(t('pinnedLimitReached', 'Maximum pinned routes limit reached'), 'warning');
-            // Track limit reached event
-            if (typeof umami !== 'undefined') {
-                umami.track('pin-route-limit-reached');
-            }
-            return false;
-        }
+        // No limit on pinned routes - users can pin as many as they want
 
         // Create and add pinned route
         const pinnedRoute = this.createTrackedBus(routeData, true);
@@ -853,7 +844,69 @@ class BusTrackingHandler {
         return true;
     }
 
-    // Remove a pinned route
+    // Show confirmation modal for removing a pinned route
+    static showRemovePinnedRouteConfirmation(pinnedId) {
+        const data = this.loadTrackingData();
+        const route = data.pinnedRoutes.find(route => route.id === pinnedId);
+        
+        if (!route) {
+            console.error('Route not found for removal confirmation');
+            return;
+        }
+        
+        // Store the route ID for later use
+        this.pendingRemovalRouteId = pinnedId;
+        
+        // Populate route details in the modal
+        const detailsContainer = document.getElementById('removePinnedRouteDetails');
+        if (detailsContainer) {
+            const dayTypeText = this.formatDayType(route.searchDay);
+            detailsContainer.innerHTML = `
+                <div class="flex items-center mb-2">
+                    <i class="fas fa-bus text-blue-500 mr-2"></i>
+                    <span class="font-medium text-gray-800">${route.routeNumber}</span>
+                    <span class="ml-2 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                        ${dayTypeText}
+                    </span>
+                </div>
+                <div class="text-sm text-gray-600">
+                    ${route.origin} → ${route.destination}
+                </div>
+            `;
+        }
+        
+        // Show the modal
+        const modal = document.getElementById('removePinnedRouteModal');
+        if (modal) {
+            modal.classList.remove('hidden');
+        }
+    }
+
+    // Close the remove pinned route confirmation modal
+    static closeRemovePinnedRouteModal() {
+        const modal = document.getElementById('removePinnedRouteModal');
+        if (modal) {
+            modal.classList.add('hidden');
+        }
+        this.pendingRemovalRouteId = null;
+    }
+
+    // Confirm and actually remove the pinned route
+    static confirmRemovePinnedRoute() {
+        if (!this.pendingRemovalRouteId) {
+            console.error('No pending route removal');
+            return;
+        }
+        
+        const success = this.removePinnedRoute(this.pendingRemovalRouteId);
+        if (success) {
+            this.showMessage(t('pinnedRouteRemoved', 'Pinned route removed'), 'success');
+        }
+        
+        this.closeRemovePinnedRouteModal();
+    }
+
+    // Remove a pinned route (internal method)
     static removePinnedRoute(pinnedId) {
         const data = this.loadTrackingData();
         const routeIndex = data.pinnedRoutes.findIndex(route => route.id === pinnedId);
@@ -1036,7 +1089,7 @@ class BusTrackingHandler {
                     ${route.estimatedArrival ? `<span class="text-gray-400">→</span><span class="estimated-arrival">${route.estimatedArrival}</span>` : ''}
                 </div>
             </div>
-            <button onclick="BusTrackingHandler.removePinnedRoute('${route.id}')" class="text-red-500 hover:text-red-700 ml-2 p-1" data-umami-event="remove-pinned-route">
+            <button onclick="BusTrackingHandler.showRemovePinnedRouteConfirmation('${route.id}')" class="text-red-500 hover:text-red-700 ml-2 p-1" data-umami-event="remove-pinned-route">
                 <i class="fas fa-times"></i>
             </button>
         `;
