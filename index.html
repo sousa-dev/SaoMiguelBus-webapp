@@ -427,6 +427,45 @@
         </div>
     </nav>
 
+    <!-- Bottom Sticky Ad Banner -->
+    <div id="bottomStickyAd" class="ad-banner fixed bottom-14 left-0 right-0 z-40 max-w-md mx-auto">
+        <div class="bg-gradient-to-r from-red-500 to-orange-500 text-white p-2 mx-2 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition-shadow duration-200" onclick="showPricingModal()" data-umami-event="bottom-sticky-ad-click">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <i class="fas fa-crown text-lg mr-2"></i>
+                    <div>
+                        <p class="font-bold text-xs" data-i18n="removeAdsTitle">REMOVE ADS</p>
+                        <p class="text-xs opacity-90" data-i18n="clickToRemoveAds">Click to remove ads</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button onclick="event.stopPropagation(); showPricingModal()" class="bg-white text-red-500 px-3 py-1 rounded text-xs font-bold hover:bg-gray-100" data-umami-event="bottom-sticky-ad-upgrade">
+                        <span data-i18n="upgradeButton">UPGRADE</span>
+                    </button>
+                    <button onclick="event.stopPropagation(); dismissBottomAd()" class="text-white hover:text-gray-200" aria-label="Close ad">
+                        <i class="fas fa-times text-sm"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function dismissBottomAd() {
+            document.getElementById('bottomStickyAd').style.display = 'none';
+            // Set a session flag to prevent showing again this session
+            sessionStorage.setItem('bottomAdDismissed', 'true');
+        }
+        
+        // Show bottom ad after 10 seconds if not dismissed and not premium
+        // Only show once per session
+        setTimeout(() => {
+            if (!sessionStorage.getItem('bottomAdDismissed') && !getCookie('premiumUser')) {
+                document.getElementById('bottomStickyAd').style.display = 'block';
+            }
+        }, 10000);
+    </script>
+
     <!-- Language Selection Modal -->
     <div id="languageModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-lg p-6 w-80 relative max-h-[90vh] overflow-y-auto">
@@ -494,56 +533,56 @@
     </div>
 
     <!-- Pricing Selection Modal -->
-    <div id="pricingModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden">
-        <div class="bg-white rounded-lg p-6 w-96 relative max-w-md mx-auto">
+    <div id="pricingModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-lg p-4 sm:p-6 w-full max-w-sm sm:max-w-md mx-auto relative max-h-[90vh] overflow-y-auto">
             <button id="closePricingModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2">
                 <i class="fas fa-times text-xl text-right"></i>
             </button>
             
-            <div class="text-center mb-6">
-                <i class="fas fa-crown text-4xl text-yellow-500 mb-4"></i>
-                <h3 class="text-xl font-semibold text-green-600 mb-2" data-i18n="removeAdsTitle">Remove Ads</h3>
-                <p class="text-gray-700 mb-4" data-i18n="pricingDescription">
+            <div class="text-center mb-4 sm:mb-6">
+                <i class="fas fa-crown text-3xl sm:text-4xl text-yellow-500 mb-3 sm:mb-4"></i>
+                <h3 class="text-lg sm:text-xl font-semibold text-green-600 mb-2" data-i18n="removeAdsTitle">Remove Ads</h3>
+                <p class="text-sm sm:text-base text-gray-700 mb-3 sm:mb-4" data-i18n="pricingDescription">
                     Choose your plan to remove all advertisements and enjoy an ad-free experience.
                 </p>
-                <p class="text-sm text-green-600 font-medium" data-i18n="supportDeveloper">
+                <p class="text-xs sm:text-sm text-green-600 font-medium" data-i18n="supportDeveloper">
                     Bonus: Support an Azorean Solo Developer. (Yes, this app is not developed by any company, it is just one guy)
                 </p>
             </div>
             
             <!-- Pricing Options -->
-            <div class="space-y-3 mb-6">
-                <div id="pricing-option-weekly" class="pricing-option border-2 border-gray-200 bg-white rounded-lg p-4 cursor-pointer hover:border-green-300 transition-colors" onclick="selectPricingOption('weekly')">
+            <div class="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
+                <div id="pricing-option-weekly" class="pricing-option border-2 border-gray-200 bg-white rounded-lg p-3 sm:p-4 cursor-pointer hover:border-green-300 transition-colors" onclick="selectPricingOption('weekly')">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
                             <div class="w-4 h-4 border-2 border-gray-300 rounded-full mr-3"></div>
                             <div>
-                                <div class="font-semibold text-lg">€0.50<span class="text-sm text-gray-500" data-i18n="perWeek">/week</span></div>
-                                <div class="text-sm text-gray-600" data-i18n="weeklyDescription">Perfect for tourists</div>
+                                <div class="font-semibold text-base sm:text-lg">€0.50<span class="text-xs sm:text-sm text-gray-500" data-i18n="perWeek">/week</span></div>
+                                <div class="text-xs sm:text-sm text-gray-600" data-i18n="weeklyDescription">Perfect for tourists</div>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <div id="pricing-option-monthly" class="pricing-option border-2 border-gray-200 bg-white rounded-lg p-4 cursor-pointer hover:border-green-300 transition-colors" onclick="selectPricingOption('monthly')">
+                <div id="pricing-option-monthly" class="pricing-option border-2 border-gray-200 bg-white rounded-lg p-3 sm:p-4 cursor-pointer hover:border-green-300 transition-colors" onclick="selectPricingOption('monthly')">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
                             <div class="w-4 h-4 border-2 border-gray-300 rounded-full mr-3"></div>
                             <div>
-                                <div class="font-semibold text-lg">€1.99<span class="text-sm text-gray-500" data-i18n="perMonth">/month</span></div>
-                                <div class="text-sm text-gray-600" data-i18n="monthlyDescription">Most popular</div>
+                                <div class="font-semibold text-base sm:text-lg">€1.99<span class="text-xs sm:text-sm text-gray-500" data-i18n="perMonth">/month</span></div>
+                                <div class="text-xs sm:text-sm text-gray-600" data-i18n="monthlyDescription">Most popular</div>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <div id="pricing-option-yearly" class="pricing-option border-2 border-gray-200 bg-white rounded-lg p-4 cursor-pointer hover:border-green-300 transition-colors" onclick="selectPricingOption('yearly')">
+                <div id="pricing-option-yearly" class="pricing-option border-2 border-gray-200 bg-white rounded-lg p-3 sm:p-4 cursor-pointer hover:border-green-300 transition-colors" onclick="selectPricingOption('yearly')">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
                             <div class="w-4 h-4 border-2 border-gray-300 rounded-full mr-3"></div>
                             <div>
-                                <div class="font-semibold text-lg">€19.99<span class="text-sm text-gray-500" data-i18n="perYear">/year</span></div>
-                                <div class="text-sm text-gray-600" data-i18n="yearlyDescription">Save 17%</div>
+                                <div class="font-semibold text-base sm:text-lg">€19.99<span class="text-xs sm:text-sm text-gray-500" data-i18n="perYear">/year</span></div>
+                                <div class="text-xs sm:text-sm text-gray-600" data-i18n="yearlyDescription">Save 17%</div>
                             </div>
                         </div>
                     </div>
@@ -552,43 +591,43 @@
             
             <!-- Subscribe Button -->
             <button onclick="subscribeToSelectedPlan()" 
-                    class="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition duration-300 mb-4"
+                    class="w-full bg-green-500 text-white py-2 sm:py-3 rounded-lg hover:bg-green-600 transition duration-300 mb-3 sm:mb-4 text-sm sm:text-base"
                     data-umami-event="subscribe-premium">
                 <i class="fas fa-crown mr-2"></i>
                 <span data-i18n="removeAdsButton">Remove Ads</span>
             </button>
             
             <!-- Already Subscribed Link -->
-            <div class="text-center">
+            <div class="text-center mb-3 sm:mb-4">
                 <button onclick="showEmailVerificationModal()" 
-                        class="text-blue-500 hover:text-blue-700 text-sm underline"
+                        class="text-blue-500 hover:text-blue-700 text-xs sm:text-sm underline"
                         data-umami-event="already-subscribed-link">
                     <span data-i18n="alreadySubscribed">I already have a subscription enabled</span>
                 </button>
             </div>
             
-            <p class="text-xs text-gray-500 text-center mt-4" data-i18n="premiumTerms">
+            <p class="text-xs text-gray-500 text-center" data-i18n="premiumTerms">
                 By subscribing, you agree to our Terms of Service and Privacy Policy.
             </p>
         </div>
     </div>
 
     <!-- Email Verification Modal -->
-    <div id="emailVerificationModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden">
-        <div class="bg-white rounded-lg p-6 w-80 relative max-w-md mx-auto">
+    <div id="emailVerificationModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-lg p-4 sm:p-6 w-full max-w-sm sm:max-w-md mx-auto relative max-h-[90vh] overflow-y-auto">
             <button id="closeEmailVerificationModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2">
                 <i class="fas fa-times text-xl text-right"></i>
             </button>
             
-            <div class="text-center mb-6">
-                <i class="fas fa-envelope text-4xl text-blue-500 mb-4"></i>
-                <h3 class="text-xl font-semibold text-green-600 mb-2" data-i18n="verifySubscriptionTitle">Verify Subscription</h3>
-                <p class="text-gray-700 mb-4" data-i18n="verifySubscriptionDescription">
+            <div class="text-center mb-4 sm:mb-6">
+                <i class="fas fa-envelope text-3xl sm:text-4xl text-blue-500 mb-3 sm:mb-4"></i>
+                <h3 class="text-lg sm:text-xl font-semibold text-green-600 mb-2" data-i18n="verifySubscriptionTitle">Verify Subscription</h3>
+                <p class="text-sm sm:text-base text-gray-700 mb-3 sm:mb-4" data-i18n="verifySubscriptionDescription">
                     Enter the email address associated with your subscription to activate premium features.
                 </p>
             </div>
             
-            <div class="space-y-4">
+            <div class="space-y-3 sm:space-y-4">
                 <div>
                     <input type="email" id="verificationEmail" 
                            placeholder="Enter your subscription email" 
@@ -635,18 +674,8 @@
             <div id="homeAdBanner" class="ad-banner">
                 <span class="absolute top-0 left-0 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-tl-lg rounded-br-lg">AD</span>          
                 <a href="#" class="block" onclick="showPricingModal(); return false;" data-umami-event="remove-ads-banner-click">
-                    <div class="bg-gradient-to-r from-yellow-400 to-orange-500 text-white p-3 text-center">
-                        <div class="flex items-center justify-center mb-1">
-                            <i class="fas fa-crown text-xl mr-2"></i>
-                            <p class="font-bold text-lg" data-i18n="removeAdsTitle">REMOVE ADS</p>
-                        </div>
-                        <p class="text-sm opacity-90">
-                            <span data-i18n="removeAdsBannerSubtitle">Enjoy an ad-free experience from €0.50/week</span>
-                        </p>
-                        <div class="mt-2 text-xs opacity-80">
-                            <i class="fas fa-hand-pointer mr-1"></i>
-                            <span data-i18n="clickToRemoveAds">Click to remove ads</span>
-                        </div>
+                    <div id="homeAdContent" class="text-white p-3 text-center">
+                        <!-- Dynamic content will be inserted here -->
                     </div>
                 </a>
             </div>
@@ -789,18 +818,8 @@
             <div id="routesAdBanner" class="ad-banner">
                 <span class="absolute top-0 left-0 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-tl-lg rounded-br-lg">AD</span>          
                 <a href="#" class="block" onclick="showPricingModal(); return false;" data-umami-event="remove-ads-banner-click-routes">
-                    <div class="bg-gradient-to-r from-yellow-400 to-orange-500 text-white p-3 text-center">
-                        <div class="flex items-center justify-center mb-1">
-                            <i class="fas fa-crown text-xl mr-2"></i>
-                            <p class="font-bold text-lg" data-i18n="removeAdsTitle">REMOVE ADS</p>
-                        </div>
-                        <p class="text-sm opacity-90">
-                            <span data-i18n="removeAdsBannerSubtitle">Enjoy an ad-free experience from €0.50/week</span>
-                        </p>
-                        <div class="mt-2 text-xs opacity-80">
-                            <i class="fas fa-hand-pointer mr-1"></i>
-                            <span data-i18n="clickToRemoveAds">Click to remove ads</span>
-                        </div>
+                    <div id="routesAdContent" class="text-white p-3 text-center">
+                        <!-- Dynamic content will be inserted here -->
                     </div>
                 </a>
             </div>
@@ -908,6 +927,23 @@
     <section id="tours" class="page hidden bg-white flex flex-col items-center p-2" data-umami-event="view-tours-page">
         <h2 class="text-2xl text-center font-bold mb-4" data-i18n="toursTitle">Tours</h2>
         <p class="text-center text-lg mb-6" data-i18n="toursSubtitle">Encontre tours turísticos na ilha de São Miguel.</p>
+        
+        <!-- Ad Banner in Tours Section -->
+        <div id="toursAdBanner" class="ad-banner mb-4 max-w-md mx-auto">
+            <span class="absolute top-0 left-0 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-tl-lg rounded-br-lg">AD</span>          
+            <a href="#" class="block" onclick="showPricingModal(); return false;" data-umami-event="remove-ads-tours-banner">
+                <div class="bg-gradient-to-r from-blue-400 to-indigo-500 text-white p-3 text-center rounded-lg">
+                    <div class="flex items-center justify-center mb-1">
+                        <i class="fas fa-gem text-xl mr-2"></i>
+                        <p class="font-bold text-lg" data-i18n="premiumExperienceTitle">PREMIUM EXPERIENCE</p>
+                    </div>
+                    <p class="text-sm opacity-90">
+                        <span data-i18n="noAdsExperienceText">Browse tours without ads - Upgrade now!</span>
+                    </p>
+                </div>
+            </a>
+        </div>
+        
         <div id="viatorWidget"></div>
         
         <!-- Loading Info Section -->
@@ -923,9 +959,9 @@
                 Se demorar muito a carregar pode também aceder através deste link: 
             </p>
         </div>
-    <div class="flex justify-center">
-        <a href="https://www.viator.com/?pid=P00222801&mcid=42383&medium=link&medium_version=selector&campaign=sao-miguel-tours" target="_blank" class="text-blue-500 hover:underline" data-umami-event="view-viator-website">São Miguel Tours <i class="fas fa-external-link-alt text-xs ml-1"></i></a>
-    </div>
+        <div class="flex justify-center">
+            <a href="https://www.viator.com/?pid=P00222801&mcid=42383&medium=link&medium_version=selector&campaign=sao-miguel-tours" target="_blank" class="text-blue-500 hover:underline" data-umami-event="view-viator-website">São Miguel Tours <i class="fas fa-external-link-alt text-xs ml-1"></i></a>
+        </div>
     </section>
 
     <!-- Advert Page - Now Premium Subscription Page -->
@@ -1421,8 +1457,6 @@
                             navLink.classList.add('text-gray-600');
                         }
                     });
-
-                    loadAdBanner('home');
                 });
             });
 
@@ -1591,6 +1625,77 @@
             };
         }
 
+        // Function to set random ad banner styles
+        function setRandomAdBannerStyles() {
+            const adBanners = [
+                { contentId: 'homeAdContent', bannerId: 'homeAdBanner' },
+                { contentId: 'routesAdContent', bannerId: 'routesAdBanner' }
+            ];
+
+            const adStyles = [
+                {
+                    // Original yellow/orange style
+                    gradient: 'bg-gradient-to-r from-yellow-400 to-orange-500',
+                    content: `
+                        <div class="flex items-center justify-center mb-1">
+                            <i class="fas fa-crown text-xl mr-2"></i>
+                            <p class="font-bold text-lg" data-i18n="removeAdsTitle">REMOVE ADS</p>
+                        </div>
+                        <p class="text-sm opacity-90">
+                            <span data-i18n="clickToRemoveAds">Click to remove ads</span>
+                        </p>
+                        <div class="mt-2 text-xs opacity-80">
+                            <i class="fas fa-hand-pointer mr-1"></i>
+                            <span data-i18n="clickToRemoveAds">Click to remove ads</span>
+                        </div>
+                    `
+                },
+                {
+                    // New purple/pink style
+                    gradient: 'bg-gradient-to-r from-purple-400 to-pink-500',
+                    content: `
+                        <div class="flex items-center justify-center mb-1">
+                            <i class="fas fa-star text-xl mr-2"></i>
+                            <p class="font-bold text-lg" data-i18n="tiredOfAdsTitle">TIRED OF ADS?</p>
+                        </div>
+                        <p class="text-sm opacity-90">
+                            <span data-i18n="upgradeNowButton">Upgrade Now</span>
+                        </p>
+                        <div class="mt-2 text-xs opacity-80">
+                            <i class="fas fa-hand-pointer mr-1"></i>
+                            <span data-i18n="clickToRemoveAds">Click to remove ads</span>
+                        </div>
+                    `
+                }
+            ];
+
+            adBanners.forEach(banner => {
+                const contentElement = document.getElementById(banner.contentId);
+                if (contentElement) {
+                    // Randomly choose a style (0 or 1)
+                    const randomStyle = adStyles[Math.floor(Math.random() * adStyles.length)];
+                    
+                    // Apply the gradient class
+                    contentElement.className = `text-white p-3 text-center ${randomStyle.gradient}`;
+                    
+                    // Set the content
+                    contentElement.innerHTML = randomStyle.content;
+                }
+            });
+
+            // Update translations if they're loaded
+            if (typeof updatePageContent === 'function') {
+                updatePageContent();
+            }
+        }
+
+        // Set random styles on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            setRandomAdBannerStyles();
+            
+            // Change banner styles every 30 seconds for more dynamic appearance
+            setInterval(setRandomAdBannerStyles, 30000);
+        });
     </script>
 
     <!-- External JS Files -->
@@ -1644,6 +1749,175 @@
         function deleteCookie(name) {
             document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         }
+    </script>
+
+    <!-- Interstitial Ad Modal -->
+    <div id="interstitialAdModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-lg p-4 sm:p-6 w-full max-w-sm sm:max-w-md mx-auto relative max-h-[90vh] overflow-y-auto">
+            <button id="closeInterstitialAd" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" onclick="closeInterstitialAd()">
+                <i class="fas fa-times text-xl text-right"></i>
+            </button>
+            
+            <!-- Banner Ad inside Interstitial -->
+            <div id="interstitialBannerAd" class="mb-4 relative">
+                <span class="absolute top-0 left-0 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-tl-lg rounded-br-lg z-10">AD</span>
+                <div id="interstitialAdContent" class="bg-gray-100 rounded-lg overflow-hidden" style="min-height: 120px;">
+                    <!-- Ad banner will be loaded here -->
+                    <div class="flex items-center justify-center h-20 text-gray-500">
+                        <div class="animate-pulse">Loading ad...</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <i class="fas fa-rocket text-4xl sm:text-5xl text-purple-500 mb-3 sm:mb-4"></i>
+                <h3 class="text-lg sm:text-xl font-semibold text-purple-600 mb-2" data-i18n="upgradeForBetterTitle">Upgrade for Better Experience!</h3>
+                <p class="text-sm sm:text-base text-gray-700 mb-4 sm:mb-6" data-i18n="interstitialAdDescription">
+                    Remove all ads and enjoy uninterrupted bus schedule searches.
+                </p>
+                
+                <button onclick="showPricingModal(); closeInterstitialAd();" 
+                        class="w-full bg-purple-500 text-white py-2 sm:py-3 rounded-lg hover:bg-purple-600 transition duration-300 mb-3 text-sm sm:text-base"
+                        data-umami-event="interstitial-ad-upgrade">
+                    <i class="fas fa-crown mr-2"></i>
+                    <span data-i18n="upgradeNowButton">Upgrade Now</span>
+                </button>
+                
+                <button onclick="closeInterstitialAd()" 
+                        class="w-full text-gray-500 text-xs sm:text-sm hover:text-gray-700"
+                        data-umami-event="interstitial-ad-continue">
+                    <span data-i18n="continueWithAdsButton">Continue with ads</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showInterstitialAd() {
+            // Only show if not premium user
+            const isPremium = getCookie('premiumUser');
+            const isDismissed = getCookie('interstitialDismissed');
+            const hasSearched = sessionStorage.getItem('hasSearchedThisSession');
+            const sessionDismissed = sessionStorage.getItem('interstitialDismissedThisSession');
+            
+            if (!isPremium) {
+                // Check if this is the first search of this session
+                if (!hasSearched && !sessionDismissed) {
+                    // First search of the session - always show (ignore cookie dismissal for first search)
+                    sessionStorage.setItem('hasSearchedThisSession', 'true');
+                    loadInterstitialBannerAd();
+                    document.getElementById('interstitialAdModal').classList.remove('hidden');
+                    return;
+                }
+                
+                // For subsequent searches, respect both cookie and session dismissal
+                if (!isDismissed && !sessionDismissed) {
+                    // Subsequent searches in this session - show on 15% chance
+                    if (Math.random() < 0.15) {
+                        loadInterstitialBannerAd();
+                        document.getElementById('interstitialAdModal').classList.remove('hidden');
+                    }
+                }
+            }
+        }
+        
+        function loadInterstitialBannerAd() {
+            const interstitialAdContent = document.getElementById('interstitialAdContent');
+            
+            // Skip loading ad on localhost
+            if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+                interstitialAdContent.innerHTML = `
+                    <div class="bg-gradient-to-r from-blue-400 to-purple-500 text-white p-4 text-center">
+                        <h4 class="font-bold">Sample Ad Banner</h4>
+                        <p class="text-sm">This would be a real ad in production</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const apiUrl = `https://api.saomiguelbus.com/api/v1/ad?on=interstitial&platform=web`;
+
+            fetch(apiUrl)
+                .then(response => { 
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        console.warn('No interstitial ad available');
+                        throw new Error('No ad available');
+                    }
+                })
+                .then(ad => {
+                    if (ad) {
+                        let hrefValue;
+                        if (ad.action === 'directions') {
+                            hrefValue = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(ad.target)}`;
+                        } else {
+                            hrefValue = ad.target;
+                        }
+
+                        interstitialAdContent.innerHTML = `
+                            <a href="${hrefValue}" target="_blank" class="block interstitial-ad-clickable" data-ad-id="${ad.id}" data-umami-event="interstitial-banner-click">
+                                <img src="${ad.media}" alt="${ad.entity}" class="w-full h-auto rounded-lg" style="max-height: 120px; object-fit: contain; background-color: #f3f4f6;">
+                            </a>
+                        `;
+
+                        // Add click tracking
+                        const adClickable = interstitialAdContent.querySelector('.interstitial-ad-clickable');
+                        if (adClickable) {
+                            adClickable.addEventListener('click', function(event) {
+                                const adId = this.getAttribute("data-ad-id");
+                                const URL = "https://api.saomiguelbus.com/api/v1/ad/click?id=" + encodeURIComponent(adId);
+                                fetch(URL, {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    mode: 'cors',
+                                })
+                                .then(response => response.json())
+                                .then(data => console.log(data))
+                                .catch(error => console.error(error));
+                            });
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading interstitial ad:', error);
+                    // Show fallback content
+                    interstitialAdContent.innerHTML = `
+                        <div class="bg-gradient-to-r from-green-400 to-blue-500 text-white p-4 text-center">
+                            <h4 class="font-bold text-sm" data-i18n="removeAdsTitle">Remove Ads</h4>
+                            <p class="text-xs opacity-90" data-i18n="upgradeForAdsFreTitle">Upgrade for ad-free experience</p>
+                        </div>
+                    `;
+                });
+        }
+        
+        function closeInterstitialAd() {
+            document.getElementById('interstitialAdModal').classList.add('hidden');
+            // Remember dismissal for this session (prevents showing again in same session)
+            sessionStorage.setItem('interstitialDismissedThisSession', 'true');
+            // Also set a shorter cookie to prevent too frequent showing across sessions
+            setCookie('interstitialDismissed', 'true', 0.021); // 30 minutes = 0.021 days
+        }
+    </script>
+
+    <div id="loadingSpinner" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+        <div class="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-green-500"></div>
+    </div>
+
+    <script>
+        // Make function globally accessible for debugging
+        window.showInterstitialAd = showInterstitialAd;
+        window.loadInterstitialBannerAd = loadInterstitialBannerAd;
+        window.closeInterstitialAd = closeInterstitialAd;
+        
+        // Debug function to test interstitial manually
+        window.testInterstitial = function() {
+            console.log('Testing interstitial manually');
+            loadInterstitialBannerAd();
+            document.getElementById('interstitialAdModal').classList.remove('hidden');
+        };
     </script>
 </body>
 </html>

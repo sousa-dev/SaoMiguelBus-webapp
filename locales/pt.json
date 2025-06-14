@@ -192,7 +192,19 @@
     "perWeek": "/semana",
     "perMonth": "/mês",
     "perYear": "/ano",
-      "allStops": "Todas as Paragens",
-  "timePlaceholder": "Selecionar hora (opcional)",
-  "machineTranslationWarning": "Os idiomas são traduzidos automaticamente. Podem estar presentes erros."
+    "allStops": "Todas as Paragens",
+    "timePlaceholder": "Selecionar hora (opcional)",
+    "machineTranslationWarning": "Os idiomas são traduzidos automaticamente. Podem estar presentes erros.",
+    "tiredOfAdsTitle": "CANSADO DOS ANÚNCIOS?",
+    "upgradeNowSubtitle": "Upgrade para Premium - A partir de €0,50/semana",
+    "premiumExperienceTitle": "EXPERIÊNCIA PREMIUM",
+    "noAdsExperienceText": "Navegue nos tours sem anúncios - Faça upgrade agora!",
+    "fromPriceText": "A partir de €0,50/semana",
+    "upgradeButton": "UPGRADE",
+    "upgradeForBetterTitle": "Upgrade para uma Melhor Experiência!",
+    "interstitialAdDescription": "Remova todos os anúncios e desfrute de pesquisas de horários de autocarros sem interrupções.",
+    "perfectForTourists": "Perfeito para turistas!",
+    "upgradeNowButton": "Upgrade Agora",
+    "continueWithAdsButton": "Continuar com anúncios",
+    "upgradeForAdsFreTitle": "Upgrade para experiência sem anúncios"
 }

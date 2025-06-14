@@ -192,7 +192,19 @@
     "perWeek": "/settimana",
     "perMonth": "/mese",
     "perYear": "/anno",
-      "allStops": "Tutte le Fermate",
-  "timePlaceholder": "Seleziona orario (opzionale)",
-  "machineTranslationWarning": "Le lingue sono tradotte automaticamente. Potrebbero essere presenti errori."
+    "allStops": "Tutte le Fermate",
+    "timePlaceholder": "Seleziona orario (opzionale)",
+    "machineTranslationWarning": "Le lingue sono tradotte automaticamente. Potrebbero essere presenti errori.",
+    "tiredOfAdsTitle": "STANCO DELLE PUBBLICITÀ?",
+    "upgradeNowSubtitle": "Passa a Premium - Da €0,50/settimana",
+    "premiumExperienceTitle": "ESPERIENZA PREMIUM",
+    "noAdsExperienceText": "Naviga nei tour senza pubblicità - Aggiorna ora!",
+    "fromPriceText": "Da €0,50/settimana",
+    "upgradeButton": "AGGIORNA",
+    "upgradeForBetterTitle": "Aggiorna per un'esperienza migliore!",
+    "interstitialAdDescription": "Rimuovi tutte le pubblicità e goditi ricerche di orari degli autobus ininterrotte.",
+    "perfectForTourists": "Perfetto per i turisti!",
+    "upgradeNowButton": "Aggiorna Ora",
+    "continueWithAdsButton": "Continua con le pubblicità",
+    "upgradeForAdsFreTitle": "Aggiorna per un'esperienza senza pubblicità"
 } 

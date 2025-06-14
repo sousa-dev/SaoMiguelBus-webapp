@@ -192,7 +192,19 @@
     "perWeek": "/week",
     "perMonth": "/month",
     "perYear": "/year",
-      "allStops": "All Stops",
-  "timePlaceholder": "Select time (optional)",
-  "machineTranslationWarning": "Languages are machine-translated. Errors may be present."
+    "allStops": "All Stops",
+    "timePlaceholder": "Select time (optional)",
+    "machineTranslationWarning": "Languages are machine-translated. Errors may be present.",
+    "tiredOfAdsTitle": "TIRED OF ADS?",
+    "upgradeNowSubtitle": "Upgrade to Premium - Start from €0.50/week",
+    "premiumExperienceTitle": "PREMIUM EXPERIENCE",
+    "noAdsExperienceText": "Browse tours without ads - Upgrade now!",
+    "fromPriceText": "From €0.50/week",
+    "upgradeButton": "UPGRADE",
+    "upgradeForBetterTitle": "Upgrade for Better Experience!",
+    "interstitialAdDescription": "Remove all ads and enjoy uninterrupted bus schedule searches.",
+    "perfectForTourists": "Perfect for tourists!",
+    "upgradeNowButton": "Upgrade Now",
+    "continueWithAdsButton": "Continue with ads",
+    "upgradeForAdsFreTitle": "Upgrade for ad-free experience"
 }

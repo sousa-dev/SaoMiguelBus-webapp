@@ -514,14 +514,28 @@ function createFavouriteIcon() {
 }
 
 function displayRoutes(routes, originStop, destinationStop) {
+    hideLoadingSpinner(); // Hide the loading spinner
+    console.log('Display routes: ', routes);
+    
+    // Show the interstitial ad after search
+    showInterstitialAd();
+    
     const routesContainer = document.getElementById('routesContainer');
-    routesContainer.innerHTML = ''; // Clear previous content
+    const favouriteRoutesContainer = document.getElementById('favouriteRoutesContainer');
+    const noRoutesMessage = document.getElementById('noRoutesMessage');
 
-    routesContainer.appendChild(createFavouriteIcon());
-    if (!Array.isArray(routes) || routes.length === 0 || routes.error) {
-        displayNoRoutesMessage(originStop, destinationStop);
+    // Clear previous results
+    routesContainer.innerHTML = '';
+    routesContainer.classList.add('hidden');
+    favouriteRoutesContainer.classList.add('hidden');
+    noRoutesMessage.classList.add('hidden');
+
+    if (routes.length === 0) {
+        noRoutesMessage.classList.remove('hidden');
         return;
     }
+
+    routesContainer.classList.remove('hidden');
 
     var lastRoute = null;
     let adIndex = 0;
@@ -895,8 +909,31 @@ function loadAdBanner(on) {
     // Check if user has active premium subscription
     if (adRemovalState && adRemovalState.isActive) {
         console.log('Ads hidden for premium user');
+        // Hide all ad elements for premium users
+        const adElements = [
+            'homeAdBanner', 
+            'routesAdBanner', 
+            'bottomStickyAd', 
+            'toursAdBanner'
+        ];
+        adElements.forEach(elementId => {
+            const element = document.getElementById(elementId);
+            if (element) element.style.display = 'none';
+        });
         return;
     }
+    
+    // Show ad elements for non-premium users
+    const adElements = [
+        'homeAdBanner', 
+        'routesAdBanner', 
+        'bottomStickyAd', 
+        'toursAdBanner'
+    ];
+    adElements.forEach(elementId => {
+        const element = document.getElementById(elementId);
+        if (element) element.style.display = 'block';
+    });
     
     if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
         return; // Do nothing if the host is localhost or 127.0.0.1
