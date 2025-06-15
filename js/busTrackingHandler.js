@@ -1034,6 +1034,12 @@ class BusTrackingHandler {
         
         if (!container || !section || !countElement) return;
 
+        // Hide section for non-premium users
+        if (!this.checkPremiumAccess()) {
+            section.style.display = 'none';
+            return;
+        }
+
         if (activeTracking.length === 0) {
             section.style.display = 'none';
             return;
@@ -1070,6 +1076,12 @@ class BusTrackingHandler {
         const countElement = document.getElementById('pinnedRoutesCount');
         
         if (!container || !section) return;
+
+        // Hide section for non-premium users
+        if (!this.checkPremiumAccess()) {
+            section.style.display = 'none';
+            return;
+        }
 
         if (pinnedRoutes.length === 0) {
             section.style.display = 'none';

@@ -409,6 +409,12 @@ class BusTrackingUI {
         
         if (!activeTrackingSection || !activeTrackingList || !activeTrackingCount) return;
         
+        // Hide section for non-premium users
+        if (!BusTrackingHandler.checkPremiumAccess()) {
+            activeTrackingSection.style.display = 'none';
+            return;
+        }
+        
         if (activeTracking.length === 0) {
             activeTrackingSection.style.display = 'none';
             return;
