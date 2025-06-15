@@ -123,19 +123,37 @@ class BusTrackingHandler {
 
         const data = this.loadTrackingData();
         
-        // Check if already tracking this route
-        const existingTracking = data.activeTracking.find(track => 
-            track.routeId === routeData.routeId && 
-            track.origin === routeData.origin && 
-            track.destination === routeData.destination &&
-            track.searchDay === routeData.searchDay
-        );
+        // Check if already tracking this route (different logic for journey vs route tracking)
+        let existingTracking;
+        if (routeData.isJourneySpecific) {
+            // For journey tracking, check by journey-specific criteria
+            existingTracking = data.activeTracking.find(track => 
+                track.type === 'journey' &&
+                track.routeNumber === routeData.routeNumber && 
+                track.origin === routeData.origin && 
+                track.destination === routeData.destination &&
+                track.departureTime === routeData.departureTime
+            );
+        } else {
+            // For regular route tracking
+            existingTracking = data.activeTracking.find(track => 
+                track.routeId === routeData.routeId && 
+                track.origin === routeData.origin && 
+                track.destination === routeData.destination &&
+                track.searchDay === routeData.searchDay
+            );
+        }
 
         if (existingTracking) {
-            this.showMessage(t('alreadyTracking', 'This route is already being tracked'), 'info');
+            const message = routeData.isJourneySpecific ? 
+                t('alreadyTrackingJourney', 'This journey is already being tracked') :
+                t('alreadyTracking', 'This route is already being tracked');
+            this.showMessage(message, 'info');
+            
             // Track already tracking event
             if (typeof umami !== 'undefined') {
-                umami.track('tracking-already-active');
+                const eventName = routeData.isJourneySpecific ? 'journey-tracking-already-active' : 'tracking-already-active';
+                umami.track(eventName);
             }
             return false;
         }
@@ -157,15 +175,20 @@ class BusTrackingHandler {
         this.saveTrackingData(data);
         this.updateHomepageWidget();
 
-        this.showMessage(t('trackingStarted', 'Bus tracking started'), 'success');
+        const message = routeData.isJourneySpecific ? 
+            t('journeyTrackingStarted', 'Journey tracking started') :
+            t('trackingStarted', 'Bus tracking started');
+        this.showMessage(message, 'success');
         
         // Track successful tracking start
         if (typeof umami !== 'undefined') {
-            umami.track('tracking-started', {
+            const eventName = routeData.isJourneySpecific ? 'journey-tracking-started' : 'tracking-started';
+            umami.track(eventName, {
                 routeId: routeData.routeId,
                 routeNumber: routeData.routeNumber,
                 origin: routeData.origin,
-                destination: routeData.destination
+                destination: routeData.destination,
+                type: routeData.type || 'route'
             });
         }
         
@@ -177,15 +200,24 @@ class BusTrackingHandler {
         const now = Date.now();
         const trackingId = `track_${now}_${Math.random().toString(36).substr(2, 9)}`;
         
-        // Auto-detect the route's available days if not specified or for pinned routes
-        const routeAvailableDays = this.detectRouteAvailableDays(routeData);
-        const searchDay = isPinned ? routeAvailableDays : (routeData.searchDay || routeAvailableDays);
+        let searchDay, nextDeparture, estimatedArrival;
         
-        // Calculate next departure time
-        const nextDeparture = this.calculateNextDeparture(routeData.allStops, routeData.origin, searchDay);
-        
-        // Calculate estimated arrival with fallback
-        const estimatedArrival = this.calculateEstimatedArrival(routeData.allStops, routeData.origin, routeData.destination, nextDeparture) || '--:--';
+        if (routeData.isJourneySpecific) {
+            // For journey-specific tracking, use the specific departure time from directions
+            searchDay = routeData.searchDay;
+            nextDeparture = routeData.departureTime || '--:--';
+            estimatedArrival = routeData.arrivalTime || '--:--';
+        } else {
+            // Auto-detect the route's available days if not specified or for pinned routes
+            const routeAvailableDays = this.detectRouteAvailableDays(routeData);
+            searchDay = isPinned ? routeAvailableDays : (routeData.searchDay || routeAvailableDays);
+            
+            // Calculate next departure time
+            nextDeparture = this.calculateNextDeparture(routeData.allStops, routeData.origin, searchDay);
+            
+            // Calculate estimated arrival with fallback
+            estimatedArrival = this.calculateEstimatedArrival(routeData.allStops, routeData.origin, routeData.destination, nextDeparture) || '--:--';
+        }
         
         return {
             id: trackingId,
@@ -194,20 +226,22 @@ class BusTrackingHandler {
             origin: routeData.origin,
             destination: routeData.destination,
             searchDay: searchDay,
-            availableDays: routeAvailableDays, // Store what days the route actually runs
+            availableDays: routeData.isJourneySpecific ? searchDay : this.detectRouteAvailableDays(routeData), // Store what days the route actually runs
             searchDate: routeData.searchDate || new Date().toISOString().split('T')[0],
             allStops: routeData.allStops,
             userStops: this.extractUserStops(routeData.allStops, routeData.origin, routeData.destination),
             nextDeparture: nextDeparture,
             estimatedArrival: estimatedArrival,
-            status: isPinned ? 'pinned' : 'active',
+            status: 'active',
             createdAt: now,
-            expiresAt: now + this.TRACKING_DURATION,
-            type: routeData.type,
-            notificationsEnabled: true,
+            expiresAt: now + this.TRACKING_DURATION, // 4 hours from now
+            type: routeData.type || 'route', // 'route' for normal tracking, 'journey' for journey-specific tracking
             isPinned: isPinned,
-            pinnedDays: isPinned ? [routeAvailableDays] : [], // Use detected days for pinned routes
-            autoTrackTime: isPinned ? routeData.autoTrackTime || '08:00' : null
+            isJourneySpecific: routeData.isJourneySpecific || false,
+            // Journey-specific fields
+            departureTime: routeData.departureTime || null,
+            arrivalTime: routeData.arrivalTime || null,
+            transitSteps: routeData.transitSteps || 0
         };
     }
     
@@ -1189,9 +1223,6 @@ class BusTrackingHandler {
                                     <h4 class="font-semibold text-sm text-gray-800 truncate mr-2">
                                         ${displayTitle}
                                     </h4>
-                                    <span class="px-2 py-0.5 rounded-full text-xs font-medium ${track.searchDay === 'weekday' ? 'bg-blue-100 text-blue-800' : track.searchDay === 'weekend' ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800'}">
-                                        ${this.formatDayType(track.searchDay)}
-                                    </span>
                                 </div>
                                 <span class="status-indicator px-2 py-1 rounded-full text-xs font-medium ${statusColor} bg-gray-100">
                                     ${busStatus.statusText}

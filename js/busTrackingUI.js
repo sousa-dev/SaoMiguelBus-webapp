@@ -79,6 +79,45 @@ class BusTrackingUI {
         return button;
     }
 
+    // Create journey-specific tracking button for step-by-step directions (no pin button)
+    static createJourneyTrackingButton(routeData, isPremium = false) {
+        const button = document.createElement('button');
+        button.className = 'bg-blue-500 text-white px-3 py-2 rounded-lg hover:bg-blue-600 transition duration-300 text-xs sm:text-sm relative w-full';
+        
+        if (isPremium) {
+            button.innerHTML = '<i class="fas fa-location-arrow mr-1 sm:mr-2"></i><span class="truncate">' + t('trackThisJourney', 'Track This Journey') + '</span>';
+            button.setAttribute('data-umami-event', 'track-journey-button');
+            
+            button.onclick = (event) => {
+                event.stopPropagation();
+                this.showJourneyTrackingDisclaimer(routeData);
+            };
+        } else {
+            button.innerHTML = `
+                <div class="flex items-center justify-center relative w-full">
+                    <i class="fas fa-location-arrow mr-1 sm:mr-2 flex-shrink-0"></i>
+                    <span class="truncate">${t('trackThisJourney', 'Track This Journey')}</span>
+                    <i class="fas fa-crown absolute -top-1.5 -right-1.5 bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-full w-4 h-4 flex items-center justify-center" style="font-size: 7px;"></i>
+                </div>
+            `;
+            button.setAttribute('data-umami-event', 'track-journey-button-premium-required');
+            
+            button.onclick = (event) => {
+                event.stopPropagation();
+                // Open premium modal instead of tracking
+                if (typeof showPricingModal === 'function') {
+                    showPricingModal();
+                }
+                // Track premium required event
+                if (typeof umami !== 'undefined') {
+                    umami.track('journey-tracking-premium-required');
+                }
+            };
+        }
+        
+        return button;
+    }
+
     // Show tracking disclaimer modal
     static showTrackingDisclaimer(routeData) {
         const modal = this.createTrackingDisclaimerModal(routeData);
@@ -230,6 +269,71 @@ class BusTrackingUI {
         modal.onclick = (event) => {
             if (event.target === modal) {
                 this.cancelPinning();
+            }
+        };
+        
+        return modal;
+    }
+
+    // Show journey tracking disclaimer modal (specific for step-by-step directions)
+    static showJourneyTrackingDisclaimer(routeData) {
+        const modal = this.createJourneyTrackingDisclaimerModal(routeData);
+        document.body.appendChild(modal);
+        modal.classList.remove('hidden');
+    }
+
+    // Create journey tracking disclaimer modal
+    static createJourneyTrackingDisclaimerModal(routeData) {
+        const modal = document.createElement('div');
+        modal.id = 'journeyTrackingDisclaimerModal';
+        modal.className = 'fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-2 sm:p-4';
+        
+        modal.innerHTML = `
+            <div class="bg-white rounded-lg w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
+                <div class="p-4 sm:p-6">
+                    <div class="flex items-start mb-4">
+                        <i class="fas fa-exclamation-triangle text-yellow-500 text-xl sm:text-2xl mr-3 mt-0.5"></i>
+                        <h2 class="text-lg sm:text-xl font-semibold text-gray-800 leading-tight">${t('journeyTrackingDisclaimer', 'Journey Tracking Disclaimer')}</h2>
+                    </div>
+                    
+                    <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3 sm:p-4 mb-4">
+                        <h3 class="font-semibold text-yellow-800 mb-2 text-sm sm:text-base">${t('estimateOnlyTitle')}</h3>
+                        <p class="text-yellow-700 text-xs sm:text-sm leading-relaxed">
+                            ${t('journeyEstimateDescription', 'This tracks your specific journey only. Times are estimates based on scheduled timetables and may vary due to traffic, weather, or service changes.')}
+                        </p>
+                    </div>
+                    
+                    <div class="space-y-3 text-xs sm:text-sm text-gray-600">
+                        <div class="flex items-start">
+                            <i class="fas fa-info-circle text-blue-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                            <p class="leading-relaxed">${t('journeyTrackingInfo1', 'This will track only this specific journey until completion or 4 hours maximum.')}</p>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-clock text-blue-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                            <p class="leading-relaxed">${t('journeyTrackingInfo2', 'Departure times are based on the specific time window shown in your directions.')}</p>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-phone text-blue-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                            <p class="leading-relaxed">${t('trackingInfo3')}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 border-t flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3">
+                    <button onclick="BusTrackingUI.cancelJourneyTracking()" class="px-4 py-2 text-gray-600 hover:text-gray-800 text-sm sm:text-base order-2 sm:order-1" data-umami-event="cancel-journey-tracking">
+                        ${t('cancel')}
+                    </button>
+                    <button onclick="BusTrackingUI.acceptJourneyTrackingDisclaimer('${btoa(JSON.stringify(routeData))}')" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm sm:text-base order-1 sm:order-2" data-umami-event="accept-journey-tracking-disclaimer">
+                        ${t('iUnderstand')}
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        // Close modal when clicking outside
+        modal.onclick = (event) => {
+            if (event.target === modal) {
+                this.cancelJourneyTracking();
             }
         };
         
@@ -449,6 +553,43 @@ class BusTrackingUI {
             umami.track('active-tracking-display-updated', {
                 count: activeTracking.length
             });
+        }
+    }
+
+    // Accept journey tracking disclaimer and start tracking
+    static acceptJourneyTrackingDisclaimer(routeDataBase64) {
+        try {
+            const routeData = JSON.parse(atob(routeDataBase64));
+            routeData.isJourneySpecific = true; // Mark as journey-specific tracking
+            routeData.type = 'journey'; // Set type to journey instead of route
+            
+            if (BusTrackingHandler.startTracking(routeData)) {
+                this.cancelJourneyTracking();
+                
+                // Track journey tracking accepted
+                if (typeof umami !== 'undefined') {
+                    umami.track('journey-tracking-accepted', {
+                        routeId: routeData.routeId,
+                        routeNumber: routeData.routeNumber
+                    });
+                }
+            }
+        } catch (error) {
+            console.error('Error accepting journey tracking disclaimer:', error);
+            this.cancelJourneyTracking();
+        }
+    }
+
+    // Cancel journey tracking
+    static cancelJourneyTracking() {
+        const modal = document.getElementById('journeyTrackingDisclaimerModal');
+        if (modal) {
+            modal.remove();
+        }
+        
+        // Track journey tracking cancelled
+        if (typeof umami !== 'undefined') {
+            umami.track('journey-tracking-cancelled');
         }
     }
 
