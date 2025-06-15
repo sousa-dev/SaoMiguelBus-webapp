@@ -302,6 +302,7 @@
     "departingSoon": "In partenza a breve",
     "waitingToStart": "In attesa di iniziare",
     "routeCompleted": "Percorso completato",
+    "futureRoute": "Percorso programmato per {date}",
     "arrivingSoon": "In arrivo a breve",
     "approaching": "Avvicinandosi",
     "enRoute": "In viaggio",

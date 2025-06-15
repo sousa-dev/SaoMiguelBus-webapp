@@ -295,6 +295,7 @@
     "departingSoon": "Відправляється незабаром",
     "waitingToStart": "Очікування початку",
     "routeCompleted": "Маршрут завершено",
+    "futureRoute": "Маршрут заплановано на {date}",
     "arrivingSoon": "Прибуває незабаром",
     "approaching": "Наближається",
     "enRoute": "В дорозі",

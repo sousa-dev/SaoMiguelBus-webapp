@@ -295,6 +295,7 @@
     "departingSoon": "即将出发",
     "waitingToStart": "等待开始",
     "routeCompleted": "路线已完成",
+    "futureRoute": "路线安排在{date}",
     "arrivingSoon": "即将到达",
     "approaching": "接近中",
     "enRoute": "在途中",

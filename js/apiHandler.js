@@ -22,6 +22,19 @@ function timeStringToMinutes(timeString) {
     return hours * 60 + minutes;
 }
 
+// Convert a date string (YYYY-MM-DD) to day type (weekday/saturday/sunday)
+function convertDateStringToDayType(dateString) {
+    if (!dateString) return 'weekday'; // Default fallback
+    
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return 'weekday'; // Invalid date fallback
+    
+    const dayOfWeek = date.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+    if (dayOfWeek === 0) return 'sunday';
+    if (dayOfWeek === 6) return 'saturday';
+    return 'weekday';
+}
+
 function getSearchParameters() {
     const originInput = document.getElementById('origin');
     const destinationInput = document.getElementById('destination');
@@ -915,13 +928,18 @@ async function createRouteDiv(route, originStop, destinationStop, lastRoute) {
     if (trackingButtonsContainer) {
         trackingButtonsContainer.style.display = 'block';
         
+        // Get the actual search date from URL parameters 
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchDate = urlParams.get('date') || checkDayType(); // Get from URL first, fallback to form
+        
         const routeData = {
             routeId: route.id,
             routeNumber: route.route,
             origin: originStop,
             destination: destinationStop,
             allStops: stringToJSON(route.stops),
-            searchDay: checkDayType(),
+            searchDay: convertDateStringToDayType(searchDate), // Convert date to day type
+            searchDate: searchDate, // Store the actual search date
             type: 'route'
         };
         

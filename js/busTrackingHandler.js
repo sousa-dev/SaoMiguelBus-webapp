@@ -212,8 +212,8 @@ class BusTrackingHandler {
             const routeAvailableDays = this.detectRouteAvailableDays(routeData);
             searchDay = isPinned ? routeAvailableDays : (routeData.searchDay || routeAvailableDays);
             
-            // Calculate next departure time
-            nextDeparture = this.calculateNextDeparture(routeData.allStops, routeData.origin, searchDay);
+            // Calculate next departure time using the search date
+            nextDeparture = this.calculateNextDeparture(routeData.allStops, routeData.origin, searchDay, routeData.searchDate);
             
             // Calculate estimated arrival with fallback
             estimatedArrival = this.calculateEstimatedArrival(routeData.allStops, routeData.origin, routeData.destination, nextDeparture) || '--:--';
@@ -292,11 +292,24 @@ class BusTrackingHandler {
         return 'weekday';
     }
 
-    // Calculate next departure time based on current time and schedule
-    static calculateNextDeparture(allStops, origin, searchDay) {
+    // Calculate next departure time based on current time and schedule  
+    static calculateNextDeparture(allStops, origin, searchDay, searchDate = null) {
         const now = new Date();
-        const currentTime = now.getHours() * 60 + now.getMinutes(); // Current time in minutes
-        const currentDay = this.getCurrentDayType();
+        let referenceDate = now;
+        let currentTime = now.getHours() * 60 + now.getMinutes(); // Current time in minutes
+        let currentDay = this.getCurrentDayType();
+        
+        // If we have a specific search date, use it as the reference
+        if (searchDate) {
+            referenceDate = new Date(searchDate);
+            // Only use current time if the search date is today
+            const today = new Date().toISOString().split('T')[0];
+            if (searchDate !== today) {
+                // For future dates, start from beginning of day (00:00)
+                currentTime = 0;
+                currentDay = this.convertDateToDayType(searchDate);
+            }
+        }
         
         // Extract all departure times from stops
         const departureTimes = this.extractDepartureTimes(allStops, origin);
@@ -311,13 +324,13 @@ class BusTrackingHandler {
             return '08h00'; // Default fallback time
         }
         
-        // Check if today matches the search day
+        // Check if the reference day matches the search day
         if (searchDay !== 'both' && currentDay !== searchDay) {
-            // Not today, return next occurrence with proper day calculation
-            return this.getNextOccurrenceTime(allStops, origin, searchDay);
+            // Not the target day, return next occurrence with proper day calculation
+            return this.getNextOccurrenceTime(allStops, origin, searchDay, searchDate);
         }
         
-        // Find the next departure time today (if route runs today)
+        // Find the next departure time on the target day (if route runs on the target day)
         if (searchDay === 'both' || currentDay === searchDay) {
             for (let time of departureTimes) {
                 if (time > currentTime) {
@@ -326,8 +339,8 @@ class BusTrackingHandler {
             }
         }
         
-        // No more departures today, return next occurrence
-        return this.getNextOccurrenceTime(allStops, origin, searchDay);
+        // No more departures on the target day, return next occurrence
+        return this.getNextOccurrenceTime(allStops, origin, searchDay, searchDate);
     }
 
     // Get current day type (weekday/saturday/sunday)
@@ -437,7 +450,7 @@ class BusTrackingHandler {
     }
 
     // Get next occurrence time for a route
-    static getNextOccurrenceTime(allStops, origin, searchDay) {
+    static getNextOccurrenceTime(allStops, origin, searchDay, searchDate = null) {
         const departureTimes = this.extractDepartureTimes(allStops, origin);
         if (departureTimes.length === 0) {
             // Fallback to first available time
@@ -562,11 +575,11 @@ class BusTrackingHandler {
     }
 
     // Calculate countdown to next departure
-    static calculateCountdown(nextDeparture, searchDay = null) {
+    static calculateCountdown(nextDeparture, searchDay = null, searchDate = null) {
         if (!nextDeparture) return null;
         
         const now = new Date();
-        const departureTime = this.parseDepartureTime(nextDeparture, searchDay);
+        const departureTime = this.parseDepartureTime(nextDeparture, searchDay, searchDate);
         const timeDiff = departureTime - now;
         
         if (timeDiff <= 0) return null;
@@ -590,14 +603,36 @@ class BusTrackingHandler {
     }
 
     // Parse departure time string to Date object
-    static parseDepartureTime(departureTime, searchDay = null) {
+    static parseDepartureTime(departureTime, searchDay = null, searchDate = null) {
         const [hours, minutes] = departureTime.split('h').map(Number);
         const now = new Date();
-        const currentDay = this.getCurrentDayType();
         
-        // Create departure time for today
-        const departure = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+        // Use search date if provided, otherwise use current date
+        let referenceDate = searchDate ? new Date(searchDate) : now;
+        let currentDay = searchDate ? this.convertDateToDayType(searchDate) : this.getCurrentDayType();
         
+        // Create departure time for the reference date
+        const departure = new Date(referenceDate.getFullYear(), referenceDate.getMonth(), referenceDate.getDate(), hours, minutes);
+        
+        // If we have a search date, we're tracking for that specific date
+        if (searchDate) {
+            const today = new Date().toISOString().split('T')[0];
+            if (searchDate === today) {
+                // Search date is today, check if time has passed
+                if (departure > now) {
+                    return departure;
+                }
+                // Time has passed today, move to next valid day
+                const daysToAdd = this.calculateDaysToNextValidDay(searchDay, currentDay);
+                departure.setDate(departure.getDate() + daysToAdd);
+                return departure;
+            } else {
+                // Search date is in the future, use that date
+                return departure;
+            }
+        }
+        
+        // No search date provided, use original logic
         // Check if route runs today
         const runsToday = searchDay === 'both' || searchDay === currentDay;
         
@@ -659,8 +694,8 @@ class BusTrackingHandler {
         
         // Update active tracking countdowns and check for expired tracking
         data.activeTracking.forEach((track, index) => {
-            // Recalculate next departure time
-            const newNextDeparture = this.calculateNextDeparture(track.allStops, track.origin, track.searchDay);
+            // Recalculate next departure time using the search date
+            const newNextDeparture = this.calculateNextDeparture(track.allStops, track.origin, track.searchDay, track.searchDate);
             if (newNextDeparture !== track.nextDeparture) {
                 track.nextDeparture = newNextDeparture;
                 hasUpdates = true;
@@ -673,8 +708,8 @@ class BusTrackingHandler {
                 hasUpdates = true;
             }
             
-            // Update countdown
-            const countdown = this.calculateCountdown(track.nextDeparture, track.searchDay);
+            // Update countdown using the search date
+            const countdown = this.calculateCountdown(track.nextDeparture, track.searchDay, track.searchDate);
             if (countdown !== track.countdown) {
                 track.countdown = countdown;
                 hasUpdates = true;
@@ -690,7 +725,7 @@ class BusTrackingHandler {
         
         // Update pinned routes countdowns
         data.pinnedRoutes.forEach(route => {
-            // Recalculate next departure for pinned routes
+            // Recalculate next departure for pinned routes (pinned routes use current day, not search date)
             const newNextDeparture = this.calculateNextDeparture(route.allStops, route.origin, route.searchDay);
             if (newNextDeparture !== route.nextDeparture) {
                 route.nextDeparture = newNextDeparture;
@@ -704,7 +739,7 @@ class BusTrackingHandler {
                 hasUpdates = true;
             }
             
-            // Update countdown
+            // Update countdown (pinned routes use current day, not search date)
             const countdown = this.calculateCountdown(route.nextDeparture, route.searchDay);
             if (countdown !== route.countdown) {
                 route.countdown = countdown;
@@ -1598,7 +1633,45 @@ class BusTrackingHandler {
     // Calculate detailed bus status for active tracking
     static calculateBusStatus(track) {
         const now = new Date();
-        const currentTime = now.getHours() * 60 + now.getMinutes();
+        let currentTime = now.getHours() * 60 + now.getMinutes();
+        let referenceDate = now;
+        
+        // If this tracking has a search date, use it for calculations
+        if (track.searchDate) {
+            const searchDate = new Date(track.searchDate);
+            const today = new Date().toISOString().split('T')[0];
+            
+            if (track.searchDate !== today) {
+                // Route is for a future date - it hasn't started yet
+                const searchDateTime = new Date(track.searchDate);
+                const daysDiff = Math.ceil((searchDateTime - now) / (1000 * 60 * 60 * 24));
+                
+                if (daysDiff > 0) {
+                    // Future date - route hasn't started yet
+                    const firstStopTime = this.getEarliestDepartureTime(track.allStops, track.origin);
+                    const minutesUntilStart = daysDiff * 24 * 60 + firstStopTime - currentTime;
+                    
+                    // Format date as DD/MM/YYYY
+                    const formattedDate = track.searchDate.split('-').reverse().join('/');
+                    
+                    return {
+                        status: 'waiting',
+                        statusText: t('waitingToStart', 'Waiting to start'),
+                        currentStop: null,
+                        nextStop: null,
+                        timeToNextStop: minutesUntilStart,
+                        timeToDestination: minutesUntilStart,
+                        progress: 0,
+                        isActive: false,
+                        detailedInfo: t('futureRoute', 'Route scheduled for {date}').replace('{date}', formattedDate),
+                        countdown: this.formatTimeRemaining(minutesUntilStart, 'departure')
+                    };
+                }
+            } else {
+                // Search date is today, use normal current time logic
+                referenceDate = now;
+            }
+        }
         
         // Get all stops with times in chronological order
         const allStopsArray = Object.entries(track.allStops).map(([stop, time]) => ({
@@ -1732,7 +1805,7 @@ class BusTrackingHandler {
     
     // Get basic status when detailed calculation fails
     static getBasicStatus(track) {
-        const countdown = this.calculateCountdown(track.nextDeparture);
+        const countdown = this.calculateCountdown(track.nextDeparture, track.searchDay, track.searchDate);
         return {
             status: 'unknown',
             statusText: t('trackingActive', 'Tracking active'),
@@ -1745,6 +1818,15 @@ class BusTrackingHandler {
             detailedInfo: t('basicTracking', 'Basic tracking information'),
             countdown: countdown || t('scheduleUnavailable', 'Schedule unavailable')
         };
+    }
+
+    // Get the earliest departure time for a given origin stop
+    static getEarliestDepartureTime(allStops, origin) {
+        const departureTimes = this.extractDepartureTimes(allStops, origin);
+        if (departureTimes.length === 0) {
+            return 8 * 60; // Default to 8:00 AM (480 minutes)
+        }
+        return Math.min(...departureTimes);
     }
     
     // Format time remaining with context
