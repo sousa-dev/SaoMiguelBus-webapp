@@ -354,5 +354,7 @@
     "smartScheduling": "Agendamento inteligente baseado na disponibilidade da rota",
     "dayAwareTracking": "Cálculos de contagem regressiva conscientes do dia",
     "unknown": "Desconhecido",
-    "askForNewFeatures": "Pedir novas funcionalidades / alterações"
+    "askForNewFeatures": "Pedir novas funcionalidades / alterações",
+    "freeTrialBadge": "14 dias grátis",
+    "startFreeTrialButton": "Iniciar 14 Dias Grátis"
 }

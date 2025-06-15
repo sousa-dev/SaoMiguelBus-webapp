@@ -341,5 +341,7 @@
     "enableButton": "启用",
     "pinnedRoutesSubtitle": "您最喜欢的路线",
     "pinnedCount": "0 个已固定",
-    "askForNewFeatures": "请求新功能/应用程序更改"
+    "askForNewFeatures": "请求新功能/应用程序更改",
+    "freeTrialBadge": "14天免费",
+    "startFreeTrialButton": "开始14天免费试用"
 } 

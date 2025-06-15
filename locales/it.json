@@ -348,5 +348,7 @@
     "enableButton": "ATTIVA",
     "pinnedRoutesSubtitle": "I tuoi percorsi preferiti",
     "pinnedCount": "0 fissati",
-    "askForNewFeatures": "Chiedi nuove funzionalità / modifiche all'app"
+    "askForNewFeatures": "Chiedi nuove funzionalità / modifiche all'app",
+    "freeTrialBadge": "14 giorni gratis",
+    "startFreeTrialButton": "Inizia Prova Gratuita di 14 Giorni"
 } 

@@ -341,5 +341,7 @@
     "enableButton": "УВІМКНУТИ",
     "pinnedRoutesSubtitle": "Ваші улюблені маршрути",
     "pinnedCount": "0 закріплено",
-    "askForNewFeatures": "Попросити нові функції / зміни в додатку"
+    "askForNewFeatures": "Попросити нові функції / зміни в додатку",
+    "freeTrialBadge": "14 днів безкоштовно",
+    "startFreeTrialButton": "Розпочати 14-денний Безкоштовний Період"
 } 

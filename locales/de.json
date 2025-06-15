@@ -348,5 +348,7 @@
     "enableButton": "AKTIVIEREN",
     "pinnedRoutesSubtitle": "Ihre Lieblingsrouten",
     "pinnedCount": "0 angeheftet",
-    "askForNewFeatures": "Nach neuen Funktionen / Änderungen in der App fragen"
+    "askForNewFeatures": "Nach neuen Funktionen / Änderungen in der App fragen",
+    "freeTrialBadge": "14 Tage kostenlos",
+    "startFreeTrialButton": "14-Tage-Testversion Starten"
 }

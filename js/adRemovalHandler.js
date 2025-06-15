@@ -237,6 +237,18 @@ function selectPricingOption(optionId) {
     
     // Update selected option in state
     window.selectedPricingOption = optionId;
+    
+    // Update button text based on selection
+    const subscribeButtonText = document.getElementById('subscribeButtonText');
+    if (subscribeButtonText) {
+        if (optionId === 'monthly') {
+            subscribeButtonText.setAttribute('data-i18n', 'startFreeTrialButton');
+            subscribeButtonText.textContent = t('startFreeTrialButton', 'Start 14-day Free Trial');
+        } else {
+            subscribeButtonText.setAttribute('data-i18n', 'getPremiumButton');
+            subscribeButtonText.textContent = t('getPremiumButton', 'Get Premium');
+        }
+    }
 }
 
 // Subscribe to selected plan
@@ -421,6 +433,18 @@ function selectPricingOptionPage(optionId) {
     
     // Update selected option in state
     window.selectedPricingOptionPage = optionId;
+    
+    // Update button text based on selection
+    const subscribeButtonTextPage = document.getElementById('subscribeButtonTextPage');
+    if (subscribeButtonTextPage) {
+        if (optionId === 'monthly') {
+            subscribeButtonTextPage.setAttribute('data-i18n', 'startFreeTrialButton');
+            subscribeButtonTextPage.textContent = t('startFreeTrialButton', 'Start 14-day Free Trial');
+        } else {
+            subscribeButtonTextPage.setAttribute('data-i18n', 'getPremiumButton');
+            subscribeButtonTextPage.textContent = t('getPremiumButton', 'Get Premium');
+        }
+    }
 }
 
 // Subscribe to selected plan from advert page

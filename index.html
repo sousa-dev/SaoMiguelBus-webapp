@@ -668,6 +668,9 @@
                                 <div class="text-xs sm:text-sm text-gray-600" data-i18n="monthlyDescription">Most popular</div>
                             </div>
                         </div>
+                        <div class="bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                            <span data-i18n="freeTrialBadge">14-day free trial</span>
+                        </div>
                     </div>
                 </div>
                 
@@ -686,10 +689,11 @@
             
             <!-- Subscribe Button -->
             <button onclick="subscribeToSelectedPlan()" 
+                    id="subscribeButton"
                     class="w-full bg-green-500 text-white py-2 sm:py-3 rounded-lg hover:bg-green-600 transition duration-300 mb-3 sm:mb-4 text-sm sm:text-base"
                     data-umami-event="subscribe-premium">
                 <i class="fas fa-crown mr-2"></i>
-                <span data-i18n="getPremiumButton">Get Premium</span>
+                <span id="subscribeButtonText" data-i18n="getPremiumButton">Get Premium</span>
             </button>
             
             <!-- Already Subscribed Link -->
@@ -1246,6 +1250,9 @@
                                 <div class="text-sm text-gray-600" data-i18n="monthlyDescription">Most popular</div>
                             </div>
                         </div>
+                        <div class="bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                            <span data-i18n="freeTrialBadge">14-day free trial</span>
+                        </div>
                     </div>
                 </div>
                 
@@ -1264,10 +1271,11 @@
             
             <!-- Subscribe Button -->
             <button onclick="subscribeToSelectedPlanPage()" 
+                    id="subscribeButtonPage"
                     class="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition duration-300 mb-4"
                     data-umami-event="subscribe-premium-page">
                 <i class="fas fa-crown mr-2"></i>
-                <span data-i18n="getPremiumButton">Get Premium</span>
+                <span id="subscribeButtonTextPage" data-i18n="getPremiumButton">Get Premium</span>
             </button>
             
             <!-- Already Subscribed Link -->

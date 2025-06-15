@@ -348,5 +348,7 @@
     "enableButton": "ACTIVER",
     "pinnedRoutesSubtitle": "Vos itinéraires favoris",
     "pinnedCount": "0 épinglés",
-    "askForNewFeatures": "Demander de nouvelles fonctionnalités / modifications de l'app"
+    "askForNewFeatures": "Demander de nouvelles fonctionnalités / modifications de l'app",
+    "freeTrialBadge": "14 jours gratuits",
+    "startFreeTrialButton": "Commencer l'Essai Gratuit de 14 Jours"
 }
