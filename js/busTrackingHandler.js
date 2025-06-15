@@ -102,7 +102,7 @@ class BusTrackingHandler {
             // Save the updated data if there were changes
             if (hasChanges) {
                 this.saveTrackingData(data);
-                console.log('Bus tracking cache renewed successfully');
+                // Bus tracking cache renewed successfully
             }
             
         } catch (error) {
@@ -1243,7 +1243,7 @@ class BusTrackingHandler {
 
     static startAutoTrackingScheduler() {
         // Auto-tracking scheduler will be implemented in Phase 4
-        console.log('Auto-tracking scheduler initialized');
+        // Auto-tracking scheduler initialized
     }
 
     static cleanupExpiredTracking() {
@@ -1273,7 +1273,7 @@ class BusTrackingHandler {
     }
 
     static showMessage(message, type = 'info') {
-        console.log(`[${type.toUpperCase()}] ${message}`);
+        // Show message notification would go here
     }
 
     // Show route details modal

@@ -114,7 +114,7 @@ function postToStatsStepByStep(parameters) {
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Success:', data);
+        // Stats posted successfully
     })
     .catch((error) => {
         console.error('Error:', error);

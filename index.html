@@ -1663,18 +1663,13 @@
         }
 
         function showPage(pageId) {
-            console.log('🔍 showPage called with pageId:', pageId);
             const pages = document.querySelectorAll('.page');
-            console.log('📄 Found pages:', pages.length, Array.from(pages).map(p => p.id));
             
             pages.forEach(page => {
                 if (page.id === pageId) {
-                    console.log('✅ Activating page:', page.id);
                     page.classList.add('active');
                     page.classList.remove('hidden');
-                    console.log('📝 Page classes after activation:', page.className);
                 } else {
-                    console.log('❌ Deactivating page:', page.id);
                     page.classList.remove('active');
                     page.classList.add('hidden');
                 }
@@ -1721,19 +1716,11 @@
             
             const pages = document.querySelectorAll('.page');
             const navLinks = document.querySelectorAll('nav a[data-target]');
-            
-            console.log('🚀 Navigation initialization');
-            console.log('📄 Found pages:', pages.length);
-            console.log('🔗 Found nav links:', navLinks.length);
-            console.log('🔗 Nav link targets:', Array.from(navLinks).map(link => link.getAttribute('data-target')));
 
             navLinks.forEach(link => {
-                console.log('➕ Adding click listener to:', link.getAttribute('data-target'));
                 link.addEventListener('click', function(e) {
-                    console.log('🖱️ Click detected on nav link:', this.getAttribute('data-target'));
                     e.preventDefault();
                     const targetPage = this.getAttribute('data-target');
-                    console.log('🎯 Target page:', targetPage);
                     showPage(targetPage);
 
                     // Update active state of nav links
@@ -1741,7 +1728,6 @@
                         if (navLink === this) {
                             navLink.classList.add('text-green-600');
                             navLink.classList.remove('text-gray-600');
-                            console.log('🟢 Activated nav link:', navLink.getAttribute('data-target'));
                         } else {
                             navLink.classList.remove('text-green-600');
                             navLink.classList.add('text-gray-600');
@@ -1826,7 +1812,6 @@
 
         // Initial Load: Show 'home' page
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('📱 DOM Content Loaded - Initial page load');
             showPage('home');
         });
 
@@ -1835,10 +1820,10 @@
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/service-worker.js')
                     .then(registration => {
-                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                        // Service worker registered successfully
                     })
                     .catch(err => {
-                        console.log('ServiceWorker registration failed: ', err);
+                        console.error('ServiceWorker registration failed: ', err);
                     });
             });
         }
@@ -2202,7 +2187,7 @@
                                     mode: 'cors',
                                 })
                                 .then(response => response.json())
-                                .then(data => console.log(data))
+                                .then(response => response.json())
                                 .catch(error => console.error(error));
                             });
                         }
@@ -2241,7 +2226,6 @@
         
         // Debug function to test interstitial manually
         window.testInterstitial = function() {
-            console.log('Testing interstitial manually');
             loadInterstitialBannerAd();
             document.getElementById('interstitialAdModal').classList.remove('hidden');
         };

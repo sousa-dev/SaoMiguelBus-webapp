@@ -70,7 +70,7 @@ function renewFavoriteRoutesCache() {
         if (favoriteRoutes) {
             // Renew the cookie with fresh 30-day expiration
             setCookie('favoriteRoutes', favoriteRoutes, 30);
-            console.log('Favorite routes cache renewed successfully');
+            // Favorite routes cache renewed successfully
         }
     } catch (error) {
         console.error('Failed to renew favorite routes cache:', error);

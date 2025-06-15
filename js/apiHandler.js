@@ -302,8 +302,6 @@ function fetchStops(filter) {
 }
 
 function searchRoutes(origin, destination, day, time) {
-    console.log("Searching routes from", origin, "to", destination);
-
     // Show loading spinner if applicable
     showLoadingSpinner();
 
@@ -366,7 +364,7 @@ function postToStats(parameters) {
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Success:', data);
+        // Stats posted successfully
     })
     .catch((error) => {
         console.error('Error:', error);
@@ -523,7 +521,6 @@ function createFavouriteIcon() {
 
 function displayRoutes(routes, originStop, destinationStop) {
     hideLoadingSpinner(); // Hide the loading spinner
-    console.log('Display routes: ', routes);
     
     // Show the interstitial ad after search
     showInterstitialAd();
@@ -955,7 +952,6 @@ async function createRouteDiv(route, originStop, destinationStop, lastRoute) {
 function loadAdBanner(on) {
     // Check if user has active premium subscription
     if (adRemovalState && adRemovalState.isActive) {
-        console.log('Ads hidden for premium user');
         // Hide all ad elements for premium users
         const adElements = [
             'homeAdBanner', 
@@ -1049,7 +1045,9 @@ function loadAdBanner(on) {
                             mode: 'cors',
                         })
                         .then(response => response.json())
-                        .then(data => console.log(data))
+                        .then(data => {
+                            // Ad click tracked successfully
+                        })
                         .catch(error => console.error(error));
                     });
                 }
@@ -1063,7 +1061,6 @@ function createInlineAdBanner(on, adIndex) {
     return new Promise((resolve, reject) => {
         // Check if user has active premium subscription
         if (adRemovalState && adRemovalState.isActive) {
-            console.log('Ads hidden for premium user');
             resolve(null);
             return;
         }
@@ -1131,7 +1128,9 @@ function createInlineAdBanner(on, adIndex) {
                                 mode: 'cors',
                             })
                             .then(response => response.json())
-                            .then(data => console.log(data))
+                            .then(data => {
+                                // Ad click tracked successfully
+                            })
                             .catch(error => console.error(error));
                         });
                     }

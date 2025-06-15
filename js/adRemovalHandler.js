@@ -524,14 +524,14 @@ function debugActivatePremium() {
     adRemovalState.subscriptionExpiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(); // 30 days from now
     hideAllAds();
     updatePremiumStatusDisplay();
-    console.log('Premium activated for testing');
+    // Premium activated for testing
 }
 
 // Debug function to test non-premium status (for development)
 function debugDeactivatePremium() {
     clearPremiumCookies();
     updatePremiumStatusDisplay();
-    console.log('Premium deactivated for testing');
+    // Premium deactivated for testing
 }
 
 // Event listeners

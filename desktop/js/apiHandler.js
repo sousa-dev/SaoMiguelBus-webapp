@@ -45,8 +45,6 @@ function fetchAndPopulateStops() {
 }
 
 function searchRoutes(origin, destination, day, time) {
-    console.log("Searching routes from", origin, "to", destination);
-
     // Hide the routes container and the no routes message
     document.getElementById('routesContainer').style.display = 'none';
     document.getElementById('noRoutesMessage').style.display = 'none';
@@ -73,9 +71,7 @@ function fetchAndDisplayRoutes(url, parameters) {
     })
         .then(response => response.json())
         .then(data => {
-            console.log('Routes fetched:', data);
             if (data && data.length > 0) {
-                console.log('Displaying routes...');
                 displayRoutes(data, parameters.origin);
             } else {
                 displayNoRoutesMessage(parameters);
@@ -86,7 +82,6 @@ function fetchAndDisplayRoutes(url, parameters) {
 }
 
 function postToStats(parameters) {
-    console.log("Posting to stats...");
     const url = `https://api.saomiguelbus.com/api/v1/stat?request=get_route&origin=${parameters.origin}&destination=${parameters.destination}&time=${parameters.time}&language=${LANG}&platform=web&day=${parameters.day}`;
     fetch(url, {
         method: 'POST',
@@ -97,7 +92,7 @@ function postToStats(parameters) {
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Success:', data);
+        // Stats posted successfully
     })
     .catch((error) => {
         console.error('Error:', error);
@@ -273,7 +268,9 @@ function loadAdBanner(on) {
                             mode: 'cors',
                         })
                         .then(response => response.json())
-                        .then(data => console.log(data))
+                        .then(data => {
+                            // Ad click tracked successfully
+                        })
                         .catch(error => console.error(error));
                     });
                 }

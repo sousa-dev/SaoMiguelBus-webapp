@@ -459,7 +459,7 @@ class BusTrackingUI {
             BusTrackingHandler.startPeriodicUpdates();
         }
         
-        console.log('Bus Tracking UI initialized with enhanced status system');
+        // Bus Tracking UI initialized with enhanced status system
     }
 }
 
