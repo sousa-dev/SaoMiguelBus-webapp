@@ -333,5 +333,6 @@
     "unlockButton": "РОЗБЛОКУВАТИ",
     "enableButton": "УВІМКНУТИ",
     "pinnedRoutesSubtitle": "Ваші улюблені маршрути",
-    "pinnedCount": "0 закріплено"
+    "pinnedCount": "0 закріплено",
+    "askForNewFeatures": "Попросити нові функції / зміни в додатку"
 } 

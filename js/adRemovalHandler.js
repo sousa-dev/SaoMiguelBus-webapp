@@ -503,6 +503,11 @@ function updatePremiumStatusDisplay() {
     
     // Update advert page content
     updateAdvertPageContent();
+    
+    // Update bus tracking display (including feature request button)
+    if (typeof BusTrackingHandler !== 'undefined' && BusTrackingHandler.updateHomepageWidget) {
+        BusTrackingHandler.updateHomepageWidget();
+    }
 }
 
 // Deactivate premium

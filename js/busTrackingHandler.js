@@ -1074,17 +1074,27 @@ class BusTrackingHandler {
         const container = document.getElementById('pinnedRoutesList');
         const section = document.getElementById('pinnedRoutesSection');
         const countElement = document.getElementById('pinnedRoutesCount');
+        const featureRequestSection = document.getElementById('premiumFeatureRequestSection');
         
         if (!container || !section) return;
 
-        // Hide section for non-premium users
+        // Hide sections for non-premium users
         if (!this.checkPremiumAccess()) {
             section.style.display = 'none';
+            if (featureRequestSection) {
+                featureRequestSection.style.display = 'none';
+            }
             return;
+        }
+
+        // Show feature request button for premium users (always show if premium)
+        if (featureRequestSection) {
+            featureRequestSection.style.display = 'block';
         }
 
         if (pinnedRoutes.length === 0) {
             section.style.display = 'none';
+            // Still show feature request button even if no pinned routes
             return;
         }
 

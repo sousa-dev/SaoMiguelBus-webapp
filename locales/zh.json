@@ -333,5 +333,6 @@
     "unlockButton": "解锁",
     "enableButton": "启用",
     "pinnedRoutesSubtitle": "您最喜欢的路线",
-    "pinnedCount": "0 个已固定"
+    "pinnedCount": "0 个已固定",
+    "askForNewFeatures": "请求新功能/应用程序更改"
 } 

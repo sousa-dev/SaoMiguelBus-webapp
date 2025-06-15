@@ -340,5 +340,6 @@
     "unlockButton": "SBLOCCA",
     "enableButton": "ATTIVA",
     "pinnedRoutesSubtitle": "I tuoi percorsi preferiti",
-    "pinnedCount": "0 fissati"
+    "pinnedCount": "0 fissati",
+    "askForNewFeatures": "Chiedi nuove funzionalità / modifiche all'app"
 } 

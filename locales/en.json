@@ -346,5 +346,6 @@
     "autoTrackingDescription": "This route will be automatically tracked on all days it operates.",
     "smartScheduling": "Smart scheduling based on route availability",
     "dayAwareTracking": "Day-aware countdown calculations",
-    "unknown": "Unknown"
+    "unknown": "Unknown",
+    "askForNewFeatures": "Ask for new features / changes to the app"
 }

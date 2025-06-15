@@ -340,5 +340,6 @@
     "unlockButton": "FREISCHALTEN",
     "enableButton": "AKTIVIEREN",
     "pinnedRoutesSubtitle": "Ihre Lieblingsrouten",
-    "pinnedCount": "0 angeheftet"
+    "pinnedCount": "0 angeheftet",
+    "askForNewFeatures": "Nach neuen Funktionen / Änderungen in der App fragen"
 }

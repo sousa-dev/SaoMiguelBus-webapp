@@ -340,5 +340,6 @@
     "unlockButton": "DESBLOQUEAR",
     "enableButton": "ACTIVAR",
     "pinnedRoutesSubtitle": "Tus rutas favoritas",
-    "pinnedCount": "0 fijadas"
+    "pinnedCount": "0 fijadas",
+    "askForNewFeatures": "Pedir nuevas funciones / cambios en la app"
 }

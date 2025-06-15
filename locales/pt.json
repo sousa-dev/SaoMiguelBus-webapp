@@ -346,5 +346,6 @@
     "autoTrackingDescription": "Esta rota será automaticamente rastreada em todos os dias que opera.",
     "smartScheduling": "Agendamento inteligente baseado na disponibilidade da rota",
     "dayAwareTracking": "Cálculos de contagem regressiva conscientes do dia",
-    "unknown": "Desconhecido"
+    "unknown": "Desconhecido",
+    "askForNewFeatures": "Pedir novas funcionalidades / alterações"
 }

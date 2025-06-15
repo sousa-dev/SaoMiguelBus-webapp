@@ -340,5 +340,6 @@
     "unlockButton": "DÉBLOQUER",
     "enableButton": "ACTIVER",
     "pinnedRoutesSubtitle": "Vos itinéraires favoris",
-    "pinnedCount": "0 épinglés"
+    "pinnedCount": "0 épinglés",
+    "askForNewFeatures": "Demander de nouvelles fonctionnalités / modifications de l'app"
 }
