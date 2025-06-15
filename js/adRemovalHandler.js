@@ -116,21 +116,33 @@ function setupModalEventListeners() {
     const closePricingModal = document.getElementById('closePricingModal');
     if (closePricingModal) {
         closePricingModal.addEventListener('click', hidePricingModal);
+        closePricingModal.setAttribute('data-umami-event', 'close-pricing-modal');
     }
     
     // Email verification modal close button
     const closeEmailVerificationModal = document.getElementById('closeEmailVerificationModal');
     if (closeEmailVerificationModal) {
         closeEmailVerificationModal.addEventListener('click', hideEmailVerificationModal);
+        closeEmailVerificationModal.setAttribute('data-umami-event', 'close-email-verification-modal');
     }
     
     // Close modals when clicking outside
     document.getElementById('pricingModal')?.addEventListener('click', function(e) {
-        if (e.target === this) hidePricingModal();
+        if (e.target === this) {
+            if (typeof umami !== 'undefined') {
+                umami.track('close-pricing-modal-outside-click');
+            }
+            hidePricingModal();
+        }
     });
     
     document.getElementById('emailVerificationModal')?.addEventListener('click', function(e) {
-        if (e.target === this) hideEmailVerificationModal();
+        if (e.target === this) {
+            if (typeof umami !== 'undefined') {
+                umami.track('close-email-verification-modal-outside-click');
+            }
+            hideEmailVerificationModal();
+        }
     });
 }
 
@@ -170,6 +182,7 @@ function addPremiumIndicator() {
         indicator.className = 'absolute -top-1 -right-1 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center';
         indicator.innerHTML = '👑';
         indicator.style.fontSize = '8px';
+        indicator.setAttribute('data-umami-event', 'premium-indicator-displayed');
         
         // Make the ads tab link relative positioned to contain the absolute indicator
         adsTabLink.style.position = 'relative';
@@ -224,12 +237,28 @@ function selectPricingOption(optionId) {
     
     // Update selected option in state
     window.selectedPricingOption = optionId;
+    
+    // Update button text based on selection
+    const subscribeButtonText = document.getElementById('subscribeButtonText');
+    if (subscribeButtonText) {
+        if (optionId === 'monthly') {
+            subscribeButtonText.setAttribute('data-i18n', 'startFreeTrialButton');
+            subscribeButtonText.textContent = t('startFreeTrialButton', 'Start 14-day Free Trial');
+        } else {
+            subscribeButtonText.setAttribute('data-i18n', 'getPremiumButton');
+            subscribeButtonText.textContent = t('getPremiumButton', 'Get Premium');
+        }
+    }
 }
 
 // Subscribe to selected plan
 function subscribeToSelectedPlan() {
     const selectedOption = pricingOptions.find(option => option.id === window.selectedPricingOption);
     if (selectedOption) {
+        // Track subscription plan selection
+        if (typeof umami !== 'undefined') {
+            umami.track('subscribe-to-plan', { plan: selectedOption.id });
+        }
         window.open(selectedOption.stripeLink, '_blank');
         hidePricingModal();
     }
@@ -334,6 +363,7 @@ function showNotification(message, type = 'info') {
         'bg-blue-500 text-white'
     }`;
     notification.textContent = message;
+    notification.setAttribute('data-umami-event', `notification-${type}-shown`);
     
     document.body.appendChild(notification);
     
@@ -403,12 +433,28 @@ function selectPricingOptionPage(optionId) {
     
     // Update selected option in state
     window.selectedPricingOptionPage = optionId;
+    
+    // Update button text based on selection
+    const subscribeButtonTextPage = document.getElementById('subscribeButtonTextPage');
+    if (subscribeButtonTextPage) {
+        if (optionId === 'monthly') {
+            subscribeButtonTextPage.setAttribute('data-i18n', 'startFreeTrialButton');
+            subscribeButtonTextPage.textContent = t('startFreeTrialButton', 'Start 14-day Free Trial');
+        } else {
+            subscribeButtonTextPage.setAttribute('data-i18n', 'getPremiumButton');
+            subscribeButtonTextPage.textContent = t('getPremiumButton', 'Get Premium');
+        }
+    }
 }
 
 // Subscribe to selected plan from advert page
 function subscribeToSelectedPlanPage() {
     const selectedOption = pricingOptions.find(option => option.id === window.selectedPricingOptionPage);
     if (selectedOption) {
+        // Track subscription plan selection from advert page
+        if (typeof umami !== 'undefined') {
+            umami.track('subscribe-to-plan-from-advert-page', { plan: selectedOption.id });
+        }
         window.open(selectedOption.stripeLink, '_blank');
     }
 }
@@ -420,6 +466,7 @@ function updatePremiumStatusDisplay() {
     const premiumButton = document.getElementById('premiumButton');
     const manageSubscriptionButton = document.getElementById('manageSubscriptionButton');
     const premiumExpiryDate = document.getElementById('premiumExpiryDate');
+    const premiumAccountEmailDisplay = document.getElementById('premiumAccountEmailDisplay');
     
     if (adRemovalState.isActive) {
         // Show premium status elements
@@ -446,6 +493,11 @@ function updatePremiumStatusDisplay() {
             const expiryDate = new Date(adRemovalState.subscriptionExpiresAt);
             premiumExpiryDate.textContent = expiryDate.toLocaleDateString();
         }
+        
+        // Update premium account email display
+        if (premiumAccountEmailDisplay && adRemovalState.userEmail) {
+            premiumAccountEmailDisplay.textContent = adRemovalState.userEmail;
+        }
     } else {
         // Hide premium status elements
         if (premiumStatusCard) {
@@ -466,15 +518,29 @@ function updatePremiumStatusDisplay() {
         
         // Remove premium indicator
         removePremiumIndicator();
+        
+        // Clear email display
+        if (premiumAccountEmailDisplay) {
+            premiumAccountEmailDisplay.textContent = '';
+        }
     }
     
     // Update advert page content
     updateAdvertPageContent();
+    
+    // Update bus tracking display (including feature request button)
+    if (typeof BusTrackingHandler !== 'undefined' && BusTrackingHandler.updateHomepageWidget) {
+        BusTrackingHandler.updateHomepageWidget();
+    }
 }
 
 // Deactivate premium
 function deactivatePremium() {
     if (confirm(t('deactivatePremium', 'Are you sure you want to deactivate premium?'))) {
+        // Track premium deactivation
+        if (typeof umami !== 'undefined') {
+            umami.track('deactivate-premium');
+        }
         clearPremiumCookies();
         location.reload(); // Reload to show ads again
     }
@@ -487,33 +553,47 @@ function debugActivatePremium() {
     adRemovalState.subscriptionExpiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(); // 30 days from now
     hideAllAds();
     updatePremiumStatusDisplay();
-    console.log('Premium activated for testing');
+    // Premium activated for testing
 }
 
 // Debug function to test non-premium status (for development)
 function debugDeactivatePremium() {
     clearPremiumCookies();
     updatePremiumStatusDisplay();
-    console.log('Premium deactivated for testing');
+    // Premium deactivated for testing
 }
 
 // Event listeners
 document.addEventListener('DOMContentLoaded', function() {
     // Close pricing modal
-    document.getElementById('closePricingModal')?.addEventListener('click', hidePricingModal);
+    const closePricingModal = document.getElementById('closePricingModal');
+    if (closePricingModal) {
+        closePricingModal.addEventListener('click', hidePricingModal);
+        closePricingModal.setAttribute('data-umami-event', 'close-pricing-modal');
+    }
     
     // Close email verification modal
-    document.getElementById('closeEmailVerificationModal')?.addEventListener('click', hideEmailVerificationModal);
+    const closeEmailVerificationModal = document.getElementById('closeEmailVerificationModal');
+    if (closeEmailVerificationModal) {
+        closeEmailVerificationModal.addEventListener('click', hideEmailVerificationModal);
+        closeEmailVerificationModal.setAttribute('data-umami-event', 'close-email-verification-modal');
+    }
     
     // Close modals when clicking outside
     document.getElementById('pricingModal')?.addEventListener('click', function(e) {
         if (e.target === this) {
+            if (typeof umami !== 'undefined') {
+                umami.track('close-pricing-modal-outside-click');
+            }
             hidePricingModal();
         }
     });
     
     document.getElementById('emailVerificationModal')?.addEventListener('click', function(e) {
         if (e.target === this) {
+            if (typeof umami !== 'undefined') {
+                umami.track('close-email-verification-modal-outside-click');
+            }
             hideEmailVerificationModal();
         }
     });
