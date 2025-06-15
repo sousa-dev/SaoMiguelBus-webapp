@@ -63,6 +63,11 @@ function redirectToStepByStepDirections() {
 document.getElementById('btnSubmitStepByStep').addEventListener('click', function(event) {
     event.preventDefault(); // Prevent form submission
 
+    // Track step-by-step search event
+    if (typeof umami !== 'undefined') {
+        umami.track('step-by-step-search');
+    }
+
     const parameters = getStepByStepSearchParameters();
     if (parameters) {
         searchStepByStep(parameters.origin, parameters.destination, parameters.day, parameters.time);
@@ -109,7 +114,7 @@ function postToStatsStepByStep(parameters) {
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Success:', data);
+        // Stats posted successfully
     })
     .catch((error) => {
         console.error('Error:', error);
@@ -261,10 +266,15 @@ function createRouteCard(route, index) {
                 </div>
             </div>
             <div class="mt-4 text-center">
-                <button class="expand-stops flex items-center justify-center w-full text-blue-500 hover:text-blue-700 text-base py-2">
+                <button class="expand-stops flex items-center justify-center w-full text-blue-500 hover:text-blue-700 text-base py-2" data-umami-event="expand-direction-details">
                     <span class="mr-2">${t('clickToSeeDetails')}</span>
                     <span class="iconify transform transition-transform duration-300 text-xl" data-icon="mdi:chevron-down"></span>
                 </button>
+            </div>
+            
+            <!-- Journey Tracking Button Container -->
+            <div class="mt-4 px-4 pb-4" id="journeyTrackingButtons-${index}">
+                <!-- Journey tracking button will be added here via JavaScript -->
             </div>
         </div>
     `;
@@ -359,6 +369,12 @@ function createRouteCard(route, index) {
     // Add click event to toggle details and load map on first expansion
     header.addEventListener('click', () => {
         const isHidden = detailsContainer.classList.contains('hidden');
+        
+        // Track route details toggle
+        if (typeof umami !== 'undefined') {
+            umami.track(isHidden ? 'expand-route-details' : 'collapse-route-details');
+        }
+        
         detailsContainer.classList.toggle('hidden');
         mapContainer.classList.toggle('hidden');
         const iconElement = header.querySelector('.iconify');
@@ -375,6 +391,22 @@ function createRouteCard(route, index) {
             mapContainer.dataset.loaded = 'true';
         }
     });
+
+    // Add journey tracking button for step-by-step directions
+    const journeyTrackingContainer = card.querySelector(`#journeyTrackingButtons-${index}`);
+    if (journeyTrackingContainer) {
+        // Extract route data from the step details for journey tracking
+        const routeData = extractJourneyRouteData(leg, index);
+        
+        if (routeData) {
+            // Check if user has premium access
+            const isPremium = typeof adRemovalState !== 'undefined' && adRemovalState.isActive;
+            
+            // Create journey tracking button (no pin button for directions)
+            const journeyTrackingButton = BusTrackingUI.createJourneyTrackingButton(routeData, isPremium);
+            journeyTrackingContainer.appendChild(journeyTrackingButton);
+        }
+    }
 
     return card;
 }
@@ -522,4 +554,122 @@ function getUrlParametersStepByStep(origin, destination, day, time) {
     // TODO: format the origin and destination strings to remove spaces and special characters
 
     return parameters;
+}
+
+/**
+ * Extracts route data for journey tracking from the directions leg data
+ * @param {Object} leg - The directions leg data
+ * @param {number} index - The route index
+ * @returns {Object|null} - Route data for tracking or null if no valid transit steps
+ */
+function extractJourneyRouteData(leg, index) {
+    try {
+        // Find transit steps (bus routes) in the directions
+        const transitSteps = leg.steps.filter(step => step.travel_mode === 'TRANSIT');
+        
+        if (transitSteps.length === 0) {
+            return null; // No bus routes to track
+        }
+        
+        // For journey tracking, we'll focus on the first transit step (primary bus route)
+        const primaryTransitStep = transitSteps[0];
+        const transit_details = primaryTransitStep.transit_details;
+        
+        if (!transit_details || !transit_details.line) {
+            return null;
+        }
+        
+        // Extract route information
+        const routeNumber = transit_details.line.short_name || transit_details.line.name || 'Unknown';
+        const origin = transit_details.departure_stop.name;
+        const destination = transit_details.arrival_stop.name;
+        
+        // Create stops data structure for journey tracking
+        const allStops = {};
+        
+        // Add departure stop and time
+        if (transit_details.departure_time && transit_details.departure_time.text) {
+            allStops[origin] = transit_details.departure_time.text;
+        }
+        
+        // Add arrival stop and time  
+        if (transit_details.arrival_time && transit_details.arrival_time.text) {
+            allStops[destination] = transit_details.arrival_time.text;
+        }
+        
+        // Get current search parameters for context
+        const searchDay = getStepByStepSearchDay();
+        const searchDate = getStepByStepSearchDate();
+        
+        const routeData = {
+            routeId: `journey_${index}_${Date.now()}`, // Unique ID for journey tracking
+            routeNumber: routeNumber,
+            origin: origin,
+            destination: destination,
+            allStops: allStops,
+            searchDay: searchDay,
+            searchDate: searchDate,
+            type: 'journey', // Mark as journey-specific tracking
+            isJourneySpecific: true,
+            departureTime: transit_details.departure_time ? transit_details.departure_time.text : null,
+            arrivalTime: transit_details.arrival_time ? transit_details.arrival_time.text : null,
+            transitSteps: transitSteps.length // Number of transfers
+        };
+        
+        return routeData;
+        
+    } catch (error) {
+        console.error('Error extracting journey route data:', error);
+        return null;
+    }
+}
+
+/**
+ * Gets the search day type from step-by-step form
+ * @returns {string} - Day type (weekday, weekend, or both)
+ */
+function getStepByStepSearchDay() {
+    try {
+        const dateInput = document.getElementById('datePickerStepByStep');
+        if (dateInput && dateInput.value) {
+            const selectedDate = new Date(dateInput.value);
+            const dayOfWeek = selectedDate.getDay();
+            
+            // Convert to day type (0 = Sunday, 6 = Saturday)
+            if (dayOfWeek === 0 || dayOfWeek === 6) {
+                return 'weekend';
+            } else {
+                return 'weekday';
+            }
+        }
+        
+        // Fallback to current day
+        const today = new Date();
+        const dayOfWeek = today.getDay();
+        return (dayOfWeek === 0 || dayOfWeek === 6) ? 'weekend' : 'weekday';
+        
+    } catch (error) {
+        console.error('Error getting step-by-step search day:', error);
+        return 'weekday';
+    }
+}
+
+/**
+ * Gets the search date from step-by-step form
+ * @returns {string} - Date in YYYY-MM-DD format
+ */
+function getStepByStepSearchDate() {
+    try {
+        const dateInput = document.getElementById('datePickerStepByStep');
+        if (dateInput && dateInput.value) {
+            return dateInput.value;
+        }
+        
+        // Fallback to today's date
+        return new Date().toISOString().split('T')[0];
+        
+    } catch (error) {
+        console.error('Error getting step-by-step search date:', error);
+        return new Date().toISOString().split('T')[0];
+    }
 }

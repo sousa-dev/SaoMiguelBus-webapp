@@ -158,9 +158,9 @@ async function loadAPIData() {
         const cachedData = getAPIDataFromCache();
         if (cachedData) {
             apiData = cachedData;
-            console.log('API data loaded from cache');
+            // API data loaded from cache
         } else {
-            console.log('No API data available');
+            // No API data available
         }
     }
     first_element = apiData[0];
@@ -201,18 +201,18 @@ function toggleVisibilityOffline(isOnline) {
 // Function to handle online/offline events
 function handleConnectivityChange() {
     if (isOnline()) {
-        console.log('Device is online. Attempting to fetch fresh API data.');
+        // Device is online. Attempting to fetch fresh API data.
         toggleVisibilityOffline(true);
         loadAPIData();
     } else {
-        console.log('Device is offline. Using cached data if available.');
+        // Device is offline. Using cached data if available.
         toggleVisibilityOffline(false);
         const cachedData = getAPIDataFromCache();
         if (cachedData) {
             apiData = cachedData;
-            console.log('API data loaded from cache');
+            // API data loaded from cache
         } else {
-            console.log('No cached API data available');
+            // No cached API data available
         }
     }
 }

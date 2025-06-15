@@ -228,6 +228,10 @@
         .page {
             flex: 1;
             overflow-y: auto;
+            display: none;
+        }
+        .page.active {
+            display: block;
         }
 
         /* Improved language picker styling */
@@ -315,7 +319,7 @@
     <div id="desktopBanner" class="hidden lg:block fixed left-4 top-1/2 transform -translate-y-1/2 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 max-w-xs shadow-lg rounded-r-lg z-50">
         <p class="font-bold" data-i18n="alertModalTitle">Alertas</p>
         <p class="text-sm" data-i18n="desktopBannerText">Este Website está desenvolvido para ser usado em dispositivos móveis. Pode usá-lo no computador, mas a experiência será melhor no telemóvel. Aceda a saomiguelbus.com no navegador do seu smartphone!</p>
-        <button onclick="dismissBanner()" class="absolute top-2 right-2 text-yellow-700 hover:text-yellow-900" aria-label="Fechar aviso">
+        <button onclick="dismissBanner()" class="absolute top-2 right-2 text-yellow-700 hover:text-yellow-900" aria-label="Fechar aviso" data-umami-event="dismiss-desktop-banner">
             <i class="fas fa-times"></i>
         </button>
     </div>
@@ -417,7 +421,7 @@
                 <span id="navBarToursLabel" class="text-xs" data-i18n="navBarToursLabel">Tours</span>
             </a>
             <a href="#" class="flex flex-col items-center justify-center text-gray-600 hover:text-green-600 py-2 flex-1" data-target="advert" data-umami-event="nav-advert">
-                <i class="fas fa-ad text-xl"></i>
+                <i class="fas fa-crown text-xl"></i>
                 <span id="navBarAdvertLabel" class="text-xs" data-i18n="navBarAdvertLabel">Anúncios</span>
             </a>
             <a href="#" class="flex flex-col items-center justify-center text-gray-600 hover:text-green-600 py-2 flex-1" data-target="info" data-umami-event="nav-info">
@@ -428,42 +432,133 @@
     </nav>
 
     <!-- Bottom Sticky Ad Banner -->
-    <div id="bottomStickyAd" class="ad-banner fixed bottom-14 left-0 right-0 z-40 max-w-md mx-auto">
-        <div class="bg-gradient-to-r from-red-500 to-orange-500 text-white p-2 mx-2 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition-shadow duration-200" onclick="showPricingModal()" data-umami-event="bottom-sticky-ad-click">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center">
-                    <i class="fas fa-crown text-lg mr-2"></i>
-                    <div>
-                        <p class="font-bold text-xs" data-i18n="removeAdsTitle">REMOVE ADS</p>
-                        <p class="text-xs opacity-90" data-i18n="clickToRemoveAds">Click to remove ads</p>
-                    </div>
-                </div>
-                <div class="flex items-center space-x-2">
-                    <button onclick="event.stopPropagation(); showPricingModal()" class="bg-white text-red-500 px-3 py-1 rounded text-xs font-bold hover:bg-gray-100" data-umami-event="bottom-sticky-ad-upgrade">
-                        <span data-i18n="upgradeButton">UPGRADE</span>
-                    </button>
-                    <button onclick="event.stopPropagation(); dismissBottomAd()" class="text-white hover:text-gray-200" aria-label="Close ad">
-                        <i class="fas fa-times text-sm"></i>
-                    </button>
-                </div>
-            </div>
+    <div id="bottomStickyAd" class="ad-banner fixed bottom-14 left-0 right-0 z-40 max-w-md mx-auto" style="display: none;">
+        <div id="bottomStickyAdContent" class="bg-gradient-to-r from-red-500 to-orange-500 text-white p-2 mx-2 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition-shadow duration-200" onclick="showPricingModal()" data-umami-event="bottom-sticky-ad-click">
+            <!-- Content will be dynamically inserted here -->
         </div>
     </div>
 
     <script>
+        // Function to set random bottom sticky ad styles
+        function setRandomBottomStickyAdStyles() {
+            const contentElement = document.getElementById('bottomStickyAdContent');
+            if (!contentElement) return;
+
+            const adVariations = [
+                {
+                    // Original remove ads variation
+                    gradient: 'bg-gradient-to-r from-red-500 to-orange-500',
+                    content: `
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <i class="fas fa-crown text-lg mr-2"></i>
+                                <div>
+                                    <p class="font-bold text-xs" data-i18n="removeAdsTitle">REMOVE ADS</p>
+                                    <p class="text-xs opacity-90" data-i18n="clickToRemoveAds">Click to remove ads</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button onclick="event.stopPropagation(); showPricingModal()" class="bg-white text-red-500 px-3 py-1 rounded text-xs font-bold hover:bg-gray-100" data-umami-event="bottom-sticky-ad-upgrade">
+                                    <span data-i18n="upgradeButton">UPGRADE</span>
+                                </button>
+                                <button onclick="event.stopPropagation(); dismissBottomAd()" class="text-white hover:text-gray-200" aria-label="Close ad" data-umami-event="dismiss-bottom-ad">
+                                    <i class="fas fa-times text-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `
+                },
+                {
+                    // New bus tracking variation
+                    gradient: 'bg-gradient-to-r from-blue-500 to-teal-500',
+                    content: `
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <i class="fas fa-location-arrow text-lg mr-2"></i>
+                                <div>
+                                    <p class="font-bold text-xs" data-i18n="trackBusesTitle">TRACK BUSES</p>
+                                    <p class="text-xs opacity-90" data-i18n="realTimeTrackingText">Real-time arrival estimates</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button onclick="event.stopPropagation(); showPricingModal()" class="bg-white text-blue-500 px-3 py-1 rounded text-xs font-bold hover:bg-gray-100" data-umami-event="bottom-sticky-ad-tracking">
+                                    <span data-i18n="unlockButton">UNLOCK</span>
+                                </button>
+                                <button onclick="event.stopPropagation(); dismissBottomAd()" class="text-white hover:text-gray-200" aria-label="Close ad" data-umami-event="dismiss-bottom-ad">
+                                    <i class="fas fa-times text-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `
+                },
+                {
+                    // New pin routes variation
+                    gradient: 'bg-gradient-to-r from-green-500 to-emerald-500',
+                    content: `
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <i class="fas fa-thumbtack text-lg mr-2"></i>
+                                <div>
+                                    <p class="font-bold text-xs" data-i18n="pinRoutesTitle">PIN ROUTES</p>
+                                    <p class="text-xs opacity-90" data-i18n="dailyTrackingText">Track your daily routes</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button onclick="event.stopPropagation(); showPricingModal()" class="bg-white text-green-500 px-3 py-1 rounded text-xs font-bold hover:bg-gray-100" data-umami-event="bottom-sticky-ad-pin">
+                                    <span data-i18n="getPremiumText">GET PRO</span>
+                                </button>
+                                <button onclick="event.stopPropagation(); dismissBottomAd()" class="text-white hover:text-gray-200" aria-label="Close ad" data-umami-event="dismiss-bottom-ad">
+                                    <i class="fas fa-times text-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `
+                }
+            ];
+
+            // Randomly choose a variation
+            const randomVariation = adVariations[Math.floor(Math.random() * adVariations.length)];
+            
+            // Apply the gradient class and content
+            contentElement.className = `text-white p-2 mx-2 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition-shadow duration-200 ${randomVariation.gradient}`;
+            contentElement.innerHTML = randomVariation.content;
+
+            // Update translations if they're loaded
+            if (typeof updatePageContent === 'function') {
+                updatePageContent();
+            }
+        }
+
         function dismissBottomAd() {
             document.getElementById('bottomStickyAd').style.display = 'none';
             // Set a session flag to prevent showing again this session
             sessionStorage.setItem('bottomAdDismissed', 'true');
         }
         
+        // Initialize bottom sticky ad content immediately on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set initial random style immediately so content is ready
+            setRandomBottomStickyAdStyles();
+        });
+
         // Show bottom ad after 10 seconds if not dismissed and not premium
         // Only show once per session
         setTimeout(() => {
-            if (!sessionStorage.getItem('bottomAdDismissed') && !getCookie('premiumUser')) {
-                document.getElementById('bottomStickyAd').style.display = 'block';
+            if (!sessionStorage.getItem('bottomAdDismissed') && !(adRemovalState && adRemovalState.isActive)) {
+                // Small delay to ensure content is rendered, then show
+                setTimeout(() => {
+                    document.getElementById('bottomStickyAd').style.display = 'block';
+                }, 100);
             }
         }, 10000);
+
+        // Change bottom sticky ad style every 45 seconds if it's visible
+        setInterval(() => {
+            const bottomAd = document.getElementById('bottomStickyAd');
+            if (bottomAd && bottomAd.style.display !== 'none' && !sessionStorage.getItem('bottomAdDismissed') && !(adRemovalState && adRemovalState.isActive)) {
+                setRandomBottomStickyAdStyles();
+            }
+        }, 45000);
     </script>
 
     <!-- Language Selection Modal -->
@@ -541,9 +636,9 @@
             
             <div class="text-center mb-4 sm:mb-6">
                 <i class="fas fa-crown text-3xl sm:text-4xl text-yellow-500 mb-3 sm:mb-4"></i>
-                <h3 class="text-lg sm:text-xl font-semibold text-green-600 mb-2" data-i18n="removeAdsTitle">Remove Ads</h3>
-                <p class="text-sm sm:text-base text-gray-700 mb-3 sm:mb-4" data-i18n="pricingDescription">
-                    Choose your plan to remove all advertisements and enjoy an ad-free experience.
+                <h3 class="text-lg sm:text-xl font-semibold text-green-600 mb-2" data-i18n="getPremiumTitle">Get Premium</h3>
+                <p class="text-sm sm:text-base text-gray-700 mb-3 sm:mb-4" data-i18n="premiumDescription">
+                    Unlock advanced bus tracking features and enjoy an ad-free experience.
                 </p>
                 <p class="text-xs sm:text-sm text-green-600 font-medium" data-i18n="supportDeveloper">
                     Bonus: Support an Azorean Solo Developer. (Yes, this app is not developed by any company, it is just one guy)
@@ -552,7 +647,7 @@
             
             <!-- Pricing Options -->
             <div class="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
-                <div id="pricing-option-weekly" class="pricing-option border-2 border-gray-200 bg-white rounded-lg p-3 sm:p-4 cursor-pointer hover:border-green-300 transition-colors" onclick="selectPricingOption('weekly')">
+                <div id="pricing-option-weekly" class="pricing-option border-2 border-gray-200 bg-white rounded-lg p-3 sm:p-4 cursor-pointer hover:border-green-300 transition-colors" onclick="selectPricingOption('weekly')" data-umami-event="select-pricing-weekly">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
                             <div class="w-4 h-4 border-2 border-gray-300 rounded-full mr-3"></div>
@@ -564,7 +659,7 @@
                     </div>
                 </div>
                 
-                <div id="pricing-option-monthly" class="pricing-option border-2 border-gray-200 bg-white rounded-lg p-3 sm:p-4 cursor-pointer hover:border-green-300 transition-colors" onclick="selectPricingOption('monthly')">
+                <div id="pricing-option-monthly" class="pricing-option border-2 border-gray-200 bg-white rounded-lg p-3 sm:p-4 cursor-pointer hover:border-green-300 transition-colors" onclick="selectPricingOption('monthly')" data-umami-event="select-pricing-monthly">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
                             <div class="w-4 h-4 border-2 border-gray-300 rounded-full mr-3"></div>
@@ -573,10 +668,13 @@
                                 <div class="text-xs sm:text-sm text-gray-600" data-i18n="monthlyDescription">Most popular</div>
                             </div>
                         </div>
+                        <div class="bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                            <span data-i18n="freeTrialBadge">14-day free trial</span>
+                        </div>
                     </div>
                 </div>
                 
-                <div id="pricing-option-yearly" class="pricing-option border-2 border-gray-200 bg-white rounded-lg p-3 sm:p-4 cursor-pointer hover:border-green-300 transition-colors" onclick="selectPricingOption('yearly')">
+                <div id="pricing-option-yearly" class="pricing-option border-2 border-gray-200 bg-white rounded-lg p-3 sm:p-4 cursor-pointer hover:border-green-300 transition-colors" onclick="selectPricingOption('yearly')" data-umami-event="select-pricing-yearly">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
                             <div class="w-4 h-4 border-2 border-gray-300 rounded-full mr-3"></div>
@@ -591,10 +689,11 @@
             
             <!-- Subscribe Button -->
             <button onclick="subscribeToSelectedPlan()" 
+                    id="subscribeButton"
                     class="w-full bg-green-500 text-white py-2 sm:py-3 rounded-lg hover:bg-green-600 transition duration-300 mb-3 sm:mb-4 text-sm sm:text-base"
                     data-umami-event="subscribe-premium">
                 <i class="fas fa-crown mr-2"></i>
-                <span data-i18n="removeAdsButton">Remove Ads</span>
+                <span id="subscribeButtonText" data-i18n="getPremiumButton">Get Premium</span>
             </button>
             
             <!-- Already Subscribed Link -->
@@ -606,9 +705,70 @@
                 </button>
             </div>
             
+            <!-- Premium Features List -->
+            <div class="bg-green-50 border border-green-200 rounded-lg p-3 sm:p-4 mb-4 sm:mb-6">
+                <h4 class="font-semibold text-green-800 mb-3 text-sm sm:text-base" data-i18n="premiumFeaturesTitle">Premium Features:</h4>
+                <ul class="text-xs sm:text-sm text-green-700 space-y-2">
+                    <li class="flex items-start">
+                        <i class="fas fa-location-arrow text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                        <span data-i18n="premiumFeatureBusTracking">Real-time bus tracking and arrival estimates</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-thumbtack text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                        <span data-i18n="premiumFeaturePinnedRoutes">Pin favorite routes for daily tracking</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-ad text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                        <span data-i18n="premiumFeature1">No advertisements</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-headset text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                        <span data-i18n="premiumFeature2">Priority support</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-star text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                        <span data-i18n="premiumFeature3">Early access to new features</span>
+                    </li>
+                </ul>
+            </div>
+            
             <p class="text-xs text-gray-500 text-center" data-i18n="premiumTerms">
                 By subscribing, you agree to our Terms of Service and Privacy Policy.
             </p>
+        </div>
+    </div>
+
+    <!-- Remove Pinned Route Confirmation Modal -->
+    <div id="removePinnedRouteModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-lg p-4 sm:p-6 w-full max-w-sm sm:max-w-md mx-auto relative max-h-[90vh] overflow-y-auto">
+            <button id="closeRemovePinnedRouteModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" onclick="BusTrackingHandler.closeRemovePinnedRouteModal()">
+                <i class="fas fa-times text-xl text-right"></i>
+            </button>
+            
+            <div class="text-center mb-4 sm:mb-6">
+                <i class="fas fa-exclamation-triangle text-3xl sm:text-4xl text-red-500 mb-3 sm:mb-4"></i>
+                <h3 class="text-lg sm:text-xl font-semibold text-red-600 mb-2" data-i18n="confirmRemovePinnedRouteTitle">Remove Pinned Route</h3>
+                <p class="text-sm sm:text-base text-gray-700 mb-3 sm:mb-4" data-i18n="confirmRemovePinnedRouteDescription">
+                    Are you sure you want to remove this pinned route? This action cannot be undone.
+                </p>
+                <div id="removePinnedRouteDetails" class="bg-gray-50 border border-gray-200 rounded-lg p-3 mb-4">
+                    <!-- Route details will be populated here -->
+                </div>
+            </div>
+            
+            <div class="flex space-x-3">
+                <button onclick="BusTrackingHandler.closeRemovePinnedRouteModal()" 
+                        class="flex-1 bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600 transition duration-300"
+                        data-umami-event="cancel-remove-pinned-route">
+                    <span data-i18n="cancelButton">Cancel</span>
+                </button>
+                <button onclick="BusTrackingHandler.confirmRemovePinnedRoute()" 
+                        class="flex-1 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition duration-300"
+                        data-umami-event="confirm-remove-pinned-route">
+                    <i class="fas fa-trash mr-2"></i>
+                    <span data-i18n="removeButton">Remove</span>
+                </button>
+            </div>
         </div>
     </div>
 
@@ -668,7 +828,91 @@
     </div>
 
     <!-- Pesquisar Page -->
-    <section id="home" class="page active bg-white flex flex-col items-center p-2 h-full overflow-y-auto">       
+          <section id="home" class="page active bg-white flex flex-col items-center p-2 h-full overflow-y-auto">       
+          <!-- Active Tracking Section (Above Search Form) -->
+          <div id="activeTrackingSection" class="container mx-auto px-4 mb-4 max-w-md" style="display: none;">
+              <div class="bg-white rounded-lg shadow-md border border-gray-200 p-3">
+                  <!-- Top Row: Premium Badge (left) and Count/Toggle (right) -->
+                  <div class="flex items-center justify-between mb-3">
+                      <!-- Premium Badge on the left -->
+                      <span class="bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs font-bold px-2 py-0.5 rounded-full flex items-center">
+                          <i class="fas fa-crown mr-1 text-xs"></i>
+                          <span data-i18n="premium">PREMIUM</span>
+                      </span>
+                      
+                      <!-- Route Count and Toggle on the right -->
+                      <div class="flex items-center space-x-2">
+                          <span id="activeTrackingCount" class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-semibold" data-i18n="trackingCount">0 routes</span>
+                          <div class="bg-gray-100 rounded-full p-1.5 cursor-pointer" onclick="toggleActiveTrackingSection()" data-umami-event="toggle-active-tracking">
+                              <i id="activeTrackingToggleIcon" class="fas fa-chevron-down transition-transform duration-300 text-gray-600 text-sm"></i>
+                          </div>
+                      </div>
+                  </div>
+                  
+                  <!-- Main Content Row: Icon, Title, and Subtitle -->
+                  <div class="flex items-center mb-2 cursor-pointer" onclick="toggleActiveTrackingSection()" data-umami-event="toggle-active-tracking">
+                      <div class="bg-green-500 rounded-full p-1.5 mr-3">
+                          <i class="fas fa-location-arrow text-white text-sm"></i>
+                      </div>
+                      <div class="flex-1 min-w-0">
+                          <h3 class="text-base font-bold text-gray-800 truncate" data-i18n="activeTracking">Active Tracking</h3>
+                          <p class="text-xs text-gray-600 truncate" data-i18n="activeTrackingSubtitle">Track your bus routes</p>
+                      </div>
+                  </div>
+                  
+                  <div id="activeTrackingList" class="space-y-2 max-h-0 overflow-y-auto transition-all duration-300">
+                      <!-- Active tracking items populated here -->
+                  </div>
+              </div>
+          </div>
+
+          <!-- Pinned Routes Section (Above Search Form) -->
+          <div id="pinnedRoutesSection" class="container mx-auto px-4 mb-4 max-w-md" style="display: none;">
+              <div class="bg-white rounded-lg shadow-md border border-gray-200 p-3">
+                  <!-- Top Row: Premium Badge (left) and Count/Toggle (right) -->
+                  <div class="flex items-center justify-between mb-3">
+                      <!-- Premium Badge on the left -->
+                      <span class="bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs font-bold px-2 py-0.5 rounded-full flex items-center">
+                          <i class="fas fa-crown mr-1 text-xs"></i>
+                          <span data-i18n="premium">PREMIUM</span>
+                      </span>
+                      
+                      <!-- Route Count and Toggle on the right -->
+                      <div class="flex items-center space-x-2">
+                          <span id="pinnedRoutesCount" class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-semibold" data-i18n="pinnedCount">0 pinned</span>
+                          <div class="bg-gray-100 rounded-full p-1.5 cursor-pointer" onclick="togglePinnedRoutesSection()" data-umami-event="toggle-pinned-routes">
+                              <i id="pinnedRoutesToggleIcon" class="fas fa-chevron-down transition-transform duration-300 text-gray-600 text-sm"></i>
+                          </div>
+                      </div>
+                  </div>
+                  
+                  <!-- Main Content Row: Icon, Title, and Subtitle -->
+                  <div class="flex items-center mb-2 cursor-pointer" onclick="togglePinnedRoutesSection()" data-umami-event="toggle-pinned-routes">
+                      <div class="bg-blue-500 rounded-full p-1.5 mr-3">
+                          <i class="fas fa-thumbtack text-white text-sm"></i>
+                      </div>
+                      <div class="flex-1 min-w-0">
+                          <h3 class="text-base font-bold text-gray-800 truncate" data-i18n="pinnedRoutes">My Daily Routes</h3>
+                          <p class="text-xs text-gray-600 truncate" data-i18n="pinnedRoutesSubtitle">Your favorite routes</p>
+                      </div>
+                  </div>
+                  
+                  <div id="pinnedRoutesList" class="space-y-2 max-h-0 overflow-y-auto transition-all duration-300">
+                      <!-- Pinned routes populated here -->
+                  </div>
+              </div>
+          </div>
+
+          <!-- Premium Feature Request Button -->
+          <div id="premiumFeatureRequestSection" class="container mx-auto px-4 mb-2 max-w-md" style="display: none;">
+              <div class="text-center">
+                  <button onclick="openFeatureRequestEmail()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs px-3 py-1 rounded-full border border-gray-300 transition duration-200" data-umami-event="feature-request-button">
+                      <i class="fas fa-crown text-yellow-500 mr-1"></i>
+                      <span data-i18n="askForNewFeatures">Ask for new features / changes to the app</span>
+                  </button>
+              </div>
+          </div>
+
         <div class="w-full max-w-md mx-auto bg-white rounded-3xl shadow-lg overflow-hidden relative">
             <!-- Ad Banner for Non-Premium Users -->
             <div id="homeAdBanner" class="ad-banner">
@@ -775,6 +1019,11 @@
             </div>
         </div>
 
+        <!-- Bus Tracking Widget (can be used for future features) -->
+        <div id="busTrackingWidget" class="container mx-auto px-4 mb-4 hidden max-w-md">
+            <!-- Future bus tracking features can be added here -->
+        </div>
+
         <!-- Instructional Card for Home Section -->
         <div id="homeInstructionCard" class="bg-white border-l-4 border-blue-500 text-blue-700 p-4 rounded-lg shadow-md mb-6 mt-4 sm:block max-w-md mx-auto">
             <div class="flex items-center mb-3">
@@ -838,7 +1087,6 @@
                 
                     <!-- Swap Button -->
                     <button type="button" class="w-full flex justify-end items-center" onclick="swapOriginDestination()" data-umami-event="swap-origin-destination-step-by-step">
-                    <button type="button" class="w-full flex justify-end items-center" onclick="swapOriginDestination()">
                         <div class="bg-green-500 rounded-full w-8 h-8 flex items-center justify-center hover:bg-green-600 transition duration-300 ease-in-out">
                             <i id="swapIconStepByStep" class="fas fa-exchange-alt transform rotate-90 text-white text-sm"></i>
                         </div>
@@ -970,9 +1218,9 @@
         <div id="premiumSubscriptionContent" class="w-full max-w-md mx-auto">
             <div class="text-center mb-6">
                 <i class="fas fa-crown text-5xl text-yellow-500 mb-4"></i>
-                <h2 class="text-2xl font-bold mb-2" data-i18n="removeAdsTitle">Remove Ads</h2>
-                <p class="text-gray-700 mb-4" data-i18n="premiumPageDescription">
-                    Enjoy an ad-free experience and support the development of São Miguel Bus.
+                <h2 class="text-2xl font-bold mb-2" data-i18n="getPremiumTitle">Get Premium</h2>
+                <p class="text-gray-700 mb-4" data-i18n="premiumDescription">
+                    Unlock advanced bus tracking features and enjoy an ad-free experience
                 </p>
                 <p class="text-sm text-green-600 font-medium" data-i18n="supportDeveloper">
                     Bonus: Support an Azorean Solo Developer. (Yes, this app is not developed by any company, it is just one guy)
@@ -981,7 +1229,7 @@
             
             <!-- Pricing Options -->
             <div class="space-y-3 mb-6">
-                <div id="premium-page-weekly" class="pricing-option border-2 border-gray-200 bg-white rounded-lg p-4 cursor-pointer hover:border-green-300 transition-colors" onclick="selectPricingOptionPage('weekly')">
+                <div id="premium-page-weekly" class="pricing-option border-2 border-gray-200 bg-white rounded-lg p-4 cursor-pointer hover:border-green-300 transition-colors" onclick="selectPricingOptionPage('weekly')" data-umami-event="select-pricing-page-weekly">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
                             <div class="w-4 h-4 border-2 border-gray-300 rounded-full mr-3"></div>
@@ -993,7 +1241,7 @@
                     </div>
                 </div>
                 
-                <div id="premium-page-monthly" class="pricing-option border-2 border-gray-200 bg-white rounded-lg p-4 cursor-pointer hover:border-green-300 transition-colors" onclick="selectPricingOptionPage('monthly')">
+                <div id="premium-page-monthly" class="pricing-option border-2 border-gray-200 bg-white rounded-lg p-4 cursor-pointer hover:border-green-300 transition-colors" onclick="selectPricingOptionPage('monthly')" data-umami-event="select-pricing-page-monthly">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
                             <div class="w-4 h-4 border-2 border-gray-300 rounded-full mr-3"></div>
@@ -1002,10 +1250,13 @@
                                 <div class="text-sm text-gray-600" data-i18n="monthlyDescription">Most popular</div>
                             </div>
                         </div>
+                        <div class="bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                            <span data-i18n="freeTrialBadge">14-day free trial</span>
+                        </div>
                     </div>
                 </div>
                 
-                <div id="premium-page-yearly" class="pricing-option border-2 border-gray-200 bg-white rounded-lg p-4 cursor-pointer hover:border-green-300 transition-colors" onclick="selectPricingOptionPage('yearly')">
+                <div id="premium-page-yearly" class="pricing-option border-2 border-gray-200 bg-white rounded-lg p-4 cursor-pointer hover:border-green-300 transition-colors" onclick="selectPricingOptionPage('yearly')" data-umami-event="select-pricing-page-yearly">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
                             <div class="w-4 h-4 border-2 border-gray-300 rounded-full mr-3"></div>
@@ -1020,10 +1271,11 @@
             
             <!-- Subscribe Button -->
             <button onclick="subscribeToSelectedPlanPage()" 
+                    id="subscribeButtonPage"
                     class="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition duration-300 mb-4"
                     data-umami-event="subscribe-premium-page">
                 <i class="fas fa-crown mr-2"></i>
-                <span data-i18n="removeAdsButton">Remove Ads</span>
+                <span id="subscribeButtonTextPage" data-i18n="getPremiumButton">Get Premium</span>
             </button>
             
             <!-- Already Subscribed Link -->
@@ -1039,9 +1291,26 @@
             <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
                 <h4 class="font-semibold text-green-800 mb-3" data-i18n="premiumFeaturesTitle">Premium Features:</h4>
                 <ul class="text-sm text-green-700 space-y-2">
-                    <li><i class="fas fa-check text-green-500 mr-2"></i><span data-i18n="premiumFeature1">No advertisements</span></li>
-                    <li><i class="fas fa-check text-green-500 mr-2"></i><span data-i18n="premiumFeature2">Priority support</span></li>
-                    <li><i class="fas fa-check text-green-500 mr-2"></i><span data-i18n="premiumFeature3">Early access to new features</span></li>
+                    <li class="flex items-start">
+                        <i class="fas fa-location-arrow text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                        <span data-i18n="premiumFeatureBusTracking">Real-time bus tracking and arrival estimates</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-thumbtack text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                        <span data-i18n="premiumFeaturePinnedRoutes">Pin favorite routes for daily tracking</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-ad text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                        <span data-i18n="premiumFeature1">No advertisements</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-headset text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                        <span data-i18n="premiumFeature2">Priority support</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-star text-green-500 mr-2 mt-0.5 flex-shrink-0"></i>
+                        <span data-i18n="premiumFeature3">Early access to new features</span>
+                    </li>
                 </ul>
             </div>
             
@@ -1109,6 +1378,19 @@
                 </div>
             </div>
             
+            <!-- Premium Account Email Display -->
+            <div class="bg-white border border-gray-200 rounded-lg p-4 mb-4">
+                <div class="flex items-center">
+                    <i class="fas fa-envelope text-2xl mr-3 text-gray-500"></i>
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-gray-800" data-i18n="premiumAccountEmail">Premium Account Email</h3>
+                        <p class="text-sm text-gray-600 break-all" id="premiumAccountEmailDisplay">
+                            <!-- Email will be populated here by JavaScript -->
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
             <!-- Support Message -->
             <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <h4 class="font-semibold text-blue-800 mb-2" data-i18n="supportMessageTitle">Your Support Matters</h4>
@@ -1149,7 +1431,7 @@
                            data-umami-event="manage-subscription">
                             <span data-i18n="manageSubscription">Manage</span>
                         </a>
-                        <button onclick="deactivatePremium()" class="text-white hover:text-gray-200">
+                        <button onclick="deactivatePremium()" class="text-white hover:text-gray-200" data-umami-event="deactivate-premium">
                             <i class="fas fa-sign-out-alt"></i>
                         </button>
                     </div>
@@ -1179,7 +1461,7 @@
                onclick="showPricingModal();" data-umami-event="view-premium-modal">
                 <div class="flex items-center">
                     <i class="fas fa-crown text-3xl mr-4 text-yellow-500"></i>
-                    <h3 class="font-semibold" data-i18n="removeAdsTitle">Remove Ads</h3>
+                    <h3 class="font-semibold" data-i18n="getPremiumTitle">Get Premium</h3>
                 </div>
                 <span class="iconify" data-icon="mdi:chevron-right"></span>
             </a>
@@ -1204,7 +1486,7 @@
             </a>
             <div id="infoModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden" onclick="document.getElementById('infoModal').classList.add('hidden');" data-umami-event="close-info-modal">
                 <div class="bg-white rounded-lg p-6 w-80 relative" onclick="event.stopPropagation();">
-                    <button id="closeInfoModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" onclick="document.getElementById('infoModal').classList.add('hidden');">
+                    <button id="closeInfoModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" onclick="document.getElementById('infoModal').classList.add('hidden');" data-umami-event="close-info-modal-button">
                         <i class="fas fa-times text-xl text-right"></i>
                     </button>
                     <h3 class="text-xl font-semibold text-green-600 mb-3" data-i18n="infoModalTitle">Informações Importantes</h3>
@@ -1225,7 +1507,7 @@
 
             <div id="contactCompaniesModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden" onclick="document.getElementById('contactCompaniesModal').classList.add('hidden');" data-umami-event="close-contact-companies-modal">
                 <div class="bg-white rounded-lg p-6 w-80 relative" onclick="event.stopPropagation();">
-                    <button id="closeContactModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" onclick="document.getElementById('contactCompaniesModal').classList.add('hidden');">
+                    <button id="closeContactModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" onclick="document.getElementById('contactCompaniesModal').classList.add('hidden');" data-umami-event="close-contact-modal-button">
                         <i class="fas fa-times text-xl text-right"></i>
                     </button>
                     <h3 class="text-xl font-semibold text-green-600 mb-3" data-i18n="contactBusCompaniesTitle">Contato das Companhias de Autocarros</h3>
@@ -1295,8 +1577,8 @@
 
             <a href="#" class="block bg-white border border-gray-200 rounded-lg p-4 mb-4 flex items-center justify-between hover:bg-gray-50" onclick="document.getElementById('infoModalAds').classList.remove('hidden');" data-umami-event="view-info-modal-ads">
                 <div class="flex items-center">
-                    <span class="text-3xl mr-4"><i class="fas fa-ad"></i></span>
-                    <h3 class="font-semibold" data-i18n="whyAdsButton">Por que há anúncios na app?</h3>
+                    <span class="text-3xl mr-4"><i class="fas fa-info-circle"></i></span>
+                    <h3 class="font-semibold" data-i18n="appMonetizationButton">How does this app work?</h3>
                 </div>
                 <span class="iconify" data-icon="mdi:chevron-right"></span>
             </a>
@@ -1400,13 +1682,14 @@
 
         function showPage(pageId) {
             const pages = document.querySelectorAll('.page');
+            
             pages.forEach(page => {
                 if (page.id === pageId) {
-                    page.classList.remove('hidden');
                     page.classList.add('active');
+                    page.classList.remove('hidden');
                 } else {
-                    page.classList.add('hidden');
                     page.classList.remove('active');
+                    page.classList.add('hidden');
                 }
             });
             // Scroll to the top of the page
@@ -1438,8 +1721,19 @@
         document.addEventListener('DOMContentLoaded', function() {
             setTodayDate();
             initializeAdRemoval(); // Initialize ad removal system
+            
+            // Initialize bus tracking system with enhanced status display
+            if (typeof BusTrackingHandler !== 'undefined') {
+                BusTrackingHandler.init();
+            }
+            
+            // Initialize bus tracking UI with enhanced display
+            if (typeof BusTrackingUI !== 'undefined') {
+                BusTrackingUI.init();
+            }
+            
             const pages = document.querySelectorAll('.page');
-            const navLinks = document.querySelectorAll('.bottom-0 a');
+            const navLinks = document.querySelectorAll('nav a[data-target]');
 
             navLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
@@ -1544,10 +1838,10 @@
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/service-worker.js')
                     .then(registration => {
-                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                        // Service worker registered successfully
                     })
                     .catch(err => {
-                        console.log('ServiceWorker registration failed: ', err);
+                        console.error('ServiceWorker registration failed: ', err);
                     });
             });
         }
@@ -1666,6 +1960,40 @@
                             <span data-i18n="clickToRemoveAds">Click to remove ads</span>
                         </div>
                     `
+                },
+                {
+                    // Blue/teal tracking style
+                    gradient: 'bg-gradient-to-r from-blue-400 to-teal-500',
+                    content: `
+                        <div class="flex items-center justify-center mb-1">
+                            <i class="fas fa-bus text-xl mr-2"></i>
+                            <p class="font-bold text-lg" data-i18n="trackBusesTitle">TRACK BUSES</p>
+                        </div>
+                        <p class="text-sm opacity-90">
+                            <span data-i18n="realTimeTrackingText">Real-time arrival estimates</span>
+                        </p>
+                        <div class="mt-2 text-xs opacity-80">
+                            <i class="fas fa-crown mr-1"></i>
+                            <span data-i18n="unlockTrackingText">Unlock tracking</span>
+                        </div>
+                    `
+                },
+                {
+                    // Green/emerald pin routes style
+                    gradient: 'bg-gradient-to-r from-green-400 to-emerald-500',
+                    content: `
+                        <div class="flex items-center justify-center mb-1">
+                            <i class="fas fa-thumbtack text-xl mr-2"></i>
+                            <p class="font-bold text-lg" data-i18n="pinRoutesTitle">PIN ROUTES</p>
+                        </div>
+                        <p class="text-sm opacity-90">
+                            <span data-i18n="dailyTrackingText">Track your daily routes</span>
+                        </p>
+                        <div class="mt-2 text-xs opacity-80">
+                            <i class="fas fa-crown mr-1"></i>
+                            <span data-i18n="unlockButton">Unlock</span>
+                        </div>
+                    `
                 }
             ];
 
@@ -1705,6 +2033,8 @@
     <script src="js/favoriteHandler.js" defer></script>
     <script src="js/languageModal.js" defer></script>
     <script src="js/adRemovalHandler.js" defer></script>
+    <script src="js/busTrackingHandler.js" defer></script>
+    <script src="js/busTrackingUI.js" defer></script>
 
     <!-- Add this script within your existing JavaScript block -->
     <script>
@@ -1754,7 +2084,7 @@
     <!-- Interstitial Ad Modal -->
     <div id="interstitialAdModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden p-4">
         <div class="bg-white rounded-lg p-4 sm:p-6 w-full max-w-sm sm:max-w-md mx-auto relative max-h-[90vh] overflow-y-auto">
-            <button id="closeInterstitialAd" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" onclick="closeInterstitialAd()">
+            <button id="closeInterstitialAd" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" onclick="closeInterstitialAd()" data-umami-event="close-interstitial-ad">
                 <i class="fas fa-times text-xl text-right"></i>
             </button>
             
@@ -1773,7 +2103,7 @@
                 <i class="fas fa-rocket text-4xl sm:text-5xl text-purple-500 mb-3 sm:mb-4"></i>
                 <h3 class="text-lg sm:text-xl font-semibold text-purple-600 mb-2" data-i18n="upgradeForBetterTitle">Upgrade for Better Experience!</h3>
                 <p class="text-sm sm:text-base text-gray-700 mb-4 sm:mb-6" data-i18n="interstitialAdDescription">
-                    Remove all ads and enjoy uninterrupted bus schedule searches.
+                    Remove all ads, track your buses in real-time, and pin your favorite routes.
                 </p>
                 
                 <button onclick="showPricingModal(); closeInterstitialAd();" 
@@ -1795,7 +2125,7 @@
     <script>
         function showInterstitialAd() {
             // Only show if not premium user
-            const isPremium = getCookie('premiumUser');
+            const isPremium = adRemovalState && adRemovalState.isActive;
             const isDismissed = getCookie('interstitialDismissed');
             const hasSearched = sessionStorage.getItem('hasSearchedThisSession');
             const sessionDismissed = sessionStorage.getItem('interstitialDismissedThisSession');
@@ -1875,7 +2205,7 @@
                                     mode: 'cors',
                                 })
                                 .then(response => response.json())
-                                .then(data => console.log(data))
+                                .then(response => response.json())
                                 .catch(error => console.error(error));
                             });
                         }
@@ -1914,10 +2244,65 @@
         
         // Debug function to test interstitial manually
         window.testInterstitial = function() {
-            console.log('Testing interstitial manually');
             loadInterstitialBannerAd();
             document.getElementById('interstitialAdModal').classList.remove('hidden');
         };
+    </script>
+
+    <!-- Toggle sections -->
+    <script>
+        function toggleActiveTrackingSection() {
+            const list = document.getElementById('activeTrackingList');
+            const icon = document.getElementById('activeTrackingToggleIcon');
+            
+            if (list.classList.contains('max-h-0')) {
+                // Expand
+                list.classList.remove('max-h-0');
+                list.classList.add('max-h-96');
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+            } else {
+                // Collapse
+                list.classList.remove('max-h-96');
+                list.classList.add('max-h-0');
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+            }
+        }
+
+        function togglePinnedRoutesSection() {
+            const list = document.getElementById('pinnedRoutesList');
+            const icon = document.getElementById('pinnedRoutesToggleIcon');
+            
+            if (list.classList.contains('max-h-0')) {
+                // Expand
+                list.classList.remove('max-h-0');
+                list.classList.add('max-h-96');
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+            } else {
+                // Collapse
+                list.classList.remove('max-h-96');
+                list.classList.add('max-h-0');
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+            }
+        }
+
+        // Make toggle functions globally accessible
+        window.toggleActiveTrackingSection = toggleActiveTrackingSection;
+        window.togglePinnedRoutesSection = togglePinnedRoutesSection;
+
+        // Open feature request email
+        function openFeatureRequestEmail() {
+            const subject = encodeURIComponent('Feature Request / App Changes - São Miguel Bus');
+            const body = encodeURIComponent('Hello,\n\nI would like to suggest the following feature or change for the São Miguel Bus app:\n\n[Please describe your suggestion here]\n\nThank you for your time and for creating this amazing app!\n\nBest regards,');
+            const mailtoLink = `mailto:info@saomiguelbus.com?subject=${subject}&body=${body}`;
+            window.open(mailtoLink, '_blank');
+        }
+
+        // Make the function globally accessible
+        window.openFeatureRequestEmail = openFeatureRequestEmail;
     </script>
 </body>
 </html>

@@ -22,6 +22,19 @@ function timeStringToMinutes(timeString) {
     return hours * 60 + minutes;
 }
 
+// Convert a date string (YYYY-MM-DD) to day type (weekday/saturday/sunday)
+function convertDateStringToDayType(dateString) {
+    if (!dateString) return 'weekday'; // Default fallback
+    
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return 'weekday'; // Invalid date fallback
+    
+    const dayOfWeek = date.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+    if (dayOfWeek === 0) return 'sunday';
+    if (dayOfWeek === 6) return 'saturday';
+    return 'weekday';
+}
+
 function getSearchParameters() {
     const originInput = document.getElementById('origin');
     const destinationInput = document.getElementById('destination');
@@ -107,6 +120,7 @@ function populateSuggestions(stopsList) {
             document.getElementById('origin').value = this.textContent;
             originSuggestions.innerHTML = ''; // Clear suggestions on selection
         });
+        stopName.setAttribute('data-umami-event', 'select-origin-suggestion');
         originDiv.appendChild(stopName);
         originSuggestions.appendChild(originDiv);
 
@@ -129,6 +143,7 @@ function populateSuggestions(stopsList) {
             document.getElementById('destination').value = this.textContent;
             destinationSuggestions.innerHTML = ''; // Clear suggestions on selection
         });
+        stopNameDest.setAttribute('data-umami-event', 'select-destination-suggestion');
         destinationDiv.appendChild(stopNameDest);
         destinationSuggestions.appendChild(destinationDiv);
 
@@ -151,6 +166,7 @@ function populateSuggestions(stopsList) {
             document.getElementById('originStepByStep').value = this.textContent;
             originStepByStepSuggestions.innerHTML = ''; // Clear suggestions on selection
         });
+        stopNameStepByStep.setAttribute('data-umami-event', 'select-origin-step-suggestion');
         originStepByStepDiv.appendChild(stopNameStepByStep);
         originStepByStepSuggestions.appendChild(originStepByStepDiv);
 
@@ -173,6 +189,7 @@ function populateSuggestions(stopsList) {
             document.getElementById('destinationStepByStep').value = this.textContent;
             destinationStepByStepSuggestions.innerHTML = ''; // Clear suggestions on selection
         });
+        stopNameDestStepByStep.setAttribute('data-umami-event', 'select-destination-step-suggestion');
         destinationStepByStepDiv.appendChild(stopNameDestStepByStep);
         destinationStepByStepSuggestions.appendChild(destinationStepByStepDiv);
 
@@ -298,8 +315,6 @@ function fetchStops(filter) {
 }
 
 function searchRoutes(origin, destination, day, time) {
-    console.log("Searching routes from", origin, "to", destination);
-
     // Show loading spinner if applicable
     showLoadingSpinner();
 
@@ -362,7 +377,7 @@ function postToStats(parameters) {
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Success:', data);
+        // Stats posted successfully
     })
     .catch((error) => {
         console.error('Error:', error);
@@ -466,6 +481,10 @@ function createFavouriteIcon() {
     showFavoritesButton.className = 'flex items-center cursor-pointer text-blue-500 hover:text-blue-700';
     showFavoritesButton.innerHTML = '<i class="fas fa-eye mr-2"></i>' + t('showFavorites');
     showFavoritesButton.onclick = function() {
+        // Track show favorites event
+        if (typeof umami !== 'undefined') {
+            umami.track('show-favorite-routes');
+        }
         // Hide the routesContainer
         document.getElementById('routesContainer').style.display = 'none';
         displayFavoriteRoutes(checkFavoriteRoutesCookie());
@@ -515,7 +534,6 @@ function createFavouriteIcon() {
 
 function displayRoutes(routes, originStop, destinationStop) {
     hideLoadingSpinner(); // Hide the loading spinner
-    console.log('Display routes: ', routes);
     
     // Show the interstitial ad after search
     showInterstitialAd();
@@ -763,16 +781,16 @@ async function createRouteDiv(route, originStop, destinationStop, lastRoute) {
                 </div>
             </div>
             <div id="${route.id}-likes-dislikes" class="mt-4 flex items-center justify-between" data-umami-event="route-summary" data-offline="false">
-                <button class="dislike-button flex items-center ${currentVote === 'dislike' ? 'text-red-700' : 'text-gray-500'} hover:text-red-700" onclick="dislike_route(${route.id}, '${route.route}', this)" data-umami-event="dislike-button-click" data-umami-event="dislike-button-interaction">
+                <button class="dislike-button flex items-center ${currentVote === 'dislike' ? 'text-red-700' : 'text-gray-500'} hover:text-red-700" onclick="dislike_route(${route.id}, '${route.route}', this)" data-umami-event="dislike-route">
                     <i class="fas fa-thumbs-down"></i>
                 </button>
                 <span id="dislikes-percent" class="text-gray-500 text-xs mr-2">${route.dislikes_percent}%</span>
-                <button class="expand-stops flex items-center justify-center text-blue-500 hover:text-blue-700 text-base py-2" data-umami-event="expand-stops-click" data-umami-event="expand-stops-interaction">
+                <button class="expand-stops flex items-center justify-center text-blue-500 hover:text-blue-700 text-base py-2" data-umami-event="expand-route-details">
                     <span class="mr-2">${t('clickToSeeDetails')}</span>
                     <span class="iconify transform transition-transform duration-300 text-xl" data-icon="mdi:chevron-down"></span>
                 </button>
                 <span id="likes-percent" class="text-gray-500 text-xs ml-2">${route.likes_percent}%</span>
-                <button class="like-button flex items-center ${currentVote === 'like' ? 'text-green-700' : 'text-gray-500'} hover:text-green-700" onclick="like_route(${route.id}, '${route.route}', this)" data-umami-event="like-button-click" data-umami-event="like-button-interaction">
+                <button class="like-button flex items-center ${currentVote === 'like' ? 'text-green-700' : 'text-gray-500'} hover:text-green-700" onclick="like_route(${route.id}, '${route.route}', this)" data-umami-event="like-route">
                     <i class="fas fa-thumbs-up"></i>
                 </button>
             </div>
@@ -813,9 +831,15 @@ async function createRouteDiv(route, originStop, destinationStop, lastRoute) {
             </div>
             <div class="flex space-x-2 mt-2" data-offline="false">
                 <button type="submit" class="flex-grow bg-green-500 text-white py-2 rounded-full hover:bg-green-600 transition duration-300 ease-in-out" data-i18n="directionsButton" data-umami-event="directions-button-click"
-                onclick="redirectToStepByStepDirections(event)">
+                onclick="redirectToStepByStepDirections(event)"
+                data-umami-event="directions-button-clicked">
                     ${t('directionsButton')} <i class="fas fa-route"></i>
                 </button>
+            </div>
+            
+            <!-- Premium Tracking Buttons -->
+            <div id="trackingButtons-${route.id}" class="mt-2 space-y-2" style="display: none;">
+                <!-- Tracking buttons will be inserted here for premium users -->
             </div>
     </div>
     `;
@@ -899,6 +923,44 @@ async function createRouteDiv(route, originStop, destinationStop, lastRoute) {
         return null;
     }
     
+    // Add tracking buttons for all users (premium check handled in UI)
+    const trackingButtonsContainer = routeDiv.querySelector(`#trackingButtons-${route.id}`);
+    if (trackingButtonsContainer) {
+        trackingButtonsContainer.style.display = 'block';
+        
+        // Get the actual search date from URL parameters 
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchDate = urlParams.get('date') || checkDayType(); // Get from URL first, fallback to form
+        
+        const routeData = {
+            routeId: route.id,
+            routeNumber: route.route,
+            origin: originStop,
+            destination: destinationStop,
+            allStops: stringToJSON(route.stops),
+            searchDay: convertDateStringToDayType(searchDate), // Convert date to day type
+            searchDate: searchDate, // Store the actual search date
+            type: 'route'
+        };
+        
+        // Check if user has premium access
+        const isPremium = typeof adRemovalState !== 'undefined' && adRemovalState.isActive;
+        
+        // Create tracking button (always visible, behavior changes based on premium status)
+        const trackingButton = BusTrackingUI.createTrackingButton(routeData, isPremium);
+        
+        // Create pin route button (always visible, behavior changes based on premium status)
+        const pinButton = BusTrackingUI.createPinRouteButton(routeData, isPremium);
+        
+        // Create button container with responsive flex layout
+        const buttonContainer = document.createElement('div');
+        buttonContainer.className = 'flex flex-col sm:flex-row gap-2 sm:gap-2';
+        buttonContainer.appendChild(trackingButton);
+        buttonContainer.appendChild(pinButton);
+        
+        trackingButtonsContainer.appendChild(buttonContainer);
+    }
+    
     // Store route data for comparison
     routeDiv.lastRouteData = { firstStop, lastStop, route: route.route, div: routeDiv };
     
@@ -908,7 +970,6 @@ async function createRouteDiv(route, originStop, destinationStop, lastRoute) {
 function loadAdBanner(on) {
     // Check if user has active premium subscription
     if (adRemovalState && adRemovalState.isActive) {
-        console.log('Ads hidden for premium user');
         // Hide all ad elements for premium users
         const adElements = [
             'homeAdBanner', 
@@ -1002,7 +1063,9 @@ function loadAdBanner(on) {
                             mode: 'cors',
                         })
                         .then(response => response.json())
-                        .then(data => console.log(data))
+                        .then(data => {
+                            // Ad click tracked successfully
+                        })
                         .catch(error => console.error(error));
                     });
                 }
@@ -1016,7 +1079,6 @@ function createInlineAdBanner(on, adIndex) {
     return new Promise((resolve, reject) => {
         // Check if user has active premium subscription
         if (adRemovalState && adRemovalState.isActive) {
-            console.log('Ads hidden for premium user');
             resolve(null);
             return;
         }
@@ -1084,7 +1146,9 @@ function createInlineAdBanner(on, adIndex) {
                                 mode: 'cors',
                             })
                             .then(response => response.json())
-                            .then(data => console.log(data))
+                            .then(data => {
+                                // Ad click tracked successfully
+                            })
                             .catch(error => console.error(error));
                         });
                     }
