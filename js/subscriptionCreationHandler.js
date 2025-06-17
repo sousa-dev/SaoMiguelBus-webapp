@@ -45,17 +45,58 @@ function verifyExistingSubscription() {
             // Success - show success message and redirect after delay
             showVerificationSuccess('Subscription verified successfully! Redirecting to app...');
             
-            // Set premium status in localStorage for immediate activation
-            if (typeof setAdRemovalStatus === 'function') {
-                setAdRemovalStatus(email, true);
+            // Follow the EXACT same pattern as adRemovalHandler.js
+            
+            // 1. Set the global adRemovalState object (in-memory state) - if available
+            if (typeof adRemovalState !== 'undefined') {
+                adRemovalState.isActive = true;
+                adRemovalState.userEmail = email;
+                adRemovalState.subscriptionExpiresAt = data.expiresAt;
+            }
+            
+            // 2. ALWAYS set cookies manually to ensure they're set correctly
+            // Use the exact same logic as renewPremiumCookies function
+            const subscriptionExpiry = new Date(data.expiresAt || new Date(Date.now() + 365 * 24 * 60 * 60 * 1000));
+            const thirtyDaysFromNow = new Date();
+            thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
+            
+            const cookieExpiryDays = subscriptionExpiry < thirtyDaysFromNow ? 
+                Math.ceil((subscriptionExpiry - new Date()) / (1000 * 60 * 60 * 24)) : 30;
+            
+            // Set the premium cookies that the main app looks for
+            setCookie('premiumEmail', email, Math.max(1, cookieExpiryDays));
+            setCookie('premiumExpiresAt', data.expiresAt || subscriptionExpiry.toISOString(), Math.max(1, cookieExpiryDays));
+            setCookie('premiumLastVerified', new Date().toISOString(), Math.max(1, cookieExpiryDays));
+            
+            // Also try to call renewPremiumCookies if available (but we already set them manually)
+            if (typeof renewPremiumCookies === 'function' && data.expiresAt) {
+                renewPremiumCookies(email, data.expiresAt);
+            }
+            
+            // 3. Hide all ads immediately
+            if (typeof hideAllAds === 'function') {
+                hideAllAds();
+            }
+            
+            // 4. Update premium status display
+            if (typeof updatePremiumStatusDisplay === 'function') {
+                updatePremiumStatusDisplay();
+            }
+            
+            console.log('Premium status activated for:', email);
+            console.log('Using expiresAt from API:', data.expiresAt);
+            
+            // Debug: Check if cookies were set correctly
+            console.log('Cookies after setting:');
+            console.log('premiumEmail:', getCookie('premiumEmail'));
+            console.log('premiumExpiresAt:', getCookie('premiumExpiresAt'));
+            console.log('premiumLastVerified:', getCookie('premiumLastVerified'));
+            
+            // Debug: Check adRemovalState
+            if (typeof adRemovalState !== 'undefined') {
+                console.log('adRemovalState after setting:', adRemovalState);
             } else {
-                // Fallback if adRemovalHandler is not loaded
-                localStorage.setItem('adRemovalState', JSON.stringify({
-                    isActive: true,
-                    email: email,
-                    expiryDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
-                    lastChecked: new Date().toISOString()
-                }));
+                console.log('adRemovalState is undefined - this might be the issue');
             }
             
             // Redirect after 2 seconds
