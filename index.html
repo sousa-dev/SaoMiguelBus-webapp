@@ -2100,17 +2100,22 @@
             </div>
             
             <div class="text-center">
-                <i class="fas fa-rocket text-4xl sm:text-5xl text-purple-500 mb-3 sm:mb-4"></i>
-                <h3 class="text-lg sm:text-xl font-semibold text-purple-600 mb-2" data-i18n="upgradeForBetterTitle">Upgrade for Better Experience!</h3>
-                <p class="text-sm sm:text-base text-gray-700 mb-4 sm:mb-6" data-i18n="interstitialAdDescription">
+                <i class="fas fa-crown text-4xl sm:text-5xl text-green-500 mb-3 sm:mb-4"></i>
+                <h3 class="text-lg sm:text-xl font-semibold text-green-600 mb-2" data-i18n="upgradeForBetterTitle">Upgrade for Better Experience!</h3>
+                <p class="text-sm sm:text-base text-gray-700 mb-2" data-i18n="interstitialAdDescription">
                     Remove all ads, track your buses in real-time, and pin your favorite routes.
                 </p>
                 
-                <button onclick="showPricingModal(); closeInterstitialAd();" 
-                        class="w-full bg-purple-500 text-white py-2 sm:py-3 rounded-lg hover:bg-purple-600 transition duration-300 mb-3 text-sm sm:text-base"
-                        data-umami-event="interstitial-ad-upgrade">
-                    <i class="fas fa-crown mr-2"></i>
-                    <span data-i18n="upgradeNowButton">Upgrade Now</span>
+                <!-- Free Trial Badge -->
+                <div class="inline-block bg-gradient-to-r from-green-400 to-green-600 text-white px-3 py-1 rounded-full text-xs font-bold mb-4">
+                    <span data-i18n="freeTrialBadge">14-day free trial</span>
+                </div>
+                
+                <button onclick="window.open('https://buy.stripe.com/5kQ28qfMb773g0d3MdgUM03', '_blank'); closeInterstitialAd();" 
+                        class="w-full bg-green-500 text-white py-2 sm:py-3 rounded-lg hover:bg-green-600 transition duration-300 mb-3 text-sm sm:text-base"
+                        data-umami-event="interstitial-ad-free-trial">
+                    <i class="fas fa-gift mr-2"></i>
+                    <span data-i18n="startFreeTrialButton">Start 14-day Free Trial</span>
                 </button>
                 
                 <button onclick="closeInterstitialAd()" 
