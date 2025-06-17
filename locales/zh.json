@@ -344,5 +344,7 @@
     "pinnedCount": "0 个已固定",
     "askForNewFeatures": "请求新功能/应用程序更改",
     "freeTrialBadge": "14天免费",
-    "startFreeTrialButton": "开始14天免费试用"
+    "startFreeTrialButton": "开始14天免费试用",
+    "thankYouMessage": "感谢您支持圣米格尔巴士的开发。请在下方输入您用于订阅高级计划的电子邮件地址。",
+    "backToApp": "返回应用"
 } 

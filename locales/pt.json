@@ -357,5 +357,7 @@
     "unknown": "Desconhecido",
     "askForNewFeatures": "Pedir novas funcionalidades / alterações",
     "freeTrialBadge": "14 dias grátis",
-    "startFreeTrialButton": "Iniciar 14 Dias Grátis"
+    "startFreeTrialButton": "Iniciar 14 Dias Grátis",
+    "thankYouMessage": "Obrigado por ajudar o desenvolvimento do São Miguel Bus. Por favor, escreva abaixo o email com que subscreveu ao plano Premium.",
+    "backToApp": "Voltar à Aplicação"
 }
