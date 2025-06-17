@@ -42,7 +42,7 @@ async function checkSubscriptionStatus() {
     if (!savedEmail) return false;
     
     try {
-        const response = await fetch('https://api.saomiguelbus.com/api/v1/subscription/verify', {
+        const response = await fetch('https://api.saomiguelbus.com/api/v1/subscription/verify/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: savedEmail })
@@ -296,7 +296,7 @@ async function verifyExistingSubscription() {
     verifyBtn.disabled = true;
     
     try {
-        const response = await fetch('https://api.saomiguelbus.com/api/v1/subscription/verify', {
+        const response = await fetch('https://api.saomiguelbus.com/api/v1/subscription/verify/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: email })
