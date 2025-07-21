@@ -242,8 +242,8 @@ function selectPricingOption(optionId) {
     const subscribeButtonText = document.getElementById('subscribeButtonText');
     if (subscribeButtonText) {
         if (optionId === 'monthly') {
-            subscribeButtonText.setAttribute('data-i18n', 'startFreeTrialButton');
-            subscribeButtonText.textContent = t('startFreeTrialButton', 'Start 14-day Free Trial');
+                    subscribeButtonText.setAttribute('data-i18n', 'startFreeTrialButton');
+        subscribeButtonText.textContent = t('startFreeTrialButton', 'Start 3-day Free Trial');
         } else {
             subscribeButtonText.setAttribute('data-i18n', 'getPremiumButton');
             subscribeButtonText.textContent = t('getPremiumButton', 'Get Premium');
@@ -438,8 +438,8 @@ function selectPricingOptionPage(optionId) {
     const subscribeButtonTextPage = document.getElementById('subscribeButtonTextPage');
     if (subscribeButtonTextPage) {
         if (optionId === 'monthly') {
-            subscribeButtonTextPage.setAttribute('data-i18n', 'startFreeTrialButton');
-            subscribeButtonTextPage.textContent = t('startFreeTrialButton', 'Start 14-day Free Trial');
+                    subscribeButtonTextPage.setAttribute('data-i18n', 'startFreeTrialButton');
+        subscribeButtonTextPage.textContent = t('startFreeTrialButton', 'Start 3-day Free Trial');
         } else {
             subscribeButtonTextPage.setAttribute('data-i18n', 'getPremiumButton');
             subscribeButtonTextPage.textContent = t('getPremiumButton', 'Get Premium');
