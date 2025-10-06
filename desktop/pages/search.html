@@ -1,0 +1,41 @@
+<section class="p-4">
+  <h1 class="text-2xl font-bold mb-4" data-i18n="bannerTitle">Search a Bus</h1>
+  <p class="text-gray-600 mb-6" data-i18n="bannerSubtitle">Find the best route for you.</p>
+
+  <form class="grid grid-cols-1 lg:grid-cols-12 gap-3" role="search" aria-label="Bus Search">
+    <div class="lg:col-span-4">
+      <label for="origin" class="block text-sm" data-i18n="originLabel">From</label>
+      <input id="origin" list="origin-stops" class="w-full border rounded px-3 py-2" data-i18n-placeholder="originPlaceholder" placeholder="Choose your starting point..." />
+      <datalist id="origin-stops"></datalist>
+    </div>
+    <div class="lg:col-span-1 flex items-end">
+      <button id="change" type="button" class="w-full border rounded px-3 py-2">⇅</button>
+    </div>
+    <div class="lg:col-span-4">
+      <label for="destination" class="block text-sm" data-i18n="destinationLabel">To</label>
+      <input id="destination" list="destination-stops" class="w-full border rounded px-3 py-2" data-i18n-placeholder="destinationPlaceholder" placeholder="Choose your destination..." />
+      <datalist id="destination-stops"></datalist>
+    </div>
+    <div class="lg:col-span-2">
+      <label for="day" class="block text-sm" data-i18n="dayLabel">Day of the Week</label>
+      <select id="day" class="w-full border rounded px-3 py-2">
+        <option value="1" data-i18n="weekday">Weekdays only</option>
+        <option value="2" data-i18n="saturday">Saturdays only</option>
+        <option value="3" data-i18n="sunday">Sundays only</option>
+      </select>
+    </div>
+    <div class="lg:col-span-1">
+      <label for="time" class="block text-sm" data-i18n="timeLabel">What time?</label>
+      <input id="time" type="time" class="w-full border rounded px-3 py-2" data-i18n-placeholder="timePlaceholder" placeholder="Select time (optional)" />
+    </div>
+    <div class="lg:col-span-12">
+      <button id="btnSubmit" class="bg-green-600 text-white rounded px-4 py-2" data-i18n="searchButton">Search</button>
+    </div>
+  </form>
+
+  <div id="placeHolderForAd" class="my-4"></div>
+
+  <div id="noRoutesMessage" class="hidden"></div>
+  <div id="favouriteRoutesContainer" class="hidden"></div>
+  <div id="routesContainer" class="hidden"></div>
+</section>
