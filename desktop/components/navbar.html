@@ -1,0 +1,25 @@
+<div class="w-full bg-white border-b sticky top-0 z-40">
+  <div class="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
+    <a href="#/search" class="flex items-center space-x-2" data-nav>
+      <img src="/static/img/logo-playstore.png" alt="Logo" class="w-6 h-6"/>
+      <span class="text-sm sm:text-base font-semibold">São Miguel Bus</span>
+    </a>
+    <div class="flex items-center space-x-4">
+      <a href="#/search" class="text-sm" data-nav data-i18n="navBarSearchLabel">Routes</a>
+      <a href="#/directions" class="text-sm" data-nav data-i18n="navBarRoutesLabel">Directions</a>
+      <a href="#/tours" class="text-sm" data-nav data-i18n="navBarToursLabel">Tours</a>
+      <a href="#/info" class="text-sm" data-nav data-i18n="navBarInfoLabel">Info</a>
+      <a href="#/premium" class="text-sm text-yellow-600 font-semibold" data-nav data-i18n="navBarAdvertLabel">Premium</a>
+      <select id="languageSelect" class="text-sm border rounded px-2 py-1" onchange="changeLanguage(this.value)" aria-label="Language">
+        <option value="pt">🇵🇹 PT</option>
+        <option value="en">🇬🇧 EN</option>
+        <option value="es">🇪🇸 ES</option>
+        <option value="fr">🇫🇷 FR</option>
+        <option value="de">🇩🇪 DE</option>
+        <option value="it">🇮🇹 IT</option>
+        <option value="uk">🇺🇦 UK</option>
+        <option value="zh">🇨🇳 ZH</option>
+      </select>
+    </div>
+  </div>
+</div>

@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function fetchAndPopulateStops() {
-    const url = 'https://api.saomiguelbus.com/api/v1/stops';
+    const url = 'https://api.saomiguelbus.com/api/v2/stops';
     fetch(url, {
         method: 'GET',
         headers: {
@@ -50,10 +50,10 @@ function searchRoutes(origin, destination, day, time) {
     document.getElementById('noRoutesMessage').style.display = 'none';
 
     const parameters = getUrlParameters(origin, destination, day, time);
-    const url = 'https://api.saomiguelbus.com/api/v1/route?origin=' + parameters.origin 
-    + '&destination=' + parameters.destination 
-    + '&day=' + parameters.day 
-    + '&start=' + parameters.time
+    const url = 'https://api.saomiguelbus.com/api/v2/route?origin=' + encodeURIComponent(parameters.origin)
+    + '&destination=' + encodeURIComponent(parameters.destination)
+    + '&day=' + encodeURIComponent(parameters.day)
+    + '&start=' + encodeURIComponent(parameters.time)
     fetchAndDisplayRoutes(url, parameters);
     // postToStats if not in localhost 
     if (window.location.hostname != "localhost" && window.location.hostname != "127.0.0.1")
@@ -82,7 +82,8 @@ function fetchAndDisplayRoutes(url, parameters) {
 }
 
 function postToStats(parameters) {
-    const url = `https://api.saomiguelbus.com/api/v1/stat?request=get_route&origin=${parameters.origin}&destination=${parameters.destination}&time=${parameters.time}&language=${LANG}&platform=web&day=${parameters.day}`;
+    const lang = (typeof currentLanguage !== 'undefined' && currentLanguage) ? currentLanguage : 'pt';
+    const url = `https://api.saomiguelbus.com/api/v1/stat?request=get_route&origin=${encodeURIComponent(parameters.origin)}&destination=${encodeURIComponent(parameters.destination)}&time=${encodeURIComponent(parameters.time)}&language=${encodeURIComponent(lang)}&platform=web&day=${encodeURIComponent(parameters.day)}`;
     fetch(url, {
         method: 'POST',
         headers: {
@@ -102,7 +103,11 @@ function postToStats(parameters) {
 
 function displayNoRoutesMessage(parameters) {
     const noRoutesDiv = document.getElementById('noRoutesMessage');
-    noRoutesDiv.innerHTML = `<div class="container" data-umami-event="desktop-no-routes-message-displayed"><div class="row"><div class="col-xs-12"><h3>${LANGS[LANG].No_routes1} <b>${parameters.origin}</b> ${LANGS[LANG].No_routes2} <b>${parameters.destination}</b></h3><p>${LANGS[LANG].No_routes_subtitle}</p></div></div></div>`;
+    const message = (typeof t === 'function' ? t('noRoutesMessage') : 'No routes found from {origin} to {destination}.')
+        .replace('{origin}', parameters.origin)
+        .replace('{destination}', parameters.destination);
+    const subtitle = (typeof t === 'function' ? t('noRoutesSubtitle') : 'Try different parameters.');
+    noRoutesDiv.innerHTML = `<div class="container" data-umami-event="desktop-no-routes-message-displayed"><div class="row"><div class="col-xs-12"><h3>${message}</h3><p>${subtitle}</p></div></div></div>`;
     noRoutesDiv.style.display = 'block';
 }
 
@@ -167,7 +172,7 @@ function displayRoutes(routes, originStop) {
         // Generate HTML for the first and last stops and transfer information
         let stopsHtml = `
             <div class="stop"><b>${firstStop[0]}</b>: ${firstStop[1]}</div>
-            <div class="transfer" id="transfer-info" data-umami-event="desktop-transfer-info"> <span class="arrow-icon">⬇</span> ${stopsArray.length > 2 ? `<span class="transfer-info">+${stopsArray.length - 2} ${stopsArray.length - 2 === 1 ? LANGS[LANG].Transfer : LANGS[LANG].Transfers}</span>` : ''} </div>
+            <div class="transfer" id="transfer-info" data-umami-event="desktop-transfer-info"> <span class="arrow-icon">⬇</span> ${stopsArray.length > 2 ? `<span class="transfer-info">+${stopsArray.length - 2} ${(typeof t==='function' ? (stopsArray.length - 2 === 1 ? t('transfer') : t('transfers')) : (stopsArray.length - 2 === 1 ? 'transfer' : 'transfers'))}</span>` : ''} </div>
             <div class="intermediate-stops" style="max-height: 0; overflow: hidden; transition: max-height 0.5s ease-out;">
                 ${stopsArray.slice(1, stopsArray.length - 1).map(([stop, time]) => `<div class="stop"><b style="margin-left: 10px">${stop}</b>: ${time}</div>`).join('')}
             </div>
