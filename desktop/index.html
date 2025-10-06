@@ -37,15 +37,15 @@ Journey Template
 http://www.templatemo.com/tm-511-journey
 -->
     <!-- load stylesheets -->
-    <link rel="icon" type="image/x-icon" href="static/img/logo-playstore.png">
+    <link rel="icon" type="image/x-icon" href="/static/img/logo-playstore.png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="preconnect" crossorigin>
     <!-- Google web font "Open Sans" -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" crossorigin="anonymous">
-    <link rel="stylesheet" href="static/css/bootstrap.min.css" crossorigin="anonymous"> <!-- Bootstrap style -->
-    <link rel="stylesheet" type="text/css" href="static/css/datepicker.css" />
-    <link rel="stylesheet" type="text/css" href="static/slick/slick.css" />
-    <link rel="stylesheet" type="text/css" href="static/slick/slick-theme.css" />
-    <link rel="stylesheet" href="static/css/templatemo-style.css"> <!-- Templatemo style -->
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css" crossorigin="anonymous"> <!-- Bootstrap style -->
+    <link rel="stylesheet" type="text/css" href="/static/css/datepicker.css" />
+    <link rel="stylesheet" type="text/css" href="/static/slick/slick.css" />
+    <link rel="stylesheet" type="text/css" href="/static/slick/slick-theme.css" />
+    <link rel="stylesheet" href="/static/css/templatemo-style.css"> <!-- Templatemo style -->
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -118,13 +118,13 @@ http://www.templatemo.com/tm-511-journey
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#28a745">
     <!-- Add icons if not already included -->
-    <link rel="icon" type="image/png" sizes="192x192" href="static/icons/icon-192x192.png">
-    <link rel="apple-touch-icon" href="static/icons/icon-512x512.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/static/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" href="/static/icons/icon-512x512.png">
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="static/favicon/favicon.ico">
-    <link rel="icon" type="image/png" sizes="16x16" href="static/favicon/favicon-16x16.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="static/favicon/favicon-32x32.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="static/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/x-icon" href="/static/favicon/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/favicon/apple-touch-icon.png">
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="São Miguel Bus | Horários e Rotas de Autocarros na Ilha de São Miguel, Açores">
     <meta property="og:description" content="São Miguel Bus: Encontre horários e rotas de autocarros na Ilha de São Miguel, Açores. Planeie sua viagem com nossa ferramenta de busca de transporte público.">
@@ -143,7 +143,7 @@ http://www.templatemo.com/tm-511-journey
                 <div class="row">
                     <nav class="navbar navbar-expand-lg navbar-light" aria-label="Main Navigation">
                         <a class="navbar-brand mr-auto" href="#top" data-umami-event="desktop-navbar-brand-click">
-                            <img src="static/img/logo-playstore.png" alt="Logotipo da São Miguel Bus">
+                            <img src="/static/img/logo-playstore.png" alt="Logotipo da São Miguel Bus">
                             São Miguel Bus
                         </a>
                         <button type="button" id="nav-toggle" class="navbar-toggler collapsed" data-toggle="collapse"
@@ -166,9 +166,15 @@ http://www.templatemo.com/tm-511-journey
                                     <a class="nav-link" href="#tm-section-4" id="navBarContactLabel" data-umami-event="desktop-nav-contato-click">Contato</a>
                                 </li>
                             </ul>
-                            <select onchange="this.options[this.selectedIndex].value && (window.location.href = '?lang='.concat(this.options[this.selectedIndex].value));" name="language" class="custom-select" id="language" aria-label="Selecionar idioma" data-umami-event="desktop-language-select">
+                            <select onchange="changeLanguage(this.value)" name="language" class="custom-select" id="language" aria-label="Selecionar idioma" data-umami-event="desktop-language-select">
                                 <option value="pt" selected>🇵🇹 PT</option>
-                                <option value="en">🇬🇧 ENG</option>
+                                <option value="en">🇬🇧 EN</option>
+                                <option value="es">🇪🇸 ES</option>
+                                <option value="de">🇩🇪 DE</option>
+                                <option value="fr">🇫🇷 FR</option>
+                                <option value="it">🇮🇹 IT</option>
+                                <option value="uk">🇺🇦 UK</option>
+                                <option value="zh">🇨🇳 ZH</option>
                             </select>
                         </div>
                     </nav>
@@ -185,7 +191,7 @@ http://www.templatemo.com/tm-511-journey
                             <div class="col-xs-12">
                                 <div class="tm-banner-header">
                                     <h1 class="text-uppercase tm-banner-title" id="bannerTitle" data-umami-event="desktop-banner-title-view">Encontre Seu Autocarro</h1>
-                                    <img src="static/img/dots-3.png" alt="Pontos decorativos">
+                                    <img src="/static/img/dots-3.png" alt="Pontos decorativos">
                                     <p class="tm-banner-subtitle" id="bannerSubtitle" data-umami-event="desktop-banner-subtitle-view">Descubra a melhor rota para você.</p>
                                     <a class="tm-down-arrow-link" id="search-background" aria-label="Ir para a seção de pesquisa" data-umami-event="desktop-banner-arrow-click">
                                         <i class="fa fa-angle-down tm-down-arrow" aria-hidden="true"></i>
@@ -284,10 +290,10 @@ http://www.templatemo.com/tm-511-journey
                                 <h2 class="text-uppercase mb-4" data-umami-event="desktop-download-section-view">Download <strong>APP</strong></h2>
                                 <div class="d-flex justify-content-center">
                                     <a target="_blank" href="https://play.google.com/store/apps/details?id=com.hsousa_apps.Autocarros&hl=pt_PT&gl=US" aria-label="Baixar na Google Play Store" data-umami-event="desktop-download-google-play">
-                                        <img class="badge-image" src="static/img/Google-play.png" alt="Baixar na Google Play Store"/>
+                                        <img class="badge-image" src="/static/img/Google-play.png" alt="Baixar na Google Play Store"/>
                                     </a>
                                     <a target="_blank" href="/newsletter/" aria-label="Baixar na Apple App Store" data-umami-event="desktop-download-apple-app-store">
-                                        <img class="badge-image grey-out" src="static/img/apple.webp" alt="Baixar na Apple App Store"/>
+                                        <img class="badge-image grey-out" src="/static/img/apple.webp" alt="Baixar na Apple App Store"/>
                                     </a>
                                 </div>
                             </div>
@@ -402,8 +408,8 @@ http://www.templatemo.com/tm-511-journey
                                 <div class="col-12 mx-auto tm-about-text-wrap text-center">
                                     <p id="patreonSubtitle" class="lead mb-4" data-umami-event="desktop-patreon-subtitle-view">Apoie-nos no Patreon e seja o primeiro a saber sobre novas atualizações, lançamentos e muito mais!</p>
                                     <a class="patreon-link" target="_blank" href="https://www.patreon.com/sousadev" rel="noopener noreferrer" aria-label="Apoiar no Patreon" data-umami-event="desktop-patreon-link-click">
-                                        <img class="patreon-symbol" style="height: 50px;" src="static/img/PATREON_SYMBOL_1_BLACK_RGB.svg" alt="Símbolo do Patreon" data-umami-event="desktop-patreon-symbol-view">
-                                        <img class="patreon-wordmark" style="height: 50px;" src="static/img/PATREON_WORDMARK_1_BLACK_RGB.svg" alt="Wordmark do Patreon" data-umami-event="desktop-patreon-wordmark-view">
+                                        <img class="patreon-symbol" style="height: 50px;" src="/static/img/PATREON_SYMBOL_1_BLACK_RGB.svg" alt="Símbolo do Patreon" data-umami-event="desktop-patreon-symbol-view">
+                                        <img class="patreon-wordmark" style="height: 50px;" src="/static/img/PATREON_WORDMARK_1_BLACK_RGB.svg" alt="Wordmark do Patreon" data-umami-event="desktop-patreon-wordmark-view">
                                     </a>
                                 </div>
                             </div>
@@ -472,37 +478,73 @@ http://www.templatemo.com/tm-511-journey
                 umami.trackEvent('desktop-swap-origin-destination-click');
             };
         </script>
-        <script src="static/js/jquery-1.11.3.min.js" crossorigin="anonymous"></script> <!-- jQuery (https://jquery.com/download/) -->
-        <script src="static/js/popper.min.js" crossorigin="anonymous"></script> <!-- https://popper.js.org/ -->
-        <script src="static/js/bootstrap.min.js"  crossorigin="anonymous"></script> <!-- https://getbootstrap.com/ -->
-        <script src="static/js/datepicker.min.js" crossorigin="anonymous"></script> <!-- https://github.com/qodesmith/datepicker -->
-        <script src="static/js/jquery.singlePageNav.min.js"  crossorigin="anonymous"></script>
+        <script src="/static/js/jquery-1.11.3.min.js" crossorigin="anonymous"></script> <!-- jQuery (https://jquery.com/download/) -->
+        <script src="/static/js/popper.min.js" crossorigin="anonymous"></script> <!-- https://popper.js.org/ -->
+        <script src="/static/js/bootstrap.min.js"  crossorigin="anonymous"></script> <!-- https://getbootstrap.com/ -->
+        <script src="/static/js/datepicker.min.js" crossorigin="anonymous"></script> <!-- https://github.com/qodesmith/datepicker -->
+        <script src="/static/js/jquery.singlePageNav.min.js"  crossorigin="anonymous"></script>
         <!-- Single Page Nav (https://github.com/ChrisWojcik/single-page-nav) -->
-        <script src="static/slick/slick.min.js" crossorigin="anonymous"></script> <!-- http://kenwheeler.github.io/slick/ -->
-        <script src="static/js/jquery.scrollTo.min.js" crossorigin="anonymous"></script> <!-- https://github.com/flesler/jquery.scrollTo -->
+        <script src="/static/slick/slick.min.js" crossorigin="anonymous"></script> <!-- http://kenwheeler.github.io/slick/ -->
+        <script src="/static/js/jquery.scrollTo.min.js" crossorigin="anonymous"></script> <!-- https://github.com/flesler/jquery.scrollTo -->
         <script src="https://code.iconify.design/2/2.1.2/iconify.min.js" crossorigin="anonymous"></script>
         
-        <script src="js/languageHandler.js" defer></script>
-        <script src="js/apiHandler.js" defer></script>
-
+        <!-- Utility functions for cookies -->
         <script>
-            if ('serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/service-worker.js')
-                .then(function(registration) {
-                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                }, function(err) {
-                    console.log('ServiceWorker registration failed: ', err);
-                });
-                });
+            function setCookie(name, value, days) {
+                let expires = "";
+                if (days) {
+                    const date = new Date();
+                    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                    expires = "; expires=" + date.toUTCString();
+                }
+                document.cookie = name + "=" + (value || "") + expires + "; path=/";
+            }
+            function getCookie(name) {
+                const nameEQ = name + "=";
+                const ca = document.cookie.split(';');
+                for (let i = 0; i < ca.length; i++) {
+                    let c = ca[i];
+                    while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+                }
+                return null;
+            }
+            function deleteCookie(name) {
+                document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+            }
+            function isValidEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
             }
         </script>
 
+        <!-- Load all JS files -->
+        <script src="/desktop/js/i18n.js"></script>
+        <script src="/desktop/js/offlineHandler.js"></script>
+        <script src="/desktop/js/adRemovalHandler.js"></script>
+        <script src="/desktop/js/subscriptionCreationHandler.js"></script>
+        <script src="/desktop/js/favoriteHandler.js"></script>
+        <script src="/desktop/js/busTrackingHandler.js"></script>
+        <script src="/desktop/js/busTrackingUI.js"></script>
+        <script src="/desktop/js/directionsApiHandler.js"></script>
+        <script src="/desktop/js/languageModal.js"></script>
+        <script src="/desktop/js/apiHandler.js"></script>
+
         <script>
+            // Check day type from form
+            function checkDayType() {
+                const daySelect = document.getElementById('day');
+                if (!daySelect) return 'WEEKDAY';
+                return daySelect.value === '1' ? 'WEEKDAY' : daySelect.value === '2' ? 'SATURDAY' : 'SUNDAY';
+            }
+
+            // Redirect to mobile for small screens
             function checkScreenWidth() {
                 if (window.innerWidth <= 769) {
                     window.location.href = '/';
-                    umami.trackEvent('desktop-redirect-to-mobile');
+                    if (typeof umami !== 'undefined') {
+                        umami.track('desktop-redirect-to-mobile');
+                    }
                 }
             }
 
@@ -511,6 +553,19 @@ http://www.templatemo.com/tm-511-journey
 
             // Continuously monitor screen size
             window.addEventListener('resize', checkScreenWidth);
+        </script>
+
+        <script>
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                    navigator.serviceWorker.register('/desktop/js/sw.js')
+                    .then(function(registration) {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    }, function(err) {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+                });
+            }
         </script>
 
     </body>
