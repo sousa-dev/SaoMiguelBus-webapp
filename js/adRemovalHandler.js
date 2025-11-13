@@ -10,7 +10,7 @@ const pricingOptions = [
     { 
         id: 'weekly', 
         period: 'week', 
-        price: '€0.50', 
+        price: '€0.99', 
         value: 'week',
         stripeLink: 'https://buy.stripe.com/5kQ9AS43t1MJ4hv6YpgUM04',
         description: 'Perfect for tourists'
