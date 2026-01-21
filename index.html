@@ -253,6 +253,10 @@
         html.dark .form-control { background-color: #374151; color: #f3f4f6; }
         html.dark .show-sel { background-color: #1f2937; }
 
+        /* Force dark background on route cards */
+        html.dark [id^="route-"] { background-color: #111827 !important; }
+        html.dark .container.card { background-color: #111827 !important; border-color: #374151 !important; }
+
         .page {
             flex: 1;
             overflow-y: auto;

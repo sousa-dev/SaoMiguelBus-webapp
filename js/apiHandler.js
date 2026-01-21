@@ -736,12 +736,12 @@ async function createRouteDiv(route, originStop, destinationStop, lastRoute) {
                                 </ul>
                             </div>
                         </div>
-                        <div class="confirmation-banner bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-1 mb-1 cursor-pointer flex justify-between items-center" onclick="document.getElementById('confirmationModal').classList.remove('hidden');" data-umami-event="confirmation-banner-click">
+                        <div class="confirmation-banner bg-yellow-100 dark:bg-yellow-900/30 border-l-4 border-yellow-500 dark:border-yellow-600 text-yellow-700 dark:text-yellow-300 p-1 mb-1 cursor-pointer flex justify-between items-center" onclick="document.getElementById('confirmationModal').classList.remove('hidden');" data-umami-event="confirmation-banner-click">
                             <div>
                                 <p class="font-bold text-xs">${t('confirmationRequired')}</p>
                                 <p class="text-xs">${t('confirmationMessage')}</p>
                             </div>
-                            <i class="fas fa-phone-alt text-yellow-700 text-lg mr-2"></i>
+                            <i class="fas fa-phone-alt text-yellow-700 dark:text-yellow-300 text-lg mr-2"></i>
                         </div>
                     ` : ''}
                 </div>
@@ -798,7 +798,7 @@ async function createRouteDiv(route, originStop, destinationStop, lastRoute) {
                 <h4 class="font-semibold mb-2 text-gray-700 dark:text-gray-300">${t('allStops')}</h4>
                 <div class="space-y-2">
                     ${stopsArray.map(([stop, time]) => `
-                        <div class="flex justify-between items-center py-1 border-b border-gray-200 last:border-b-0">
+                        <div class="flex justify-between items-center py-1 border-b border-gray-200 dark:border-gray-700 last:border-b-0">
                             <span class="text-sm text-gray-600 dark:text-gray-400">${stop}</span>
                             <span class="text-sm font-medium text-gray-800 dark:text-gray-100">${time}</span>
                         </div>
