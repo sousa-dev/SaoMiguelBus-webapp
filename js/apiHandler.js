@@ -394,7 +394,7 @@ function displayNoRoutesMessage(origin, destination) {
                     <h3 class="text-xl font-semibold mb-2 text-center" data-umami-event="no-routes-message-header">
                         ${message}
                     </h3>
-                    <p class="text-gray-600 text-center" data-umami-event="no-routes-message-subtitle">
+                    <p class="text-gray-600 dark:text-gray-400 text-center" data-umami-event="no-routes-message-subtitle">
                         ${t('noRoutesSubtitle')}
                     </p>
                     <button class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="redirectToStepByStepDirections(event)" data-umami-event="try-directions-button-clicked">
@@ -419,7 +419,7 @@ function displayNoStopsMessage() {
                     <h3 class="text-xl font-semibold mb-2 text-center">
                         Unable to load stops data.
                     </h3>
-                    <p class="text-gray-600 text-center">Please check your internet connection or try again later.</p>
+                    <p class="text-gray-600 dark:text-gray-400 text-center">Please check your internet connection or try again later.</p>
                 </div>
             </div>
         </div>
@@ -495,7 +495,7 @@ function createFavouriteIcon() {
 
     const favoriteText = document.createElement('span');
     favoriteText.id = 'favorite-text';
-    favoriteText.className = 'mr-2 text-sm text-gray-500';
+    favoriteText.className = 'mr-2 text-sm text-gray-500 dark:text-gray-400';
 
     const favoriteIcon = document.createElement('i');
     favoriteIcon.id = 'favorite-icon';
@@ -702,22 +702,22 @@ async function createRouteDiv(route, originStop, destinationStop, lastRoute) {
     const currentVote = getCookie(cookieName);
 
     routeDiv.innerHTML = `
-        <div id="route-${route.route}" class="bg-white shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-300" data-umami-event="route-${route.route}-click">
+        <div id="route-${route.route}" class="bg-white dark:bg-gray-900 shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-300" data-umami-event="route-${route.route}-click">
             <div class="route-header flex items-center justify-between mb-4">
                 <div class="flex items-center">
                     <div class="route-icon text-2xl mr-2"><i class="fa-solid fa-bus"></i></div>
                     ${route.route.includes('C') ? `
                         <div class="route-number text-xl font-semibold text-green-600 mr-2">${route.route.replace('C', '')}</div>
                         <div id="confirmationModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center hidden" onclick="document.getElementById('confirmationModal').classList.add('hidden');" data-umami-event="confirmation-modal-click">
-                            <div class="bg-white rounded-lg p-6 w-80 relative" onclick="event.stopPropagation();">
-                                <button id="closeConfirmationModal" class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2" onclick="document.getElementById('confirmationModal').classList.add('hidden');" data-umami-event="close-confirmation-modal-click">
+                            <div class="bg-white dark:bg-gray-900 rounded-lg p-6 w-80 relative" onclick="event.stopPropagation();">
+                                <button id="closeConfirmationModal" class="text-gray-600 dark:text-gray-400 w-full text-right hover:text-gray-800 dark:hover:text-gray-200 transition duration-300 ease-in-out mb-2" onclick="document.getElementById('confirmationModal').classList.add('hidden');" data-umami-event="close-confirmation-modal-click">
                                     <i class="fas fa-times text-xl text-right"></i>
                                 </button>
                                 <h3 class="text-xl font-semibold text-green-600 mb-3" data-i18n="contactBusCompaniesTitle">Contato das Companhias de Autocarros</h3>
-                                <p class="text-gray-700 text-sm" data-i18n="confirmBusCompaniesDescription">
+                                <p class="text-gray-700 dark:text-gray-300 text-sm" data-i18n="confirmBusCompaniesDescription">
                                 Se não tem a certeza da existência desta rota, entre em contato com as companhias de autocarros diretamente para confirmá-la.
                                 </p>
-                                <ul class="list-disc list-inside text-gray-700 mt-2 space-y-2">
+                                <ul class="list-disc list-inside text-gray-700 dark:text-gray-300 mt-2 space-y-2">
                                     <li>
                                         <strong class="text-sm">Auto Viação Micaelense, Lda.</strong>
                                         <br>
@@ -745,7 +745,7 @@ async function createRouteDiv(route, originStop, destinationStop, lastRoute) {
                         </div>
                     ` : ''}
                 </div>
-                <div class="text-sm text-gray-600">
+                <div class="text-sm text-gray-600 dark:text-gray-400">
                     ${transferCount > 0 ? `<i class="fa fa-shuffle mr-1"></i> ${transferCount} ${transferCount === 1 ? t('transfer') : t('transfers')}` : ''}
                 </div>
             </div>
@@ -754,9 +754,9 @@ async function createRouteDiv(route, originStop, destinationStop, lastRoute) {
                     <div class="time text-2xl font-bold text-center w-1/4">${firstStop[1]}</div>
                     <div class="route-line flex-grow mx-4 relative">
                         <div class="absolute inset-0 flex items-center">
-                            <div class="h-0.5 w-full bg-gray-300 relative dashed-line">
+                            <div class="h-0.5 w-full bg-gray-300 dark:bg-gray-600 relative dashed-line">
                                 <div class="absolute inset-0 flex items-center justify-center">
-                                    <span class="bg-white px-2 text-sm font-medium text-gray-500 travel-time rounded border">
+                                    <span class="bg-white dark:bg-gray-800 px-2 text-sm font-medium text-gray-500 dark:text-gray-400 travel-time rounded border dark:border-gray-600">
                                         ${travelTime.formatted}
                                     </span>
                                 </div>
@@ -769,13 +769,13 @@ async function createRouteDiv(route, originStop, destinationStop, lastRoute) {
                     <div class="start-stop w-1/4 pr-2">
                         <div class="location text-center">
                             <div class="text-base">${firstStop[0].split(' - ')[0]}</div>
-                            <div class="text-sm text-gray-600">${firstStop[0].split(' - ').slice(1).join(' - ')}</div>
+                            <div class="text-sm text-gray-600 dark:text-gray-400">${firstStop[0].split(' - ').slice(1).join(' - ')}</div>
                         </div>
                     </div>
                     <div class="end-stop w-1/4 pl-2">
                         <div class="location text-center">
                             <div class="text-base">${lastStop[0].split(' - ')[0]}</div>
-                            <div class="text-sm text-gray-600">${lastStop[0].split(' - ').slice(1).join(' - ')}</div>
+                            <div class="text-sm text-gray-600 dark:text-gray-400">${lastStop[0].split(' - ').slice(1).join(' - ')}</div>
                         </div>
                     </div>
                 </div>
@@ -794,18 +794,18 @@ async function createRouteDiv(route, originStop, destinationStop, lastRoute) {
                     <i class="fas fa-thumbs-up"></i>
                 </button>
             </div>
-            <div class="all-stops hidden mt-4 bg-gray-50 rounded-lg p-3">
-                <h4 class="font-semibold mb-2 text-gray-700">${t('allStops')}</h4>
+            <div class="all-stops hidden mt-4 bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
+                <h4 class="font-semibold mb-2 text-gray-700 dark:text-gray-300">${t('allStops')}</h4>
                 <div class="space-y-2">
                     ${stopsArray.map(([stop, time]) => `
                         <div class="flex justify-between items-center py-1 border-b border-gray-200 last:border-b-0">
-                            <span class="text-sm text-gray-600">${stop}</span>
-                            <span class="text-sm font-medium text-gray-800">${time}</span>
+                            <span class="text-sm text-gray-600 dark:text-gray-400">${stop}</span>
+                            <span class="text-sm font-medium text-gray-800 dark:text-gray-100">${time}</span>
                         </div>
                     `).join('')}
                 </div>
                 <!-- 
-                    <div class="mt-3 text-xs text-gray-500">
+                    <div class="mt-3 text-xs text-gray-500 dark:text-gray-400">
                         ${(() => {
                             const routeNumbers = route.route.split('/').map(num => parseInt(num));
                             const operators = new Set();
@@ -1125,7 +1125,7 @@ function createInlineAdBanner(on, adIndex) {
                         </div>
                         <div class="text-center mt-2">
                             <button onclick="showPricingModal()" 
-                                    class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs px-3 py-1 rounded-full border border-gray-300 transition duration-200"
+                                    class="bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 text-xs px-3 py-1 rounded-full border border-gray-300 dark:border-gray-600 transition duration-200"
                                     data-umami-event="inline-ad-remove-ads-${adIndex}">
                                 <i class="fas fa-crown text-yellow-500 mr-1"></i>
                                 <span>${t('getRidOfAds', 'Get rid of ads')}</span>

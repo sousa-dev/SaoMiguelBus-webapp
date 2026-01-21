@@ -163,7 +163,7 @@ function displayDirections(data) {
                     <h3 class="text-xl font-semibold mb-2 text-center">
                         ${t('noRoutesMessage').replace('{origin}', userInputOrigin).replace('{destination}', userInputDestination)}
                     </h3>
-                    <p class="text-gray-600 text-center">${t('noRoutesSubtitle')}</p>
+                    <p class="text-gray-600 dark:text-gray-400 text-center">${t('noRoutesSubtitle')}</p>
                 </div>
             </div>
         `;
@@ -202,7 +202,7 @@ function displayDirections(data) {
  */
 function createRouteCard(route, index) {
     const card = document.createElement('div');
-    card.className = 'bg-white mb-4 shadow-md rounded-lg overflow-hidden';
+    card.className = 'bg-white dark:bg-gray-900 mb-4 shadow-md rounded-lg overflow-hidden';
 
     const leg = route.legs[0];
 
@@ -223,11 +223,11 @@ function createRouteCard(route, index) {
             </div>
             <div class="flex items-center justify-center flex-1">
                 <i class="fas fa-walking text-green-600 mr-1"></i>
-                <span class="text-gray-600">${formattedWalkDistance}</span>
+                <span class="text-gray-600 dark:text-gray-400">${formattedWalkDistance}</span>
             </div>
             <div class="flex items-center justify-end flex-1">
                 <i class="fas fa-bus text-green-600 mr-1"></i>
-                <span class="text-gray-600">${formattedBusDistance}</span>
+                <span class="text-gray-600 dark:text-gray-400">${formattedBusDistance}</span>
             </div>
         </div>
         <div class="stops-summary flex flex-col">
@@ -235,14 +235,14 @@ function createRouteCard(route, index) {
                 <div class="time text-2xl font-bold text-center w-1/4">${leg.departure_time.text}</div>
                 <div class="route-line flex-grow mx-4 relative">
                     <div class="absolute inset-0 flex items-center">
-                        <div class="h-0.5 w-full bg-gray-300 relative dashed-line">
+                        <div class="h-0.5 w-full bg-gray-300 dark:bg-gray-600 relative dashed-line">
                             <div class="absolute inset-0 flex flex-col items-center justify-center">
-                                <span class="bg-white px-2 text-sm font-medium text-gray-500 travel-time rounded border">
+                                <span class="bg-white dark:bg-gray-800 px-2 text-sm font-medium text-gray-500 dark:text-gray-400 travel-time rounded border dark:border-gray-600">
                                     ${leg.duration.text}
                                 </span>
                             </div>
                             ${nTransfers > 0 ? `
-                                <span class="bg-white px-2 text-xs font-medium text-gray-500 mt-4 flex items-center justify-center">
+                                <span class="bg-white dark:bg-gray-800 px-2 text-xs font-medium text-gray-500 dark:text-gray-400 mt-4 flex items-center justify-center">
                                     <i class="fa fa-shuffle mr-1"></i> ${nTransfers} ${nTransfers === 1 ? t('transfer') : t('transfers')}
                                 </span>
                             ` : ''}
@@ -255,13 +255,13 @@ function createRouteCard(route, index) {
                 <div class="start-stop w-1/4 pr-2">
                     <div class="location text-center">
                         <div class="text-base">${leg.start_address.split(',')[0]}</div>
-                        <div class="text-sm text-gray-600">${leg.start_address.split(',').slice(1).join(',').trim().replace('Portugal', '')}</div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400">${leg.start_address.split(',').slice(1).join(',').trim().replace('Portugal', '')}</div>
                     </div>
                 </div>
                 <div class="end-stop w-1/4 pl-2">
                     <div class="location text-center">
                         <div class="text-base">${leg.end_address.split(',')[0]}</div>
-                        <div class="text-sm text-gray-600">${leg.end_address.split(',').slice(1).join(',').trim().replace('Portugal', '')}</div>
+                        <div class="text-sm text-gray-600 dark:text-gray-400">${leg.end_address.split(',').slice(1).join(',').trim().replace('Portugal', '')}</div>
                     </div>
                 </div>
             </div>
@@ -440,7 +440,7 @@ function toggleStepByStepDetails(card) {
  */
 function createStepCard(step, stepNumber) {
     const card = document.createElement('div');
-    card.className = 'p-4 border-t border-gray-200 bg-gray-50 details-container';
+    card.className = 'p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 details-container';
 
     let icon = 'mdi:bus';
     if (step.travel_mode === 'WALKING') {
@@ -452,9 +452,9 @@ function createStepCard(step, stepNumber) {
             <span class="iconify text-3xl mr-4 text-green-500" data-icon="${icon}"></span>
             <div class="flex-grow">
                 <h3 class="font-bold text-lg text-green-700">${step.html_instructions}</h3>
-                <p class="text-gray-700 mt-1">
+                <p class="text-gray-700 dark:text-gray-300 mt-1">
                     <span class="font-medium">${step.duration.text}</span>
-                    <span class="text-gray-500 ml-4">${step.distance.text}</span>
+                    <span class="text-gray-500 dark:text-gray-400 ml-4">${step.distance.text}</span>
                 </p>
             </div>
             <span class="text-green-600 font-bold font-xl ml-12">${getArrivalTime(step)}</span>
@@ -465,16 +465,16 @@ function createStepCard(step, stepNumber) {
         const transit = step.transit_details;
         card.innerHTML = `
             ${stepContent}
-            <div class="ml-10 mt-2 bg-white rounded-lg shadow-sm p-3">
-                <p class="text-gray-700 flex items-center mb-2">
+            <div class="ml-10 mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-sm p-3">
+                <p class="text-gray-700 dark:text-gray-300 flex items-center mb-2">
                     <span class="iconify mr-2 text-green-500" data-icon="mdi:bus-stop"></span>
                     <span class="font-medium">${t('departFrom')}</span>
-                    <span class="ml-2 text-black font-semibold">${transit.departure_stop.name}</span>
+                    <span class="ml-2 text-black dark:text-gray-100 font-semibold">${transit.departure_stop.name}</span>
                 </p>
-                <p class="text-gray-700 flex items-center">
+                <p class="text-gray-700 dark:text-gray-300 flex items-center">
                     <span class="iconify mr-2 text-red-500" data-icon="mdi:bus-stop"></span>
                     <span class="font-medium">${t('arriveAt')}</span>
-                    <span class="ml-2 text-black font-semibold">${transit.arrival_stop.name}</span>
+                    <span class="ml-2 text-black dark:text-gray-100 font-semibold">${transit.arrival_stop.name}</span>
                 </p>
             </div>
             `;

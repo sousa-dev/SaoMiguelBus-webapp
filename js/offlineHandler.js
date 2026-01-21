@@ -117,7 +117,7 @@ function updateAlertBadge() {
                 <button class="show-less-btn text-blue-500" data-umami-event="show-less-alert">${t('showLess')}</button>
             </div>
             <div style="display: flex; justify-content: flex-end; align-items: center;">
-                <a href="${source}" target="_blank" rel="noopener noreferrer" class="flex text-gray-500" data-umami-event="open-alert-source">
+                <a href="${source}" target="_blank" rel="noopener noreferrer" class="flex text-gray-500 dark:text-gray-400" data-umami-event="open-alert-source">
                     <small>${company}</small>
                     <i class="fas fa-external-link-alt ml-1"></i>
                 </a>

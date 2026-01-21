@@ -215,7 +215,7 @@ function selectPricingOption(optionId) {
     // Remove all selected states
     document.querySelectorAll('.pricing-option').forEach(option => {
         option.classList.remove('border-green-500', 'bg-green-50');
-        option.classList.add('border-gray-200', 'bg-white');
+        option.classList.add('border-gray-200', 'dark:border-gray-700', 'bg-white', 'dark:bg-gray-800');
         const radio = option.querySelector('.w-4.h-4');
         if (radio) {
             radio.classList.remove('bg-green-500', 'border-green-500');
@@ -226,7 +226,7 @@ function selectPricingOption(optionId) {
     // Add selected state to chosen option
     const selectedOption = document.getElementById(`pricing-option-${optionId}`);
     if (selectedOption) {
-        selectedOption.classList.remove('border-gray-200', 'bg-white');
+        selectedOption.classList.remove('border-gray-200', 'dark:border-gray-700', 'bg-white', 'dark:bg-gray-800');
         selectedOption.classList.add('border-green-500', 'bg-green-50');
         const radio = selectedOption.querySelector('.w-4.h-4');
         if (radio) {
@@ -411,7 +411,7 @@ function selectPricingOptionPage(optionId) {
     // Remove all selected states
     document.querySelectorAll('.pricing-option').forEach(option => {
         option.classList.remove('border-green-500', 'bg-green-50');
-        option.classList.add('border-gray-200', 'bg-white');
+        option.classList.add('border-gray-200', 'dark:border-gray-700', 'bg-white', 'dark:bg-gray-800');
         const radio = option.querySelector('.w-4.h-4');
         if (radio) {
             radio.classList.remove('bg-green-500', 'border-green-500');
@@ -422,7 +422,7 @@ function selectPricingOptionPage(optionId) {
     // Add selected state to chosen option
     const selectedOption = document.getElementById(`premium-page-${optionId}`);
     if (selectedOption) {
-        selectedOption.classList.remove('border-gray-200', 'bg-white');
+        selectedOption.classList.remove('border-gray-200', 'dark:border-gray-700', 'bg-white', 'dark:bg-gray-800');
         selectedOption.classList.add('border-green-500', 'bg-green-50');
         const radio = selectedOption.querySelector('.w-4.h-4');
         if (radio) {

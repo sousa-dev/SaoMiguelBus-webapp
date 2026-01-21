@@ -18,7 +18,7 @@ function createFavoriteCard(route) {
     const destination = capitalizeEveryWord(route.destination);
     const favoriteCard = document.createElement('div');
     favoriteCard.setAttribute('data-umami-event', 'favorite-route-card');
-    favoriteCard.classList.add('bg-white', 'rounded-lg', 'shadow-md', 'p-4', 'mb-4', 'flex', 'flex-col', 'items-center', 'cursor-pointer');
+    favoriteCard.classList.add('bg-white', 'dark:bg-gray-900', 'rounded-lg', 'shadow-md', 'p-4', 'mb-4', 'flex', 'flex-col', 'items-center', 'cursor-pointer');
     favoriteCard.onclick = () => {
         fillOriginDestination(origin, destination);
         // Track the click event
@@ -28,9 +28,9 @@ function createFavoriteCard(route) {
     };
     favoriteCard.innerHTML = `
         <div class="flex flex-col items-center w-full cursor-pointer">
-            <p class="text-lg font-semibold text-gray-500">${origin}</p>
+            <p class="text-lg font-semibold text-gray-500 dark:text-gray-400">${origin}</p>
             <i class="fas fa-arrow-down text-green-600 my-2 text-xl"></i>
-            <p class="text-lg font-semibold text-gray-500">${destination}</p>
+            <p class="text-lg font-semibold text-gray-500 dark:text-gray-400">${destination}</p>
         </div>
     `;
     return favoriteCard;
@@ -51,7 +51,7 @@ function checkFavoriteRoutesCookie() {
 function displayFavoriteRoutes(routes) {
     // You might want to update a specific element in your HTML to show these routes
     const favoriteRoutesContainer = document.getElementById('favouriteRoutesContainer');
-    favoriteRoutesContainer.innerHTML = '<h2 class="text-2xl font-bold mb-4 text-gray-800" data-i18n="favoriteSearches">Rotas Favoritas</h2>';
+    favoriteRoutesContainer.innerHTML = '<h2 class="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-100" data-i18n="favoriteSearches">Rotas Favoritas</h2>';
     if (routes.length > 0) {
         routes.forEach(route => {
             favoriteRoutesContainer.appendChild(createFavoriteCard(route));
@@ -59,8 +59,8 @@ function displayFavoriteRoutes(routes) {
     }
     else {
         const noFavouriteCard = document.createElement('div');
-        noFavouriteCard.classList.add('bg-white', 'rounded-lg', 'shadow-md', 'p-4', 'mb-4', 'flex', 'flex-col', 'items-center', 'cursor-pointer');
-        noFavouriteCard.innerHTML = '<p class="text-lg text-gray-500" data-i18n="noFavoriteSearches">Não há rotas favoritas</p>';
+        noFavouriteCard.classList.add('bg-white', 'dark:bg-gray-900', 'rounded-lg', 'shadow-md', 'p-4', 'mb-4', 'flex', 'flex-col', 'items-center', 'cursor-pointer');
+        noFavouriteCard.innerHTML = '<p class="text-lg text-gray-500 dark:text-gray-400" data-i18n="noFavoriteSearches">Não há rotas favoritas</p>';
         favoriteRoutesContainer.appendChild(noFavouriteCard);
     }
     favoriteRoutesContainer.style.display = 'block';

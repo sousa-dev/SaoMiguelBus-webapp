@@ -796,7 +796,7 @@ class BusTrackingHandler {
         const statusIndicator = element.querySelector('.status-indicator');
         if (statusIndicator) {
             statusIndicator.textContent = busStatus.statusText;
-            statusIndicator.className = `status-indicator px-2 py-1 rounded-full text-xs font-medium ${statusColor} bg-gray-100`;
+            statusIndicator.className = `status-indicator px-2 py-1 rounded-full text-xs font-medium ${statusColor} bg-gray-100 dark:bg-gray-700`;
         }
         
         // Update icon
@@ -982,7 +982,7 @@ class BusTrackingHandler {
             detailsContainer.innerHTML = `
                 <div class="flex items-center mb-2">
                     <i class="fas fa-bus text-blue-500 mr-2"></i>
-                    <span class="font-medium text-gray-800">${route.routeNumber}</span>
+                    <span class="font-medium text-gray-800 dark:text-gray-100">${route.routeNumber}</span>
                     <span class="ml-2 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                         ${dayTypeText}
                     </span>
@@ -1207,22 +1207,22 @@ class BusTrackingHandler {
                             'bg-gray-100 text-gray-800';
         
         const element = document.createElement('div');
-        element.className = 'bg-white rounded-lg border border-gray-200 shadow-sm p-3 mb-2 flex items-center justify-between cursor-pointer hover:shadow-md transition-all duration-200';
+        element.className = 'bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-3 mb-2 flex items-center justify-between cursor-pointer hover:shadow-md transition-all duration-200';
         element.setAttribute('data-pinned-id', route.id);
         element.innerHTML = `
             <div class="flex-1" onclick="BusTrackingHandler.showRouteDetails('${route.id}', 'pinned')" data-umami-event="view-pinned-route-details">
                 <div class="flex items-center mb-1">
                     <div class="status-indicator w-3 h-3 rounded-full bg-green-500 mr-2"></div>
                     <i class="fas fa-thumbtack text-blue-500 mr-2"></i>
-                    <span class="font-medium text-gray-800">${route.routeNumber}</span>
+                    <span class="font-medium text-gray-800 dark:text-gray-100">${route.routeNumber}</span>
                     <span class="ml-2 px-2 py-0.5 rounded-full text-xs font-medium ${dayTypeColor}">
                         ${dayTypeText}
                     </span>
                 </div>
-                <div class="text-sm text-gray-600 mb-1">
+                <div class="text-sm text-gray-600 dark:text-gray-400 mb-1">
                     ${route.origin} → ${route.destination}
                 </div>
-                <div class="text-xs text-gray-500 flex items-center space-x-2">
+                <div class="text-xs text-gray-500 dark:text-gray-400 flex items-center space-x-2">
                     <span class="countdown-display">${countdownText}</span>
                     <span class="text-gray-400">•</span>
                     <span class="next-departure">${route.nextDeparture || '--:--'}</span>
@@ -1246,7 +1246,7 @@ class BusTrackingHandler {
         const displayTitle = routeName ? `${track.routeNumber}` : track.routeNumber;
         
         return `
-            <div class="bg-white border border-gray-200 rounded-lg p-3 mb-2 shadow-sm" data-tracking-id="${track.id}">
+            <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-3 mb-2 shadow-sm" data-tracking-id="${track.id}">
                 <div class="flex items-start justify-between mb-2">
                     <div class="flex items-center flex-1 min-w-0">
                         <div class="mr-3">
@@ -1255,29 +1255,29 @@ class BusTrackingHandler {
                         <div class="flex-1 min-w-0">
                             <div class="flex items-center justify-between mb-1">
                                 <div class="flex items-center">
-                                    <h4 class="font-semibold text-sm text-gray-800 truncate mr-2">
+                                    <h4 class="font-semibold text-sm text-gray-800 dark:text-gray-100 truncate mr-2">
                                         ${displayTitle}
                                     </h4>
                                 </div>
-                                <span class="status-indicator px-2 py-1 rounded-full text-xs font-medium ${statusColor} bg-gray-100">
+                                <span class="status-indicator px-2 py-1 rounded-full text-xs font-medium ${statusColor} bg-gray-100 dark:bg-gray-700">
                                     ${busStatus.statusText}
                                 </span>
                             </div>
-                            <p class="text-xs text-gray-600 truncate mb-1">
+                            <p class="text-xs text-gray-600 dark:text-gray-400 truncate mb-1">
                                 ${track.origin} → ${track.destination}
                             </p>
                             
                             <!-- Detailed Status Information -->
                             <div class="text-xs space-y-1">
                                 ${busStatus.currentStop && busStatus.status !== 'completed' ? `
-                                    <div class="flex items-center text-gray-700">
+                                    <div class="flex items-center text-gray-700 dark:text-gray-300">
                                         <i class="fas fa-map-marker-alt mr-1 text-blue-500"></i>
                                         <span><strong>${t('current', 'Current')}:</strong> ${busStatus.currentStop.name.split(' - ')[0]}</span>
                                     </div>
                                 ` : ''}
                                 
                                 ${busStatus.nextStop && busStatus.timeToNextStop > 0 && busStatus.status !== 'completed' ? `
-                                    <div class="flex items-center text-gray-700">
+                                    <div class="flex items-center text-gray-700 dark:text-gray-300">
                                         <i class="fas fa-arrow-right mr-1 text-green-500"></i>
                                         <span><strong>${t('next', 'Next')}:</strong> ${busStatus.nextStop.name.split(' - ')[0]} 
                                         (${this.formatTimeRemaining(busStatus.timeToNextStop)})</span>
@@ -1285,7 +1285,7 @@ class BusTrackingHandler {
                                 ` : ''}
                                 
                                 ${busStatus.timeToDestination > 0 && busStatus.status !== 'completed' ? `
-                                    <div class="flex items-center text-gray-700">
+                                    <div class="flex items-center text-gray-700 dark:text-gray-300">
                                         <i class="fas fa-flag-checkered mr-1 text-red-500"></i>
                                         <span><strong>${t('destination', 'Destination')}:</strong> ${this.formatTimeRemaining(busStatus.timeToDestination)}</span>
                                     </div>
@@ -1293,7 +1293,7 @@ class BusTrackingHandler {
                                 
                                 ${busStatus.progress > 0 && busStatus.status !== 'completed' ? `
                                     <div class="mt-2">
-                                        <div class="flex justify-between text-xs text-gray-600 mb-1">
+                                        <div class="flex justify-between text-xs text-gray-600 dark:text-gray-400 mb-1">
                                             <span>${t('progress', 'Progress')}</span>
                                             <span>${busStatus.progress}%</span>
                                         </div>
@@ -1308,8 +1308,8 @@ class BusTrackingHandler {
                     </div>
                 </div>
                 
-                <div class="flex items-center justify-between pt-2 border-t border-gray-100">
-                    <div class="text-xs text-gray-600">
+                <div class="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-gray-700">
+                    <div class="text-xs text-gray-600 dark:text-gray-400">
                         <span class="countdown-display">${busStatus.countdown}</span>
                     </div>
                     <div class="flex space-x-2">
@@ -1389,17 +1389,17 @@ class BusTrackingHandler {
         const countdownText = countdown || t('scheduleUnavailable', 'Schedule unavailable');
         
         modal.innerHTML = `
-            <div class="bg-white rounded-lg w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="bg-white dark:bg-gray-900 rounded-lg w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
                 <div class="p-4 sm:p-6">
                     <div class="flex items-start justify-between mb-4">
                         <div class="flex items-start">
                             <i class="fas ${type === 'pinned' ? 'fa-thumbtack text-green-500' : 'fa-bus text-blue-500'} text-xl sm:text-2xl mr-3 mt-0.5"></i>
                             <div>
-                                <h2 class="text-lg sm:text-xl font-semibold text-gray-800 leading-tight">${route.routeNumber}</h2>
-                                <p class="text-sm text-gray-600">${route.origin} → ${route.destination}</p>
+                                <h2 class="text-lg sm:text-xl font-semibold text-gray-800 dark:text-gray-100 leading-tight">${route.routeNumber}</h2>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">${route.origin} → ${route.destination}</p>
                             </div>
                         </div>
-                        <button onclick="BusTrackingHandler.closeRouteDetails()" class="text-gray-500 hover:text-gray-700 p-1" data-umami-event="close-route-details">
+                        <button onclick="BusTrackingHandler.closeRouteDetails()" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 p-1" data-umami-event="close-route-details">
                             <i class="fas fa-times text-lg"></i>
                         </button>
                     </div>
@@ -1414,31 +1414,31 @@ class BusTrackingHandler {
                     
                     <!-- Route Information -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                        <div class="bg-gray-50 p-3 rounded-lg">
-                            <div class="text-xs text-gray-500 uppercase tracking-wide mb-1">${t('nextDeparture', 'Next Departure')}</div>
-                            <div class="font-semibold text-gray-800">${route.nextDeparture}</div>
+                        <div class="bg-gray-50 dark:bg-gray-800 p-3 rounded-lg">
+                            <div class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">${t('nextDeparture', 'Next Departure')}</div>
+                            <div class="font-semibold text-gray-800 dark:text-gray-100">${route.nextDeparture}</div>
                         </div>
-                        <div class="bg-gray-50 p-3 rounded-lg">
-                            <div class="text-xs text-gray-500 uppercase tracking-wide mb-1">${t('estimatedArrival', 'Estimated Arrival')}</div>
-                            <div class="font-semibold text-gray-800">${route.estimatedArrival}</div>
+                        <div class="bg-gray-50 dark:bg-gray-800 p-3 rounded-lg">
+                            <div class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">${t('estimatedArrival', 'Estimated Arrival')}</div>
+                            <div class="font-semibold text-gray-800 dark:text-gray-100">${route.estimatedArrival}</div>
                         </div>
                     </div>
                     
                     <!-- All Stops Section -->
                     <div class="mb-4">
-                        <h3 class="text-sm sm:text-base font-semibold text-gray-700 mb-3 flex items-center">
-                            <i class="fas fa-map-marker-alt text-gray-500 mr-2"></i>
+                        <h3 class="text-sm sm:text-base font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center">
+                            <i class="fas fa-map-marker-alt text-gray-500 dark:text-gray-400 mr-2"></i>
                             ${t('allStops', 'All Stops')}
                         </h3>
-                        <div class="bg-gray-50 rounded-lg p-3 max-h-60 overflow-y-auto">
+                        <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 max-h-60 overflow-y-auto">
                             <div class="space-y-2">
                                 ${stopsList.map((stop, index) => `
-                                    <div class="flex items-center justify-between py-1 ${index === 0 ? 'border-b border-gray-200 pb-2' : ''} ${index === stopsList.length - 1 ? 'border-t border-gray-200 pt-2' : ''}">
+                                    <div class="flex items-center justify-between py-1 ${index === 0 ? 'border-b border-gray-200 dark:border-gray-700 pb-2' : ''} ${index === stopsList.length - 1 ? 'border-t border-gray-200 dark:border-gray-700 pt-2' : ''}">
                                         <div class="flex items-center">
                                             <div class="w-2 h-2 rounded-full ${index === 0 ? 'bg-green-500' : index === stopsList.length - 1 ? 'bg-red-500' : 'bg-blue-500'} mr-3"></div>
-                                            <span class="text-sm text-gray-700">${stop.name}</span>
+                                            <span class="text-sm text-gray-700 dark:text-gray-300">${stop.name}</span>
                                         </div>
-                                        <span class="text-sm font-medium text-gray-800">${stop.time}</span>
+                                        <span class="text-sm font-medium text-gray-800 dark:text-gray-100">${stop.time}</span>
                                     </div>
                                 `).join('')}
                             </div>
@@ -1463,7 +1463,7 @@ class BusTrackingHandler {
                     </div>
                 </div>
                 
-                <div class="px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 border-t flex justify-end">
+                <div class="px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 dark:bg-gray-800 border-t dark:border-gray-700 flex justify-end">
                     <button onclick="BusTrackingHandler.closeRouteDetails()" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 text-sm sm:text-base" data-umami-event="close-route-details-modal">
                         ${t('close', 'Close')}
                     </button>
@@ -1530,28 +1530,28 @@ class BusTrackingHandler {
         modal.className = 'fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4';
         
         modal.innerHTML = `
-            <div class="bg-white rounded-lg w-full max-w-sm mx-auto">
+            <div class="bg-white dark:bg-gray-900 rounded-lg w-full max-w-sm mx-auto">
                 <div class="p-6">
                     <div class="flex items-center mb-4">
                         <div class="bg-red-100 rounded-full p-2 mr-3">
                             <i class="fas fa-exclamation-triangle text-red-500 text-lg"></i>
                         </div>
-                        <h3 class="text-lg font-semibold text-gray-800">${t('stopTrackingTitle', 'Stop Tracking')}</h3>
+                        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100">${t('stopTrackingTitle', 'Stop Tracking')}</h3>
                     </div>
-                    <p class="text-gray-600 mb-6">
+                    <p class="text-gray-600 dark:text-gray-400 mb-6">
                         ${t('stopTrackingMessage', 'Are you sure you want to stop tracking this route?')}
                     </p>
-                    <div class="bg-gray-50 rounded-lg p-3 mb-4">
+                    <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 mb-4">
                         <div class="flex items-center">
                             <i class="fas fa-bus text-blue-500 mr-2"></i>
                             <span class="font-medium">${track.routeNumber}</span>
                         </div>
-                        <div class="text-sm text-gray-600 mt-1">
+                        <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">
                             ${track.origin} → ${track.destination}
                         </div>
                     </div>
                     <div class="flex space-x-3">
-                        <button onclick="BusTrackingHandler.closeStopTrackingModal()" class="flex-1 px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition duration-200" data-umami-event="cancel-stop-tracking">
+                        <button onclick="BusTrackingHandler.closeStopTrackingModal()" class="flex-1 px-4 py-2 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-500 transition duration-200" data-umami-event="cancel-stop-tracking">
                             ${t('cancel', 'Cancel')}
                         </button>
                         <button onclick="BusTrackingHandler.confirmStopTracking('${trackingId}')" class="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-200" data-umami-event="confirm-stop-tracking">
@@ -1597,15 +1597,15 @@ class BusTrackingHandler {
         const modal = document.createElement('div');
         modal.className = 'fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4';
         modal.innerHTML = `
-            <div class="bg-white rounded-lg p-6 w-full max-w-sm mx-auto relative">
+            <div class="bg-white dark:bg-gray-900 rounded-lg p-6 w-full max-w-sm mx-auto relative">
                 <div class="text-center mb-4">
                     <i class="fas fa-exclamation-triangle text-4xl text-yellow-500 mb-3"></i>
-                    <h3 class="text-lg font-semibold text-gray-800 mb-2">${t('stopTrackingQuestion', 'Stop Tracking?')}</h3>
-                    <p class="text-gray-600 text-sm">
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">${t('stopTrackingQuestion', 'Stop Tracking?')}</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm">
                         ${t('stopTrackingConfirmation', 'Are you sure you want to stop tracking this route?')}
                     </p>
-                    <div class="bg-gray-50 rounded-lg p-2 mt-3">
-                        <p class="text-xs text-gray-700">
+                    <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-2 mt-3">
+                        <p class="text-xs text-gray-700 dark:text-gray-300">
                             <strong>${displayTitle}</strong><br>
                             ${track.origin} → ${track.destination}
                         </p>
@@ -1915,29 +1915,29 @@ class BusTrackingHandler {
         const modal = document.createElement('div');
         modal.className = 'fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4';
         modal.innerHTML = `
-            <div class="bg-white rounded-lg p-6 w-full max-w-md mx-auto relative max-h-[90vh] overflow-y-auto">
+            <div class="bg-white dark:bg-gray-900 rounded-lg p-6 w-full max-w-md mx-auto relative max-h-[90vh] overflow-y-auto">
                 <button onclick="this.parentElement.parentElement.remove()" 
-                        class="text-gray-600 w-full text-right hover:text-gray-800 transition duration-300 ease-in-out mb-2">
+                        class="text-gray-600 dark:text-gray-400 w-full text-right hover:text-gray-800 dark:hover:text-gray-200 transition duration-300 ease-in-out mb-2">
                     <i class="fas fa-times text-xl text-right"></i>
                 </button>
                 
                 <div class="text-center mb-4">
                     <i class="${this.getStatusIcon(busStatus)} text-3xl mb-2"></i>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-1">
+                    <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-1">
                         ${displayTitle}
                     </h3>
-                    <p class="text-gray-600">${track.origin} → ${track.destination}</p>
+                    <p class="text-gray-600 dark:text-gray-400">${track.origin} → ${track.destination}</p>
                 </div>
                 
                 <div class="space-y-3">
-                    <div class="bg-gray-50 rounded-lg p-3">
-                        <h4 class="font-semibold text-gray-800 mb-2">${t('currentStatus', 'Current Status')}</h4>
+                    <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
+                        <h4 class="font-semibold text-gray-800 dark:text-gray-100 mb-2">${t('currentStatus', 'Current Status')}</h4>
                         <div class="flex items-center mb-2">
-                            <span class="px-2 py-1 rounded-full text-xs font-medium ${this.getStatusColor(busStatus)} bg-gray-100">
+                            <span class="px-2 py-1 rounded-full text-xs font-medium ${this.getStatusColor(busStatus)} bg-gray-100 dark:bg-gray-700">
                                 ${busStatus.statusText}
                             </span>
                         </div>
-                        <p class="text-sm text-gray-700">${busStatus.detailedInfo}</p>
+                        <p class="text-sm text-gray-700 dark:text-gray-300">${busStatus.detailedInfo}</p>
                     </div>
                     
                     ${busStatus.currentStop && busStatus.status !== 'completed' ? `
@@ -1980,9 +1980,9 @@ class BusTrackingHandler {
                     ` : ''}
                     
                     ${busStatus.progress > 0 && busStatus.status !== 'completed' ? `
-                        <div class="bg-gray-50 rounded-lg p-3">
-                            <h4 class="font-semibold text-gray-800 mb-2">${t('routeProgress', 'Route Progress')}</h4>
-                            <div class="flex justify-between text-sm text-gray-600 mb-2">
+                        <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
+                            <h4 class="font-semibold text-gray-800 dark:text-gray-100 mb-2">${t('routeProgress', 'Route Progress')}</h4>
+                            <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
                                 <span>${t('progress', 'Progress')}</span>
                                 <span>${busStatus.progress}%</span>
                             </div>
