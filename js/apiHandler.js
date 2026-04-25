@@ -427,68 +427,128 @@ function displayNoStopsMessage() {
     stopsContainer.style.display = 'block';
 }
 
-// Function to add the current search to favorites
-function toggleFavorite() {
-    const origin = document.getElementById('origin').value;
-    const destination = document.getElementById('destination').value;
+// --- Favorite routes (cookie: favoriteRoutes) ---------------------------------
 
-    const favorite = {
-        origin: origin.toLowerCase(),
-        destination: destination.toLowerCase(),
-    };
+function getCurrentFavoritePair() {
+    const originInput = document.getElementById('origin');
+    const destinationInput = document.getElementById('destination');
+    if (!originInput || !destinationInput) {
+        return null;
+    }
+    const origin = originInput.value.trim();
+    const destination = destinationInput.value.trim();
+    if (!origin || !destination) {
+        return null;
+    }
+    return { origin: origin.toLowerCase(), destination: destination.toLowerCase() };
+}
 
-    const favoriteRoutes = JSON.parse(getCookie('favoriteRoutes') || '[]');
-    const isFavorite = favoriteRoutes.some(route => 
-        route.origin.toLowerCase() === origin.toLowerCase() && 
-        route.destination.toLowerCase() === destination.toLowerCase()
-    );
-    const favoriteIcon = document.getElementById('favorite-icon');
-    const favoriteText = document.getElementById('favorite-text');
-    if (isFavorite) {
-        // Remove from favorites
-        const favoriteRoutes = JSON.parse(getCookie('favoriteRoutes') || '[]');
-        const updatedRoutes = favoriteRoutes.filter(route => 
-            route.origin.toLowerCase() !== origin.toLowerCase() && 
-            route.destination.toLowerCase() !== destination.toLowerCase()
-        );
-        setCookie('favoriteRoutes', JSON.stringify(updatedRoutes), 1000);
+function isFavoritesPanelVisible() {
+    const el = document.getElementById('favouriteRoutesContainer');
+    if (!el) {
+        return false;
+    }
+    if (el.classList.contains('hidden')) {
+        return false;
+    }
+    if (el.style.display === 'none') {
+        return false;
+    }
+    return getComputedStyle(el).display !== 'none';
+}
 
-        // Update the favorite icon
-        favoriteText.textContent = t('addFavorites');
-        favoriteIcon.setAttribute('data-umami-event', 'add-favorite');
-        favoriteIcon.className = 'far fa-star text-yellow-400 cursor-pointer text-xl';
-
-    } else {
-        // Add to favorites
-        const favoriteRoutes = JSON.parse(getCookie('favoriteRoutes') || '[]');
-        favoriteRoutes.push(favorite);
-        setCookie('favoriteRoutes', JSON.stringify(favoriteRoutes), 1000);
-
-        // Update the favorite icon
+/** Apply label/icon/aria; works for detached nodes (createFavouriteIcon) and after mount. */
+function applyFavoriteButtonState(favoriteText, favoriteIcon, favoriteBtn, isFavorited) {
+    if (!favoriteText || !favoriteIcon) {
+        return;
+    }
+    if (isFavorited) {
         favoriteText.textContent = t('removeFavorites');
         favoriteIcon.setAttribute('data-umami-event', 'remove-favorite');
-        favoriteIcon.className = 'fas fa-star text-yellow-400 cursor-pointer text-xl';
+        favoriteIcon.className = 'fas fa-star text-yellow-400 text-xl';
+        if (favoriteBtn) {
+            favoriteBtn.setAttribute('aria-pressed', 'true');
+            favoriteBtn.setAttribute('aria-label', t('removeFavorites'));
+        }
+    } else {
+        favoriteText.textContent = t('addFavorites');
+        favoriteIcon.setAttribute('data-umami-event', 'add-favorite');
+        favoriteIcon.className = 'far fa-star text-yellow-400 text-xl';
+        if (favoriteBtn) {
+            favoriteBtn.setAttribute('aria-pressed', 'false');
+            favoriteBtn.setAttribute('aria-label', t('addFavorites'));
+        }
     }
 }
 
+function updateFavoriteButtonUi(isFavorited) {
+    applyFavoriteButtonState(
+        document.getElementById('favorite-text'),
+        document.getElementById('favorite-icon'),
+        document.getElementById('favorite-toggle-btn'),
+        isFavorited
+    );
+}
+
+function refreshFavoritesListIfOpen() {
+    if (isFavoritesPanelVisible() && typeof displayFavoriteRoutes === 'function' && typeof checkFavoriteRoutesCookie === 'function') {
+        displayFavoriteRoutes(checkFavoriteRoutesCookie());
+    }
+}
+
+// Function to add or remove the current search from favorites
+function toggleFavorite() {
+    const pair = getCurrentFavoritePair();
+    if (!pair) {
+        return;
+    }
+
+    const favoriteRoutes = JSON.parse(getCookie('favoriteRoutes') || '[]');
+    const isFavorite = favoriteRoutes.some(
+        route =>
+            route.origin.toLowerCase() === pair.origin &&
+            route.destination.toLowerCase() === pair.destination
+    );
+
+    if (isFavorite) {
+        const updatedRoutes = favoriteRoutes.filter(
+            route =>
+                !(
+                    route.origin.toLowerCase() === pair.origin &&
+                    route.destination.toLowerCase() === pair.destination
+                )
+        );
+        setCookie('favoriteRoutes', JSON.stringify(updatedRoutes), 1000);
+    } else {
+        favoriteRoutes.push({ origin: pair.origin, destination: pair.destination });
+        setCookie('favoriteRoutes', JSON.stringify(favoriteRoutes), 1000);
+    }
+
+    updateFavoriteButtonUi(!isFavorite);
+    refreshFavoritesListIfOpen();
+}
 
 function createFavouriteIcon() {
     const container = document.createElement('div');
-    container.className = 'flex justify-between items-center w-full';
+    container.className = 'flex flex-wrap justify-between items-center w-full gap-2 mb-2';
 
     const showFavoritesButton = document.createElement('button');
-    showFavoritesButton.textContent = t('showFavorites');
-    showFavoritesButton.className = 'flex items-center cursor-pointer text-blue-500 hover:text-blue-700';
-    showFavoritesButton.innerHTML = '<i class="fas fa-eye mr-2"></i>' + t('showFavorites');
-    showFavoritesButton.onclick = function() {
-        // Track show favorites event
+    showFavoritesButton.type = 'button';
+    showFavoritesButton.setAttribute('aria-label', t('showFavorites'));
+    showFavoritesButton.className =
+        'flex items-center cursor-pointer text-blue-500 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 rounded';
+    showFavoritesButton.innerHTML =
+        '<i class="fas fa-eye mr-2" aria-hidden="true"></i><span>' + t('showFavorites') + '</span>';
+    showFavoritesButton.addEventListener('click', function () {
         if (typeof umami !== 'undefined') {
             umami.track('show-favorite-routes');
         }
-        // Hide the routesContainer
-        document.getElementById('routesContainer').style.display = 'none';
+        const routesContainerEl = document.getElementById('routesContainer');
+        if (routesContainerEl) {
+            routesContainerEl.style.display = 'none';
+        }
         displayFavoriteRoutes(checkFavoriteRoutesCookie());
-    };
+    });
 
     const favoriteContainer = document.createElement('div');
     favoriteContainer.className = 'flex items-center';
@@ -497,35 +557,37 @@ function createFavouriteIcon() {
     favoriteText.id = 'favorite-text';
     favoriteText.className = 'mr-2 text-sm text-gray-500 dark:text-gray-400';
 
+    const favoriteBtn = document.createElement('button');
+    favoriteBtn.type = 'button';
+    favoriteBtn.id = 'favorite-toggle-btn';
+    favoriteBtn.className =
+        'p-0 border-0 bg-transparent cursor-pointer focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 rounded';
     const favoriteIcon = document.createElement('i');
     favoriteIcon.id = 'favorite-icon';
-    favoriteIcon.className = 'cursor-pointer text-xl';
-    
-    const origin = document.getElementById('origin').value;
-    const destination = document.getElementById('destination').value;
-    const favoriteRoutes = JSON.parse(getCookie('favoriteRoutes') || '[]');
-    const isFavorite = favoriteRoutes.some(route => 
-        route.origin.toLowerCase() === origin.toLowerCase() && 
-        route.destination.toLowerCase() === destination.toLowerCase()
-    );
-    
-    if (isFavorite) {
-        favoriteText.textContent = t('removeFavorites');
-        favoriteIcon.setAttribute('data-umami-event', 'remove-favorite');
-        favoriteIcon.className += ' fas fa-star text-yellow-400';
-    } else {
-        favoriteText.textContent = t('addFavorites');
-        favoriteIcon.setAttribute('data-umami-event', 'add-favorite');
-        favoriteIcon.className += ' far fa-star text-yellow-400';
-    }
+    favoriteIcon.setAttribute('aria-hidden', 'true');
+    favoriteIcon.className = 'text-xl';
+    favoriteBtn.appendChild(favoriteIcon);
 
-    favoriteIcon.onclick = function(event) {
-        event.stopPropagation(); // Prevent the click from bubbling up to the route div
+    const pair = getCurrentFavoritePair();
+    const favoriteRoutes = JSON.parse(getCookie('favoriteRoutes') || '[]');
+    const isFavorite = pair
+        ? favoriteRoutes.some(
+              route =>
+                  route.origin.toLowerCase() === pair.origin &&
+                  route.destination.toLowerCase() === pair.destination
+          )
+        : false;
+
+    favoriteBtn.addEventListener('click', function (event) {
+        event.stopPropagation();
         toggleFavorite();
-    };
+    });
 
     favoriteContainer.appendChild(favoriteText);
-    favoriteContainer.appendChild(favoriteIcon);
+    favoriteContainer.appendChild(favoriteBtn);
+
+    // Must not use getElementById here: toolbar is not in document until appended to #routesContainer.
+    applyFavoriteButtonState(favoriteText, favoriteIcon, favoriteBtn, isFavorite);
 
     container.appendChild(showFavoritesButton);
     container.appendChild(favoriteContainer);
@@ -546,6 +608,7 @@ function displayRoutes(routes, originStop, destinationStop) {
     routesContainer.innerHTML = '';
     routesContainer.classList.add('hidden');
     favouriteRoutesContainer.classList.add('hidden');
+    favouriteRoutesContainer.style.display = 'none';
     noRoutesMessage.classList.add('hidden');
 
     if (routes.length === 0) {
@@ -554,6 +617,7 @@ function displayRoutes(routes, originStop, destinationStop) {
     }
 
     routesContainer.classList.remove('hidden');
+    routesContainer.appendChild(createFavouriteIcon());
 
     var lastRoute = null;
     let adIndex = 0;
@@ -580,8 +644,15 @@ function displayRoutes(routes, originStop, destinationStop) {
             }
         }
         
-        // Final setup after all routes are processed
-        if (routesContainer.childElementCount === 0) {
+        // Final setup after all routes are processed (toolbar is always first, so use routeCount)
+        if (routeCount === 0) {
+            routesContainer.innerHTML = '';
+            routesContainer.classList.add('hidden');
+            routesContainer.style.display = 'none';
+            const noMsg = document.getElementById('noRoutesMessage');
+            if (noMsg) {
+                noMsg.classList.remove('hidden');
+            }
             displayNoRoutesMessage(originStop, destinationStop);
             return;
         }

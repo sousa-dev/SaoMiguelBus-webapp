@@ -49,21 +49,26 @@ function checkFavoriteRoutesCookie() {
 
 // Function to display favorite routes (implement this based on your UI requirements)
 function displayFavoriteRoutes(routes) {
-    // You might want to update a specific element in your HTML to show these routes
     const favoriteRoutesContainer = document.getElementById('favouriteRoutesContainer');
+    if (!favoriteRoutesContainer) {
+        return;
+    }
     favoriteRoutesContainer.innerHTML = '<h2 class="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-100" data-i18n="favoriteSearches">Rotas Favoritas</h2>';
     if (routes.length > 0) {
         routes.forEach(route => {
             favoriteRoutesContainer.appendChild(createFavoriteCard(route));
         });
-    }
-    else {
+    } else {
         const noFavouriteCard = document.createElement('div');
         noFavouriteCard.classList.add('bg-white', 'dark:bg-gray-900', 'rounded-lg', 'shadow-md', 'p-4', 'mb-4', 'flex', 'flex-col', 'items-center', 'cursor-pointer');
         noFavouriteCard.innerHTML = '<p class="text-lg text-gray-500 dark:text-gray-400" data-i18n="noFavoriteSearches">Não há rotas favoritas</p>';
         favoriteRoutesContainer.appendChild(noFavouriteCard);
     }
+    favoriteRoutesContainer.classList.remove('hidden');
     favoriteRoutesContainer.style.display = 'block';
+    if (typeof updatePageContent === 'function') {
+        updatePageContent();
+    }
 }
 
 // Renew favorite routes cookie to extend its lifetime
@@ -80,13 +85,9 @@ function renewFavoriteRoutesCache() {
     }
 }
 
-// Initialize favorite routes and renew cache
+// Initialize favorite routes and renew cache (panel content is built when user opens favorites)
 function initializeFavoriteRoutes() {
-    // Renew cache to extend lifetime
     renewFavoriteRoutesCache();
-    
-    // Display favorite routes
-    displayFavoriteRoutes(checkFavoriteRoutesCookie());
 }
 
 // Call the function to check for favorite routes when the page loads
