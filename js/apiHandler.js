@@ -530,7 +530,10 @@ function toggleFavorite() {
 
 function createFavouriteIcon() {
     const container = document.createElement('div');
-    container.className = 'flex flex-wrap justify-between items-center w-full gap-2 mb-2';
+    container.className =
+        'flex flex-wrap justify-between items-center w-full gap-2 mb-3 rounded-lg border border-amber-200/90 dark:border-amber-800/60 bg-amber-50/95 dark:bg-gray-800/90 px-3 py-2.5 shadow-sm';
+    container.setAttribute('role', 'region');
+    container.setAttribute('aria-label', t('favoriteSearches'));
 
     const showFavoritesButton = document.createElement('button');
     showFavoritesButton.type = 'button';
@@ -617,6 +620,8 @@ function displayRoutes(routes, originStop, destinationStop) {
     }
 
     routesContainer.classList.remove('hidden');
+    // searchRoutes() sets inline display:none; must clear before async route cards finish or toolbar stays invisible
+    routesContainer.style.display = 'block';
     routesContainer.appendChild(createFavouriteIcon());
 
     var lastRoute = null;
