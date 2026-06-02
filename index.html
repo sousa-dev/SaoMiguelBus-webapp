@@ -2233,7 +2233,7 @@
                 return;
             }
 
-            const apiUrl = `https://api.saomiguelbus.com/api/v1/ad?on=interstitial&platform=web`;
+            const apiUrl = `http://91.107.197.197:9000/api/v1/ad?on=interstitial&platform=web`;
 
             fetch(apiUrl)
                 .then(response => { 
@@ -2264,7 +2264,7 @@
                         if (adClickable) {
                             adClickable.addEventListener('click', function(event) {
                                 const adId = this.getAttribute("data-ad-id");
-                                const URL = "https://api.saomiguelbus.com/api/v1/ad/click?id=" + encodeURIComponent(adId);
+                                const URL = "http://91.107.197.197:9000/api/v1/ad/click?id=" + encodeURIComponent(adId);
                                 fetch(URL, {
                                     method: 'POST',
                                     headers: {

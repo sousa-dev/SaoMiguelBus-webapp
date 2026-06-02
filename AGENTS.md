@@ -23,6 +23,6 @@ Reports missing i18n keys per locale.
 
 ### Non-obvious caveats
 
-- The webapp hardcodes `https://api.saomiguelbus.com` for API calls. In local dev, it fetches from the production API (no local proxy needed for the webapp to function).
+- The webapp hardcodes `http://91.107.197.197:9000` for API calls.
 - There is no package.json — `browser-sync` is installed on-demand via `npx`.
 - The `desktop/` subdirectory is a separate desktop-optimized version of the same app.
