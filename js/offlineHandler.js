@@ -8,7 +8,7 @@ let infos = [];
 // Function to fetch API data
 async function fetchAPIData() {
     try {
-        const url = new URL('https://api.saomiguelbus.com/api/v2/webapp/load');
+        const url = new URL('https://staging.api.saomiguelbus.com/api/v2/webapp/load');
         if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
             url.searchParams.append('debug', 'true');
         }
