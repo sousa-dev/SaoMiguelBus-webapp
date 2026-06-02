@@ -29,7 +29,7 @@ function verifyExistingSubscription() {
     clearVerificationError();
     
     // Make API call with creation code
-    fetch('https://api.saomiguelbus.com/api/v1/subscription/verify/', {
+    fetch(`${API_BASE}/api/v1/subscription/verify/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

@@ -2070,6 +2070,7 @@
     </script>
 
     <!-- External JS Files -->
+    <script src="js/config.js"></script>
     <script src="js/offlineHandler.js" defer></script>
     <script src="js/apiHandler.js" defer></script>
     <script src="js/directionsApiHandler.js" defer></script>
@@ -2233,7 +2234,7 @@
                 return;
             }
 
-            const apiUrl = `https://api.saomiguelbus.com/api/v1/ad?on=interstitial&platform=web`;
+            const apiUrl = `${API_BASE}/api/v1/ad?on=interstitial&platform=web`;
 
             fetch(apiUrl)
                 .then(response => { 
@@ -2264,7 +2265,7 @@
                         if (adClickable) {
                             adClickable.addEventListener('click', function(event) {
                                 const adId = this.getAttribute("data-ad-id");
-                                const URL = "https://api.saomiguelbus.com/api/v1/ad/click?id=" + encodeURIComponent(adId);
+                                const URL = `${API_BASE}/api/v1/ad/click?id=` + encodeURIComponent(adId);
                                 fetch(URL, {
                                     method: 'POST',
                                     headers: {
