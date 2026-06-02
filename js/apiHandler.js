@@ -66,7 +66,7 @@ function getSearchParameters() {
 }
 
 function fetchAndPopulateStops() {
-    const url = 'http://91.107.197.197:9000/api/v2/stops';
+    const url = 'https://staging.api.saomiguelbus.com/api/v2/stops';
     fetch(url, {
         method: 'GET',
         headers: {
@@ -323,7 +323,7 @@ function searchRoutes(origin, destination, day, time) {
     document.getElementById('noRoutesMessage').style.display = 'none';
 
     const parameters = getUrlParameters(origin, destination, day, time);
-    const url = 'http://91.107.197.197:9000/api/v2/route?origin=' + encodeURIComponent(origin) 
+    const url = 'https://staging.api.saomiguelbus.com/api/v2/route?origin=' + encodeURIComponent(origin) 
     + '&destination=' + encodeURIComponent(destination) 
     + '&day=' + encodeURIComponent(day) 
     + '&start=' + encodeURIComponent(time);
@@ -367,7 +367,7 @@ function fetchAndDisplayRoutes(url, parameters) {
 }
 
 function postToStats(parameters) {
-    const url = `http://91.107.197.197:9000/api/v1/stat?request=get_route&origin=${encodeURIComponent(parameters.origin)}&destination=${encodeURIComponent(parameters.destination)}&time=${encodeURIComponent(parameters.time)}&language=${encodeURIComponent(currentLanguage)}&platform=web&day=${encodeURIComponent(parameters.day)}`;
+    const url = `https://staging.api.saomiguelbus.com/api/v1/stat?request=get_route&origin=${encodeURIComponent(parameters.origin)}&destination=${encodeURIComponent(parameters.destination)}&time=${encodeURIComponent(parameters.time)}&language=${encodeURIComponent(currentLanguage)}&platform=web&day=${encodeURIComponent(parameters.day)}`;
     fetch(url, {
         method: 'POST',
         headers: {
@@ -1075,7 +1075,7 @@ function loadAdBanner(on) {
     if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
         return; // Do nothing if the host is localhost or 127.0.0.1
     }
-    const apiUrl = `http://91.107.197.197:9000/api/v1/ad?on=${on}&platform=web`;  // Replace with your API endpoint
+    const apiUrl = `https://staging.api.saomiguelbus.com/api/v1/ad?on=${on}&platform=web`;  // Replace with your API endpoint
 
     fetch(apiUrl)
         .then(response => { 
@@ -1130,7 +1130,7 @@ function loadAdBanner(on) {
                 if (adImage) {
                     document.getElementById('ad-clickable').addEventListener('click', function(event) {
                         const adId = adImage.getAttribute("data-id");
-                        const URL = "http://91.107.197.197:9000/api/v1/ad/click?id="+ encodeURIComponent(adId);
+                        const URL = "https://staging.api.saomiguelbus.com/api/v1/ad/click?id="+ encodeURIComponent(adId);
                         fetch(URL, {
                             method: 'POST',
                             headers: {
@@ -1164,7 +1164,7 @@ function createInlineAdBanner(on, adIndex) {
             return;
         }
 
-        const apiUrl = `http://91.107.197.197:9000/api/v1/ad?on=${on}&platform=web`;
+        const apiUrl = `https://staging.api.saomiguelbus.com/api/v1/ad?on=${on}&platform=web`;
 
         fetch(apiUrl)
             .then(response => { 
@@ -1213,7 +1213,7 @@ function createInlineAdBanner(on, adIndex) {
                     if (adClickable) {
                         adClickable.addEventListener('click', function(event) {
                             const adId = this.getAttribute("data-ad-id");
-                            const URL = "http://91.107.197.197:9000/api/v1/ad/click?id=" + encodeURIComponent(adId);
+                            const URL = "https://staging.api.saomiguelbus.com/api/v1/ad/click?id=" + encodeURIComponent(adId);
                             fetch(URL, {
                                 method: 'POST',
                                 headers: {
@@ -1293,7 +1293,7 @@ function like_route(trip_id, route_number, routeElement) {
         requestCount = -1; // Remove the previous like
     }
 
-    fetch(`http://91.107.197.197:9000/api/v2/like/${trip_id}?type_route=${type_route}&count=${requestCount}`, {
+    fetch(`https://staging.api.saomiguelbus.com/api/v2/like/${trip_id}?type_route=${type_route}&count=${requestCount}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -1330,7 +1330,7 @@ function dislike_route(trip_id, route_number, routeElement) {
         requestCount = -1; // Remove the previous dislike
     }
 
-    fetch(`http://91.107.197.197:9000/api/v2/dislike/${trip_id}?type_route=${type_route}&count=${requestCount}`, {
+    fetch(`https://staging.api.saomiguelbus.com/api/v2/dislike/${trip_id}?type_route=${type_route}&count=${requestCount}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

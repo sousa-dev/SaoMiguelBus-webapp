@@ -23,6 +23,6 @@ Reports missing i18n keys per locale.
 
 ### Non-obvious caveats
 
-- The webapp hardcodes `http://91.107.197.197:9000` for API calls.
+- The webapp hardcodes `https://staging.api.saomiguelbus.com` for API calls.
 - There is no package.json — `browser-sync` is installed on-demand via `npx`.
 - The `desktop/` subdirectory is a separate desktop-optimized version of the same app.

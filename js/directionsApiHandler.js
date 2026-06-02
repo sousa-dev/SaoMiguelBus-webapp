@@ -90,7 +90,7 @@ function searchStepByStep(origin, destination, day, time) {
         currentLanguage = 'pt-pt';
     }
 
-    const url = 'http://91.107.197.197:9000/api/v1/gmaps?origin=' + encodeURIComponent(parameters.origin) 
+    const url = 'https://staging.api.saomiguelbus.com/api/v1/gmaps?origin=' + encodeURIComponent(parameters.origin) 
     + '&destination=' + encodeURIComponent(parameters.destination) 
     + '&day=' + encodeURIComponent(parameters.day) 
     + '&start=' + encodeURIComponent(parameters.time)
@@ -104,7 +104,7 @@ function searchStepByStep(origin, destination, day, time) {
 }
 
 function postToStatsStepByStep(parameters) {
-    const url = `http://91.107.197.197:9000/api/v1/stat?request=get_directions&origin=${encodeURIComponent(parameters.origin)}&destination=${encodeURIComponent(parameters.destination)}&time=${encodeURIComponent(parameters.time)}&language=${encodeURIComponent(currentLanguage)}&platform=web&day=${encodeURIComponent(parameters.day)}`;
+    const url = `https://staging.api.saomiguelbus.com/api/v1/stat?request=get_directions&origin=${encodeURIComponent(parameters.origin)}&destination=${encodeURIComponent(parameters.destination)}&time=${encodeURIComponent(parameters.time)}&language=${encodeURIComponent(currentLanguage)}&platform=web&day=${encodeURIComponent(parameters.day)}`;
     fetch(url, {
         method: 'POST',
         headers: {
