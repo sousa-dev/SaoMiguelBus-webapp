@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sao-miguel-bus-v2'; // Increment this version
+const CACHE_NAME = 'sao-miguel-bus-v3'; // Increment this version
 const urlsToCache = [
   //'/',
   '/index.html',
@@ -16,6 +16,9 @@ const urlsToCache = [
   '/locales/es.json',
   '/locales/fr.json',
   '/locales/de.json',
+  '/locales/it.json',
+  '/locales/uk.json',
+  '/locales/zh.json',
 ];
 
 // Install the service worker and cache resources
