@@ -1056,6 +1056,21 @@
             <!-- Future bus tracking features can be added here -->
         </div>
 
+        <!-- São Miguel Hub Teaser -->
+        <div id="hubTeaserCard" class="bg-gradient-to-r from-green-500 to-emerald-600 text-white p-4 rounded-lg shadow-md mb-4 mt-4 max-w-md mx-auto">
+            <div class="flex items-center mb-3">
+                <i class="fas fa-sparkles text-xl mr-2"></i>
+                <span class="font-semibold text-lg sm:text-xl" data-i18n="hubTeaserTitle">Algo novo está a chegar a São Miguel</span>
+            </div>
+            <a href="https://saomiguelhub.com" target="_blank" rel="noopener noreferrer"
+               class="inline-flex items-center bg-white text-green-600 font-semibold px-4 py-2 rounded-full hover:bg-green-50 transition duration-300"
+               data-i18n="hubTeaserCta"
+               data-umami-event="hub-teaser-cta">
+                Descobrir mais
+                <i class="fas fa-external-link-alt ml-2 text-sm"></i>
+            </a>
+        </div>
+
         <!-- Instructional Card for Home Section -->
         <div id="homeInstructionCard" class="bg-white dark:bg-gray-800 border-l-4 border-blue-500 dark:border-blue-600 text-blue-700 dark:text-blue-300 p-4 rounded-lg shadow-md mb-6 mt-4 sm:block max-w-md mx-auto">
             <div class="flex items-center mb-3">
@@ -2084,12 +2099,14 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             updateThemeToggleUI();
-            // Initially show the instructional cards
+            // Initially show the instructional cards and hub teaser
+            document.getElementById('hubTeaserCard').classList.remove('hidden');
             document.getElementById('homeInstructionCard').classList.remove('hidden');
             document.getElementById('routesInstructionCard').classList.remove('hidden');
 
-            // Hide Home Instructional Card after a search is performed
+            // Hide Home Instructional Card and hub teaser after a search is performed
             document.getElementById('btnSubmit').addEventListener('click', function() {
+                document.getElementById('hubTeaserCard').classList.add('hidden');
                 document.getElementById('homeInstructionCard').classList.add('hidden');
             });
 
