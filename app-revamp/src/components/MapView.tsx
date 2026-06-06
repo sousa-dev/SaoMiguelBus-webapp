@@ -65,6 +65,8 @@ function viewForCoords(
 function KeepSized() {
   const map = useMap();
   useEffect(() => {
+    // Guarantee page scroll never zooms the map (props are init-only in react-leaflet).
+    map.scrollWheelZoom.disable();
     const invalidate = () => map.invalidateSize();
     invalidate();
     const timers = [setTimeout(invalidate, 100), setTimeout(invalidate, 400), setTimeout(invalidate, 900)];
