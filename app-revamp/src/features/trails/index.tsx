@@ -14,11 +14,11 @@ import type { TrailSummary } from '@/lib/types';
 const DIFFICULTIES = ['', 'easy', 'moderate', 'hard'];
 const SHAPES = ['', 'circular', 'linear'];
 
-const DISTANCE_RANGES = [
-  { key: 'all', label: 'All', minLength: undefined, maxLength: undefined },
-  { key: 'short', label: '< 5 km', minLength: undefined, maxLength: 5 },
-  { key: 'mid', label: '5–10 km', minLength: 5, maxLength: 10 },
-  { key: 'long', label: '> 10 km', minLength: 10, maxLength: undefined },
+const DISTANCE_RANGES: { key: string; minLength?: number; maxLength?: number }[] = [
+  { key: 'all' },
+  { key: 'short', maxLength: 5 },
+  { key: 'mid', minLength: 5, maxLength: 10 },
+  { key: 'long', minLength: 10 },
 ];
 
 function difficultyTone(difficulty: string): 'success' | 'warning' | 'danger' | 'neutral' {
@@ -119,7 +119,12 @@ export function TrailsPage() {
           ))}
           <span className="mx-1 w-px self-stretch bg-border" />
           {DISTANCE_RANGES.map((r) => (
-            <Chip key={r.key} label={r.label} active={distance === r.key} onClick={() => setDistance(r.key)} />
+            <Chip
+              key={r.key}
+              label={r.key === 'all' ? t('trailsFilterAll') : t(`trailsDistance_${r.key}`)}
+              active={distance === r.key}
+              onClick={() => setDistance(r.key)}
+            />
           ))}
         </div>
       </div>
