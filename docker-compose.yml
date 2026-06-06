@@ -11,3 +11,12 @@ services:
     restart: unless-stopped
     ports:
       - "${WEBAPP_HOST_PORT:-80}:${WEBAPP_CONTAINER_PORT:-80}"
+    networks:
+      - default
+      - dokploy-network
+    labels:
+      - traefik.docker.network=dokploy-network
+
+networks:
+  dokploy-network:
+    external: true
