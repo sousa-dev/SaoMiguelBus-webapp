@@ -14,6 +14,7 @@ import {
   SegmentedControl,
 } from '@/components/ui';
 import { BackLink, PageHeader } from '@/components/layout/Page';
+import { Seo } from '@/components/Seo';
 import { fetchNewsArticle, fetchNewsArticles, fetchNewsSources } from '@/lib/api';
 import { formatAppDate, formatAppDateTime } from '@/lib/format';
 import { useDebounced } from '@/hooks/useDebounced';
@@ -65,6 +66,7 @@ export function NewsPage() {
 
   return (
     <>
+      <Seo modulePath="/news" />
       <PageHeader title={t('navBarNewsLabel')} subtitle={t('newsSubtitle', { defaultValue: 'Latest news and official notices from São Miguel.' })} />
 
       <div className="mb-5 flex flex-col gap-3">
@@ -133,6 +135,7 @@ export function NewsArticlePage() {
   const a = article.data;
   return (
     <>
+      <Seo title={a.title} description={a.summary?.slice(0, 200) || a.title} type="article" />
       <BackLink to="/news" label={t('navBarNewsLabel')} />
       <div className="mx-auto max-w-3xl">
         <Badge tone="primary">{a.source.name}</Badge>

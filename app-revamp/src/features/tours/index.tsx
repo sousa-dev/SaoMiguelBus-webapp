@@ -6,6 +6,7 @@ import { Clock, Compass, ExternalLink, Star } from 'lucide-react';
 
 import { Badge, Button, Card, CenteredSpinner, Chip, EmptyState, SearchField } from '@/components/ui';
 import { BackLink, PageHeader } from '@/components/layout/Page';
+import { Seo } from '@/components/Seo';
 import { fetchTour, fetchTours } from '@/lib/api';
 import {
   DEFAULT_TOUR_FILTERS,
@@ -77,6 +78,7 @@ export function ToursPage() {
 
   return (
     <>
+      <Seo modulePath="/tours" />
       <PageHeader title={t('toursTitle')} subtitle={t('toursSubtitle')} />
 
       <div className="mb-5 flex flex-col gap-3">
@@ -138,6 +140,7 @@ export function TourDetailPage() {
 
   return (
     <>
+      <Seo title={d.title} description={d.description?.slice(0, 200) || d.title} image={d.heroUrl || d.thumbnailUrl} type="article" />
       <BackLink to="/tours" label={t('navBarToursLabel')} />
       <div className="overflow-hidden rounded-2xl">
         <img src={d.heroUrl || d.thumbnailUrl} alt="" className="aspect-[16/7] w-full object-cover" />

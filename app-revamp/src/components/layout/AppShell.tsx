@@ -8,6 +8,7 @@ import { useBootstrap } from '@/hooks/useBootstrap';
 import { HUB_NAV, NAV_MODULES } from '@/lib/modules';
 import { cn } from '@/lib/cn';
 import { LanguagePicker } from '@/components/layout/LanguagePicker';
+import { AppInstallBanner, GetTheAppCard } from '@/components/AppInstall';
 
 function NavItems({ onNavigate }: { onNavigate?: () => void }) {
   const { t } = useTranslation();
@@ -61,8 +62,9 @@ export function AppShell() {
       <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col gap-6 border-r border-border bg-surface px-4 py-5 lg:flex">
         <Brand />
         <NavItems />
-        <div className="mt-auto px-1 text-xs text-muted">
-          <p>© {new Date().getFullYear()} São Miguel Bus</p>
+        <div className="mt-auto flex flex-col gap-3">
+          <GetTheAppCard />
+          <p className="px-1 text-xs text-muted">© {new Date().getFullYear()} São Miguel Bus</p>
         </div>
       </aside>
 
@@ -104,10 +106,15 @@ export function AppShell() {
           </div>
         </header>
 
-        <main key={location.pathname} className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 lg:px-8 lg:py-8">
+        <main
+          key={location.pathname}
+          className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 pb-44 lg:px-8 lg:py-8 lg:pb-8"
+        >
           <Outlet />
         </main>
       </div>
+
+      <AppInstallBanner />
     </div>
   );
 }

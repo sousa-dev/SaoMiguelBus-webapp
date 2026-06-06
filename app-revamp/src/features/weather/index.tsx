@@ -6,6 +6,7 @@ import { CloudSun, Droplets, Wind } from 'lucide-react';
 
 import { Card, CenteredSpinner, Chip, EmptyState, SearchField } from '@/components/ui';
 import { BackLink, PageHeader } from '@/components/layout/Page';
+import { Seo } from '@/components/Seo';
 import { fetchWeatherParish, fetchWeatherParishes } from '@/lib/api';
 import { formatAppDate, normalizeSearchText } from '@/lib/format';
 import { weatherCodeEmoji, weatherCodeLabelKey } from '@/lib/weather-codes';
@@ -58,6 +59,7 @@ export function WeatherPage() {
 
   return (
     <>
+      <Seo modulePath="/weather" />
       <PageHeader title={t('navBarWeatherLabel')} subtitle={parishes.data?.attribution} />
 
       <div className="mb-5 flex flex-col gap-3">
@@ -111,6 +113,7 @@ export function WeatherDetailPage() {
   const c = p.current;
   return (
     <>
+      <Seo title={`${t('navBarWeatherLabel')} — ${p.name}`} description={`${p.name}, ${p.concelho}`} />
       <BackLink to="/weather" label={t('navBarWeatherLabel')} />
       <PageHeader title={p.name} subtitle={p.concelho} />
 

@@ -4,6 +4,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowRightLeft, Bus, Clock, Route as RouteIcon, Search, Star } from 'lucide-react';
 
 import { Button, Card, CenteredSpinner, EmptyState } from '@/components/ui';
+import { Seo } from '@/components/Seo';
 import { PageHeader } from '@/components/layout/Page';
 import { useBootstrap } from '@/hooks/useBootstrap';
 import { resolveDayType } from '@/lib/format';
@@ -83,6 +84,7 @@ export function TransitPage() {
 
   return (
     <>
+      <Seo modulePath="/transit" />
       <PageHeader title={t('navBarSearchLabel')} subtitle={t('homeInstructionsTitle')} />
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[380px_1fr]">

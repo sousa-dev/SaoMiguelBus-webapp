@@ -6,6 +6,7 @@ import { Check, MapPin, ThumbsDown, ThumbsUp, TriangleAlert } from 'lucide-react
 
 import { Badge, Button, Card, CenteredSpinner, Chip, EmptyState, SegmentedControl } from '@/components/ui';
 import { BackLink, PageHeader } from '@/components/layout/Page';
+import { Seo } from '@/components/Seo';
 import { MapView, type MapPoint } from '@/components/MapView';
 import {
   confirmTrafficReport,
@@ -66,6 +67,7 @@ export function TrafficPage() {
 
   return (
     <>
+      <Seo modulePath="/traffic" />
       <PageHeader
         title={t('homeTrafficTitle')}
         subtitle={t('trafficSubtitle', { defaultValue: 'Community-reported radars, accidents and hazards.' })}
@@ -143,6 +145,7 @@ export function TrafficDetailPage() {
   const r = report.data;
   return (
     <>
+      <Seo title={`${r.category.name}${r.road ? ` — ${r.road}` : ''}`} description={r.description || r.category.name} />
       <BackLink to="/traffic" label={t('homeTrafficTitle')} />
       <PageHeader title={r.category.name} subtitle={r.road || undefined} />
 

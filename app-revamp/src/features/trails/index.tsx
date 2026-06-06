@@ -6,6 +6,7 @@ import { Download, Mountain, Navigation, Route as RouteIcon } from 'lucide-react
 
 import { Badge, Button, Card, CenteredSpinner, Chip, EmptyState, SearchField } from '@/components/ui';
 import { BackLink, PageHeader } from '@/components/layout/Page';
+import { Seo } from '@/components/Seo';
 import { MapView, type MapPoint } from '@/components/MapView';
 import { fetchTrail, fetchTrails } from '@/lib/api';
 import { normalizeSearchText } from '@/lib/format';
@@ -89,6 +90,7 @@ export function TrailsPage() {
 
   return (
     <>
+      <Seo modulePath="/trails" />
       <PageHeader title={t('navBarTrailsLabel')} subtitle={trails.data?.attribution} />
 
       <div className="mb-5 flex flex-col gap-3">
@@ -173,6 +175,7 @@ export function TrailDetailPage() {
 
   return (
     <>
+      <Seo title={d.name} description={(description || d.name).slice(0, 200)} image={d.mapImageUrl} type="article" />
       <BackLink to="/trails" label={t('navBarTrailsLabel')} />
       <PageHeader
         title={d.name}

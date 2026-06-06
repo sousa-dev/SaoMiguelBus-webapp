@@ -12,8 +12,11 @@ import {
 } from 'lucide-react';
 
 import { Badge, Card } from '@/components/ui';
+import { Seo } from '@/components/Seo';
 import { resolveEnabledModules } from '@/config/island';
 import { useBootstrap } from '@/hooks/useBootstrap';
+import { SITE } from '@/lib/seo-config';
+import { getSiteUrl } from '@/lib/site';
 import {
   fetchNewsArticles,
   fetchSeismicEvents,
@@ -85,8 +88,22 @@ export function HomePage() {
   const featuredTour = tours.data?.[0];
   const featuredTrail = trails.data?.trails?.[0];
 
+  const websiteJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: SITE.name,
+    url: getSiteUrl(),
+    inLanguage: i18n.language?.split('-')[0] ?? 'pt',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: `${getSiteUrl()}/transit?origin={origin}&destination={destination}`,
+      'query-input': 'required name=origin',
+    },
+  };
+
   return (
     <div className="flex flex-col gap-6">
+      <Seo home jsonLd={websiteJsonLd} />
       <div>
         <h1 className="text-3xl font-extrabold tracking-tight text-content">
           {t(greetingKey())} 👋

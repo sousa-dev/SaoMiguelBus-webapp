@@ -4,6 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Bus, Footprints, MapPin, Navigation, Search } from 'lucide-react';
 
 import { Badge, Button, Card, CenteredSpinner, EmptyState } from '@/components/ui';
+import { Seo } from '@/components/Seo';
 import { BackLink, PageHeader } from '@/components/layout/Page';
 import { useBootstrap } from '@/hooks/useBootstrap';
 import { resolveDayType } from '@/lib/format';
@@ -95,6 +96,7 @@ export function DirectionsPage() {
 
   return (
     <>
+      <Seo title={t('navBarRoutesLabel', { defaultValue: 'Directions' })} description={t('directionsSubtitle', { defaultValue: 'Step-by-step transit directions powered by Google Maps.' })} />
       <BackLink to="/transit" label={t('navBarSearchLabel')} />
       <PageHeader title={t('navBarRoutesLabel', { defaultValue: 'Directions' })} subtitle={t('directionsSubtitle', { defaultValue: 'Step-by-step transit directions powered by Google Maps.' })} />
 

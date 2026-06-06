@@ -6,6 +6,7 @@ import { Activity, MapPin, Waves } from 'lucide-react';
 
 import { Badge, Card, CenteredSpinner, Chip, EmptyState, SegmentedControl } from '@/components/ui';
 import { BackLink, PageHeader } from '@/components/layout/Page';
+import { Seo } from '@/components/Seo';
 import { MapView, type MapPoint } from '@/components/MapView';
 import { fetchSeismicEvent, fetchSeismicEvents } from '@/lib/api';
 import { formatAppDateTime, formatRelativeTime } from '@/lib/format';
@@ -81,6 +82,7 @@ export function EarthquakesPage() {
 
   return (
     <>
+      <Seo modulePath="/earthquakes" />
       <PageHeader
         title={t('navBarEarthquakesLabel')}
         actions={
@@ -150,6 +152,7 @@ export function EarthquakeDetailPage() {
 
   return (
     <>
+      <Seo title={`M${e.magnitude.toFixed(1)} — ${headline}`} description={`${t(seismicMagnitudeLabelKey(e.magnitude))} · ${headline}`} type="article" />
       <BackLink to="/earthquakes" label={t('navBarEarthquakesLabel')} />
       <PageHeader title={t('seismicDetailTitle', { defaultValue: 'Earthquake' })} />
 

@@ -969,5 +969,15 @@
     "trailNearestStop": "Paragem mais próxima",
     "trailNotFound": "Trilho não encontrado",
     "weatherEmpty": "Nenhuma freguesia encontrada",
-    "weatherNotFound": "Freguesia não encontrada"
+    "weatherNotFound": "Freguesia não encontrada",
+    "appInstallTitle": "Instala a app São Miguel Bus",
+    "appInstallBodyAndroid": "Mais rápido, com alertas e mapas offline.",
+    "appInstallBodyIos": "Mais rápido, com alertas e mapas offline.",
+    "appInstallDesktopBody": "Leva o São Miguel Bus contigo no telemóvel.",
+    "appInstallGetApp": "Obter a app",
+    "appInstallAndroid": "Google Play",
+    "appInstallIos": "App Store",
+    "appInstallStorePrefix": "Descarregar na",
+    "appInstallComingSoon": "Brevemente",
+    "appInstallDismiss": "Dispensar"
 }

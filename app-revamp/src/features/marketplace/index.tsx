@@ -6,6 +6,7 @@ import { Globe, Mail, MessageCircle, Phone, Star, Store } from 'lucide-react';
 
 import { Badge, Button, Card, CenteredSpinner, Chip, EmptyState, SearchField, StarRating } from '@/components/ui';
 import { BackLink, PageHeader } from '@/components/layout/Page';
+import { Seo } from '@/components/Seo';
 import {
   fetchMarketplaceCategories,
   fetchProvider,
@@ -62,6 +63,7 @@ export function MarketplacePage() {
 
   return (
     <>
+      <Seo modulePath="/marketplace" />
       <PageHeader title={t('navBarMarketplaceLabel')} subtitle={t('marketplaceSubtitle', { defaultValue: 'Find trusted local service providers.' })} />
 
       <div className="mb-5 flex flex-col gap-3">
@@ -161,6 +163,7 @@ export function MarketplaceProviderPage() {
   const p = provider.data;
   return (
     <>
+      <Seo title={`${p.name} — ${p.category.name}`} description={p.bio?.slice(0, 200) || `${p.name}, ${p.category.name}`} type="article" />
       <BackLink to="/marketplace" label={t('navBarMarketplaceLabel')} />
 
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1fr_320px]">

@@ -969,5 +969,15 @@
     "trailNearestStop": "Nearest bus stop",
     "trailNotFound": "Trail not found",
     "weatherEmpty": "No parishes found",
-    "weatherNotFound": "Parish not found"
+    "weatherNotFound": "Parish not found",
+    "appInstallTitle": "Get the São Miguel Bus app",
+    "appInstallBodyAndroid": "Faster, with alerts and offline maps.",
+    "appInstallBodyIos": "Faster, with alerts and offline maps.",
+    "appInstallDesktopBody": "Take São Miguel Bus with you on your phone.",
+    "appInstallGetApp": "Get the app",
+    "appInstallAndroid": "Google Play",
+    "appInstallIos": "App Store",
+    "appInstallStorePrefix": "Download on",
+    "appInstallComingSoon": "Coming soon",
+    "appInstallDismiss": "Dismiss"
 }

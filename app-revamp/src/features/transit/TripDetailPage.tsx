@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Bus, ThumbsDown, ThumbsUp } from 'lucide-react';
 
 import { Badge, Button, Card, CenteredSpinner, EmptyState } from '@/components/ui';
+import { Seo } from '@/components/Seo';
 import { BackLink, PageHeader } from '@/components/layout/Page';
 import { displayRouteNumber, splitStopLabel } from '@/lib/format';
 import { useTripDetail, useTripVote } from '@/features/transit/hooks';
@@ -30,6 +31,7 @@ export function TripDetailPage() {
 
   return (
     <>
+      <Seo title={`${t('routeLabel', { defaultValue: 'Route' })} ${displayRouteNumber(data.route)}`} />
       <BackLink to="/transit" label={t('navBarSearchLabel')} />
       <PageHeader
         title={`${t('routeLabel', { defaultValue: 'Route' })} ${displayRouteNumber(data.route)}`}

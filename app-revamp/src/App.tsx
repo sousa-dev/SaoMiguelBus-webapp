@@ -12,13 +12,23 @@ import { TourDetailPage, ToursPage } from '@/features/tours';
 import { TrailDetailPage, TrailsPage } from '@/features/trails';
 import { TrafficDetailPage, TrafficPage } from '@/features/traffic';
 import { MarketplacePage, MarketplaceProviderPage } from '@/features/marketplace';
+import { resolveSubdomainPath } from '@/lib/subdomain';
+
+/** On a module subdomain (e.g. radares.<host>) deep-link into that module; else Home. */
+function IndexRoute() {
+  const subdomainPath = resolveSubdomainPath();
+  if (subdomainPath) {
+    return <Navigate to={subdomainPath} replace />;
+  }
+  return <HomePage />;
+}
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <AppShell />,
     children: [
-      { index: true, element: <HomePage /> },
+      { index: true, element: <IndexRoute /> },
       { path: 'transit', element: <TransitPage /> },
       { path: 'transit/directions', element: <DirectionsPage /> },
       { path: 'transit/trip/:tripId', element: <TripDetailPage /> },
