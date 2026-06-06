@@ -1,0 +1,6 @@
+# Only the new React app is needed to build the Docker image.
+*
+!app-revamp
+app-revamp/node_modules
+app-revamp/dist
+**/.git
