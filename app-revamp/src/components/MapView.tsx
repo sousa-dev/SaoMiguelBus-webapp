@@ -30,43 +30,45 @@ function collectBounds(points: MapPoint[], lines: MapLine[]): [number, number][]
 }
 
 /**
- * Leaflet only measures its container once on init. When the map mounts before
- * the page has settled (stacked cards, images loading, fonts), tiles render for
- * the wrong size and leave grey gaps. Re-measure on mount and on container resize.
+ * Leaflet measures its container only on init. When a map mounts before the page
+ * has settled (stacked cards below the fold, images/fonts loading), tiles render
+ * for the wrong size (grey gaps) AND fitBounds computes the wrong zoom (world
+ * view). So we re-measure (invalidateSize) and re-fit whenever the container size
+ * changes — on mount, after settle timers, and via a ResizeObserver.
  */
-function AutoResize() {
+function AutoFit({ coords, fit }: { coords: [number, number][]; fit: boolean }) {
   const map = useMap();
+  const key = coords.map((c) => `${c[0].toFixed(5)},${c[1].toFixed(5)}`).join('|');
+
   useEffect(() => {
-    const invalidate = () => map.invalidateSize();
-    const timers = [setTimeout(invalidate, 0), setTimeout(invalidate, 200), setTimeout(invalidate, 600)];
-    const observer = new ResizeObserver(() => invalidate());
+    const apply = () => {
+      map.invalidateSize();
+      if (!fit || coords.length === 0) return;
+      if (coords.length === 1) {
+        map.setView(coords[0], 13);
+        return;
+      }
+      const lats = coords.map((c) => c[0]);
+      const lngs = coords.map((c) => c[1]);
+      const bounds: LatLngBoundsExpression = [
+        [Math.min(...lats), Math.min(...lngs)],
+        [Math.max(...lats), Math.max(...lngs)],
+      ];
+      map.fitBounds(bounds, { padding: [36, 36], maxZoom: 14 });
+    };
+
+    apply();
+    const timers = [setTimeout(apply, 200), setTimeout(apply, 600)];
+    const observer = new ResizeObserver(() => apply());
     observer.observe(map.getContainer());
-    window.addEventListener('resize', invalidate);
+    window.addEventListener('resize', apply);
     return () => {
       timers.forEach(clearTimeout);
       observer.disconnect();
-      window.removeEventListener('resize', invalidate);
+      window.removeEventListener('resize', apply);
     };
-  }, [map]);
-  return null;
-}
-
-function FitToContent({ coords }: { coords: [number, number][] }) {
-  const map = useMap();
-  useEffect(() => {
-    if (coords.length === 0) return;
-    if (coords.length === 1) {
-      map.setView(coords[0], 12);
-      return;
-    }
-    const lats = coords.map((c) => c[0]);
-    const lngs = coords.map((c) => c[1]);
-    const bounds: LatLngBoundsExpression = [
-      [Math.min(...lats), Math.min(...lngs)],
-      [Math.max(...lats), Math.max(...lngs)],
-    ];
-    map.fitBounds(bounds, { padding: [36, 36], maxZoom: 14 });
-  }, [map, coords]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [map, key, fit]);
   return null;
 }
 
@@ -133,8 +135,7 @@ export function MapView({
           {p.popup ? <Popup>{p.popup}</Popup> : null}
         </CircleMarker>
       ))}
-      <AutoResize />
-      {fit ? <FitToContent coords={boundsCoords} /> : null}
+      <AutoFit coords={boundsCoords} fit={fit} />
     </MapContainer>
   );
 }
