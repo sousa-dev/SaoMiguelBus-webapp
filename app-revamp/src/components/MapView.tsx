@@ -1,7 +1,6 @@
 import { MapContainer, TileLayer, CircleMarker, Polyline, Popup, useMap } from 'react-leaflet';
-import type { LatLngBoundsExpression } from 'leaflet';
 import type { ReactNode } from 'react';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 
 import { staticIslandConfig } from '@/config/island';
 
@@ -21,7 +20,7 @@ export interface MapLine {
   weight?: number;
 }
 
-function collectBounds(points: MapPoint[], lines: MapLine[]): [number, number][] {
+function collectCoords(points: MapPoint[], lines: MapLine[]): [number, number][] {
   const coords: [number, number][] = points.map((p) => [p.lat, p.lng]);
   for (const line of lines) {
     coords.push(...line.coords);
@@ -30,64 +29,62 @@ function collectBounds(points: MapPoint[], lines: MapLine[]): [number, number][]
 }
 
 /**
- * Leaflet measures its container only on init. When a map mounts before the page
- * has settled (stacked cards below the fold, images/fonts loading), tiles render
- * for the wrong size (grey gaps) AND fitBounds computes the wrong zoom (world
- * view). So we re-measure (invalidateSize) and re-fit whenever the container size
- * changes — on mount, after settle timers, and via a ResizeObserver.
+ * Deterministically derive a center + zoom from a bounding box, WITHOUT relying on
+ * the container size. This avoids Leaflet's flaky fitBounds behaviour when a map
+ * mounts below the fold / is scrolled (which caused world-zoom + tile gaps).
  */
-function AutoFit({ coords, fit }: { coords: [number, number][]; fit: boolean }) {
+function viewForCoords(
+  coords: [number, number][],
+  fallback: { lat: number; lng: number },
+  fallbackZoom: number,
+): { center: [number, number]; zoom: number } {
+  if (coords.length === 0) {
+    return { center: [fallback.lat, fallback.lng], zoom: fallbackZoom };
+  }
+  const lats = coords.map((c) => c[0]);
+  const lngs = coords.map((c) => c[1]);
+  const minLat = Math.min(...lats);
+  const maxLat = Math.max(...lats);
+  const minLng = Math.min(...lngs);
+  const maxLng = Math.max(...lngs);
+  const center: [number, number] = [(minLat + maxLat) / 2, (minLng + maxLng) / 2];
+  if (coords.length === 1) {
+    return { center, zoom: 13 };
+  }
+  const span = Math.max(maxLat - minLat, (maxLng - minLng) * Math.cos((center[0] * Math.PI) / 180));
+  const zoom = span > 0.6 ? 9 : span > 0.3 ? 10 : span > 0.15 ? 11 : span > 0.07 ? 12 : span > 0.03 ? 13 : 14;
+  return { center, zoom };
+}
+
+/**
+ * Leaflet measures its container once on init; if that happens before layout
+ * settles, tiles render for the wrong size and leave grey gaps. Re-measure on
+ * mount, after a couple of settle ticks, and whenever the container resizes.
+ * (View/zoom is fixed up front, so this never changes what the map shows.)
+ */
+function KeepSized() {
   const map = useMap();
-  const fittedRef = useRef(false);
-  const key = coords.map((c) => `${c[0].toFixed(5)},${c[1].toFixed(5)}`).join('|');
-
   useEffect(() => {
-    // New content (route changed): allow exactly one fit again.
-    fittedRef.current = false;
-    const container = map.getContainer();
-
-    // Fit once, only when the container actually has a size. This avoids the
-    // world-zoom bug when a map mounts below the fold with a 0-height container.
-    const tryFit = () => {
-      map.invalidateSize();
-      if (fittedRef.current || !fit || coords.length === 0) return;
-      if (container.offsetWidth === 0 || container.offsetHeight === 0) return;
-      if (coords.length === 1) {
-        map.setView(coords[0], 13);
-      } else {
-        const lats = coords.map((c) => c[0]);
-        const lngs = coords.map((c) => c[1]);
-        const bounds: LatLngBoundsExpression = [
-          [Math.min(...lats), Math.min(...lngs)],
-          [Math.max(...lats), Math.max(...lngs)],
-        ];
-        map.fitBounds(bounds, { padding: [36, 36], maxZoom: 14 });
-      }
-      fittedRef.current = true;
-    };
-
-    tryFit();
-    const timers = [setTimeout(tryFit, 100), setTimeout(tryFit, 400), setTimeout(tryFit, 900)];
-    // Observe size changes: re-measure tiles, and fit once the container is sized.
-    const observer = new ResizeObserver(() => tryFit());
-    observer.observe(container);
-    const onWinResize = () => map.invalidateSize();
-    window.addEventListener('resize', onWinResize);
+    const invalidate = () => map.invalidateSize();
+    invalidate();
+    const timers = [setTimeout(invalidate, 100), setTimeout(invalidate, 400), setTimeout(invalidate, 900)];
+    const observer = new ResizeObserver(invalidate);
+    observer.observe(map.getContainer());
+    window.addEventListener('resize', invalidate);
     return () => {
       timers.forEach(clearTimeout);
       observer.disconnect();
-      window.removeEventListener('resize', onWinResize);
+      window.removeEventListener('resize', invalidate);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [map, key, fit]);
+  }, [map]);
   return null;
 }
 
 export function MapView({
   points = [],
   lines = [],
-  center = staticIslandConfig.mapCenter,
-  zoom = 10,
+  center,
+  zoom,
   className,
   fit = true,
   interactive = true,
@@ -101,12 +98,16 @@ export function MapView({
   /** When false, renders a static (non-pannable) preview map — used for hub cards. */
   interactive?: boolean;
 }) {
-  const boundsCoords = collectBounds(points, lines);
+  const fallbackCenter = center ?? staticIslandConfig.mapCenter;
+  const fallbackZoom = zoom ?? 10;
+  const view = fit
+    ? viewForCoords(collectCoords(points, lines), fallbackCenter, fallbackZoom)
+    : { center: [fallbackCenter.lat, fallbackCenter.lng] as [number, number], zoom: fallbackZoom };
 
   return (
     <MapContainer
-      center={[center.lat, center.lng]}
-      zoom={zoom}
+      center={view.center}
+      zoom={view.zoom}
       className={className}
       style={{ height: '100%', width: '100%' }}
       scrollWheelZoom={interactive}
@@ -146,7 +147,7 @@ export function MapView({
           {p.popup ? <Popup>{p.popup}</Popup> : null}
         </CircleMarker>
       ))}
-      <AutoFit coords={boundsCoords} fit={fit} />
+      <KeepSized />
     </MapContainer>
   );
 }
