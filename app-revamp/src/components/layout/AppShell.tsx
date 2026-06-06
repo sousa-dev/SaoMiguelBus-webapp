@@ -46,7 +46,7 @@ function Brand() {
       <img src="/logo.png" alt="" className="h-9 w-9 rounded-xl" />
       <div className="leading-tight">
         <p className="text-[15px] font-extrabold text-content">São Miguel Bus</p>
-        <p className="text-xs text-muted">Azores Hub</p>
+        <p className="text-xs text-muted">São Miguel Hub</p>
       </div>
     </div>
   );

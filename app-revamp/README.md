@@ -1,6 +1,6 @@
 # São Miguel Bus — Desktop Web App
 
-A desktop-focused React web application for **São Miguel Bus / Azores Hub**, intended to be
+A desktop-focused React web application for **São Miguel Bus / São Miguel Hub**, intended to be
 served at `app.<host>`. It is a faithful web port of the Expo (React Native) app in the
 [`SaoMiguelBus`](https://github.com/sousa-dev/SaoMiguelBus) repository and talks to the same
 `/api/v3` backend ([`SaoMiguelBus-api`](https://github.com/sousa-dev/SaoMiguelBus-api)).
