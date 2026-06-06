@@ -1,6 +1,16 @@
-# Only the new React app is needed to build the Docker image.
-*
-!app-revamp
-app-revamp/node_modules
-app-revamp/dist
-**/.git
+# Build artifacts and deps (reinstalled/rebuilt in the image)
+node_modules
+dist
+dist-ssr
+.vite
+
+# The deprecated legacy PWA is not part of the new app build
+legacy
+
+# VCS / meta
+.git
+.github
+.gitignore
+.env
+.env.*.local
+*.log
