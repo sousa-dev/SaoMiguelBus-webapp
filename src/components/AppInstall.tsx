@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Smartphone, X } from 'lucide-react';
+import { Apple, Smartphone, X } from 'lucide-react';
 
 import { cn } from '@/lib/cn';
 import { detectPlatform, type Platform } from '@/lib/platform';
@@ -30,7 +30,7 @@ function mobileStorePlatform(): Exclude<Platform, 'desktop'> {
   return platform === 'desktop' ? 'android' : platform;
 }
 
-function StoreBadge({
+function StoreButton({
   platform,
   className,
 }: {
@@ -40,23 +40,39 @@ function StoreBadge({
   const { t } = useTranslation();
   const configured = isStoreConfigured(platform);
   const href = storeLink(platform);
-  const badgeSrc = platform === 'ios' ? '/badges/app-store.svg' : '/badges/google-play.svg';
-  const badgeAlt = platform === 'ios' ? t('appInstallIos') : t('appInstallAndroid');
+  const Icon = platform === 'ios' ? Apple : Smartphone;
+  const storeLabel = platform === 'ios' ? t('appInstallIos') : t('appInstallAndroid');
+
+  const inner = configured ? (
+    <>
+      <Icon size={18} />
+      <span className="flex flex-col items-start leading-tight">
+        <span className="text-[10px] font-medium opacity-80">{t('appInstallStorePrefix')}</span>
+        <span className="text-sm font-bold">{storeLabel}</span>
+      </span>
+    </>
+  ) : (
+    <>
+      <Icon size={18} />
+      <span className="flex flex-col items-start leading-tight">
+        <span className="text-[10px] font-medium opacity-80">{storeLabel}</span>
+        <span className="text-sm font-bold">{t('appInstallComingSoon')}</span>
+      </span>
+    </>
+  );
 
   return (
     <a
       href={href}
       target="_blank"
       rel="noreferrer"
-      className={cn('relative block w-full max-w-[220px] transition hover:opacity-90', className)}
-      aria-label={configured ? badgeAlt : `${badgeAlt} — ${t('appInstallComingSoon')}`}
+      className={cn(
+        'inline-flex items-center gap-2 rounded-xl bg-secondary px-4 py-2 text-white transition hover:opacity-90',
+        !configured && 'border border-white/25 bg-secondary/80',
+        className,
+      )}
     >
-      <img src={badgeSrc} alt="" className={cn('h-12 w-full object-contain', !configured && 'opacity-55')} />
-      {!configured ? (
-        <span className="absolute inset-0 flex items-center justify-center rounded-md bg-black/45 px-2 text-center text-xs font-bold uppercase tracking-wide text-white">
-          {t('appInstallComingSoon')}
-        </span>
-      ) : null}
+      {inner}
     </a>
   );
 }
@@ -104,8 +120,8 @@ export function AppInstallBanner() {
           <X size={18} />
         </button>
       </div>
-      <div className="mt-3 flex justify-center">
-        <StoreBadge platform={platform} />
+      <div className="mt-3 flex">
+        <StoreButton platform={platform} className="w-full justify-center" />
       </div>
     </div>
   );
@@ -121,9 +137,9 @@ export function GetTheAppCard() {
         <p className="text-sm font-bold text-content">{t('appInstallGetApp')}</p>
       </div>
       <p className="mb-3 text-xs text-muted">{t('appInstallDesktopBody')}</p>
-      <div className="flex flex-col items-center gap-2">
-        <StoreBadge platform="ios" />
-        <StoreBadge platform="android" />
+      <div className="flex flex-col gap-2">
+        <StoreButton platform="ios" className="w-full justify-center py-1.5" />
+        <StoreButton platform="android" className="w-full justify-center py-1.5" />
       </div>
     </div>
   );
