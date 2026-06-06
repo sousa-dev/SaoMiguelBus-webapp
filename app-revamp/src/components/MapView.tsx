@@ -110,7 +110,8 @@ export function MapView({
       zoom={view.zoom}
       className={className}
       style={{ height: '100%', width: '100%' }}
-      scrollWheelZoom={interactive}
+      /* Never hijack page scroll — users zoom with the +/- control or double-click. */
+      scrollWheelZoom={false}
       dragging={interactive}
       doubleClickZoom={interactive}
       zoomControl={interactive}
