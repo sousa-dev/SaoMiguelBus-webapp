@@ -1,6 +1,6 @@
 ---
 title: "fix: Hub map stacking, hub parity, sismos archipelago, map defaults"
-status: active
+status: completed
 date: 2026-06-06
 type: fix
 target_repo: SaoMiguelBus-webapp
