@@ -4,7 +4,7 @@ import { Apple, Smartphone, X } from 'lucide-react';
 
 import { cn } from '@/lib/cn';
 import { detectPlatform, type Platform } from '@/lib/platform';
-import { hasAnyStoreLink, storeUrl } from '@/lib/app-links';
+import { isStoreConfigured, storeLink } from '@/lib/app-links';
 
 const DISMISS_KEY = 'smb_install_dismissed';
 
@@ -16,34 +16,40 @@ function StoreButton({
   className?: string;
 }) {
   const { t } = useTranslation();
-  const url = storeUrl(platform);
+  const configured = isStoreConfigured(platform);
+  const href = storeLink(platform);
   const Icon = platform === 'ios' ? Apple : Smartphone;
-  const label = platform === 'ios' ? t('appInstallIos') : t('appInstallAndroid');
+  const storeLabel = platform === 'ios' ? t('appInstallIos') : t('appInstallAndroid');
 
-  const inner = (
+  const inner = configured ? (
     <>
       <Icon size={18} />
       <span className="flex flex-col items-start leading-tight">
         <span className="text-[10px] font-medium opacity-80">{t('appInstallStorePrefix')}</span>
-        <span className="text-sm font-bold">{label}</span>
+        <span className="text-sm font-bold">{storeLabel}</span>
+      </span>
+    </>
+  ) : (
+    <>
+      <Icon size={18} />
+      <span className="flex flex-col items-start leading-tight">
+        <span className="text-[10px] font-medium opacity-80">{storeLabel}</span>
+        <span className="text-sm font-bold">{t('appInstallComingSoon')}</span>
       </span>
     </>
   );
 
-  const base = cn(
-    'inline-flex items-center gap-2 rounded-xl bg-secondary px-4 py-2 text-white transition',
-    className,
-  );
-
-  if (!url) {
-    return (
-      <span className={cn(base, 'cursor-default opacity-70')} title={t('appInstallComingSoon')}>
-        {inner}
-      </span>
-    );
-  }
   return (
-    <a href={url} target="_blank" rel="noreferrer" className={cn(base, 'hover:opacity-90')}>
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      className={cn(
+        'inline-flex items-center gap-2 rounded-xl bg-secondary px-4 py-2 text-white transition hover:opacity-90',
+        !configured && 'border border-white/25 bg-secondary/80',
+        className,
+      )}
+    >
       {inner}
     </a>
   );
@@ -100,8 +106,6 @@ export function AppInstallBanner() {
 /** Subtle "get the app" card for the desktop sidebar footer. */
 export function GetTheAppCard() {
   const { t } = useTranslation();
-  // Always offer both stores on desktop so users can grab it on their phone.
-  void hasAnyStoreLink();
   return (
     <div className="rounded-2xl border border-border bg-surface-variant p-3">
       <div className="mb-2 flex items-center gap-2">
