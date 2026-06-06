@@ -1,7 +1,7 @@
 import { MapContainer, TileLayer, CircleMarker, Polyline, Popup, useMap } from 'react-leaflet';
 import type { LatLngBoundsExpression } from 'leaflet';
 import type { ReactNode } from 'react';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { staticIslandConfig } from '@/config/island';
 
@@ -38,34 +38,45 @@ function collectBounds(points: MapPoint[], lines: MapLine[]): [number, number][]
  */
 function AutoFit({ coords, fit }: { coords: [number, number][]; fit: boolean }) {
   const map = useMap();
+  const fittedRef = useRef(false);
   const key = coords.map((c) => `${c[0].toFixed(5)},${c[1].toFixed(5)}`).join('|');
 
   useEffect(() => {
-    const apply = () => {
+    // New content (route changed): allow exactly one fit again.
+    fittedRef.current = false;
+    const container = map.getContainer();
+
+    // Fit once, only when the container actually has a size. This avoids the
+    // world-zoom bug when a map mounts below the fold with a 0-height container.
+    const tryFit = () => {
       map.invalidateSize();
-      if (!fit || coords.length === 0) return;
+      if (fittedRef.current || !fit || coords.length === 0) return;
+      if (container.offsetWidth === 0 || container.offsetHeight === 0) return;
       if (coords.length === 1) {
         map.setView(coords[0], 13);
-        return;
+      } else {
+        const lats = coords.map((c) => c[0]);
+        const lngs = coords.map((c) => c[1]);
+        const bounds: LatLngBoundsExpression = [
+          [Math.min(...lats), Math.min(...lngs)],
+          [Math.max(...lats), Math.max(...lngs)],
+        ];
+        map.fitBounds(bounds, { padding: [36, 36], maxZoom: 14 });
       }
-      const lats = coords.map((c) => c[0]);
-      const lngs = coords.map((c) => c[1]);
-      const bounds: LatLngBoundsExpression = [
-        [Math.min(...lats), Math.min(...lngs)],
-        [Math.max(...lats), Math.max(...lngs)],
-      ];
-      map.fitBounds(bounds, { padding: [36, 36], maxZoom: 14 });
+      fittedRef.current = true;
     };
 
-    apply();
-    const timers = [setTimeout(apply, 200), setTimeout(apply, 600)];
-    const observer = new ResizeObserver(() => apply());
-    observer.observe(map.getContainer());
-    window.addEventListener('resize', apply);
+    tryFit();
+    const timers = [setTimeout(tryFit, 100), setTimeout(tryFit, 400), setTimeout(tryFit, 900)];
+    // Observe size changes: re-measure tiles, and fit once the container is sized.
+    const observer = new ResizeObserver(() => tryFit());
+    observer.observe(container);
+    const onWinResize = () => map.invalidateSize();
+    window.addEventListener('resize', onWinResize);
     return () => {
       timers.forEach(clearTimeout);
       observer.disconnect();
-      window.removeEventListener('resize', apply);
+      window.removeEventListener('resize', onWinResize);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map, key, fit]);
