@@ -1,0 +1,18 @@
+export type Platform = 'ios' | 'android' | 'desktop';
+
+/** Best-effort client platform detection from the user agent. */
+export function detectPlatform(): Platform {
+  if (typeof navigator === 'undefined') return 'desktop';
+  const ua = navigator.userAgent || '';
+  if (/android/i.test(ua)) return 'android';
+  // iPadOS 13+ reports as MacIntel with touch points.
+  const iOSLike =
+    /iphone|ipad|ipod/i.test(ua) ||
+    (navigator.platform === 'MacIntel' && (navigator.maxTouchPoints ?? 0) > 1);
+  if (iOSLike) return 'ios';
+  return 'desktop';
+}
+
+export function isMobilePlatform(): boolean {
+  return detectPlatform() !== 'desktop';
+}
