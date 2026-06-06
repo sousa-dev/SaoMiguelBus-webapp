@@ -1,4 +1,5 @@
-import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, CircleMarker, Polyline, Popup, useMap } from 'react-leaflet';
+import type { LatLngBoundsExpression } from 'leaflet';
 import type { ReactNode } from 'react';
 import { useEffect } from 'react';
 
@@ -13,52 +14,88 @@ export interface MapPoint {
   popup?: ReactNode;
 }
 
-function FitToPoints({ points }: { points: MapPoint[] }) {
+export interface MapLine {
+  id: string | number;
+  coords: [number, number][];
+  color?: string;
+  weight?: number;
+}
+
+function collectBounds(points: MapPoint[], lines: MapLine[]): [number, number][] {
+  const coords: [number, number][] = points.map((p) => [p.lat, p.lng]);
+  for (const line of lines) {
+    coords.push(...line.coords);
+  }
+  return coords;
+}
+
+function FitToContent({ coords }: { coords: [number, number][] }) {
   const map = useMap();
   useEffect(() => {
-    if (points.length === 0) return;
-    if (points.length === 1) {
-      map.setView([points[0].lat, points[0].lng], 12);
+    if (coords.length === 0) return;
+    if (coords.length === 1) {
+      map.setView(coords[0], 12);
       return;
     }
-    const lats = points.map((p) => p.lat);
-    const lngs = points.map((p) => p.lng);
-    map.fitBounds(
-      [
-        [Math.min(...lats), Math.min(...lngs)],
-        [Math.max(...lats), Math.max(...lngs)],
-      ],
-      { padding: [40, 40], maxZoom: 13 },
-    );
-  }, [map, points]);
+    const lats = coords.map((c) => c[0]);
+    const lngs = coords.map((c) => c[1]);
+    const bounds: LatLngBoundsExpression = [
+      [Math.min(...lats), Math.min(...lngs)],
+      [Math.max(...lats), Math.max(...lngs)],
+    ];
+    map.fitBounds(bounds, { padding: [36, 36], maxZoom: 14 });
+  }, [map, coords]);
   return null;
 }
 
 export function MapView({
-  points,
+  points = [],
+  lines = [],
   center = staticIslandConfig.mapCenter,
   zoom = 10,
   className,
   fit = true,
+  interactive = true,
 }: {
-  points: MapPoint[];
+  points?: MapPoint[];
+  lines?: MapLine[];
   center?: { lat: number; lng: number };
   zoom?: number;
   className?: string;
   fit?: boolean;
+  /** When false, renders a static (non-pannable) preview map — used for hub cards. */
+  interactive?: boolean;
 }) {
+  const boundsCoords = collectBounds(points, lines);
+
   return (
     <MapContainer
       center={[center.lat, center.lng]}
       zoom={zoom}
-      scrollWheelZoom
       className={className}
       style={{ height: '100%', width: '100%' }}
+      scrollWheelZoom={interactive}
+      dragging={interactive}
+      doubleClickZoom={interactive}
+      zoomControl={interactive}
+      attributionControl={interactive}
+      keyboard={interactive}
+      touchZoom={interactive}
+      boxZoom={interactive}
     >
+      {/* OpenStreetMap raster tiles — same basemap the mobile app uses. */}
       <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-        url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+        maxZoom={19}
       />
+      {lines.map((line) => (
+        <Polyline
+          key={line.id}
+          positions={line.coords}
+          pathOptions={{ color: line.color ?? '#1e88e5', weight: line.weight ?? 5, opacity: 0.9 }}
+        />
+      ))}
       {points.map((p) => (
         <CircleMarker
           key={p.id}
@@ -74,7 +111,7 @@ export function MapView({
           {p.popup ? <Popup>{p.popup}</Popup> : null}
         </CircleMarker>
       ))}
-      {fit ? <FitToPoints points={points} /> : null}
+      {fit ? <FitToContent coords={boundsCoords} /> : null}
     </MapContainer>
   );
 }

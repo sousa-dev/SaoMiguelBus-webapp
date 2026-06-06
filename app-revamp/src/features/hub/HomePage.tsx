@@ -13,6 +13,7 @@ import {
 
 import { Badge, Card } from '@/components/ui';
 import { Seo } from '@/components/Seo';
+import { MapView, type MapPoint } from '@/components/MapView';
 import { resolveEnabledModules } from '@/config/island';
 import { useBootstrap } from '@/hooks/useBootstrap';
 import { SITE } from '@/lib/seo-config';
@@ -35,6 +36,22 @@ function greetingKey(): string {
   if (hour < 12) return 'hubGreetingMorning';
   if (hour < 19) return 'hubGreetingAfternoon';
   return 'hubGreetingEvening';
+}
+
+function magnitudeHex(m: number): string {
+  if (m >= 5) return '#b91c1c';
+  if (m >= 3) return '#b45309';
+  return '#15803d';
+}
+
+/** Small, non-interactive OSM preview map used on the hub cards. */
+function MiniMap({ points, color }: { points: MapPoint[]; color: string }) {
+  const colored = points.map((p) => ({ ...p, color: p.color ?? color, radius: p.radius ?? 6 }));
+  return (
+    <div className="h-28 w-full overflow-hidden rounded-xl border border-border">
+      <MapView points={colored} interactive={false} zoom={9} fit={colored.length > 0} />
+    </div>
+  );
 }
 
 function SectionLink({ to, label }: { to: string; label: string }) {
@@ -162,7 +179,17 @@ export function HomePage() {
                 <Waves size={18} className="text-primary" />
                 <h2 className="font-bold text-content">{t('navBarEarthquakesLabel')}</h2>
               </div>
-              <p className="text-2xl font-extrabold text-content">{seismic.data?.length ?? 0}</p>
+              <MiniMap
+                color="#b45309"
+                points={(seismic.data ?? []).map((e) => ({
+                  id: e.id,
+                  lat: e.latitude,
+                  lng: e.longitude,
+                  color: magnitudeHex(e.magnitude),
+                  radius: 5 + e.magnitude,
+                }))}
+              />
+              <p className="mt-2 text-2xl font-extrabold text-content">{seismic.data?.length ?? 0}</p>
               <p className="text-sm text-muted">{t('homeEarthquakes24h', { defaultValue: 'in the last 24h' })}</p>
               <div className="mt-2"><SectionLink to="/earthquakes" label={t('seeAllLabel', { defaultValue: 'See all' })} /></div>
             </Card>
@@ -177,7 +204,15 @@ export function HomePage() {
               <TriangleAlert size={18} className="text-warning" />
               <h2 className="font-bold text-content">{t('homeTrafficTitle')}</h2>
             </div>
-            <p className="text-2xl font-extrabold text-content">{traffic.data?.length ?? 0}</p>
+            <MiniMap
+              color="#b45309"
+              points={(traffic.data ?? [])
+                .filter((r) => r.status === 'active')
+                .map((r) => ({ id: r.id, lat: r.latitude, lng: r.longitude }))}
+            />
+            <p className="mt-2 text-2xl font-extrabold text-content">
+              {(traffic.data ?? []).filter((r) => r.status === 'active').length}
+            </p>
             <p className="text-sm text-muted">{t('homeTrafficActive', { defaultValue: 'active reports' })}</p>
             <div className="mt-2"><SectionLink to="/traffic" label={t('seeAllLabel', { defaultValue: 'See all' })} /></div>
           </Card>

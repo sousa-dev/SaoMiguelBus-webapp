@@ -6,11 +6,48 @@ import { Bus, Footprints, MapPin, Navigation, Search } from 'lucide-react';
 import { Badge, Button, Card, CenteredSpinner, EmptyState } from '@/components/ui';
 import { Seo } from '@/components/Seo';
 import { BackLink, PageHeader } from '@/components/layout/Page';
+import { MapView, type MapLine, type MapPoint } from '@/components/MapView';
 import { useBootstrap } from '@/hooks/useBootstrap';
 import { resolveDayType } from '@/lib/format';
+import { decodePolyline } from '@/lib/polyline';
 import { StopPicker } from '@/features/transit/components';
 import { useDirections, useStops } from '@/features/transit/hooks';
-import type { DirectionsLeg, DirectionsStep } from '@/lib/types';
+import type { DirectionsLeg, DirectionsRoute, DirectionsStep } from '@/lib/types';
+
+const WALK_COLOR = '#e53935';
+const TRANSIT_COLOR = '#1e88e5';
+
+function RouteMap({ route }: { route: DirectionsRoute }) {
+  const lines: MapLine[] = [];
+  const all: [number, number][] = [];
+  (route.legs?.[0]?.steps ?? []).forEach((step, i) => {
+    const coords = decodePolyline(step.polyline?.points ?? '');
+    if (coords.length === 0) return;
+    all.push(...coords);
+    lines.push({
+      id: i,
+      coords,
+      color: step.travel_mode === 'WALKING' ? WALK_COLOR : TRANSIT_COLOR,
+      weight: step.travel_mode === 'WALKING' ? 4 : 5,
+    });
+  });
+  const overview = decodePolyline(route.overview_polyline?.points ?? '');
+  const path = all.length > 0 ? all : overview;
+  if (path.length === 0) return null;
+
+  const start = path[0];
+  const end = path[path.length - 1];
+  const points: MapPoint[] = [
+    { id: 'start', lat: start[0], lng: start[1], color: '#15803d', radius: 7 },
+    { id: 'end', lat: end[0], lng: end[1], color: '#b91c1c', radius: 7 },
+  ];
+
+  return (
+    <div className="h-64 w-full overflow-hidden rounded-xl border border-border">
+      <MapView points={points} lines={lines.length > 0 ? lines : [{ id: 'ov', coords: overview }]} />
+    </div>
+  );
+}
 
 function stripHtml(html: string): string {
   return html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
@@ -48,8 +85,9 @@ function StepRow({ step }: { step: DirectionsStep }) {
   );
 }
 
-function LegCard({ leg, index }: { leg: DirectionsLeg; index: number }) {
+function RouteDirectionsCard({ route, index }: { route: DirectionsRoute; index: number }) {
   const { t } = useTranslation();
+  const leg: DirectionsLeg | undefined = route.legs?.[0];
   return (
     <Card className="overflow-hidden">
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border bg-surface-variant px-4 py-3">
@@ -58,17 +96,18 @@ function LegCard({ leg, index }: { leg: DirectionsLeg; index: number }) {
           {t('directionsOptionLabel', { count: index + 1, defaultValue: `Option ${index + 1}` })}
         </div>
         <div className="flex items-center gap-3 text-sm text-muted">
-          {leg.departure_time?.text && leg.arrival_time?.text ? (
+          {leg?.departure_time?.text && leg?.arrival_time?.text ? (
             <span className="font-semibold text-content">
               {leg.departure_time.text} – {leg.arrival_time.text}
             </span>
           ) : null}
-          {leg.duration?.text ? <Badge tone="neutral">{leg.duration.text}</Badge> : null}
+          {leg?.duration?.text ? <Badge tone="neutral">{leg.duration.text}</Badge> : null}
         </div>
       </div>
-      <div className="px-4 py-2">
-        <ol className="divide-y divide-border">
-          {(leg.steps ?? []).map((s, i) => (
+      <div className="p-4">
+        <RouteMap route={route} />
+        <ol className="mt-2 divide-y divide-border">
+          {(leg?.steps ?? []).map((s, i) => (
             <StepRow key={i} step={s} />
           ))}
         </ol>
@@ -117,9 +156,9 @@ export function DirectionsPage() {
       ) : null}
 
       <div className="flex flex-col gap-4">
-        {routes.map((route, ri) =>
-          (route.legs ?? []).map((leg, li) => <LegCard key={`${ri}-${li}`} leg={leg} index={ri} />),
-        )}
+        {routes.map((route, ri) => (
+          <RouteDirectionsCard key={ri} route={route} index={ri} />
+        ))}
       </div>
     </>
   );
