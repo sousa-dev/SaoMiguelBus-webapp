@@ -1,0 +1,13 @@
+services:
+  webapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL:-https://api.saomiguelbus.com}
+        VITE_ISLAND_KEY: ${VITE_ISLAND_KEY:-sao-miguel}
+        VITE_SITE_URL: ${VITE_SITE_URL:-https://app.saomiguelbus.com}
+        VITE_BASE_DOMAIN: ${VITE_BASE_DOMAIN:-saomiguelbus.com}
+    restart: unless-stopped
+    ports:
+      - "80:80"
