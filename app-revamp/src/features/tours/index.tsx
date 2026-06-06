@@ -15,19 +15,13 @@ import {
 } from '@/features/tours/filterHelpers';
 import type { TourSummary } from '@/lib/types';
 
-function priceLabel(tour: { fromPrice: number | null; currency: string }): string | null {
-  if (tour.fromPrice == null) return null;
-  try {
-    return new Intl.NumberFormat(undefined, { style: 'currency', currency: tour.currency }).format(tour.fromPrice);
-  } catch {
-    return `${tour.fromPrice} ${tour.currency}`;
-  }
-}
-
 function TourCard({ tour }: { tour: TourSummary }) {
   const { t } = useTranslation();
   const duration = formatDuration(tour.durationMinutes, t);
-  const price = priceLabel(tour);
+  const price =
+    tour.fromPrice != null
+      ? t('tourFromPrice', { price: tour.fromPrice.toFixed(0), currency: tour.currency })
+      : null;
   return (
     <Link to={`/tours/${encodeURIComponent(tour.code)}`}>
       <Card className="flex h-full flex-col overflow-hidden transition hover:border-outline">
@@ -51,18 +45,18 @@ function TourCard({ tour }: { tour: TourSummary }) {
               </span>
             ) : null}
           </div>
-          {price ? <Badge tone="primary" className="self-start">{t('tourFromPrice', { price, defaultValue: `from ${price}` })}</Badge> : null}
+          {price ? <Badge tone="primary" className="self-start">{price}</Badge> : null}
         </div>
       </Card>
     </Link>
   );
 }
 
-const SORTS: { value: TourSortKey; key: string; fallback: string }[] = [
-  { value: 'featured', key: 'tourSortFeatured', fallback: 'Featured' },
-  { value: 'priceLow', key: 'tourSortPriceLow', fallback: 'Price ↑' },
-  { value: 'priceHigh', key: 'tourSortPriceHigh', fallback: 'Price ↓' },
-  { value: 'rating', key: 'tourSortRating', fallback: 'Rating' },
+const SORTS: { value: TourSortKey; key: string }[] = [
+  { value: 'featured', key: 'toursSortFeatured' },
+  { value: 'priceLow', key: 'toursSortPriceLow' },
+  { value: 'priceHigh', key: 'toursSortPriceHigh' },
+  { value: 'rating', key: 'toursSortRating' },
 ];
 
 export function ToursPage() {
@@ -83,11 +77,11 @@ export function ToursPage() {
 
   return (
     <>
-      <PageHeader title={t('navBarToursLabel')} subtitle={t('toursSubtitle', { defaultValue: 'Book unforgettable experiences across São Miguel.' })} />
+      <PageHeader title={t('toursTitle')} subtitle={t('toursSubtitle')} />
 
       <div className="mb-5 flex flex-col gap-3">
         <SearchField
-          placeholder={t('toursSearchPlaceholder', { defaultValue: 'Search experiences…' })}
+          placeholder={t('toursSearchPlaceholder')}
           value={filters.search}
           onChange={(e) => setFilters((f) => ({ ...f, search: e.target.value }))}
           className="max-w-md"
@@ -96,7 +90,7 @@ export function ToursPage() {
           {SORTS.map((s) => (
             <Chip
               key={s.value}
-              label={t(s.key, { defaultValue: s.fallback })}
+              label={t(s.key)}
               active={filters.sort === s.value}
               onClick={() => setFilters((f) => ({ ...f, sort: s.value }))}
             />
@@ -139,7 +133,8 @@ export function TourDetailPage() {
 
   const d = tour.data;
   const duration = formatDuration(d.durationMinutes, t);
-  const price = priceLabel(d);
+  const price =
+    d.fromPrice != null ? t('tourFromPrice', { price: d.fromPrice.toFixed(0), currency: d.currency }) : null;
 
   return (
     <>
@@ -179,7 +174,7 @@ export function TourDetailPage() {
           <p className="mb-4 text-xs text-muted">{t('tourPricePerPerson', { defaultValue: 'per person' })}</p>
           <a href={d.bookingUrl} target="_blank" rel="noreferrer">
             <Button icon={ExternalLink} className="w-full">
-              {t('tourBookNow', { defaultValue: 'Book on Viator' })}
+              {t('tourBookCta')}
             </Button>
           </a>
         </Card>

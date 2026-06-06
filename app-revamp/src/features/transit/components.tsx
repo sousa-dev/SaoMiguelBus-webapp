@@ -135,14 +135,14 @@ export function RouteCard({ result }: { result: TransitSearchResult }) {
           <span className="flex h-9 min-w-9 items-center justify-center rounded-lg bg-primary px-2 font-bold text-on-primary">
             {displayRouteNumber(result.route)}
           </span>
-          <div className="flex items-center gap-2 text-xs text-muted">
-            <Bus size={15} />
-            {transfers > 0 ? (
-              <span>{t('routeTransfersLabel', { count: transfers, defaultValue: `${transfers} transfer(s)` })}</span>
-            ) : (
-              <span>{t('routeDirectLabel', { defaultValue: 'Direct' })}</span>
-            )}
-          </div>
+          {transfers > 0 ? (
+            <div className="flex items-center gap-1.5 text-xs text-muted">
+              <Bus size={15} />
+              <span>
+                {transfers} {transfers === 1 ? t('transfer') : t('transfers')}
+              </span>
+            </div>
+          ) : null}
         </div>
         <div className="flex items-center gap-3 text-xs font-semibold">
           <span className="inline-flex items-center gap-1 text-success">
@@ -155,11 +155,11 @@ export function RouteCard({ result }: { result: TransitSearchResult }) {
       </div>
 
       {lowConfidence ? (
-        <div className="flex items-center gap-2 bg-warning-surface px-4 py-2 text-xs font-medium text-warning">
-          <TriangleAlert size={14} />
-          {t('routeConfirmationWarning', {
-            defaultValue: 'This schedule needs confirmation. Please verify before travelling.',
-          })}
+        <div className="flex items-start gap-2 bg-warning-surface px-4 py-2 text-xs font-medium text-warning">
+          <TriangleAlert size={14} className="mt-0.5 shrink-0" />
+          <span>
+            <strong>{t('confirmationRequired')}</strong> — {t('confirmationMessage')}
+          </span>
         </div>
       ) : null}
 
@@ -172,7 +172,7 @@ export function RouteCard({ result }: { result: TransitSearchResult }) {
         onClick={() => setExpanded((e) => !e)}
         className="flex w-full items-center justify-center gap-1.5 border-t border-border py-2.5 text-sm font-semibold text-primary hover:bg-surface-variant"
       >
-        {expanded ? t('hideStopsButton', { defaultValue: 'Hide stops' }) : t('showStopsButton', { defaultValue: 'Show all stops' })}
+        {t('allStops')}
         <ChevronDown size={16} className={cn('transition', expanded && 'rotate-180')} />
       </button>
 
@@ -197,7 +197,7 @@ export function RouteCard({ result }: { result: TransitSearchResult }) {
             to={`/transit/trip/${result.id}`}
             className="mt-2 inline-block text-sm font-semibold text-primary hover:underline"
           >
-            {t('routeDetailsLink', { defaultValue: 'View route details →' })}
+            {t('clickToSeeDetails')} →
           </Link>
         </div>
       ) : null}

@@ -11,18 +11,8 @@ import { fetchTrail, fetchTrails } from '@/lib/api';
 import { normalizeSearchText } from '@/lib/format';
 import type { TrailSummary } from '@/lib/types';
 
-const DIFFICULTIES = [
-  { value: '', key: 'allLabel', fallback: 'All' },
-  { value: 'easy', key: 'trailDifficultyEasy', fallback: 'Easy' },
-  { value: 'moderate', key: 'trailDifficultyModerate', fallback: 'Moderate' },
-  { value: 'hard', key: 'trailDifficultyHard', fallback: 'Hard' },
-];
-
-const SHAPES = [
-  { value: '', key: 'allLabel', fallback: 'All' },
-  { value: 'circular', key: 'trailShapeCircular', fallback: 'Circular' },
-  { value: 'linear', key: 'trailShapeLinear', fallback: 'Linear' },
-];
+const DIFFICULTIES = ['', 'easy', 'moderate', 'hard'];
+const SHAPES = ['', 'circular', 'linear'];
 
 const DISTANCE_RANGES = [
   { key: 'all', label: 'All', minLength: undefined, maxLength: undefined },
@@ -59,8 +49,12 @@ function TrailCard({ trail }: { trail: TrailSummary }) {
             {trail.durationMin ? ` · ${Math.round(trail.durationMin / 60)}h` : ''}
           </p>
           <div className="mt-auto flex flex-wrap gap-2">
-            <Badge tone={difficultyTone(trail.difficulty)}>{trail.difficulty}</Badge>
-            {trail.shape ? <Badge tone="neutral">{t(`trailShape_${trail.shape}`, { defaultValue: trail.shape })}</Badge> : null}
+            <Badge tone={difficultyTone(trail.difficulty)}>
+              {t(`trailsDifficulty_${trail.difficulty}`, { defaultValue: trail.difficulty })}
+            </Badge>
+            {trail.shape ? (
+              <Badge tone="neutral">{t(`trailsShape_${trail.shape}`, { defaultValue: trail.shape })}</Badge>
+            ) : null}
           </div>
         </div>
       </Card>
@@ -106,12 +100,22 @@ export function TrailsPage() {
         />
         <div className="flex flex-wrap gap-2">
           {DIFFICULTIES.map((d) => (
-            <Chip key={d.value} label={t(d.key, { defaultValue: d.fallback })} active={difficulty === d.value} onClick={() => setDifficulty(d.value)} />
+            <Chip
+              key={d}
+              label={d ? t(`trailsDifficulty_${d}`, { defaultValue: d }) : t('trailsFilterAll')}
+              active={difficulty === d}
+              onClick={() => setDifficulty(d)}
+            />
           ))}
         </div>
         <div className="flex flex-wrap gap-2">
           {SHAPES.map((s) => (
-            <Chip key={s.value} label={t(s.key, { defaultValue: s.fallback })} active={shape === s.value} onClick={() => setShape(s.value)} />
+            <Chip
+              key={s}
+              label={s ? t(`trailsShape_${s}`, { defaultValue: s }) : t('trailsFilterAll')}
+              active={shape === s}
+              onClick={() => setShape(s)}
+            />
           ))}
           <span className="mx-1 w-px self-stretch bg-border" />
           {DISTANCE_RANGES.map((r) => (
@@ -178,9 +182,11 @@ export function TrailDetailPage() {
       />
 
       <div className="mb-4 flex flex-wrap gap-2">
-        <Badge tone={difficultyTone(d.difficulty)}>{d.difficulty}</Badge>
+        <Badge tone={difficultyTone(d.difficulty)}>
+          {t(`trailsDifficulty_${d.difficulty}`, { defaultValue: d.difficulty })}
+        </Badge>
         {d.distanceKm != null ? <Badge tone="neutral"><RouteIcon size={13} /> {d.distanceKm} km</Badge> : null}
-        {d.shape ? <Badge tone="neutral">{d.shape}</Badge> : null}
+        {d.shape ? <Badge tone="neutral">{t(`trailsShape_${d.shape}`, { defaultValue: d.shape })}</Badge> : null}
         {d.durationMin ? <Badge tone="neutral">{Math.round(d.durationMin / 60)}h</Badge> : null}
       </div>
 

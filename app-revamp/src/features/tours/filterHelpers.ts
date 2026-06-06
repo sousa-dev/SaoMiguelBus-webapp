@@ -91,9 +91,9 @@ export function formatDuration(
   t: (key: string, opts?: Record<string, unknown>) => string,
 ): string | null {
   if (minutes == null) return null;
-  if (minutes < 60) return t('tourDurationMinutes', { count: minutes, defaultValue: `${minutes} min` });
+  if (minutes < 60) return t('tourDurationMinutes', { minutes });
   const h = Math.floor(minutes / 60);
   const m = minutes % 60;
-  if (m === 0) return t('tourDurationHours', { count: h, defaultValue: `${h}h` });
-  return t('tourDurationHoursMinutes', { hours: h, minutes: m, defaultValue: `${h}h ${m}m` });
+  if (m === 0) return t('tourDurationHours', { hours: h });
+  return t('tourDurationHoursMinutes', { hours: h, minutes: m });
 }

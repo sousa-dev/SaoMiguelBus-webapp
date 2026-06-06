@@ -38,7 +38,7 @@ function MagCircle({ magnitude, size = 48 }: { magnitude: number; size?: number 
 
 function EarthquakeCard({ event }: { event: SeismicEvent }) {
   const { t, i18n } = useTranslation();
-  const headline = seismicEventHeadline(event, t) ?? t('seismicRegionFallback', { defaultValue: event.region || 'Azores' });
+  const headline = seismicEventHeadline(event, t) ?? (event.region || 'Açores');
   return (
     <Link to={`/earthquakes/${event.id}`}>
       <Card className="flex items-center gap-4 p-4 transition hover:border-outline">
