@@ -29,6 +29,28 @@ function collectBounds(points: MapPoint[], lines: MapLine[]): [number, number][]
   return coords;
 }
 
+/**
+ * Leaflet only measures its container once on init. When the map mounts before
+ * the page has settled (stacked cards, images loading, fonts), tiles render for
+ * the wrong size and leave grey gaps. Re-measure on mount and on container resize.
+ */
+function AutoResize() {
+  const map = useMap();
+  useEffect(() => {
+    const invalidate = () => map.invalidateSize();
+    const timers = [setTimeout(invalidate, 0), setTimeout(invalidate, 200), setTimeout(invalidate, 600)];
+    const observer = new ResizeObserver(() => invalidate());
+    observer.observe(map.getContainer());
+    window.addEventListener('resize', invalidate);
+    return () => {
+      timers.forEach(clearTimeout);
+      observer.disconnect();
+      window.removeEventListener('resize', invalidate);
+    };
+  }, [map]);
+  return null;
+}
+
 function FitToContent({ coords }: { coords: [number, number][] }) {
   const map = useMap();
   useEffect(() => {
@@ -111,6 +133,7 @@ export function MapView({
           {p.popup ? <Popup>{p.popup}</Popup> : null}
         </CircleMarker>
       ))}
+      <AutoResize />
       {fit ? <FitToContent coords={boundsCoords} /> : null}
     </MapContainer>
   );
