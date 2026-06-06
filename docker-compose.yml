@@ -10,4 +10,4 @@ services:
         VITE_BASE_DOMAIN: ${VITE_BASE_DOMAIN:-saomiguelbus.com}
     restart: unless-stopped
     ports:
-      - "80:80"
+      - "${WEBAPP_HOST_PORT:-80}:${WEBAPP_CONTAINER_PORT:-80}"
