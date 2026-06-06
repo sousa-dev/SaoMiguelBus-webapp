@@ -94,8 +94,40 @@ body {
 
 /* Leaflet needs an explicit height from its container. */
 .leaflet-container {
+  position: relative;
+  z-index: 0;
   font-family: var(--font-sans);
   background: var(--color-surface-variant);
+}
+
+/*
+ * Leaflet defaults use z-index 200–1000 on panes, which escapes hub card
+ * containers and paints over the mobile drawer / install banner. Keep all
+ * panes relative within the map container.
+ */
+.leaflet-pane {
+  z-index: 1 !important;
+}
+.leaflet-tile-pane {
+  z-index: 2 !important;
+}
+.leaflet-overlay-pane {
+  z-index: 3 !important;
+}
+.leaflet-shadow-pane {
+  z-index: 4 !important;
+}
+.leaflet-marker-pane {
+  z-index: 5 !important;
+}
+.leaflet-tooltip-pane {
+  z-index: 6 !important;
+}
+.leaflet-popup-pane {
+  z-index: 7 !important;
+}
+.leaflet-control {
+  z-index: 8 !important;
 }
 
 @keyframes smb-spin {

@@ -30,7 +30,7 @@ export function LanguagePicker() {
         <span className="hidden sm:inline">{LANGUAGE_NAMES[current] ?? current}</span>
       </button>
       {open ? (
-        <div className="absolute right-0 z-50 mt-2 w-44 overflow-hidden rounded-xl border border-border bg-surface py-1 shadow-lg">
+        <div className="absolute right-0 z-[1050] mt-2 w-44 overflow-hidden rounded-xl border border-border bg-surface py-1 shadow-lg">
           {SUPPORTED_LOCALES.map((loc) => (
             <button
               key={loc}

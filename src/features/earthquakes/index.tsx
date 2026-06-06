@@ -9,6 +9,7 @@ import { BackLink, PageHeader } from '@/components/layout/Page';
 import { Seo } from '@/components/Seo';
 import { MapView, type MapPoint } from '@/components/MapView';
 import { fetchSeismicEvent, fetchSeismicEvents } from '@/lib/api';
+import { AZORES_ARCHIPELAGO_VIEW } from '@/lib/map-bounds';
 import { formatAppDateTime, formatRelativeTime } from '@/lib/format';
 import { magnitudeColorVar, seismicEventHeadline, seismicMagnitudeLabelKey } from '@/lib/seismic';
 import type { SeismicEvent } from '@/lib/types';
@@ -58,7 +59,7 @@ function EarthquakeCard({ event }: { event: SeismicEvent }) {
 export function EarthquakesPage() {
   const { t } = useTranslation();
   const [windowHours, setWindowHours] = useState(24);
-  const [view, setView] = useState<'map' | 'list'>('list');
+  const [view, setView] = useState<'map' | 'list'>('map');
 
   const events = useQuery({
     queryKey: ['seismic', 'events', windowHours],
@@ -110,12 +111,17 @@ export function EarthquakesPage() {
 
       {events.isLoading ? (
         <CenteredSpinner />
+      ) : view === 'map' ? (
+        <Card className="relative isolate z-0 h-[600px] overflow-hidden">
+          <MapView
+            points={points}
+            center={AZORES_ARCHIPELAGO_VIEW.center}
+            zoom={AZORES_ARCHIPELAGO_VIEW.zoom}
+            fit={points.length > 0}
+          />
+        </Card>
       ) : (events.data ?? []).length === 0 ? (
         <EmptyState icon={Waves} title={t('seismicEmpty')} description={t('seismicMapEmptyHint', { defaultValue: undefined })} />
-      ) : view === 'map' ? (
-        <Card className="h-[600px] overflow-hidden">
-          <MapView points={points} zoom={8} />
-        </Card>
       ) : (
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           {events.data!.map((e) => (

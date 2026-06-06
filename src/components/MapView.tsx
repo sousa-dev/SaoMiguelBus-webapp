@@ -111,7 +111,7 @@ export function MapView({
       center={view.center}
       zoom={view.zoom}
       className={className}
-      style={{ height: '100%', width: '100%' }}
+      style={{ height: '100%', width: '100%', position: 'relative', zIndex: 0 }}
       /* Never hijack page scroll — users zoom with the +/- control or double-click. */
       scrollWheelZoom={false}
       dragging={interactive}

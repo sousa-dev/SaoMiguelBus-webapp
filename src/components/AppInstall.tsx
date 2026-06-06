@@ -104,7 +104,7 @@ export function AppInstallBanner() {
   };
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-[60] border-t border-border bg-surface px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-8px_24px_rgba(0,0,0,0.12)] lg:hidden">
+    <div className="fixed inset-x-0 bottom-0 z-[1200] border-t border-border bg-surface px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-8px_24px_rgba(0,0,0,0.12)] lg:hidden">
       <div className="flex items-start gap-3">
         <img src="/logo.png" alt="" className="h-12 w-12 shrink-0 rounded-2xl" />
         <div className="min-w-0 flex-1">

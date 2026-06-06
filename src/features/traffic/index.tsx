@@ -47,7 +47,7 @@ function ReportRow({ report }: { report: TrafficReport }) {
 
 export function TrafficPage() {
   const { t } = useTranslation();
-  const [view, setView] = useState<'list' | 'map'>('list');
+  const [view, setView] = useState<'list' | 'map'>('map');
   const [category, setCategory] = useState<string | undefined>(undefined);
 
   const categories = useQuery({ queryKey: ['traffic', 'categories'], queryFn: fetchTrafficCategories });
@@ -93,7 +93,7 @@ export function TrafficPage() {
       {reports.isLoading ? (
         <CenteredSpinner />
       ) : view === 'map' ? (
-        <Card className="h-[600px] overflow-hidden">
+        <Card className="relative isolate z-0 h-[600px] overflow-hidden">
           <MapView points={points} zoom={10} />
         </Card>
       ) : (reports.data ?? []).length === 0 ? (
