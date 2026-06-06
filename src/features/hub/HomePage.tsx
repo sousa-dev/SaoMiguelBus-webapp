@@ -133,18 +133,21 @@ export function HomePage() {
         <p className="mt-1 text-muted">{t('hubSubtitle')}</p>
       </div>
 
-      <Card className="flex flex-col items-start gap-3 bg-primary p-6 text-on-primary sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col items-start gap-3 rounded-2xl border border-primary/20 bg-primary p-6 text-on-primary shadow-sm shadow-black/[0.03] sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
           <Bus size={32} />
           <div>
             <p className="text-lg font-bold">{t('homeBusCtaGeneric')}</p>
-            <p className="text-sm opacity-90">{t('homeInstructionsText', { defaultValue: 'Search routes between any two stops.' })}</p>
+            <p className="text-sm text-on-primary/90">{t('bannerSubtitle')}</p>
           </div>
         </div>
-        <Link to="/transit" className="rounded-xl bg-white/20 px-5 py-2.5 font-semibold backdrop-blur hover:bg-white/30">
-          {t('searchButton', { defaultValue: 'Search' })}
+        <Link
+          to="/transit"
+          className="rounded-xl bg-on-primary/15 px-5 py-2.5 font-semibold text-on-primary backdrop-blur hover:bg-on-primary/25"
+        >
+          {t('searchButton')}
         </Link>
-      </Card>
+      </div>
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         {enabled.includes('weather') && parish ? (
