@@ -1096,10 +1096,10 @@
                     <span data-i18n="installAndroidApp" class="flex-grow">Install Android App</span>
                 </div>
             </button>
-            <button id="installIOSApp" class="hidden w-full bg-black text-white py-2 px-4 rounded-full hover:bg-blue-600 transition duration-300 ease-in-out" onclick="window.location.href='/newsletter'" data-umami-event="install-ios-app">
+            <button id="installIOSApp" class="hidden w-full bg-black text-white py-2 px-4 rounded-full hover:bg-blue-600 transition duration-300 ease-in-out" onclick="showIOSInstallPrompt()" data-umami-event="install-ios-app">
                 <div class="flex items-center">
                     <i class="fab fa-apple mr-2 self-center text-xl"></i>
-                    <span data-i18n="registerToDownloadIOSApp" class="flex-grow text-sm">Register to Download iOS App</span>
+                    <span data-i18n="downloadIOSApp" class="flex-grow text-sm">Download the iOS app</span>
                 </div>
             </button>
         </div>
@@ -1696,6 +1696,28 @@
         function hideLoadingSpinner() {
             document.getElementById('loadingSpinner').classList.add('hidden');
         }
+
+        function showIOSInstallPrompt() {
+            document.getElementById('iosInstallPromptModal').classList.remove('hidden');
+        }
+
+        function closeIOSInstallPrompt() {
+            document.getElementById('iosInstallPromptModal').classList.add('hidden');
+            try {
+                sessionStorage.setItem('smb_ios_install_prompt_seen', '1');
+            } catch (error) {
+                // Ignore storage failures so the close button always works.
+            }
+        }
+
+        function shouldShowIOSInstallPrompt() {
+            try {
+                return sessionStorage.getItem('smb_ios_install_prompt_seen') !== '1';
+            } catch (error) {
+                return true;
+            }
+        }
+
         function toggleSpoiler() {
             var spoilerContent = document.getElementById('spoilerContent');
             var spoilerArrow = document.getElementById('spoilerArrow');
@@ -1820,6 +1842,9 @@
                     document.getElementById('installAndroidApp').classList.remove('hidden');
                 } else if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
                     document.getElementById('installIOSApp').classList.remove('hidden');
+                    if (shouldShowIOSInstallPrompt()) {
+                        setTimeout(showIOSInstallPrompt, 700);
+                    }
                 }
             }
             loadViatorWidget(currentLanguage);
@@ -2319,6 +2344,22 @@
 
     <div id="loadingSpinner" class="hidden fixed inset-0 bg-gray-600 dark:bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
         <div class="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-green-500"></div>
+    </div>
+
+    <div id="iosInstallPromptModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 p-4">
+        <div class="w-full max-w-sm rounded-2xl bg-white p-5 text-center shadow-2xl dark:bg-gray-800">
+            <button type="button" onclick="closeIOSInstallPrompt()" class="float-right rounded-full px-2 py-1 text-gray-500 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700" aria-label="Close iOS install prompt">
+                <i class="fas fa-times"></i>
+            </button>
+            <img src="static/img/icon.png" alt="" class="mx-auto mb-3 h-16 w-16 rounded-2xl">
+            <h2 class="mb-2 text-xl font-bold text-gray-900 dark:text-white" data-i18n="iosInstallPromptTitle">Install São Miguel Bus on iOS</h2>
+            <p class="mb-4 text-sm text-gray-600 dark:text-gray-300" data-i18n="iosInstallPromptBody">The iOS app is live. Download it from the App Store for the best mobile experience.</p>
+            <a href="https://apps.apple.com/pt/app/s%C3%A3o-miguel-bus/id6777066837" target="_blank" rel="noopener noreferrer" class="inline-flex w-full items-center justify-center rounded-full bg-black px-4 py-3 font-semibold text-white transition hover:bg-gray-800" data-umami-event="install-ios-app-store">
+                <i class="fab fa-apple mr-2 text-xl"></i>
+                <span data-i18n="iosInstallPromptCta">Download on the App Store</span>
+            </a>
+            <button type="button" onclick="closeIOSInstallPrompt()" class="mt-3 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-300 dark:hover:text-white" data-i18n="iosInstallPromptClose">Maybe later</button>
+        </div>
     </div>
 
     <script>

@@ -147,7 +147,7 @@
     "routeInstructionsText2": "Haga clic en el botón del autobús arriba si desea buscar solo rutas de autobuses disponibles.",
     "tryDirectionsButton": "Intentar obtener direcciones",
     "installAndroidApp": "Instalar Aplicación Android",
-    "registerToDownloadIOSApp": "Registrar para Descargar Aplicación iOS",
+    "downloadIOSApp": "Descargar la app iOS",
     "navBarToursLabel": "Experiencias",
     "navBarWeatherLabel": "Tiempo",
     "hubModuleWeatherDesc": "Tiempo por parroquia en la isla.",

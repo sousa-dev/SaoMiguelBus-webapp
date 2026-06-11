@@ -146,7 +146,7 @@
     "routeInstructionsText2": "Натисніть кнопку автобуса вище, якщо хочете шукати лише доступні автобусні маршрути.",
     "tryDirectionsButton": "Спробуйте отримати напрямки натомість",
     "installAndroidApp": "Встановити Android Додаток",
-    "registerToDownloadIOSApp": "Зареєструватися для Завантаження iOS Додатка",
+    "downloadIOSApp": "Завантажити iOS-додаток",
     "navBarToursLabel": "Враження",
     "navBarWeatherLabel": "Погода",
     "hubModuleWeatherDesc": "Погода за парафіями на острові.",
