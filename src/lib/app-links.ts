@@ -1,17 +1,22 @@
 import type { Platform } from '@/lib/platform';
 
+/** Live on the App Store — override via `VITE_IOS_APP_URL` at build time if needed. */
+const DEFAULT_IOS_APP_URL = 'https://apps.apple.com/app/id6777066837';
+const DEFAULT_IOS_APP_ID = '6777066837';
+
 /**
  * Native app store URLs. Set via `VITE_ANDROID_APP_URL` / `VITE_IOS_APP_URL`
- * at build time (Docker build args on Dokploy). When unset, buttons show
- * "Coming soon" and link to the public hub site.
+ * at build time (Docker build args on Dokploy). iOS defaults to the live App
+ * Store listing; Android still shows "Coming soon" until configured.
  */
 export const APP_LINKS = {
   android: (import.meta.env.VITE_ANDROID_APP_URL as string | undefined)?.trim() || '',
-  ios: (import.meta.env.VITE_IOS_APP_URL as string | undefined)?.trim() || '',
+  ios: (import.meta.env.VITE_IOS_APP_URL as string | undefined)?.trim() || DEFAULT_IOS_APP_URL,
 } as const;
 
-/** Optional iOS app id (numeric) for the native Smart App Banner meta tag. */
-export const IOS_APP_ID = (import.meta.env.VITE_IOS_APP_ID as string | undefined)?.trim() || '';
+/** iOS app id (numeric) for the native Smart App Banner meta tag. */
+export const IOS_APP_ID =
+  (import.meta.env.VITE_IOS_APP_ID as string | undefined)?.trim() || DEFAULT_IOS_APP_ID;
 
 const baseDomain =
   (import.meta.env.VITE_BASE_DOMAIN as string | undefined)?.trim() || 'saomiguelhub.com';
