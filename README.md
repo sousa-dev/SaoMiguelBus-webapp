@@ -48,8 +48,8 @@ npm run lint
 | `VITE_SITE_URL` | `https://app.saomiguelbus.com` | canonical base URL (canonical links + sitemap) |
 | `VITE_BASE_DOMAIN` | `saomiguelbus.com` | root domain used to build module subdomains |
 | `VITE_ANDROID_APP_URL` | _(empty)_ | Google Play URL for the install banner/buttons |
-| `VITE_IOS_APP_URL` | _(empty)_ | App Store URL for the install banner/buttons |
-| `VITE_IOS_APP_ID` | _(empty)_ | optional numeric iOS app id (Smart App Banner) |
+| `VITE_IOS_APP_URL` | `https://apps.apple.com/pt/app/s%C3%A3o-miguel-bus/id6777066837` | App Store URL for the install banner/buttons |
+| `VITE_IOS_APP_ID` | `6777066837` | numeric iOS app id for the Smart App Banner |
 
 ## Deep links, subdomains & SEO
 
@@ -62,7 +62,7 @@ npm run lint
 
 - On phones a prominent, dismissible bottom banner promotes the native app, with **platform-specific** store buttons (App Store on iOS, Google Play on Android) — `src/components/AppInstall.tsx`, platform detection in `src/lib/platform.ts`.
 - On desktop a subtle "Get the app" card with both store buttons sits in the sidebar footer.
-- Store URLs are not published yet: set `VITE_ANDROID_APP_URL` / `VITE_IOS_APP_URL` once available (the UI shows a "coming soon" state until then). All links resolve through `src/lib/app-links.ts`.
+- The iOS App Store listing is live and configured by default. Set `VITE_ANDROID_APP_URL` once Google Play is available; unconfigured store buttons show a "coming soon" state and link to the public hub site. All links resolve through `src/lib/app-links.ts`.
 
 > The production `api.saomiguelbus.com` host still served the legacy backend at the time of
 > writing (v3 lives on staging). The default points at staging so the app works out of the box;

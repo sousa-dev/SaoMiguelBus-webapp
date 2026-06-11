@@ -6,6 +6,7 @@
  */
 import { SITE } from '@/lib/seo-config';
 import { getSiteUrl } from '@/lib/site';
+import { IOS_APP_ID } from '@/lib/app-links';
 
 export interface HeadMeta {
   title: string;
@@ -67,6 +68,7 @@ export function setHead(meta: HeadMeta): void {
   upsertMeta('name', 'twitter:title', meta.title);
   upsertMeta('name', 'twitter:description', meta.description);
   upsertMeta('name', 'twitter:image', imageAbs);
+  upsertMeta('name', 'apple-itunes-app', `app-id=${IOS_APP_ID}`);
 
   // JSON-LD structured data (one managed block).
   let ld = document.getElementById('smb-jsonld');

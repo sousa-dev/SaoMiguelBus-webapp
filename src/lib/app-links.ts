@@ -1,7 +1,8 @@
 import type { Platform } from '@/lib/platform';
 
 /** Live on the App Store — override via `VITE_IOS_APP_URL` at build time if needed. */
-const DEFAULT_IOS_APP_URL = 'https://apps.apple.com/app/id6777066837';
+const DEFAULT_IOS_APP_URL =
+  'https://apps.apple.com/pt/app/s%C3%A3o-miguel-bus/id6777066837';
 const DEFAULT_IOS_APP_ID = '6777066837';
 
 /**
