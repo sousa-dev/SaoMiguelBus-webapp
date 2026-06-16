@@ -16,3 +16,11 @@ export function detectPlatform(): Platform {
 export function isMobilePlatform(): boolean {
   return detectPlatform() !== 'desktop';
 }
+
+/** Platform string sent to `/api/v1/ad` (matches mobile analytics platform). */
+export function getAdPlatform(): 'ios' | 'android' | 'web' {
+  const platform = detectPlatform();
+  if (platform === 'ios') return 'ios';
+  if (platform === 'android') return 'android';
+  return 'web';
+}

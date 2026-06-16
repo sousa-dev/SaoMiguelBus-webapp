@@ -38,3 +38,7 @@ export const NAV_MODULES: NavModule[] = [
   { key: 'traffic', route: '/traffic', labelKey: 'homeTrafficTitle', Icon: TriangleAlert },
   { key: 'marketplace', route: '/marketplace', labelKey: 'navBarMarketplaceLabel', Icon: Store },
 ];
+
+export function getModule(key: ModuleKey): NavModule | undefined {
+  return NAV_MODULES.find((m) => m.key === key);
+}

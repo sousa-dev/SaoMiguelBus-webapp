@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowRightLeft, Bus, Clock, Route as RouteIcon, Search, Star } from 'lucide-react';
@@ -11,6 +11,9 @@ import { resolveDayType } from '@/lib/format';
 import { useProfileStore } from '@/lib/store';
 import { RouteCard, StopPicker } from '@/features/transit/components';
 import { useStops, useTransitSearch } from '@/features/transit/hooks';
+import { AdBanner } from '@/features/ads/components/AdBanner';
+import { InterstitialOrchestrator } from '@/features/ads/components/InterstitialOrchestrator';
+import { useCanShowAds } from '@/features/premium/usePremium';
 
 const DEFAULT_SEARCH_TIME = '00:00';
 
@@ -35,6 +38,9 @@ export function TransitPage() {
   const [dateStr, setDateStr] = useState(todayInputValue());
   const [time, setTime] = useState(DEFAULT_SEARCH_TIME);
   const [searchEnabled, setSearchEnabled] = useState(Boolean(params.get('origin') && params.get('destination')));
+  const [interstitialTrigger, setInterstitialTrigger] = useState(0);
+  const lastInterstitialSearchRef = useRef(0);
+  const canShowAds = useCanShowAds();
 
   const day = useMemo(
     () => resolveDayType(new Date(`${dateStr}T00:00:00`), bootstrap?.holidays),
@@ -59,6 +65,17 @@ export function TransitPage() {
       addRecentSearch({ origin, destination, day, time });
     }
   }, [search.data, searchEnabled, origin, destination, day, time, addRecentSearch]);
+
+  useEffect(() => {
+    if (!canShowAds || !searchEnabled || search.isFetching || !search.isFetched) {
+      return;
+    }
+    if (lastInterstitialSearchRef.current === search.dataUpdatedAt) {
+      return;
+    }
+    lastInterstitialSearchRef.current = search.dataUpdatedAt;
+    setInterstitialTrigger((n) => n + 1);
+  }, [canShowAds, search.dataUpdatedAt, search.isFetched, search.isFetching, searchEnabled]);
 
   const runSearch = () => {
     if (!origin || !destination) return;
@@ -183,6 +200,7 @@ export function TransitPage() {
 
         {/* Results column */}
         <div className="flex flex-col gap-4">
+          {canShowAds ? <AdBanner on="home" slot="top" /> : null}
           {!searchEnabled && !hasResults ? (
             <Card className="p-6">
               <h3 className="mb-1 text-lg font-bold text-content">{t('homeInstructionsTitle')}</h3>
@@ -206,12 +224,27 @@ export function TransitPage() {
           ) : null}
 
           {hasResults && !search.isFetching
-            ? search.data!.map((r) => <RouteCard key={r.id} result={r} />)
+            ? search.data!.flatMap((r, index) => {
+                const cards = [<RouteCard key={r.id} result={r} />];
+                if (canShowAds && index % 2 === 1) {
+                  cards.push(
+                    <AdBanner key={`ad-inline-${index}`} on="home" slot={`inline-${index}`} />,
+                  );
+                }
+                return cards;
+              })
             : null}
 
           {stopsLoading && !searchEnabled ? <p className="text-sm text-muted">{t('loading', { defaultValue: 'Loading…' })}</p> : null}
         </div>
       </div>
+
+      {canShowAds ? (
+        <InterstitialOrchestrator
+          trigger={interstitialTrigger}
+          ready={searchEnabled && !search.isFetching && search.isFetched}
+        />
+      ) : null}
     </>
   );
 }

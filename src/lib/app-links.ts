@@ -1,9 +1,14 @@
 import type { Platform } from '@/lib/platform';
+import { detectPlatform } from '@/lib/platform';
 
 /** Live on the App Store — override via `VITE_IOS_APP_URL` at build time if needed. */
 const DEFAULT_IOS_APP_URL =
   'https://apps.apple.com/pt/app/s%C3%A3o-miguel-bus/id6777066837';
 const DEFAULT_IOS_APP_ID = '6777066837';
+
+/** Google Play listing for São Miguel Bus / Hub (legacy package id). */
+const DEFAULT_ANDROID_APP_URL =
+  'https://play.google.com/store/apps/details?id=com.hsousa_apps.Autocarros';
 
 /**
  * Native app store URLs. Set via `VITE_ANDROID_APP_URL` / `VITE_IOS_APP_URL`
@@ -11,7 +16,9 @@ const DEFAULT_IOS_APP_ID = '6777066837';
  * Store listing; Android still shows "Coming soon" until configured.
  */
 export const APP_LINKS = {
-  android: (import.meta.env.VITE_ANDROID_APP_URL as string | undefined)?.trim() || '',
+  android:
+    (import.meta.env.VITE_ANDROID_APP_URL as string | undefined)?.trim() ||
+    DEFAULT_ANDROID_APP_URL,
   ios: (import.meta.env.VITE_IOS_APP_URL as string | undefined)?.trim() || DEFAULT_IOS_APP_URL,
 } as const;
 
@@ -39,4 +46,14 @@ export function isStoreConfigured(platform: Exclude<Platform, 'desktop'>): boole
 /** Store URL when configured; otherwise the public hub site. */
 export function storeLink(platform: Exclude<Platform, 'desktop'>): string {
   return storeUrl(platform) ?? APP_HUB_URL;
+}
+
+/** Open the native app store for the current device, or show chooser on desktop. */
+export function openPremiumStore(openChooser: () => void): void {
+  const platform = detectPlatform();
+  if (platform === 'desktop') {
+    openChooser();
+    return;
+  }
+  window.open(storeLink(platform), '_blank', 'noopener,noreferrer');
 }

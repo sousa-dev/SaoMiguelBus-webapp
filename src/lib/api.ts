@@ -360,3 +360,13 @@ export async function recordAdClick(id: number): Promise<void> {
     /* fire and forget */
   }
 }
+
+export async function verifySubscriptionEmail(email: string): Promise<{
+  hasActiveSubscription: boolean;
+  expiresAt?: string;
+}> {
+  return apiFetch('/api/v1/subscription/verify/', {
+    method: 'POST',
+    body: JSON.stringify({ email }),
+  });
+}

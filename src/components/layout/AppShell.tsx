@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Menu, X } from 'lucide-react';
@@ -9,6 +9,9 @@ import { HUB_NAV, NAV_MODULES } from '@/lib/modules';
 import { cn } from '@/lib/cn';
 import { LanguagePicker } from '@/components/layout/LanguagePicker';
 import { AppInstallBanner, GetTheAppCard } from '@/components/AppInstall';
+import { SessionAdOrchestrator } from '@/features/ads/components/SessionAdOrchestrator';
+import { StoreChooserModal } from '@/features/ads/components/StoreChooserModal';
+import { useCanShowAds, usePremiumStore } from '@/features/premium/usePremium';
 
 function NavItems({ onNavigate }: { onNavigate?: () => void }) {
   const { t } = useTranslation();
@@ -55,6 +58,12 @@ function Brand() {
 export function AppShell() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+  const canShowAds = useCanShowAds();
+  const { isSuccess: bootstrapReady } = useBootstrap();
+
+  useEffect(() => {
+    void usePremiumStore.getState().refresh();
+  }, []);
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -115,6 +124,8 @@ export function AppShell() {
       </div>
 
       <AppInstallBanner />
+      <StoreChooserModal />
+      {canShowAds ? <SessionAdOrchestrator bootstrapReady={bootstrapReady} /> : null}
     </div>
   );
 }
