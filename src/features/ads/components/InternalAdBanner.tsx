@@ -46,14 +46,14 @@ export function InternalAdBanner({ creative }: Props) {
         {t('transitAdLabel')}
       </span>
 
-      <div className="mb-1 flex items-center justify-center gap-2">
-        <TitleIcon size={20} color="#FFFFFF" strokeWidth={2.5} />
-        <span className="text-base font-extrabold uppercase tracking-wide text-white">
+      <div className="mb-1 flex w-full items-center justify-center gap-2">
+        <TitleIcon size={20} color="#FFFFFF" strokeWidth={2.5} className="shrink-0" />
+        <span className="text-center text-base font-extrabold uppercase tracking-wide text-white">
           {t(creative.titleKey)}
         </span>
       </div>
 
-      <p className="text-sm text-white/90">{t(creative.subtitleKey)}</p>
+      <p className="text-center text-sm text-white/90">{t(creative.subtitleKey)}</p>
 
       {creative.hintKey ? (
         <div className="mt-2 flex items-center justify-center gap-1">

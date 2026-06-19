@@ -65,9 +65,9 @@ export function FirstPartyInterstitialModal({ visible, ad, onDismiss }: Props) {
         </button>
 
         <div className="flex flex-col items-center gap-2 px-4 pb-[max(1rem,env(safe-area-inset-bottom))] lg:px-6">
-          <div className="flex items-center gap-2">
-            <Crown size={22} className="text-accent" strokeWidth={2.5} />
-            <p className="text-base font-bold text-content">
+          <div className="flex items-center justify-center gap-2">
+            <Crown size={22} className="shrink-0 text-accent" strokeWidth={2.5} />
+            <p className="text-center text-base font-bold text-content">
               {t('upgradeForBetterTitle', { defaultValue: 'Upgrade for a better experience' })}
             </p>
           </div>

@@ -97,7 +97,7 @@ export function InternalFullscreenModal({ visible, creative, surface, onDismiss 
             </h2>
             <p className="text-base text-white/90 lg:text-lg">{t(creative.subtitleKey)}</p>
             {creative.hintKey ? (
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center justify-center gap-1.5">
                 <HintIcon size={16} color="rgba(255,255,255,0.85)" strokeWidth={2} />
                 <span className="text-sm text-white/85">{t(creative.hintKey)}</span>
               </div>
