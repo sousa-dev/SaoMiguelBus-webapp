@@ -97,7 +97,7 @@ export function MarketplaceToolbar({
       </div>
 
       {open ? (
-        <div className="rounded-2xl border border-border bg-surface p-4">
+        <div className="rounded-2xl border border-border bg-surface px-6 py-4">
           <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted">
             {t('marketplaceFilterCategory', { defaultValue: 'Category' })}
           </p>
