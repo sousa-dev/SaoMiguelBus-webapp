@@ -177,6 +177,7 @@ export interface ServiceCategory {
   slug: string;
   icon: string;
   userSuggested?: boolean;
+  isActive?: boolean;
 }
 
 export interface SocialLink {
