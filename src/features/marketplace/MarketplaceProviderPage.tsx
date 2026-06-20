@@ -1,100 +1,15 @@
-import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Globe, Mail, MessageCircle, Phone, Star, Store } from 'lucide-react';
 
-import { Badge, Button, Card, CenteredSpinner, Chip, EmptyState, SearchField, StarRating } from '@/components/ui';
-import { BackLink, PageHeader } from '@/components/layout/Page';
+import { Badge, Button, Card, CenteredSpinner, EmptyState, StarRating } from '@/components/ui';
+import { BackLink } from '@/components/layout/Page';
 import { Seo } from '@/components/Seo';
-import {
-  fetchMarketplaceCategories,
-  fetchProvider,
-  fetchProviders,
-  fetchReviews,
-  submitReview,
-} from '@/lib/api';
+import { VerifiedByOwnerBadge } from '@/features/marketplace/VerifiedByOwnerBadge';
+import { fetchProvider, fetchReviews, submitReview } from '@/lib/api';
 import { formatAppDate } from '@/lib/format';
-import { useDebounced } from '@/hooks/useDebounced';
-import type { MarketplaceProvider } from '@/lib/types';
-
-function Avatar({ name }: { name: string }) {
-  return (
-    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/12 text-lg font-bold text-primary">
-      {name.charAt(0).toUpperCase()}
-    </span>
-  );
-}
-
-function ProviderCard({ provider }: { provider: MarketplaceProvider }) {
-  return (
-    <Link to={`/marketplace/${provider.id}`}>
-      <Card className="flex h-full gap-4 p-4 transition hover:border-outline">
-        <Avatar name={provider.name} />
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2">
-            <p className="truncate font-bold text-content">{provider.name}</p>
-            {provider.isPromoted ? <Badge tone="accent">★</Badge> : null}
-          </div>
-          <p className="truncate text-xs text-muted">{provider.category.name}</p>
-          {provider.bio ? <p className="mt-1 line-clamp-2 text-sm text-muted">{provider.bio}</p> : null}
-          {provider.reviewCount > 0 ? (
-            <div className="mt-1.5">
-              <StarRating rating={provider.rating} count={provider.reviewCount} />
-            </div>
-          ) : null}
-        </div>
-      </Card>
-    </Link>
-  );
-}
-
-export function MarketplacePage() {
-  const { t } = useTranslation();
-  const [query, setQuery] = useState('');
-  const [category, setCategory] = useState<string | undefined>(undefined);
-  const debouncedQ = useDebounced(query, 350);
-
-  const categories = useQuery({ queryKey: ['marketplace', 'categories'], queryFn: fetchMarketplaceCategories });
-  const providers = useQuery({
-    queryKey: ['marketplace', 'providers', category, debouncedQ],
-    queryFn: () => fetchProviders({ category, q: debouncedQ || undefined, limit: 50 }),
-  });
-
-  return (
-    <>
-      <Seo modulePath="/marketplace" />
-      <PageHeader title={t('navBarMarketplaceLabel')} subtitle={t('marketplaceSubtitle', { defaultValue: 'Find trusted local service providers.' })} />
-
-      <div className="mb-5 flex flex-col gap-3">
-        <SearchField
-          placeholder={t('marketplaceSearchPlaceholder', { defaultValue: 'Search services…' })}
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="max-w-md"
-        />
-        <div className="flex flex-wrap gap-2">
-          <Chip label={t('allLabel', { defaultValue: 'All' })} active={!category} onClick={() => setCategory(undefined)} />
-          {(categories.data ?? []).map((c) => (
-            <Chip key={c.id} label={c.name} active={category === c.slug} onClick={() => setCategory((cur) => (cur === c.slug ? undefined : c.slug))} />
-          ))}
-        </div>
-      </div>
-
-      {providers.isLoading ? (
-        <CenteredSpinner />
-      ) : (providers.data ?? []).length === 0 ? (
-        <EmptyState icon={Store} title={t('marketplaceEmpty', { defaultValue: 'No providers found' })} />
-      ) : (
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          {providers.data!.map((p) => (
-            <ProviderCard key={p.id} provider={p} />
-          ))}
-        </div>
-      )}
-    </>
-  );
-}
 
 function ReviewForm({ providerId }: { providerId: number }) {
   const { t } = useTranslation();
@@ -169,21 +84,25 @@ export function MarketplaceProviderPage() {
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1fr_320px]">
         <div>
           <Card className="p-6">
-            <div className="flex items-start gap-4">
-              <Avatar name={p.name} />
-              <div className="min-w-0 flex-1">
-                <div className="flex flex-wrap items-center gap-2">
-                  <h1 className="text-xl font-extrabold text-content">{p.name}</h1>
-                  {p.isPromoted ? <Badge tone="accent">★ {t('marketplacePromoted', { defaultValue: 'Promoted' })}</Badge> : null}
-                </div>
-                <p className="text-sm text-muted">{p.category.name}</p>
-                {p.reviewCount > 0 ? <div className="mt-1"><StarRating rating={p.rating} count={p.reviewCount} /></div> : null}
+            <div className="flex flex-col gap-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <h1 className="text-xl font-extrabold text-content">{p.name}</h1>
+                {p.isPromoted ? (
+                  <Badge tone="accent">★ {t('marketplacePromoted', { defaultValue: 'Featured' })}</Badge>
+                ) : null}
+                {p.verifiedByOwner ? <VerifiedByOwnerBadge /> : null}
               </div>
+              <p className="text-sm text-muted">{p.category.name}</p>
+              {p.reviewCount > 0 ? (
+                <StarRating rating={p.rating} count={p.reviewCount} />
+              ) : (
+                <p className="text-sm text-muted">{t('marketplaceNoReviews', { defaultValue: 'No reviews yet.' })}</p>
+              )}
             </div>
             {p.bio ? <p className="mt-4 whitespace-pre-line text-content">{p.bio}</p> : null}
             {p.hourlyRate != null ? (
               <p className="mt-3 font-semibold text-content">
-                {t('marketplaceHourlyRate', { rate: p.hourlyRate, defaultValue: `€${p.hourlyRate}/h` })}
+                {t('marketplaceRateLabel', { rate: p.hourlyRate, defaultValue: `€${p.hourlyRate}/h` })}
               </p>
             ) : null}
           </Card>
@@ -232,6 +151,16 @@ export function MarketplaceProviderPage() {
             {p.website ? (
               <a href={p.website} target="_blank" rel="noreferrer" className="flex items-center gap-2 rounded-xl bg-surface-variant px-3 py-2.5 text-sm font-medium text-content hover:bg-border">
                 <Globe size={16} className="text-primary" /> {t('marketplaceWebsite', { defaultValue: 'Website' })}
+              </a>
+            ) : null}
+            {p.latitude != null && p.longitude != null ? (
+              <a
+                href={`https://www.google.com/maps?q=${p.latitude},${p.longitude}`}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-2 rounded-xl bg-surface-variant px-3 py-2.5 text-sm font-medium text-content hover:bg-border"
+              >
+                {t('marketplaceContactDirections', { defaultValue: 'Directions' })}
               </a>
             ) : null}
           </div>

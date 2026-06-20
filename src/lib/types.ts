@@ -198,9 +198,21 @@ export interface MarketplaceProvider {
   latitude: number | null;
   longitude: number | null;
   isPromoted: boolean;
+  verifiedByOwner?: boolean;
   rating: number;
   reviewCount: number;
   status?: string;
+}
+
+export interface MarketplaceListMeta {
+  reviewedShare: number;
+  reviewedCount: number;
+  totalCount: number;
+}
+
+export interface MarketplaceProvidersResult {
+  providers: MarketplaceProvider[];
+  meta: MarketplaceListMeta;
 }
 
 export interface MarketplaceReview {
