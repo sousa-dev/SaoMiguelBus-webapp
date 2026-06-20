@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
@@ -16,6 +16,7 @@ import {
 import { BackLink, PageHeader } from '@/components/layout/Page';
 import { Seo } from '@/components/Seo';
 import { fetchNewsArticle, fetchNewsArticles, fetchNewsSources } from '@/lib/api';
+import { track } from '@/lib/analytics';
 import { formatAppDate, formatAppDateTime } from '@/lib/format';
 import { useDebounced } from '@/hooks/useDebounced';
 import type { NewsArticle } from '@/lib/types';
@@ -27,7 +28,13 @@ function useNewsSources() {
 function useNewsArticles(params: { category: string; q?: string; source?: number }) {
   return useQuery<NewsArticle[]>({
     queryKey: ['news', 'articles', params.category, params.q, params.source],
-    queryFn: () => fetchNewsArticles(params),
+    queryFn: async () => {
+      const articles = await fetchNewsArticles(params);
+      if (params.q) {
+        track('news', 'search', { query: params.q, results_count: articles.length });
+      }
+      return articles;
+    },
     staleTime: 5 * 60 * 1000,
   });
 }
@@ -122,6 +129,12 @@ export function NewsArticlePage() {
     enabled: Number.isFinite(id),
   });
 
+  useEffect(() => {
+    if (article.data) {
+      track('news', 'open', { article_id: article.data.id, source: article.data.source.name });
+    }
+  }, [article.data?.id, article.data?.source.name]);
+
   if (article.isLoading) return <CenteredSpinner />;
   if (!article.data) {
     return (
@@ -133,6 +146,7 @@ export function NewsArticlePage() {
   }
 
   const a = article.data;
+
   return (
     <>
       <Seo title={a.title} description={a.summary?.slice(0, 200) || a.title} type="article" />

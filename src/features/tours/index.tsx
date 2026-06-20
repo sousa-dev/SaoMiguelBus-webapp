@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
@@ -8,12 +8,14 @@ import { Badge, Button, Card, CenteredSpinner, Chip, EmptyState, SearchField } f
 import { BackLink, PageHeader } from '@/components/layout/Page';
 import { Seo } from '@/components/Seo';
 import { fetchTour, fetchTours } from '@/lib/api';
+import { track } from '@/lib/analytics';
 import {
   DEFAULT_TOUR_FILTERS,
   filterAndSortTours,
   formatDuration,
   type TourSortKey,
 } from '@/features/tours/filterHelpers';
+import { trackTourBookClick, trackTourFilter, trackTourOpen } from '@/features/tours/analytics';
 import type { TourSummary } from '@/lib/types';
 
 function TourCard({ tour }: { tour: TourSummary }) {
@@ -74,6 +76,12 @@ export function ToursPage() {
     [tours.data, filters],
   );
 
+  useEffect(() => {
+    if (!tours.isLoading) {
+      track('tours', 'view', { screen: 'list', locale: i18n.language });
+    }
+  }, [tours.isLoading, i18n.language]);
+
   if (tours.isLoading) return <CenteredSpinner />;
 
   return (
@@ -94,7 +102,11 @@ export function ToursPage() {
               key={s.value}
               label={t(s.key)}
               active={filters.sort === s.value}
-              onClick={() => setFilters((f) => ({ ...f, sort: s.value }))}
+              onClick={() => {
+                const next = { ...filters, sort: s.value };
+                setFilters(next);
+                trackTourFilter(next);
+              }}
             />
           ))}
         </div>
@@ -122,6 +134,12 @@ export function TourDetailPage() {
     queryFn: () => fetchTour(code as string, { locale, currency: 'EUR' }),
     enabled: Boolean(code),
   });
+
+  useEffect(() => {
+    if (tour.data) {
+      trackTourOpen(tour.data.code, tour.data.title);
+    }
+  }, [tour.data?.code, tour.data?.title]);
 
   if (tour.isLoading) return <CenteredSpinner />;
   if (!tour.data) {
@@ -175,7 +193,12 @@ export function TourDetailPage() {
         <Card className="h-fit p-5 lg:sticky lg:top-24">
           {price ? <p className="text-2xl font-extrabold text-content">{price}</p> : null}
           <p className="mb-4 text-xs text-muted">{t('tourPricePerPerson', { defaultValue: 'per person' })}</p>
-          <a href={d.bookingUrl} target="_blank" rel="noreferrer">
+          <a
+            href={d.bookingUrl}
+            target="_blank"
+            rel="noreferrer"
+            onClick={() => trackTourBookClick(d.code)}
+          >
             <Button icon={ExternalLink} className="w-full">
               {t('tourBookCta')}
             </Button>

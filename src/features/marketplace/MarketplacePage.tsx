@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { Plus, Store } from 'lucide-react';
@@ -17,6 +17,7 @@ import { ProviderCard } from '@/features/marketplace/ProviderCard';
 import { MARKETPLACE_REGISTER_URL, shareMarketplaceListingInvite } from '@/features/marketplace/share-listing-invite';
 import { useDebounced } from '@/hooks/useDebounced';
 import { fetchMarketplaceCategories, fetchProviders } from '@/lib/api';
+import { track } from '@/lib/analytics';
 
 export function MarketplacePage() {
   const { t } = useTranslation();
@@ -27,8 +28,8 @@ export function MarketplacePage() {
   const categories = useQuery({ queryKey: ['marketplace', 'categories'], queryFn: fetchMarketplaceCategories });
   const providers = useQuery({
     queryKey: ['marketplace', 'providers', filters, debouncedQ],
-    queryFn: () =>
-      fetchProviders({
+    queryFn: async () => {
+      const result = await fetchProviders({
         category: filters.category,
         q: debouncedQ || undefined,
         sort: filters.sort,
@@ -36,8 +37,22 @@ export function MarketplacePage() {
         has_rate: filters.hasRate || undefined,
         verified: filters.verified || undefined,
         limit: 50,
-      }),
+      });
+      if (debouncedQ) {
+        track('marketplace', 'search', {
+          query: debouncedQ,
+          category: filters.category ?? null,
+          sort: filters.sort,
+          results_count: result.providers.length,
+        });
+      }
+      return result;
+    },
   });
+
+  useEffect(() => {
+    track('marketplace', 'view', { screen: 'list' });
+  }, []);
 
   const gridItems = useMemo(
     () => buildMarketplaceGridItems(providers.data?.providers ?? []),

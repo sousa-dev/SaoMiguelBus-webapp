@@ -9,6 +9,8 @@ import { HUB_NAV, NAV_MODULES } from '@/lib/modules';
 import { cn } from '@/lib/cn';
 import { LanguagePicker } from '@/components/layout/LanguagePicker';
 import { AppInstallBanner, GetTheAppCard } from '@/components/AppInstall';
+import { AnalyticsLifecycle } from '@/components/consent/AnalyticsLifecycle';
+import { ConsentBanner } from '@/components/consent/ConsentBanner';
 import { SessionAdOrchestrator } from '@/features/ads/components/SessionAdOrchestrator';
 import { StoreChooserModal } from '@/features/ads/components/StoreChooserModal';
 import { useCanShowAds, usePremiumStore } from '@/features/premium/usePremium';
@@ -125,6 +127,8 @@ export function AppShell() {
 
       <AppInstallBanner />
       <StoreChooserModal />
+      <ConsentBanner />
+      <AnalyticsLifecycle />
       {canShowAds ? <SessionAdOrchestrator bootstrapReady={bootstrapReady} /> : null}
     </div>
   );

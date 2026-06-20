@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
@@ -9,6 +9,8 @@ import { BackLink, PageHeader } from '@/components/layout/Page';
 import { Seo } from '@/components/Seo';
 import { MapView, type MapPoint } from '@/components/MapView';
 import { fetchTrail, fetchTrails } from '@/lib/api';
+import { track } from '@/lib/analytics';
+import { trackTrailFilter } from '@/features/trails/analytics';
 import { normalizeSearchText } from '@/lib/format';
 import type { TrailSummary } from '@/lib/types';
 
@@ -88,6 +90,43 @@ export function TrailsPage() {
     return (trails.data?.trails ?? []).filter((tr) => !q || normalizeSearchText(tr.name).includes(q));
   }, [trails.data, query]);
 
+  useEffect(() => {
+    if (!trails.isLoading) {
+      track('trails', 'view', { screen: 'list' });
+    }
+  }, [trails.isLoading]);
+
+  const applyDifficulty = (d: string) => {
+    setDifficulty(d);
+    trackTrailFilter({
+      difficulty: d || undefined,
+      shape: shape || undefined,
+      minLength: range?.minLength,
+      maxLength: range?.maxLength,
+    });
+  };
+
+  const applyShape = (s: string) => {
+    setShape(s);
+    trackTrailFilter({
+      difficulty: difficulty || undefined,
+      shape: s || undefined,
+      minLength: range?.minLength,
+      maxLength: range?.maxLength,
+    });
+  };
+
+  const applyDistance = (key: string) => {
+    setDistance(key);
+    const nextRange = DISTANCE_RANGES.find((r) => r.key === key);
+    trackTrailFilter({
+      difficulty: difficulty || undefined,
+      shape: shape || undefined,
+      minLength: nextRange?.minLength,
+      maxLength: nextRange?.maxLength,
+    });
+  };
+
   return (
     <>
       <Seo modulePath="/trails" />
@@ -106,7 +145,7 @@ export function TrailsPage() {
               key={d}
               label={d ? t(`trailsDifficulty_${d}`, { defaultValue: d }) : t('trailsFilterAll')}
               active={difficulty === d}
-              onClick={() => setDifficulty(d)}
+              onClick={() => applyDifficulty(d)}
             />
           ))}
         </div>
@@ -116,7 +155,7 @@ export function TrailsPage() {
               key={s}
               label={s ? t(`trailsShape_${s}`, { defaultValue: s }) : t('trailsFilterAll')}
               active={shape === s}
-              onClick={() => setShape(s)}
+              onClick={() => applyShape(s)}
             />
           ))}
           <span className="mx-1 w-px self-stretch bg-border" />
@@ -125,7 +164,7 @@ export function TrailsPage() {
               key={r.key}
               label={r.key === 'all' ? t('trailsFilterAll') : t(`trailsDistance_${r.key}`)}
               active={distance === r.key}
-              onClick={() => setDistance(r.key)}
+              onClick={() => applyDistance(r.key)}
             />
           ))}
         </div>
@@ -156,6 +195,24 @@ export function TrailDetailPage() {
     enabled: Number.isFinite(trailId),
   });
 
+  useEffect(() => {
+    if (trail.data) {
+      track('trails', 'view', {
+        trail_id: trail.data.id,
+        difficulty: trail.data.difficulty || undefined,
+      });
+    }
+  }, [trail.data?.id, trail.data?.difficulty]);
+
+  useEffect(() => {
+    const data = trail.data;
+    if (!data) return;
+    const hasMap = (data.waypoints?.length ?? 0) > 0 || data.startLat != null;
+    if (hasMap) {
+      track('trails', 'map_open', { trail_id: data.id });
+    }
+  }, [trail.data?.id, trail.data?.waypoints?.length, trail.data?.startLat]);
+
   if (trail.isLoading) return <CenteredSpinner />;
   if (!trail.data) {
     return (
@@ -182,7 +239,12 @@ export function TrailDetailPage() {
         subtitle={d.sourceRef}
         actions={
           d.startLat != null && d.startLng != null ? (
-            <a href={`https://www.google.com/maps/dir/?api=1&destination=${d.startLat},${d.startLng}`} target="_blank" rel="noreferrer">
+            <a
+              href={`https://www.google.com/maps/dir/?api=1&destination=${d.startLat},${d.startLng}`}
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => track('trails', 'engage', { action: 'get_directions', trail_id: d.id })}
+            >
               <Button variant="outline" size="sm" icon={Navigation}>{t('trailDirections', { defaultValue: 'Directions' })}</Button>
             </a>
           ) : null
@@ -210,12 +272,22 @@ export function TrailDetailPage() {
           ) : null}
           <div className="mt-4 flex flex-wrap gap-2">
             {d.gpxUrl ? (
-              <a href={d.gpxUrl} target="_blank" rel="noreferrer">
+              <a
+                href={d.gpxUrl}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => track('trails', 'download', { kind: 'gpx', trail_id: d.id })}
+              >
                 <Button variant="outline" size="sm" icon={Download}>GPX</Button>
               </a>
             ) : null}
             {d.kmlUrl ? (
-              <a href={d.kmlUrl} target="_blank" rel="noreferrer">
+              <a
+                href={d.kmlUrl}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() => track('trails', 'download', { kind: 'kml', trail_id: d.id })}
+              >
                 <Button variant="outline" size="sm" icon={Download}>KML</Button>
               </a>
             ) : null}

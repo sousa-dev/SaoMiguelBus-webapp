@@ -18,7 +18,7 @@ export function AdBanner({ on, slot }: Props) {
   }
 
   if (kind === 'first-party' && ad) {
-    return <FirstPartyAdBanner ad={ad} onOpen={openAd} />;
+    return <FirstPartyAdBanner ad={ad} onOpen={openAd} on={on} />;
   }
 
   return null;

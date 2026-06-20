@@ -9,6 +9,7 @@ import { BackLink } from '@/components/layout/Page';
 import { Seo } from '@/components/Seo';
 import { VerifiedByOwnerBadge } from '@/features/marketplace/VerifiedByOwnerBadge';
 import { fetchProvider, fetchReviews, submitReview } from '@/lib/api';
+import { track } from '@/lib/analytics';
 import { formatAppDate } from '@/lib/format';
 
 function ReviewForm({ providerId }: { providerId: number }) {
@@ -19,6 +20,7 @@ function ReviewForm({ providerId }: { providerId: number }) {
   const mutation = useMutation({
     mutationFn: () => submitReview(providerId, { rating, text: text || undefined }),
     onSuccess: () => {
+      track('marketplace', 'engage', { action: 'review', provider_id: providerId, rating });
       setText('');
       void qc.invalidateQueries({ queryKey: ['marketplace', 'reviews', providerId] });
       void qc.invalidateQueries({ queryKey: ['marketplace', 'provider', providerId] });
@@ -76,6 +78,11 @@ export function MarketplaceProviderPage() {
   }
 
   const p = provider.data;
+
+  const trackContact = (action: string) => {
+    track('marketplace', 'engage', { action, provider_id: p.id });
+  };
+
   return (
     <>
       <Seo title={`${p.name} — ${p.category.name}`} description={p.bio?.slice(0, 200) || `${p.name}, ${p.category.name}`} type="article" />
@@ -134,22 +141,22 @@ export function MarketplaceProviderPage() {
           <h3 className="mb-3 font-bold text-content">{t('marketplaceContact', { defaultValue: 'Contact' })}</h3>
           <div className="flex flex-col gap-2">
             {p.phone ? (
-              <a href={`tel:${p.phone}`} className="flex items-center gap-2 rounded-xl bg-surface-variant px-3 py-2.5 text-sm font-medium text-content hover:bg-border">
+              <a href={`tel:${p.phone}`} onClick={() => trackContact('call')} className="flex items-center gap-2 rounded-xl bg-surface-variant px-3 py-2.5 text-sm font-medium text-content hover:bg-border">
                 <Phone size={16} className="text-primary" /> {p.phone}
               </a>
             ) : null}
             {p.whatsapp ? (
-              <a href={`https://wa.me/${p.whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noreferrer" className="flex items-center gap-2 rounded-xl bg-surface-variant px-3 py-2.5 text-sm font-medium text-content hover:bg-border">
+              <a href={`https://wa.me/${p.whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noreferrer" onClick={() => trackContact('whatsapp')} className="flex items-center gap-2 rounded-xl bg-surface-variant px-3 py-2.5 text-sm font-medium text-content hover:bg-border">
                 <MessageCircle size={16} className="text-success" /> WhatsApp
               </a>
             ) : null}
             {p.email ? (
-              <a href={`mailto:${p.email}`} className="flex items-center gap-2 rounded-xl bg-surface-variant px-3 py-2.5 text-sm font-medium text-content hover:bg-border">
+              <a href={`mailto:${p.email}`} onClick={() => trackContact('email')} className="flex items-center gap-2 rounded-xl bg-surface-variant px-3 py-2.5 text-sm font-medium text-content hover:bg-border">
                 <Mail size={16} className="text-info" /> {p.email}
               </a>
             ) : null}
             {p.website ? (
-              <a href={p.website} target="_blank" rel="noreferrer" className="flex items-center gap-2 rounded-xl bg-surface-variant px-3 py-2.5 text-sm font-medium text-content hover:bg-border">
+              <a href={p.website} target="_blank" rel="noreferrer" onClick={() => trackContact('website')} className="flex items-center gap-2 rounded-xl bg-surface-variant px-3 py-2.5 text-sm font-medium text-content hover:bg-border">
                 <Globe size={16} className="text-primary" /> {t('marketplaceWebsite', { defaultValue: 'Website' })}
               </a>
             ) : null}
@@ -158,6 +165,7 @@ export function MarketplaceProviderPage() {
                 href={`https://www.google.com/maps?q=${p.latitude},${p.longitude}`}
                 target="_blank"
                 rel="noreferrer"
+                onClick={() => trackContact('directions')}
                 className="flex items-center gap-2 rounded-xl bg-surface-variant px-3 py-2.5 text-sm font-medium text-content hover:bg-border"
               >
                 {t('marketplaceContactDirections', { defaultValue: 'Directions' })}

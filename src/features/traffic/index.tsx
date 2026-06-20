@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
@@ -14,6 +14,7 @@ import {
   fetchTrafficReport,
   fetchTrafficReports,
 } from '@/lib/api';
+import { track } from '@/lib/analytics';
 import { formatRelativeTime } from '@/lib/format';
 import type { ConfirmVote, TrafficReport } from '@/lib/types';
 
@@ -64,6 +65,10 @@ export function TrafficPage() {
     color: '#b45309',
     popup: `${r.category.name}${r.road ? ` · ${r.road}` : ''}`,
   }));
+
+  useEffect(() => {
+    track('traffic', 'view', { screen: view });
+  }, [view]);
 
   return (
     <>
@@ -127,7 +132,8 @@ export function TrafficDetailPage() {
 
   const confirm = useMutation({
     mutationFn: (vote: ConfirmVote) => confirmTrafficReport(reportId, vote),
-    onSuccess: (data) => {
+    onSuccess: (data, vote) => {
+      track('traffic', 'confirm', { report_id: reportId, vote });
       qc.setQueryData(['traffic', 'report', reportId], data);
     },
   });

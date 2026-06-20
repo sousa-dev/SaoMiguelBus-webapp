@@ -60,6 +60,13 @@ export interface TripDetail {
   dislikesPercent?: number;
 }
 
+export interface ConsentPurposes {
+  strictly_necessary: boolean;
+  analytics: boolean;
+  ads: boolean;
+  personalization: boolean;
+}
+
 export interface DirectionsTimeValue {
   value?: number;
   text?: string;

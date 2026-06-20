@@ -1,9 +1,11 @@
 import { staticIslandConfig } from '@/config/island';
+import { getAnalyticsPlatform, getAppVersion } from '@/lib/platform';
 import { getOrCreateSessionId } from '@/lib/session';
 import type {
   AdPayload,
   BootstrapResponse,
   ConfirmVote,
+  ConsentPurposes,
   DirectionsResponse,
   MarketplaceProvider,
   MarketplaceProvidersResult,
@@ -382,5 +384,34 @@ export async function verifySubscriptionEmail(email: string): Promise<{
   return apiFetch('/api/v1/subscription/verify/', {
     method: 'POST',
     body: JSON.stringify({ email }),
+  });
+}
+
+// --- Consent & analytics --- //
+
+export async function postConsent(sessionId: string, purposes: ConsentPurposes) {
+  return apiFetch('/api/v3/consent/', {
+    method: 'POST',
+    body: JSON.stringify({ session_id: sessionId, purposes }),
+  });
+}
+
+export async function postAnalyticsEvents(
+  sessionId: string,
+  events: {
+    module: string;
+    event_type: string;
+    properties?: Record<string, unknown>;
+    occurred_at?: string;
+  }[],
+) {
+  return apiFetch<{ accepted: number; dropped: number }>('/api/v3/analytics/events', {
+    method: 'POST',
+    body: JSON.stringify({
+      session_id: sessionId,
+      platform: getAnalyticsPlatform(),
+      app_version: getAppVersion(),
+      events,
+    }),
   });
 }

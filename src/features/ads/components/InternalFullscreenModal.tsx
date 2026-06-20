@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { INTERNAL_AD_CLOSE_DELAY_SEC } from '@/features/ads/lib/internal-ad-constants';
 import { openPremiumStore } from '@/features/ads/lib/premium-cta';
 import type { InternalAdCreative, InternalAdSurface } from '@/features/ads/lib/internal-ads/types';
+import { track } from '@/lib/analytics';
 import { getModule } from '@/lib/modules';
 import { Button } from '@/components/ui';
 import { cn } from '@/lib/cn';
@@ -33,6 +34,13 @@ export function InternalFullscreenModal({ visible, creative, surface, onDismiss 
       return;
     }
 
+    track('transit', 'internal_ad_impression', {
+      creativeId: creative.id,
+      kind: creative.kind,
+      moduleKey: creative.moduleKey,
+      surface,
+    });
+
     // Reset countdown each time the modal opens (matches mobile interstitial timing).
     // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional open reset
     setSecondsLeft(INTERNAL_AD_CLOSE_DELAY_SEC);
@@ -44,6 +52,12 @@ export function InternalFullscreenModal({ visible, creative, surface, onDismiss 
   }, [visible, creative.id]);
 
   const onPrimaryPress = () => {
+    track('transit', 'internal_ad_click', {
+      creativeId: creative.id,
+      kind: creative.kind,
+      moduleKey: creative.moduleKey,
+      surface,
+    });
     if (creative.kind === 'paywall') {
       onDismiss();
       openPremiumStore();

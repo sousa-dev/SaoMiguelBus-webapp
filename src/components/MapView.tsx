@@ -11,6 +11,7 @@ export interface MapPoint {
   color?: string;
   radius?: number;
   popup?: ReactNode;
+  onClick?: () => void;
 }
 
 export interface MapLine {
@@ -146,6 +147,7 @@ export function MapView({
             fillColor: p.color ?? '#218732',
             fillOpacity: 0.9,
           }}
+          eventHandlers={p.onClick ? { click: p.onClick } : undefined}
         >
           {p.popup ? <Popup>{p.popup}</Popup> : null}
         </CircleMarker>

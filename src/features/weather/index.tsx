@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
@@ -8,6 +8,7 @@ import { Card, CenteredSpinner, Chip, EmptyState, SearchField } from '@/componen
 import { BackLink, PageHeader } from '@/components/layout/Page';
 import { Seo } from '@/components/Seo';
 import { fetchWeatherParish, fetchWeatherParishes } from '@/lib/api';
+import { track } from '@/lib/analytics';
 import { formatAppDate, normalizeSearchText } from '@/lib/format';
 import { weatherCodeEmoji, weatherCodeLabelKey } from '@/lib/weather-codes';
 import type { ParishWeather } from '@/lib/types';
@@ -55,6 +56,12 @@ export function WeatherPage() {
     });
   }, [parishes.data, query, concelho]);
 
+  useEffect(() => {
+    if (!parishes.isLoading) {
+      track('weather', 'view', { screen: 'list' });
+    }
+  }, [parishes.isLoading]);
+
   if (parishes.isLoading) return <CenteredSpinner />;
 
   return (
@@ -99,6 +106,12 @@ export function WeatherDetailPage() {
     enabled: Boolean(slug),
   });
 
+  useEffect(() => {
+    if (slug && parish.data) {
+      track('weather', 'view', { screen: 'detail', slug });
+    }
+  }, [slug, parish.data]);
+
   if (parish.isLoading) return <CenteredSpinner />;
   if (!parish.data) {
     return (
@@ -111,6 +124,7 @@ export function WeatherDetailPage() {
 
   const p = parish.data;
   const c = p.current;
+
   return (
     <>
       <Seo title={`${t('navBarWeatherLabel')} — ${p.name}`} description={`${p.name}, ${p.concelho}`} />

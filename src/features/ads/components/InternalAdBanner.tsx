@@ -1,9 +1,11 @@
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Crown, Hand, type LucideIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 import { openPremiumStore } from '@/features/ads/lib/premium-cta';
 import type { InternalAdCreative } from '@/features/ads/lib/internal-ads/types';
+import { track } from '@/lib/analytics';
 import { getModule } from '@/lib/modules';
 import { cn } from '@/lib/cn';
 
@@ -13,15 +15,34 @@ type Props = {
   slot?: string | number;
 };
 
-export function InternalAdBanner({ creative }: Props) {
+export function InternalAdBanner({ creative, on = 'home', slot = 'top' }: Props) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    track('transit', 'internal_ad_impression', {
+      on,
+      slot,
+      creativeId: creative.id,
+      kind: creative.kind,
+      moduleKey: creative.moduleKey,
+      surface: 'banner',
+    });
+  }, [creative.id, creative.kind, creative.moduleKey, on, slot]);
 
   const module = creative.moduleKey ? getModule(creative.moduleKey) : undefined;
   const TitleIcon: LucideIcon = creative.kind === 'paywall' ? Crown : (module?.Icon ?? Crown);
   const HintIcon: LucideIcon = creative.kind === 'paywall' ? Hand : (module?.Icon ?? Crown);
 
   const onPress = () => {
+    track('transit', 'internal_ad_click', {
+      on,
+      slot,
+      creativeId: creative.id,
+      kind: creative.kind,
+      moduleKey: creative.moduleKey,
+      surface: 'banner',
+    });
     if (creative.kind === 'paywall') {
       openPremiumStore();
       return;

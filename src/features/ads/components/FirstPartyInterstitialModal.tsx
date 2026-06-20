@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import { openPremiumStore } from '@/features/ads/lib/premium-cta';
 import { resolveAdHref } from '@/features/ads/lib/ad-link';
+import { track } from '@/lib/analytics';
 import { recordAdClick } from '@/lib/api';
 import type { AdPayload } from '@/lib/types';
 import { Button } from '@/components/ui';
@@ -19,6 +20,7 @@ export function FirstPartyInterstitialModal({ visible, ad, onDismiss }: Props) {
   if (!visible) return null;
 
   const onAdPress = () => {
+    track('transit', 'ad_click', { on: 'interstitial', adId: ad.id });
     void recordAdClick(ad.id);
     const href = resolveAdHref(ad);
     if (href) {
@@ -27,6 +29,7 @@ export function FirstPartyInterstitialModal({ visible, ad, onDismiss }: Props) {
   };
 
   const onUpgrade = () => {
+    track('transit', 'interstitial_upsell_click', { source: 'first_party_modal' });
     onDismiss();
     openPremiumStore();
   };

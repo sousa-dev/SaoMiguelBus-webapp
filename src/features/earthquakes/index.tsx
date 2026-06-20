@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
@@ -9,6 +9,7 @@ import { BackLink, PageHeader } from '@/components/layout/Page';
 import { Seo } from '@/components/Seo';
 import { MapView, type MapPoint } from '@/components/MapView';
 import { fetchSeismicEvent, fetchSeismicEvents } from '@/lib/api';
+import { track } from '@/lib/analytics';
 import { AZORES_ARCHIPELAGO_VIEW } from '@/lib/map-bounds';
 import { formatAppDateTime, formatRelativeTime } from '@/lib/format';
 import { magnitudeColorVar, seismicEventHeadline, seismicMagnitudeLabelKey } from '@/lib/seismic';
@@ -66,12 +67,17 @@ export function EarthquakesPage() {
     queryFn: () => fetchSeismicEvents({ sinceHours: windowHours, limit: 50 }),
   });
 
+  useEffect(() => {
+    track('seismic', 'view', { screen: view });
+  }, [view]);
+
   const points: MapPoint[] = (events.data ?? []).map((e) => ({
     id: e.id,
     lat: e.latitude,
     lng: e.longitude,
     color: magnitudeHex(e.magnitude),
     radius: 6 + e.magnitude * 2,
+    onClick: () => track('seismic', 'map_marker', { event_id: e.id, magnitude: e.magnitude }),
     popup: (
       <div className="text-sm">
         <strong>M{e.magnitude.toFixed(1)}</strong> · {e.region}
@@ -104,7 +110,10 @@ export function EarthquakesPage() {
             key={w.value}
             label={t(w.key, { defaultValue: w.fallback })}
             active={windowHours === w.value}
-            onClick={() => setWindowHours(w.value)}
+            onClick={() => {
+              setWindowHours(w.value);
+              track('seismic', 'filter', { window_hours: w.value });
+            }}
           />
         ))}
       </div>
@@ -142,6 +151,12 @@ export function EarthquakeDetailPage() {
     queryFn: () => fetchSeismicEvent(eventId),
     enabled: Number.isFinite(eventId),
   });
+
+  useEffect(() => {
+    if (event.data) {
+      track('seismic', 'open', { event_id: event.data.id, magnitude: event.data.magnitude });
+    }
+  }, [event.data?.id, event.data?.magnitude]);
 
   if (event.isLoading) return <CenteredSpinner />;
   if (!event.data) {
@@ -194,7 +209,16 @@ export function EarthquakeDetailPage() {
 
         <Card className="h-[400px] overflow-hidden">
           <MapView
-            points={[{ id: e.id, lat: e.latitude, lng: e.longitude, color: magnitudeHex(e.magnitude), radius: 12 }]}
+            points={[
+              {
+                id: e.id,
+                lat: e.latitude,
+                lng: e.longitude,
+                color: magnitudeHex(e.magnitude),
+                radius: 12,
+                onClick: () => track('seismic', 'view', { screen: 'map', source: 'detail', event_id: e.id }),
+              },
+            ]}
             center={{ lat: e.latitude, lng: e.longitude }}
             zoom={9}
             fit={false}

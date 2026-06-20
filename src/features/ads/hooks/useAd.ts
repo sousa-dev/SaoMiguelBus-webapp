@@ -1,11 +1,12 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { resolveAdSlotKind } from '@/features/ads/lib/ad-slot';
 import { resolveAdHref } from '@/features/ads/lib/ad-link';
 import { selectInternalCreative } from '@/features/ads/lib/internal-ads/select-creative';
 import { useCanShowAds } from '@/features/premium/usePremium';
 import { resolveEnabledModules } from '@/config/island';
+import { track } from '@/lib/analytics';
 import { fetchAd, recordAdClick } from '@/lib/api';
 import { getAdPlatform } from '@/lib/platform';
 import type { AdPayload } from '@/lib/types';
@@ -48,15 +49,18 @@ export function useAd(on: string, slot: string | number = 'top') {
   });
 
   const internalCreative =
-    kind === 'internal' ? selectInternalCreative({ slotKey, enabledModuleKeys }) : null;
+    kind === 'internal'
+      ? selectInternalCreative({ slotKey, enabledModuleKeys })
+      : null;
 
   const openAd = useCallback(async () => {
     if (!ad) return;
+    track('transit', 'ad_click', { on, adId: ad.id });
     void recordAdClick(ad.id);
     const href = resolveAdHref(ad);
     if (!href) return;
     window.open(href, '_blank', 'noopener,noreferrer');
-  }, [ad]);
+  }, [ad, on]);
 
   return { kind, ad, internalCreative, openAd, enabled: canShowAds, on, slot };
 }

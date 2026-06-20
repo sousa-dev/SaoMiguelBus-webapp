@@ -19,6 +19,7 @@ import {
 import { useCanShowAds } from '@/features/premium/usePremium';
 import { resolveEnabledModules } from '@/config/island';
 import { fetchAd } from '@/lib/api';
+import { track } from '@/lib/analytics';
 import { getAdPlatform } from '@/lib/platform';
 import type { AdPayload } from '@/lib/types';
 import { useBootstrap } from '@/hooks/useBootstrap';
@@ -105,6 +106,7 @@ export function InterstitialOrchestrator({ trigger, ready }: Props) {
           setShowFirstParty(true);
           setFirstPartyInterstitialVisible(true);
           markFullScreenAdShown(Date.now());
+          track('transit', 'ad_impression', { on: 'interstitial', adId: ad.id });
           return;
         }
 

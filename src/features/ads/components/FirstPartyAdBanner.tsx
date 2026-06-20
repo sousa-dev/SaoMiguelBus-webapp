@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { track } from '@/lib/analytics';
 import type { AdPayload } from '@/lib/types';
 
 type Props = {
   ad: AdPayload;
   onOpen: () => void;
+  on?: string;
 };
 
-export function FirstPartyAdBanner({ ad, onOpen }: Props) {
+export function FirstPartyAdBanner({ ad, onOpen, on = 'home' }: Props) {
   const { t } = useTranslation();
   const [aspectRatio, setAspectRatio] = useState(4);
 
@@ -26,6 +28,12 @@ export function FirstPartyAdBanner({ ad, onOpen }: Props) {
       cancelled = true;
     };
   }, [ad.media]);
+
+  useEffect(() => {
+    if (ad.id != null) {
+      track('transit', 'ad_impression', { on, adId: ad.id });
+    }
+  }, [ad.id, on]);
 
   return (
     <button
