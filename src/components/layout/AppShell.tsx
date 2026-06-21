@@ -5,6 +5,7 @@ import { Menu, X } from 'lucide-react';
 
 import { resolveEnabledModules } from '@/config/island';
 import { useBootstrap } from '@/hooks/useBootstrap';
+import { PRIVACY_URL, TERMS_URL } from '@/lib/app-links';
 import { HUB_NAV, NAV_MODULES } from '@/lib/modules';
 import { cn } from '@/lib/cn';
 import { LanguagePicker } from '@/components/layout/LanguagePicker';
@@ -45,6 +46,26 @@ function NavItems({ onNavigate }: { onNavigate?: () => void }) {
   );
 }
 
+function SidebarLegalLinks() {
+  const { t } = useTranslation();
+  const linkClass =
+    'text-muted underline-offset-2 transition hover:text-content hover:underline';
+
+  return (
+    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 px-1 text-xs">
+      <a href={TERMS_URL} target="_blank" rel="noopener noreferrer" className={linkClass}>
+        {t('termsAndConditions')}
+      </a>
+      <span className="text-muted/50" aria-hidden>
+        ·
+      </span>
+      <a href={PRIVACY_URL} target="_blank" rel="noopener noreferrer" className={linkClass}>
+        {t('privacyPolicy')}
+      </a>
+    </div>
+  );
+}
+
 function Brand() {
   return (
     <div className="flex items-center gap-2.5 px-1">
@@ -75,6 +96,7 @@ export function AppShell() {
         <NavItems />
         <div className="mt-auto flex flex-col gap-3">
           <GetTheAppCard />
+          <SidebarLegalLinks />
           <p className="px-1 text-xs text-muted">© {new Date().getFullYear()} São Miguel Bus</p>
         </div>
       </aside>
@@ -97,6 +119,9 @@ export function AppShell() {
               </button>
             </div>
             <NavItems onNavigate={() => setMobileOpen(false)} />
+            <div className="mt-auto">
+              <SidebarLegalLinks />
+            </div>
           </div>
         </div>
       ) : null}
