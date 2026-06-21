@@ -5,7 +5,7 @@ import { Menu, X } from 'lucide-react';
 
 import { resolveEnabledModules } from '@/config/island';
 import { useBootstrap } from '@/hooks/useBootstrap';
-import { PRIVACY_URL, TERMS_URL } from '@/lib/app-links';
+import { PRIVACY_PATH, TERMS_PATH } from '@/lib/app-links';
 import { HUB_NAV, NAV_MODULES } from '@/lib/modules';
 import { cn } from '@/lib/cn';
 import { LanguagePicker } from '@/components/layout/LanguagePicker';
@@ -53,13 +53,13 @@ function SidebarLegalLinks() {
 
   return (
     <div className="flex flex-wrap items-center gap-x-2 gap-y-1 px-1 text-xs">
-      <a href={TERMS_URL} target="_blank" rel="noopener noreferrer" className={linkClass}>
+      <a href={TERMS_PATH} className={linkClass}>
         {t('termsAndConditions')}
       </a>
       <span className="text-muted/50" aria-hidden>
         ·
       </span>
-      <a href={PRIVACY_URL} target="_blank" rel="noopener noreferrer" className={linkClass}>
+      <a href={PRIVACY_PATH} className={linkClass}>
         {t('privacyPolicy')}
       </a>
     </div>

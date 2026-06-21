@@ -1,6 +1,8 @@
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 
+import { ExternalRedirect } from '@/components/ExternalRedirect';
 import { AppShell } from '@/components/layout/AppShell';
+import { PRIVACY_URL, TERMS_URL } from '@/lib/app-links';
 import { HomePage } from '@/features/hub/HomePage';
 import { TransitPage } from '@/features/transit/TransitPage';
 import { DirectionsPage } from '@/features/transit/DirectionsPage';
@@ -24,6 +26,8 @@ function IndexRoute() {
 }
 
 const router = createBrowserRouter([
+  { path: '/terms.html', element: <ExternalRedirect to={TERMS_URL} /> },
+  { path: '/privacy.html', element: <ExternalRedirect to={PRIVACY_URL} /> },
   {
     path: '/',
     element: <AppShell />,
