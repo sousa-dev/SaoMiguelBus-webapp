@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import { CloudSun, Droplets, Wind } from 'lucide-react';
 
 import { Card, CenteredSpinner, Chip, EmptyState, SearchField } from '@/components/ui';
@@ -100,6 +100,10 @@ export function WeatherPage() {
 export function WeatherDetailPage() {
   const { t } = useTranslation();
   const { slug } = useParams();
+  const location = useLocation();
+  const returnState = location.state as { returnTo?: string; returnLabelKey?: string } | null;
+  const backTo = returnState?.returnTo ?? '/weather';
+  const backLabel = returnState?.returnLabelKey ? t(returnState.returnLabelKey) : t('navBarWeatherLabel');
   const parish = useQuery({
     queryKey: ['weather', 'parish', slug],
     queryFn: () => fetchWeatherParish(slug as string),
@@ -116,7 +120,7 @@ export function WeatherDetailPage() {
   if (!parish.data) {
     return (
       <>
-        <BackLink to="/weather" label={t('navBarWeatherLabel')} />
+        <BackLink to={backTo} label={backLabel} />
         <EmptyState icon={CloudSun} title={t('weatherNotFound', { defaultValue: 'Parish not found' })} />
       </>
     );
@@ -128,7 +132,7 @@ export function WeatherDetailPage() {
   return (
     <>
       <Seo title={`${t('navBarWeatherLabel')} — ${p.name}`} description={`${p.name}, ${p.concelho}`} />
-      <BackLink to="/weather" label={t('navBarWeatherLabel')} />
+      <BackLink to={backTo} label={backLabel} />
       <PageHeader title={p.name} subtitle={p.concelho} />
 
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-[360px_1fr]">

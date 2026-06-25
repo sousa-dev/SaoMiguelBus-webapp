@@ -22,7 +22,7 @@ import {
   splitStopLabel,
 } from '@/lib/format';
 import type { RouteWeatherCell, Stop, TransitSearchResult } from '@/lib/types';
-import { weatherCodeEmoji, weatherCodeLabelKey } from '@/lib/weather-codes';
+import { weatherCodeEmoji } from '@/lib/weather-codes';
 
 // --- StopPicker (autocomplete combobox) --- //
 
@@ -56,6 +56,10 @@ export function StopPicker({
         <input
           value={query}
           placeholder={placeholder}
+          autoCorrect="off"
+          spellCheck={false}
+          autoComplete="off"
+          autoCapitalize="off"
           onChange={(e) => {
             setQuery(e.target.value);
             onChange(e.target.value);
@@ -207,7 +211,7 @@ export function RouteCard({ result }: { result: TransitSearchResult }) {
   );
 }
 
-function RouteWeatherCellCard({
+function RouteWeatherCellCompact({
   cell,
   role,
   label,
@@ -216,11 +220,10 @@ function RouteWeatherCellCard({
   role: 'origin' | 'destination';
   label: string;
 }) {
-  const { t } = useTranslation();
-
   return (
     <Link
       to={`/weather/${cell.slug}`}
+      state={{ returnTo: '/transit', returnLabelKey: 'navBarSearchLabel' }}
       onClick={() =>
         track('weather', 'engage', {
           action: 'route_weather_click',
@@ -228,17 +231,13 @@ function RouteWeatherCellCard({
           role,
         })
       }
-      className="block h-full"
+      className="inline-flex items-center gap-1 text-xs text-muted transition hover:text-content"
     >
-      <div className="flex h-full flex-col items-center gap-1 rounded-xl border border-border p-3 text-center transition hover:border-outline">
-        <p className="text-xs font-semibold text-muted">{label}</p>
-        <span className="text-3xl">{weatherCodeEmoji(cell.weatherCode)}</span>
-        <p className="truncate w-full text-sm font-bold text-content">{cell.name}</p>
-        <p className="text-lg font-extrabold text-content">
-          {cell.temperature != null ? `${Math.round(cell.temperature)}°` : '—'}
-        </p>
-        <p className="text-xs text-muted">{t(weatherCodeLabelKey(cell.weatherCode))}</p>
-      </div>
+      <span>{label}</span>
+      <span className="text-sm leading-none">{weatherCodeEmoji(cell.weatherCode)}</span>
+      <span className="font-semibold">
+        {cell.temperature != null ? `${Math.round(cell.temperature)}°` : '—'}
+      </span>
     </Link>
   );
 }
@@ -253,21 +252,21 @@ export function RouteWeatherGrid({
   const { t } = useTranslation();
 
   return (
-    <Card className="p-4">
-      <h3 className="mb-3 text-sm font-bold text-content">{t('routeWeatherTitle')}</h3>
-      <div className="grid grid-cols-2 gap-3">
-        <RouteWeatherCellCard
-          cell={origin}
-          role="origin"
-          label={t('routeWeatherOrigin')}
-        />
-        <RouteWeatherCellCard
-          cell={destination}
-          role="destination"
-          label={t('routeWeatherDestination')}
-        />
-      </div>
-    </Card>
+    <div className="flex items-center justify-center gap-3 border-t border-border py-2 text-muted">
+      <RouteWeatherCellCompact
+        cell={origin}
+        role="origin"
+        label={t('routeWeatherOrigin')}
+      />
+      <span aria-hidden className="text-xs text-border">
+        ·
+      </span>
+      <RouteWeatherCellCompact
+        cell={destination}
+        role="destination"
+        label={t('routeWeatherDestination')}
+      />
+    </div>
   );
 }
 

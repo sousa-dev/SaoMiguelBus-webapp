@@ -71,11 +71,7 @@ export function TransitPage() {
     enabled: searchParams.enabled && hasResults,
   });
   const showRouteWeather = Boolean(
-    routeWeather.data &&
-      !routeWeather.isLoading &&
-      !routeWeather.isFetching &&
-      routeWeather.data.origin &&
-      routeWeather.data.destination,
+    routeWeather.data?.origin && routeWeather.data.destination,
   );
 
   useEffect(() => {
