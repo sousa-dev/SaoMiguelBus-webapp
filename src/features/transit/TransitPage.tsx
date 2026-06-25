@@ -9,8 +9,8 @@ import { PageHeader } from '@/components/layout/Page';
 import { useBootstrap } from '@/hooks/useBootstrap';
 import { resolveDayType } from '@/lib/format';
 import { useProfileStore } from '@/lib/store';
-import { RouteCard, StopPicker } from '@/features/transit/components';
-import { useStops, useTransitSearch } from '@/features/transit/hooks';
+import { RouteCard, RouteWeatherGrid, StopPicker } from '@/features/transit/components';
+import { useRouteWeather, useStops, useTransitSearch } from '@/features/transit/hooks';
 import { AdBanner } from '@/features/ads/components/AdBanner';
 import { InterstitialOrchestrator } from '@/features/ads/components/InterstitialOrchestrator';
 import { useCanShowAds } from '@/features/premium/usePremium';
@@ -60,6 +60,24 @@ export function TransitPage() {
 
   const search = useTransitSearch(searchParams);
 
+  const hasResults = Boolean(search.data && search.data.length > 0);
+  const earliestArrival = search.data?.[0]?.end;
+  const routeWeather = useRouteWeather({
+    origin,
+    destination,
+    dateStr,
+    time,
+    earliestArrival,
+    enabled: searchParams.enabled && hasResults,
+  });
+  const showRouteWeather = Boolean(
+    routeWeather.data &&
+      !routeWeather.isLoading &&
+      !routeWeather.isFetching &&
+      routeWeather.data.origin &&
+      routeWeather.data.destination,
+  );
+
   useEffect(() => {
     if (search.data && search.data.length > 0 && searchEnabled) {
       addRecentSearch({ origin, destination, day, time });
@@ -96,7 +114,6 @@ export function TransitPage() {
     setParams({ origin: o, destination: d }, { replace: true });
   };
 
-  const hasResults = Boolean(search.data && search.data.length > 0);
   const showEmpty = searchEnabled && !search.isFetching && search.data && search.data.length === 0;
 
   return (
@@ -200,6 +217,12 @@ export function TransitPage() {
 
         {/* Results column */}
         <div className="flex flex-col gap-4">
+          {showRouteWeather && routeWeather.data?.origin && routeWeather.data.destination ? (
+            <RouteWeatherGrid
+              origin={routeWeather.data.origin}
+              destination={routeWeather.data.destination}
+            />
+          ) : null}
           {canShowAds ? <AdBanner on="home" slot="top" /> : null}
           {!searchEnabled && !hasResults ? (
             <Card className="p-6">

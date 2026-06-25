@@ -24,6 +24,7 @@ import type {
   TrailsListResponse,
   TransitSearchResult,
   TripDetail,
+  RouteWeather,
   WeatherParishesResponse,
 } from '@/lib/types';
 
@@ -193,6 +194,21 @@ export async function fetchWeatherParishes(): Promise<WeatherParishesResponse> {
 
 export async function fetchWeatherParish(slug: string): Promise<ParishWeather> {
   return apiFetch<ParishWeather>(`/api/v3/weather/parishes/${encodeURIComponent(slug)}`);
+}
+
+export async function fetchRouteWeather(params: {
+  origin: string;
+  destination: string;
+  originAt?: string;
+  destinationAt?: string;
+}): Promise<RouteWeather> {
+  const query = new URLSearchParams({
+    origin: params.origin,
+    destination: params.destination,
+  });
+  if (params.originAt) query.set('origin_at', params.originAt);
+  if (params.destinationAt) query.set('destination_at', params.destinationAt);
+  return apiFetch<RouteWeather>(`/api/v3/transit/route-weather?${query.toString()}`);
 }
 
 // --- Earthquakes --- //

@@ -336,6 +336,26 @@ export interface WeatherParishesResponse {
   attribution: string;
 }
 
+export interface RouteWeatherCell {
+  slug: string;
+  name: string;
+  concelho: string;
+  at: string | null;
+  source: 'current' | 'forecast';
+  temperature: number | null;
+  weatherCode: number | null;
+  windSpeed: number | null;
+  humidity: number | null;
+  precipitation: number | null;
+  precipitationProbability?: number | null;
+  distanceKm?: number | null;
+}
+
+export interface RouteWeather {
+  origin: RouteWeatherCell | null;
+  destination: RouteWeatherCell | null;
+}
+
 export interface AdPayload {
   id: number;
   entity: string;

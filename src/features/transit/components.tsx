@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 
 import { Badge, Card } from '@/components/ui';
+import { track } from '@/lib/analytics';
 import { cn } from '@/lib/cn';
 import {
   countTransfers,
@@ -20,7 +21,8 @@ import {
   normalizeSearchText,
   splitStopLabel,
 } from '@/lib/format';
-import type { Stop, TransitSearchResult } from '@/lib/types';
+import type { RouteWeatherCell, Stop, TransitSearchResult } from '@/lib/types';
+import { weatherCodeEmoji, weatherCodeLabelKey } from '@/lib/weather-codes';
 
 // --- StopPicker (autocomplete combobox) --- //
 
@@ -201,6 +203,70 @@ export function RouteCard({ result }: { result: TransitSearchResult }) {
           </Link>
         </div>
       ) : null}
+    </Card>
+  );
+}
+
+function RouteWeatherCellCard({
+  cell,
+  role,
+  label,
+}: {
+  cell: RouteWeatherCell;
+  role: 'origin' | 'destination';
+  label: string;
+}) {
+  const { t } = useTranslation();
+
+  return (
+    <Link
+      to={`/weather/${cell.slug}`}
+      onClick={() =>
+        track('weather', 'engage', {
+          action: 'route_weather_click',
+          slug: cell.slug,
+          role,
+        })
+      }
+      className="block h-full"
+    >
+      <div className="flex h-full flex-col items-center gap-1 rounded-xl border border-border p-3 text-center transition hover:border-outline">
+        <p className="text-xs font-semibold text-muted">{label}</p>
+        <span className="text-3xl">{weatherCodeEmoji(cell.weatherCode)}</span>
+        <p className="truncate w-full text-sm font-bold text-content">{cell.name}</p>
+        <p className="text-lg font-extrabold text-content">
+          {cell.temperature != null ? `${Math.round(cell.temperature)}°` : '—'}
+        </p>
+        <p className="text-xs text-muted">{t(weatherCodeLabelKey(cell.weatherCode))}</p>
+      </div>
+    </Link>
+  );
+}
+
+export function RouteWeatherGrid({
+  origin,
+  destination,
+}: {
+  origin: RouteWeatherCell;
+  destination: RouteWeatherCell;
+}) {
+  const { t } = useTranslation();
+
+  return (
+    <Card className="p-4">
+      <h3 className="mb-3 text-sm font-bold text-content">{t('routeWeatherTitle')}</h3>
+      <div className="grid grid-cols-2 gap-3">
+        <RouteWeatherCellCard
+          cell={origin}
+          role="origin"
+          label={t('routeWeatherOrigin')}
+        />
+        <RouteWeatherCellCard
+          cell={destination}
+          role="destination"
+          label={t('routeWeatherDestination')}
+        />
+      </div>
     </Card>
   );
 }

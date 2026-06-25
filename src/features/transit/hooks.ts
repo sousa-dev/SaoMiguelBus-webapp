@@ -3,13 +3,14 @@ import { useTranslation } from 'react-i18next';
 
 import {
   fetchDirections,
+  fetchRouteWeather,
   fetchStops,
   fetchTripDetail,
   searchTransit,
   voteTrip,
 } from '@/lib/api';
 import { track } from '@/lib/analytics';
-import type { Stop, TransitSearchResult, TripDetail } from '@/lib/types';
+import type { RouteWeather, Stop, TransitSearchResult, TripDetail } from '@/lib/types';
 
 export function useStops() {
   return useQuery<Stop[]>({ queryKey: ['transit', 'stops'], queryFn: fetchStops });
@@ -41,6 +42,61 @@ export function useTransitSearch(params: TransitSearchParams) {
         results_count: results.length,
       });
       return results;
+    },
+    enabled: params.enabled && Boolean(params.origin && params.destination),
+  });
+}
+
+export interface RouteWeatherParams {
+  origin: string;
+  destination: string;
+  dateStr: string;
+  time: string;
+  earliestArrival?: string;
+  enabled: boolean;
+}
+
+function parseStartHour(time: string): number {
+  const [hours] = time.split(':');
+  return Number(hours) || 0;
+}
+
+function tripTimeToIso(dateStr: string, tripTime: string): string {
+  const match = tripTime.match(/(\d{1,2})[h:](\d{2})/);
+  if (!match) return `${dateStr}T00:00`;
+  return `${dateStr}T${match[1].padStart(2, '0')}:${match[2]}`;
+}
+
+export function useRouteWeather(params: RouteWeatherParams) {
+  const startHour = parseStartHour(params.time);
+  const forecastMode = startHour >= 5 && Boolean(params.earliestArrival);
+  const originAt = forecastMode ? `${params.dateStr}T${params.time}` : undefined;
+  const destinationAt =
+    forecastMode && params.earliestArrival
+      ? tripTimeToIso(params.dateStr, params.earliestArrival)
+      : undefined;
+
+  return useQuery<RouteWeather>({
+    queryKey: [
+      'transit',
+      'route-weather',
+      params.origin,
+      params.destination,
+      originAt,
+      destinationAt,
+    ],
+    queryFn: async () => {
+      const data = await fetchRouteWeather({
+        origin: params.origin,
+        destination: params.destination,
+        originAt,
+        destinationAt,
+      });
+      track('weather', 'view', {
+        screen: 'transit_inline',
+        mode: forecastMode ? 'forecast' : 'current',
+      });
+      return data;
     },
     enabled: params.enabled && Boolean(params.origin && params.destination),
   });
