@@ -32,6 +32,12 @@ const baseDomain =
 /** Fallback when a store URL is not configured yet. */
 export const APP_HUB_URL = `https://${baseDomain.replace(/^https?:\/\//, '')}`;
 
+export const TERMS_PATH = '/terms.html';
+export const PRIVACY_PATH = '/privacy.html';
+
+export const TERMS_URL = `${APP_HUB_URL}${TERMS_PATH}`;
+export const PRIVACY_URL = `${APP_HUB_URL}${PRIVACY_PATH}`;
+
 /** Returns the store URL for a platform, or null when not yet configured. */
 export function storeUrl(platform: Platform): string | null {
   if (platform === 'android') return APP_LINKS.android || null;
