@@ -83,11 +83,107 @@ export function formatTravelDuration(first: string, last: string): string {
   return `${String(h).padStart(2, '0')}h${String(mm).padStart(2, '0')}`;
 }
 
+/**
+ * Split a stop name into what to show and what to show underneath.
+ *
+ * The two networks name stops differently: legacy uses `"VILLAGE - LANDMARK"`,
+ * AzoresBus uses `"VILLAGE (LANDMARK)"`. Both are handled here rather than at
+ * the call sites, which have no business knowing which network they are on.
+ */
 export function splitStopLabel(name: string): { title: string; subtitle: string | null } {
+  const paren = name.indexOf(' (');
+  if (paren > 0 && name.endsWith(')')) {
+    const subtitle = name.slice(paren + 2, -1).trim();
+    return { title: name.slice(0, paren).trim(), subtitle: subtitle || null };
+  }
   const parts = name.split(' - ');
   if (parts.length <= 1) return { title: name, subtitle: null };
   return { title: parts[0] ?? name, subtitle: parts.slice(1).join(' - ') || null };
 }
+
+/** Parse `08h30` / `08:30` into minutes since midnight. */
+export function timeStringToMinutes(timeString: string): number {
+  const normalized = normalizeTripTime(timeString);
+  const [hours, minutes] = normalized.split('h').map((part) => parseInt(part, 10));
+  return (hours || 0) * 60 + (minutes || 0);
+}
+
+export function computeVotePercents(
+  likes: number,
+  dislikes: number,
+): { likesPercent: number; dislikesPercent: number } {
+  const total = likes + dislikes;
+  if (total <= 0) {
+    return { likesPercent: 0, dislikesPercent: 0 };
+  }
+  return {
+    likesPercent: Math.floor((likes / total) * 100),
+    dislikesPercent: Math.floor((dislikes / total) * 100),
+  };
+}
+
+/** Minimal shape of i18next's `t`, so this module stays free of react-i18next. */
+type Translate = (key: string, options?: Record<string, unknown>) => string;
+
+/**
+ * A span of minutes as words: "17 minutes", "2 hours", "1 hour and 17 minutes".
+ *
+ * Built from two separately-pluralised parts joined by a locale-specific
+ * conjunction, rather than one `{{hours}}h {{minutes}}` template, because the
+ * singular/plural of each unit varies independently — "1 hour and 2 minutes",
+ * "2 hours and 1 minute" — and no single interpolated string can express that
+ * across eight languages.
+ *
+ * Minutes are NOT carried into the hours part as a fraction: a rider reads a
+ * connection time to decide whether to leave the stop, and "1.3 hours" is not a
+ * thing anyone converts back to a departure.
+ */
+export function formatDurationWords(t: Translate, totalMinutes: number): string {
+  const safe = Math.max(0, Math.round(totalMinutes));
+  const hours = Math.floor(safe / 60);
+  const minutes = safe % 60;
+
+  if (hours === 0) {
+    return t('durationMinutes', { count: minutes });
+  }
+  const hoursPart = t('durationHours', { count: hours });
+  if (minutes === 0) {
+    return hoursPart;
+  }
+  return t('durationHoursAndMinutes', {
+    hours: hoursPart,
+    minutes: t('durationMinutes', { count: minutes }),
+  });
+}
+
+/**
+ * `start` is rounded DOWN to this many minutes, which does two jobs at once.
+ *
+ * It keeps a query key stable — a key carrying the live minute would refetch
+ * sixty times an hour for a timetable that does not change — and it leaves a few
+ * minutes of grace at the front of the list, so a bus that pulled out two
+ * minutes ago is still visible to a rider who is running for it.
+ */
+export const DEPARTURES_START_BUCKET_MINUTES = 5;
+
+/**
+ * A clock time as the transit API's `start` parameter: `HHhMM`, bucketed.
+ *
+ * Local time on purpose — the timetable is written in island local time, and the
+ * rider is standing at the stop.
+ */
+export function departuresStartTime(
+  date: Date,
+  bucketMinutes = DEPARTURES_START_BUCKET_MINUTES,
+): string {
+  const size = Math.max(1, Math.floor(bucketMinutes));
+  const hours = date.getHours();
+  const minutes = Math.floor(date.getMinutes() / size) * size;
+  return `${String(hours).padStart(2, '0')}h${String(minutes).padStart(2, '0')}`;
+}
+
+/** The whole service day, as the API spells it. */
+export const FULL_DAY_START = '00h00';
 
 export function countTransfers(route: string, stopCount: number): number {
   const raw = route.split('/').length - 1;

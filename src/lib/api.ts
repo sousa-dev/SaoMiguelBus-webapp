@@ -1,4 +1,9 @@
 import { staticIslandConfig } from '@/config/island';
+import { ApiRequestError } from '@/lib/api-errors';
+import {
+  journeyFromSearchResult,
+  shouldFallBackToDirectSearch,
+} from '@/features/transit/lib/journey-fallback';
 import { getAnalyticsPlatform, getAppVersion } from '@/lib/platform';
 import { getOrCreateSessionId } from '@/lib/session';
 import type {
@@ -10,6 +15,14 @@ import type {
   MarketplaceProvider,
   MarketplaceProvidersResult,
   MarketplaceReview,
+  MinibusDocument,
+  MinibusDocumentsResponse,
+  MinibusLine,
+  MinibusLinesResponse,
+  MinibusMeta,
+  MinibusNetworkResponse,
+  MinibusRouteSearchResponse,
+  MinibusTariffsResponse,
   NewsArticle,
   NewsSource,
   ParishWeather,
@@ -22,7 +35,15 @@ import type {
   TrafficReport,
   TrailDetail,
   TrailsListResponse,
+  TariffsResponse,
+  TransitDataset,
+  TransitJourney,
+  TransitJourneySearch,
+  TransitLegGeometry,
+  TransitLineDetail,
+  TransitLineShape,
   TransitSearchResult,
+  TransitStopDetail,
   TripDetail,
   RouteWeather,
   WeatherParishesResponse,
@@ -34,18 +55,7 @@ export function getApiBase(): string {
   return API_BASE;
 }
 
-/** Structured error mirroring the Expo client's ApiRequestError. */
-export class ApiRequestError extends Error {
-  status: number;
-  body: string;
-
-  constructor(status: number, body: string) {
-    super(`API ${status}`);
-    this.name = 'ApiRequestError';
-    this.status = status;
-    this.body = body;
-  }
-}
+export { ApiRequestError } from '@/lib/api-errors';
 
 function baseHeaders(extra?: HeadersInit): HeadersInit {
   return {
@@ -74,14 +84,37 @@ export async function fetchBootstrap(): Promise<BootstrapResponse> {
   return apiFetch<BootstrapResponse>('/api/v3/bootstrap');
 }
 
-export async function fetchStops(): Promise<Stop[]> {
-  const data = await apiFetch<{ stops: Stop[] }>('/api/v3/transit/stops');
-  const seen = new Set<number>();
+/**
+ * Every transit read takes an optional dataset, and it is only ever appended
+ * when truthy.
+ *
+ * The client is allowed to send exactly one value — `azoresbus`, while
+ * previewing. Omitting the parameter lets the server resolve the network from
+ * its own Atlantic/Azores clock, which is the only answer that stays correct
+ * across the cutover instant. See `features/transit/lib/schedule-config.ts`.
+ */
+function withDataset(query: URLSearchParams, dataset?: TransitDataset | null): string {
+  if (dataset) {
+    query.set('dataset', dataset);
+  }
+  const qs = query.toString();
+  return qs ? `?${qs}` : '';
+}
+
+export async function fetchStops(dataset?: TransitDataset | null): Promise<Stop[]> {
+  const data = await apiFetch<{ stops: Stop[] }>(
+    `/api/v3/transit/stops${withDataset(new URLSearchParams(), dataset)}`,
+  );
+  // Dedupe on NAME, never on id. The server emits every real stop and then a
+  // block of short-name aliases that REUSE the same id (194 legacy rows carry
+  // 108 distinct ids), so deduping by id silently deletes every alias — and the
+  // alias is often the name a rider types.
+  const seen = new Set<string>();
   return data.stops.filter((stop) => {
-    if (seen.has(stop.id)) {
+    if (seen.has(stop.name)) {
       return false;
     }
-    seen.add(stop.id);
+    seen.add(stop.name);
     return true;
   });
 }
@@ -91,26 +124,169 @@ export async function searchTransit(params: {
   destination: string;
   day: string;
   start: string;
+  dataset?: TransitDataset | null;
 }): Promise<TransitSearchResult[]> {
-  const query = new URLSearchParams(params);
+  const { dataset, ...rest } = params;
   const data = await apiFetch<{ results: TransitSearchResult[] }>(
-    `/api/v3/transit/search?${query.toString()}`,
+    `/api/v3/transit/search${withDataset(new URLSearchParams(rest), dataset)}`,
   );
   return data.results ?? [];
 }
 
-export async function fetchTripDetail(tripId: number): Promise<TripDetail> {
-  return apiFetch<TripDetail>(`/api/v3/transit/trips/${tripId}`);
+export interface JourneySearchParams {
+  origin: string;
+  destination: string;
+  day: string;
+  start: string;
+  /** 0 = one bus only. Omitted ⇒ the server's default of 1. */
+  maxTransfers?: number;
+  dataset?: TransitDataset | null;
+}
+
+/**
+ * Multi-leg journey search, degrading to direct search when the endpoint is
+ * missing or broken (see `shouldFallBackToDirectSearch`).
+ */
+export async function searchTransitJourneys(
+  params: JourneySearchParams,
+): Promise<TransitJourneySearch> {
+  const query = new URLSearchParams({
+    origin: params.origin,
+    destination: params.destination,
+    day: params.day,
+    start: params.start,
+  });
+  if (params.maxTransfers != null) {
+    query.set('maxTransfers', String(params.maxTransfers));
+  }
+
+  try {
+    const data = await apiFetch<{
+      journeys?: TransitJourney[];
+      maxTransfers?: number;
+      transfersAvailable?: number;
+    }>(`/api/v3/transit/journeys${withDataset(query, params.dataset)}`);
+    return {
+      journeys: data.journeys ?? [],
+      maxTransfers: data.maxTransfers ?? params.maxTransfers ?? 1,
+      ...(data.transfersAvailable != null
+        ? { transfersAvailable: data.transfersAvailable }
+        : {}),
+    };
+  } catch (error) {
+    if (!shouldFallBackToDirectSearch(error)) {
+      throw error;
+    }
+    const results = await searchTransit({
+      origin: params.origin,
+      destination: params.destination,
+      day: params.day,
+      start: params.start,
+      dataset: params.dataset,
+    });
+    // The direct endpoint knows nothing about changes, so the answer it gives is
+    // a direct-only one — say so rather than implying transfers were considered.
+    return { journeys: results.map(journeyFromSearchResult), maxTransfers: 0 };
+  }
+}
+
+export async function fetchTripDetail(
+  tripId: number,
+  dataset?: TransitDataset | null,
+): Promise<TripDetail> {
+  return apiFetch<TripDetail>(
+    `/api/v3/transit/trips/${tripId}${withDataset(new URLSearchParams(), dataset)}`,
+  );
+}
+
+export async function fetchStopDetail(params: {
+  stopId: number;
+  day: string;
+  start: string;
+  dataset?: TransitDataset | null;
+}): Promise<TransitStopDetail> {
+  const query = new URLSearchParams({ day: params.day, start: params.start });
+  return apiFetch<TransitStopDetail>(
+    `/api/v3/transit/stops/${params.stopId}${withDataset(query, params.dataset)}`,
+  );
+}
+
+/**
+ * The drawable path for one ride leg.
+ *
+ * `from`/`to` are the leg's `board.sequence` / `alight.sequence`. Omit BOTH to
+ * get the whole trip — that is how the trip detail page draws the full line.
+ */
+export async function fetchTripGeometry(params: {
+  tripId: number;
+  from?: number;
+  to?: number;
+  dataset?: TransitDataset | null;
+}): Promise<TransitLegGeometry> {
+  const query = new URLSearchParams();
+  if (params.from != null && params.to != null) {
+    query.set('from', String(params.from));
+    query.set('to', String(params.to));
+  }
+  return apiFetch<TransitLegGeometry>(
+    `/api/v3/transit/trips/${params.tripId}/geometry${withDataset(query, params.dataset)}`,
+  );
+}
+
+export async function fetchLineShape(
+  code: string,
+  dataset?: TransitDataset | null,
+): Promise<TransitLineShape> {
+  return apiFetch<TransitLineShape>(
+    `/api/v3/transit/lines/${encodeURIComponent(code)}/shape${withDataset(
+      new URLSearchParams(),
+      dataset,
+    )}`,
+  );
+}
+
+export async function fetchLineDetail(
+  code: string,
+  dataset?: TransitDataset | null,
+): Promise<TransitLineDetail> {
+  return apiFetch<TransitLineDetail>(
+    `/api/v3/transit/lines/${encodeURIComponent(code)}${withDataset(
+      new URLSearchParams(),
+      dataset,
+    )}`,
+  );
+}
+
+/**
+ * Fare tables. Takes no dataset — the tariff snapshot belongs to the operator,
+ * not to a timetable.
+ *
+ * A 404 means "nothing has been synced yet", which is an EMPTY state and not an
+ * error, so it resolves to `null` rather than throwing.
+ */
+export async function fetchTariffs(): Promise<TariffsResponse | null> {
+  try {
+    return await apiFetch<TariffsResponse>('/api/v3/transit/tariffs');
+  } catch (error) {
+    if (error instanceof ApiRequestError && error.status === 404) {
+      return null;
+    }
+    throw error;
+  }
 }
 
 export async function voteTrip(
   tripId: number,
   vote: 'like' | 'dislike' | 'undo_like' | 'undo_dislike' | 'switch_to_like',
+  dataset?: TransitDataset | null,
 ): Promise<TripDetail> {
-  return apiFetch<TripDetail>(`/api/v3/transit/trips/${tripId}/vote`, {
-    method: 'POST',
-    body: JSON.stringify({ vote }),
-  });
+  return apiFetch<TripDetail>(
+    `/api/v3/transit/trips/${tripId}/vote${withDataset(new URLSearchParams(), dataset)}`,
+    {
+      method: 'POST',
+      body: JSON.stringify({ vote }),
+    },
+  );
 }
 
 export async function fetchDirections(params: {
@@ -130,6 +306,64 @@ export async function fetchDirections(params: {
     locale: params.locale ?? 'pt',
   });
   return apiFetch<DirectionsResponse>(`/api/v3/transit/directions?${query.toString()}`);
+}
+
+// --- Mini Bus (PDL Mini Bus, Ponta Delgada urban network) --- //
+
+function minibusQuery(locale?: string): string {
+  const query = new URLSearchParams();
+  if (locale) {
+    query.set('locale', locale);
+  }
+  const suffix = query.toString();
+  return suffix ? `?${suffix}` : '';
+}
+
+export async function fetchMinibusLines(params?: { locale?: string }): Promise<MinibusLinesResponse> {
+  return apiFetch<MinibusLinesResponse>(`/api/v3/minibus/lines${minibusQuery(params?.locale)}`);
+}
+
+export async function fetchMinibusLine(
+  slug: string,
+  params?: { locale?: string },
+): Promise<MinibusLine & MinibusMeta> {
+  return apiFetch<MinibusLine & MinibusMeta>(
+    `/api/v3/minibus/lines/${encodeURIComponent(slug)}${minibusQuery(params?.locale)}`,
+  );
+}
+
+export async function fetchMinibusTariffs(params?: { locale?: string }): Promise<MinibusTariffsResponse> {
+  return apiFetch<MinibusTariffsResponse>(`/api/v3/minibus/tariffs${minibusQuery(params?.locale)}`);
+}
+
+export async function fetchMinibusNetwork(params?: { locale?: string }): Promise<MinibusNetworkResponse> {
+  return apiFetch<MinibusNetworkResponse>(`/api/v3/minibus/network${minibusQuery(params?.locale)}`);
+}
+
+export async function fetchMinibusDocuments(params?: {
+  locale?: string;
+}): Promise<MinibusDocumentsResponse> {
+  return apiFetch<MinibusDocumentsResponse>(`/api/v3/minibus/documents${minibusQuery(params?.locale)}`);
+}
+
+export async function fetchMinibusSchematic(params?: {
+  locale?: string;
+}): Promise<MinibusDocument & MinibusMeta> {
+  return apiFetch<MinibusDocument & MinibusMeta>(
+    `/api/v3/minibus/schematic${minibusQuery(params?.locale)}`,
+  );
+}
+
+export async function fetchMinibusRoute(params: {
+  origin: string;
+  destination: string;
+  locale?: string;
+}): Promise<MinibusRouteSearchResponse> {
+  const query = new URLSearchParams({ origin: params.origin, destination: params.destination });
+  if (params.locale) {
+    query.set('locale', params.locale);
+  }
+  return apiFetch<MinibusRouteSearchResponse>(`/api/v3/minibus/route?${query.toString()}`);
 }
 
 // --- News --- //

@@ -1,5 +1,6 @@
 import {
   Bus,
+  BusFront,
   CloudSun,
   Compass,
   Home,
@@ -30,6 +31,7 @@ export const HUB_NAV = {
 /** Ordered like the mobile hub tab bar. `key` gates visibility via bootstrap.enabledModules. */
 export const NAV_MODULES: NavModule[] = [
   { key: 'transit', route: '/transit', labelKey: 'navBarSearchLabel', Icon: Bus },
+  { key: 'minibus', route: '/minibus', labelKey: 'navBarMinibusLabel', Icon: BusFront },
   { key: 'news', route: '/news', labelKey: 'navBarNewsLabel', Icon: Newspaper },
   { key: 'weather', route: '/weather', labelKey: 'navBarWeatherLabel', Icon: CloudSun },
   { key: 'seismic', route: '/earthquakes', labelKey: 'navBarEarthquakesLabel', Icon: Waves },

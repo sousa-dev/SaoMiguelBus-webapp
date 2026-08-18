@@ -7,6 +7,16 @@ import { HomePage } from '@/features/hub/HomePage';
 import { TransitPage } from '@/features/transit/TransitPage';
 import { DirectionsPage } from '@/features/transit/DirectionsPage';
 import { TripDetailPage } from '@/features/transit/TripDetailPage';
+import { StopDetailPage } from '@/features/transit/StopDetailPage';
+import { LinePage } from '@/features/transit/LinePage';
+import { NetworkPage } from '@/features/transit/NetworkPage';
+import { PricesPage } from '@/features/transit/PricesPage';
+import {
+  MinibusLinePage,
+  MinibusPage,
+  MinibusSchematicPage,
+  MinibusSearchPage,
+} from '@/features/minibus';
 import { NewsArticlePage, NewsPage } from '@/features/news';
 import { WeatherDetailPage, WeatherPage } from '@/features/weather';
 import { EarthquakeDetailPage, EarthquakesPage } from '@/features/earthquakes';
@@ -36,6 +46,14 @@ const router = createBrowserRouter([
       { path: 'transit', element: <TransitPage /> },
       { path: 'transit/directions', element: <DirectionsPage /> },
       { path: 'transit/trip/:tripId', element: <TripDetailPage /> },
+      { path: 'transit/stop/:stopId', element: <StopDetailPage /> },
+      { path: 'transit/line/:code', element: <LinePage /> },
+      { path: 'transit/network', element: <NetworkPage /> },
+      { path: 'transit/prices', element: <PricesPage /> },
+      { path: 'minibus', element: <MinibusPage /> },
+      { path: 'minibus/search', element: <MinibusSearchPage /> },
+      { path: 'minibus/schematic', element: <MinibusSchematicPage /> },
+      { path: 'minibus/:slug', element: <MinibusLinePage /> },
       { path: 'news', element: <NewsPage /> },
       { path: 'news/:articleId', element: <NewsArticlePage /> },
       { path: 'weather', element: <WeatherPage /> },

@@ -15,6 +15,7 @@ import { ConsentBanner } from '@/components/consent/ConsentBanner';
 import { SessionAdOrchestrator } from '@/features/ads/components/SessionAdOrchestrator';
 import { StoreChooserModal } from '@/features/ads/components/StoreChooserModal';
 import { useCanShowAds, usePremiumStore } from '@/features/premium/usePremium';
+import { useScheduleTransition } from '@/features/transit/schedule-hooks';
 
 function NavItems({ onNavigate }: { onNavigate?: () => void }) {
   const { t } = useTranslation();
@@ -82,7 +83,11 @@ export function AppShell() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const canShowAds = useCanShowAds();
-  const { isSuccess: bootstrapReady } = useBootstrap();
+  const { data: bootstrapData, isSuccess: bootstrapReady } = useBootstrap();
+
+  // Re-resolve the network at `nextTransitionAt`. Mounted at the shell so a tab
+  // parked on any page still crosses the cutover, not just the transit one.
+  useScheduleTransition(bootstrapData?.transitSchedule);
 
   useEffect(() => {
     void usePremiumStore.getState().refresh();

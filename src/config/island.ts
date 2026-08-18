@@ -2,6 +2,7 @@
 
 export type ModuleKey =
   | 'transit'
+  | 'minibus'
   | 'news'
   | 'seismic'
   | 'marketplace'

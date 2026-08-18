@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import type { Plugin } from 'vite';
 
-import { HOME_SEO, MODULE_SEO, SITE } from './src/lib/seo-config';
+import { HOME_SEO, MINIBUS_LINE_SEO, MODULE_SEO, SITE } from './src/lib/seo-config';
 
 interface SeoOptions {
   siteUrl: string;
@@ -27,7 +27,8 @@ function headBlock(opts: {
   url: string;
   image: string;
   type: 'website' | 'article';
-  jsonLd?: Record<string, unknown>;
+  /** A single schema, or several — the latter are wrapped in a `@graph`. */
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }): string {
   const lines = [
     `<meta name="description" content="${esc(opts.description)}" />`,
@@ -45,7 +46,10 @@ function headBlock(opts: {
     `<meta name="twitter:image" content="${opts.image}" />`,
   ];
   if (opts.jsonLd) {
-    lines.push(`<script type="application/ld+json">${JSON.stringify(opts.jsonLd)}</script>`);
+    const jsonLd = Array.isArray(opts.jsonLd)
+      ? { '@context': 'https://schema.org', '@graph': opts.jsonLd }
+      : opts.jsonLd;
+    lines.push(`<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>`);
   }
   return lines.join('\n    ');
 }
@@ -110,15 +114,81 @@ export function seoPrerender(opts: SeoOptions): Plugin {
             url: `${siteUrl}${mod.path}`,
             image,
             type: 'website',
+            // The Mini Bus hub links every line so crawlers can reach the line
+            // pages even before client-side JS runs.
+            jsonLd:
+              mod.path === '/minibus'
+                ? {
+                    '@context': 'https://schema.org',
+                    '@type': 'ItemList',
+                    itemListElement: MINIBUS_LINE_SEO.map((line, index) => ({
+                      '@type': 'ListItem',
+                      position: index + 1,
+                      name: line.name.pt,
+                      url: `${siteUrl}/minibus/${line.slug}`,
+                    })),
+                  }
+                : undefined,
           }),
         );
       }
 
-      // sitemap.xml — main module paths + friendly subdomain roots.
+      // Per-Mini-Bus-line prerendered pages → dist/minibus/<slug>/index.html.
+      // These are the pages a search for "horário linha A mini bus" should land
+      // on — the generic module page above is one level too shallow for that.
+      for (const line of MINIBUS_LINE_SEO) {
+        const lineUrl = `${siteUrl}/minibus/${line.slug}`;
+        const dir = path.join(root, 'minibus', line.slug);
+        fs.mkdirSync(dir, { recursive: true });
+        fs.writeFileSync(
+          path.join(dir, 'index.html'),
+          renderPage(template, {
+            title: line.title.pt,
+            description: line.description.pt,
+            url: lineUrl,
+            image,
+            type: 'website',
+            jsonLd: [
+              {
+                '@type': 'BusTrip',
+                name: line.name.pt,
+                busName: line.name.pt,
+                busNumber: line.code,
+                provider: {
+                  '@type': 'Organization',
+                  name: 'PDL Mini Bus',
+                  url: 'https://pdlminibus.pt',
+                },
+              },
+              {
+                '@type': 'BreadcrumbList',
+                itemListElement: [
+                  { '@type': 'ListItem', position: 1, name: SITE.name, item: `${siteUrl}/` },
+                  {
+                    '@type': 'ListItem',
+                    position: 2,
+                    name: 'Mini Bus',
+                    item: `${siteUrl}/minibus`,
+                  },
+                  { '@type': 'ListItem', position: 3, name: line.name.pt, item: lineUrl },
+                ],
+              },
+            ],
+          }),
+        );
+      }
+
+      // sitemap.xml — main module paths, Mini Bus line pages + friendly subdomain roots.
       const today = new Date().toISOString().slice(0, 10);
-      const urls = [`${siteUrl}/`, ...MODULE_SEO.map((m) => `${siteUrl}${m.path}`)];
+      const urls = [
+        `${siteUrl}/`,
+        ...MODULE_SEO.map((m) => `${siteUrl}${m.path}`),
+        ...MINIBUS_LINE_SEO.map((l) => `${siteUrl}/minibus/${l.slug}`),
+      ];
       for (const mod of MODULE_SEO) {
-        urls.push(`https://${mod.subdomain}.${opts.baseDomain}/`);
+        if (mod.subdomain) {
+          urls.push(`https://${mod.subdomain}.${opts.baseDomain}/`);
+        }
       }
       const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
