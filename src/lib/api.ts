@@ -308,7 +308,7 @@ export async function fetchDirections(params: {
   return apiFetch<DirectionsResponse>(`/api/v3/transit/directions?${query.toString()}`);
 }
 
-// --- Mini Bus (PDL Mini Bus, Ponta Delgada urban network) --- //
+// --- Mini Bus (PDL MiniBus, Ponta Delgada urban network) --- //
 
 function minibusQuery(locale?: string): string {
   const query = new URLSearchParams();

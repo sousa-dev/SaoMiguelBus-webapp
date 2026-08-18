@@ -156,7 +156,7 @@ export function seoPrerender(opts: SeoOptions): Plugin {
                 busNumber: line.code,
                 provider: {
                   '@type': 'Organization',
-                  name: 'PDL Mini Bus',
+                  name: 'PDL MiniBus',
                   url: 'https://pdlminibus.pt',
                 },
               },
@@ -167,7 +167,7 @@ export function seoPrerender(opts: SeoOptions): Plugin {
                   {
                     '@type': 'ListItem',
                     position: 2,
-                    name: 'Mini Bus',
+                    name: 'PDL MiniBus',
                     item: `${siteUrl}/minibus`,
                   },
                   { '@type': 'ListItem', position: 3, name: line.name.pt, item: lineUrl },

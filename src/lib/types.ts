@@ -684,7 +684,7 @@ export interface AdPayload {
   platform?: string;
 }
 
-// --- Mini Bus (PDL Mini Bus, Ponta Delgada urban network) --- //
+// --- Mini Bus (PDL MiniBus, Ponta Delgada urban network) --- //
 
 export interface MinibusServiceSummary {
   weekday?: { start: string; end: string };
