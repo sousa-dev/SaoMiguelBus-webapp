@@ -1,11 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { openPremiumStore } from '@/features/ads/lib/premium-cta';
 import { useStoreChooserStore } from '@/features/ads/lib/store-chooser-store';
-
-vi.mock('@/lib/platform', () => ({
-  detectPlatform: vi.fn(),
-}));
 
 vi.mock('@/lib/app-links', () => ({
   openPremiumStore: vi.fn((chooser: () => void) => {
@@ -13,10 +8,10 @@ vi.mock('@/lib/app-links', () => ({
   }),
 }));
 
-import { detectPlatform } from '@/lib/platform';
 import { openPremiumStore as openStoreLink } from '@/lib/app-links';
+import { openMinibusLiveInstallPrompt } from '@/features/minibus/lib/live-install';
 
-describe('openPremiumStore (wrapper)', () => {
+describe('openMinibusLiveInstallPrompt', () => {
   beforeEach(() => {
     useStoreChooserStore.setState({ open: false, content: null });
     vi.mocked(openStoreLink).mockImplementation((chooser) => {
@@ -28,15 +23,17 @@ describe('openPremiumStore (wrapper)', () => {
     vi.clearAllMocks();
   });
 
-  it('delegates to app-links openPremiumStore with chooser callback', () => {
-    openPremiumStore();
+  it('opens the store chooser with Mini Bus live copy, not the premium default', () => {
+    openMinibusLiveInstallPrompt(
+      'See buses in real time',
+      'Download the São Miguel Bus app, free, to see Mini Bus locations in real time.',
+    );
+
     expect(openStoreLink).toHaveBeenCalledTimes(1);
     expect(useStoreChooserStore.getState().open).toBe(true);
-  });
-
-  it('exposes detectPlatform via getPremiumStorePlatform', async () => {
-    vi.mocked(detectPlatform).mockReturnValue('ios');
-    const { getPremiumStorePlatform } = await import('@/features/ads/lib/premium-cta');
-    expect(getPremiumStorePlatform()).toBe('ios');
+    expect(useStoreChooserStore.getState().content).toEqual({
+      title: 'See buses in real time',
+      body: 'Download the São Miguel Bus app, free, to see Mini Bus locations in real time.',
+    });
   });
 });

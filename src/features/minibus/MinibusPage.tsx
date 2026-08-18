@@ -11,6 +11,7 @@ import { track } from '@/lib/analytics';
 import { MinibusAttributionFooter } from './components/MinibusAttributionFooter';
 import { MinibusDocumentImage } from './components/MinibusDocumentImage';
 import { MinibusLineCard } from './components/MinibusLineCard';
+import { MinibusLiveTeaser } from './components/MinibusLiveTeaser';
 import { MinibusTariffTable } from './components/MinibusTariffTable';
 import { useMinibusLines, useMinibusTariffs } from './hooks';
 
@@ -43,6 +44,8 @@ export function MinibusPage() {
             </div>
           </Card>
         </Link>
+
+        <MinibusLiveTeaser />
 
         <section>
           <h2 className="mb-3 text-lg font-extrabold text-content">{t('minibusSectionLines')}</h2>

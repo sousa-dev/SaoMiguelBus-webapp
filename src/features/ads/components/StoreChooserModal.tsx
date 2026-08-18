@@ -44,6 +44,7 @@ function StoreButton({
 export function StoreChooserModal() {
   const { t } = useTranslation();
   const open = useStoreChooserStore((s) => s.open);
+  const content = useStoreChooserStore((s) => s.content);
   const hide = useStoreChooserStore((s) => s.hide);
 
   if (!open) return null;
@@ -57,8 +58,8 @@ export function StoreChooserModal() {
       <div className="w-full max-w-sm rounded-3xl border border-border bg-surface p-5 shadow-xl">
         <div className="mb-4 flex items-start justify-between gap-2">
           <div>
-            <p className="text-base font-bold text-content">{t('removeAdsTitle')}</p>
-            <p className="mt-1 text-sm text-muted">{t('appInstallDesktopBody')}</p>
+            <p className="text-base font-bold text-content">{content?.title ?? t('removeAdsTitle')}</p>
+            <p className="mt-1 text-sm text-muted">{content?.body ?? t('appInstallDesktopBody')}</p>
           </div>
           <button
             type="button"
