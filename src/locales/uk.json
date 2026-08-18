@@ -965,5 +965,9 @@
   "transitShareJourneyTransfer": "Пересадка на {{stop}} · {{route}} о {{time}}",
   "transitShareFooter": "Перегляньте повний розклад у застосунку: {{url}}",
   "noRoutesAfterTimeMessage": "Немає відправлень після {{time}}",
-  "noRoutesAfterTimeAction": "Показати весь день"
+  "noRoutesAfterTimeAction": "Показати весь день",
+  "minibusLiveCta": "Наживо",
+  "minibusLiveCtaHint": "Перегляньте автобуси на карті в реальному часі",
+  "minibusLiveInstallTitle": "Дивіться автобуси в реальному часі",
+  "minibusLiveInstallBody": "Завантажте безкоштовний застосунок São Miguel Bus, щоб бачити розташування автобусів Mini Bus у реальному часі."
 }

@@ -1154,5 +1154,9 @@
   "transitShareJourneyTransfer": "Muda em {{stop}} · {{route}} às {{time}}",
   "transitShareFooter": "Vê o horário completo na app: {{url}}",
   "noRoutesAfterTimeMessage": "Sem partidas depois das {{time}}",
-  "noRoutesAfterTimeAction": "Ver o dia todo"
+  "noRoutesAfterTimeAction": "Ver o dia todo",
+  "minibusLiveCta": "Ao vivo",
+  "minibusLiveCtaHint": "Veja os autocarros no mapa em tempo real",
+  "minibusLiveInstallTitle": "Ver autocarros em tempo real",
+  "minibusLiveInstallBody": "Descarrega a app São Miguel Bus, grátis, para veres a localização dos autocarros Mini Bus em tempo real."
 }

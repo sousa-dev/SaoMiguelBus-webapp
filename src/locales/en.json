@@ -1154,5 +1154,9 @@
   "transitShareJourneyTransfer": "Change at {{stop}} · {{route}} at {{time}}",
   "transitShareFooter": "Check the app for the full schedule: {{url}}",
   "noRoutesAfterTimeMessage": "No departures after {{time}}",
-  "noRoutesAfterTimeAction": "See the whole day"
+  "noRoutesAfterTimeAction": "See the whole day",
+  "minibusLiveCta": "Live tracking",
+  "minibusLiveCtaHint": "See buses on the map in real time",
+  "minibusLiveInstallTitle": "See buses in real time",
+  "minibusLiveInstallBody": "Download the São Miguel Bus app, free, to see Mini Bus locations in real time."
 }

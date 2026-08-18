@@ -1040,5 +1040,9 @@
   "transitShareJourneyTransfer": "Umstieg in {{stop}} · {{route}} um {{time}}",
   "transitShareFooter": "Den vollständigen Fahrplan finden Sie in der App: {{url}}",
   "noRoutesAfterTimeMessage": "Keine Abfahrten nach {{time}} Uhr",
-  "noRoutesAfterTimeAction": "Ganzen Tag anzeigen"
+  "noRoutesAfterTimeAction": "Ganzen Tag anzeigen",
+  "minibusLiveCta": "Live",
+  "minibusLiveCtaHint": "Sehen Sie die Busse in Echtzeit auf der Karte",
+  "minibusLiveInstallTitle": "Busse in Echtzeit sehen",
+  "minibusLiveInstallBody": "Lade die kostenlose São Miguel Bus App herunter, um Mini-Bus-Standorte in Echtzeit zu sehen."
 }

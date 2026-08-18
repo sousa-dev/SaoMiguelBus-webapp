@@ -965,5 +965,9 @@
   "transitShareJourneyTransfer": "在 {{stop}} 换乘 · {{route}} {{time}}",
   "transitShareFooter": "在应用中查看完整时刻表：{{url}}",
   "noRoutesAfterTimeMessage": "{{time}} 之后没有班次",
-  "noRoutesAfterTimeAction": "查看全天班次"
+  "noRoutesAfterTimeAction": "查看全天班次",
+  "minibusLiveCta": "实时",
+  "minibusLiveCtaHint": "在地图上实时查看公交车",
+  "minibusLiveInstallTitle": "实时查看公交车",
+  "minibusLiveInstallBody": "免费下载 São Miguel Bus 应用，即可实时查看 Mini Bus 的位置。"
 }
