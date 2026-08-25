@@ -23,7 +23,7 @@ export interface NavModule {
 
 /** Home is always present. */
 export const HUB_NAV = {
-  route: '/',
+  route: '/hub',
   labelKey: 'hubTitle',
   Icon: Home,
 } as const;

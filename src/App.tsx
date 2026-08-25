@@ -26,13 +26,13 @@ import { TrafficDetailPage, TrafficPage } from '@/features/traffic';
 import { MarketplacePage, MarketplaceProviderPage } from '@/features/marketplace';
 import { resolveSubdomainPath } from '@/lib/subdomain';
 
-/** On a module subdomain (e.g. radares.<host>) deep-link into that module; else Home. */
+/**
+ * On a module subdomain (e.g. radares.<host>) deep-link into that module; else the
+ * bus feed. Opening the app lands on transit, not the hub (the hub lives at `/hub`).
+ */
 function IndexRoute() {
   const subdomainPath = resolveSubdomainPath();
-  if (subdomainPath) {
-    return <Navigate to={subdomainPath} replace />;
-  }
-  return <HomePage />;
+  return <Navigate to={subdomainPath ?? '/transit'} replace />;
 }
 
 const router = createBrowserRouter([
@@ -43,6 +43,7 @@ const router = createBrowserRouter([
     element: <AppShell />,
     children: [
       { index: true, element: <IndexRoute /> },
+      { path: 'hub', element: <HomePage /> },
       { path: 'transit', element: <TransitPage /> },
       { path: 'transit/directions', element: <DirectionsPage /> },
       { path: 'transit/trip/:tripId', element: <TripDetailPage /> },

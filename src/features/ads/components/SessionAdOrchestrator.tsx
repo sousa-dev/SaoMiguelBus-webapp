@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigationType } from 'react-router-dom';
 
 import { InternalFullscreenModal } from '@/features/ads/components/InternalFullscreenModal';
 import { evaluateInternalAppOpenPolicy } from '@/features/ads/lib/app-open-policy';
@@ -24,10 +24,14 @@ type Props = {
   bootstrapReady: boolean;
 };
 
-/** Once per browser session on `/` or `/transit` after bootstrap resolves. */
+/**
+ * Once per browser session on `/hub` or `/transit`, and only after the user has
+ * navigated in-app — opening the site never greets anyone with a fullscreen ad.
+ */
 export function SessionAdOrchestrator({ bootstrapReady }: Props) {
   const canShowAds = useCanShowAds();
   const location = useLocation();
+  const navigationType = useNavigationType();
   const { data: bootstrap } = useBootstrap();
   const enabledModuleKeys = useMemo(
     () => resolveEnabledModules(bootstrap?.island?.enabledModules),
@@ -48,8 +52,13 @@ export function SessionAdOrchestrator({ bootstrapReady }: Props) {
     if (!bootstrapReady || attemptedRef.current) return;
     if (!canShowAds) return;
 
+    // The app-open ad belongs to in-session usage, not to the first screen of the
+    // session: the initial load is `POP` and the index redirect is `REPLACE`, so
+    // only a `PUSH` means the user actually navigated here themselves.
+    if (navigationType !== 'PUSH') return;
+
     const path = location.pathname;
-    if (path !== '/' && path !== '/transit') return;
+    if (path !== '/hub' && path !== '/transit') return;
 
     attemptedRef.current = true;
 
@@ -81,7 +90,14 @@ export function SessionAdOrchestrator({ bootstrapReady }: Props) {
       setInternalFullscreenAdVisible(true);
       markFullScreenAdShown(Date.now());
     })();
-  }, [bootstrapReady, canShowAds, enabledModuleKeys, location.pathname, showInternal]);
+  }, [
+    bootstrapReady,
+    canShowAds,
+    enabledModuleKeys,
+    location.pathname,
+    navigationType,
+    showInternal,
+  ]);
 
   if (!internalCreative) return null;
 
