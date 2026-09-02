@@ -9,9 +9,9 @@ vi.mock('@/lib/app-links', () => ({
 }));
 
 import { openPremiumStore as openStoreLink } from '@/lib/app-links';
-import { openMinibusLiveInstallPrompt } from '@/features/minibus/lib/live-install';
+import { openLiveInstallPrompt } from '@/features/ads/lib/live-install-prompt';
 
-describe('openMinibusLiveInstallPrompt', () => {
+describe('openLiveInstallPrompt', () => {
   beforeEach(() => {
     useStoreChooserStore.setState({ open: false, content: null });
     vi.mocked(openStoreLink).mockImplementation((chooser) => {
@@ -23,8 +23,8 @@ describe('openMinibusLiveInstallPrompt', () => {
     vi.clearAllMocks();
   });
 
-  it('opens the store chooser with Mini Bus live copy, not the premium default', () => {
-    openMinibusLiveInstallPrompt(
+  it('opens the store chooser with the caller-supplied live-tracking copy, not the premium default', () => {
+    openLiveInstallPrompt(
       'See buses in real time',
       'Download the São Miguel Bus app, free, to see Mini Bus locations in real time.',
     );

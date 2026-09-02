@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Crown, Hand, type LucideIcon } from 'lucide-react';
+import { ChevronRight, Crown, type LucideIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 import { openPremiumStore } from '@/features/ads/lib/premium-cta';
@@ -32,7 +32,6 @@ export function InternalAdBanner({ creative, on = 'home', slot = 'top' }: Props)
 
   const module = creative.moduleKey ? getModule(creative.moduleKey) : undefined;
   const TitleIcon: LucideIcon = creative.kind === 'paywall' ? Crown : (module?.Icon ?? Crown);
-  const HintIcon: LucideIcon = creative.kind === 'paywall' ? Hand : (module?.Icon ?? Crown);
 
   const onPress = () => {
     track('transit', 'internal_ad_click', {
@@ -58,30 +57,26 @@ export function InternalAdBanner({ creative, on = 'home', slot = 'top' }: Props)
       onClick={onPress}
       aria-label={`${t(creative.titleKey)}. ${t(creative.subtitleKey)}`}
       className={cn(
-        'relative w-full rounded-2xl px-4 py-4 text-center transition active:opacity-90',
-        'min-h-[44px]',
+        'relative flex w-full min-h-14 items-center gap-3 rounded-xl px-4 py-2 text-left transition active:opacity-90',
       )}
       style={{ backgroundColor: creative.backgroundColor }}
     >
-      <span className="absolute left-0 top-0 rounded-br-lg bg-primary px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-on-primary">
+      <span className="absolute right-0 top-0 rounded-bl-lg rounded-tr-xl bg-black/20 px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wider text-white/85">
         {t('transitAdLabel')}
       </span>
 
-      <div className="mb-1 flex w-full items-center justify-center gap-2">
-        <TitleIcon size={20} color="#FFFFFF" strokeWidth={2.5} className="shrink-0" />
-        <span className="text-center text-base font-extrabold uppercase tracking-wide text-white">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15">
+        <TitleIcon size={18} color="#FFFFFF" strokeWidth={2.5} />
+      </span>
+
+      <span className="min-w-0 flex-1">
+        <span className="block truncate text-sm font-extrabold text-white">
           {t(creative.titleKey)}
         </span>
-      </div>
+        <span className="block truncate text-xs text-white/85">{t(creative.subtitleKey)}</span>
+      </span>
 
-      <p className="text-center text-sm text-white/90">{t(creative.subtitleKey)}</p>
-
-      {creative.hintKey ? (
-        <div className="mt-2 flex items-center justify-center gap-1">
-          <HintIcon size={12} color="rgba(255,255,255,0.85)" strokeWidth={2} />
-          <span className="text-[11px] text-white/80">{t(creative.hintKey)}</span>
-        </div>
-      ) : null}
+      <ChevronRight size={18} color="rgba(255,255,255,0.7)" strokeWidth={2.5} className="shrink-0" />
     </button>
   );
 }

@@ -21,6 +21,7 @@ import { resolveDayType, splitStopLabel } from '@/lib/format';
 import { cn } from '@/lib/cn';
 import { useProfileStore } from '@/lib/store';
 import { RouteWeatherGrid } from '@/features/transit/components';
+import { AzoresbusLiveTeaser } from '@/features/transit/components/AzoresbusLiveTeaser';
 import { JourneyCard } from '@/features/transit/components/JourneyCard';
 import { ScheduleChangeBanner } from '@/features/transit/components/ScheduleChangeBanner';
 import {
@@ -315,6 +316,8 @@ export function TransitPage() {
               </div>
             </div>
           </Card>
+
+          {resolvedDataset === 'azoresbus' ? <AzoresbusLiveTeaser /> : null}
 
           <Link to="/minibus">
             <Card className="flex items-center gap-3 p-4 hover:bg-surface-variant">

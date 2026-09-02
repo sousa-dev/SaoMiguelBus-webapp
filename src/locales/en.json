@@ -1158,5 +1158,9 @@
   "minibusLiveCta": "Live tracking",
   "minibusLiveCtaHint": "See buses on the map in real time",
   "minibusLiveInstallTitle": "See buses in real time",
-  "minibusLiveInstallBody": "Download the São Miguel Bus app, free, to see Mini Bus locations in real time."
+  "minibusLiveInstallBody": "Download the São Miguel Bus app, free, to see Mini Bus locations in real time.",
+  "azoresbusLiveCta": "Live tracking",
+  "azoresbusLiveCtaHint": "See network buses on the map in real time",
+  "azoresbusLiveInstallTitle": "See buses in real time",
+  "azoresbusLiveInstallBody": "Download the São Miguel Bus app, free, to see network bus locations in real time."
 }

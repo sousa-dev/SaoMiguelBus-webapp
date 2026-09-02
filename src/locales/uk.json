@@ -969,5 +969,9 @@
   "minibusLiveCta": "Наживо",
   "minibusLiveCtaHint": "Перегляньте автобуси на карті в реальному часі",
   "minibusLiveInstallTitle": "Дивіться автобуси в реальному часі",
-  "minibusLiveInstallBody": "Завантажте безкоштовний застосунок São Miguel Bus, щоб бачити розташування автобусів Mini Bus у реальному часі."
+  "minibusLiveInstallBody": "Завантажте безкоштовний застосунок São Miguel Bus, щоб бачити розташування автобусів Mini Bus у реальному часі.",
+  "azoresbusLiveCta": "Наживо",
+  "azoresbusLiveCtaHint": "Дивіться автобуси мережі на карті в реальному часі",
+  "azoresbusLiveInstallTitle": "Дивіться автобуси в реальному часі",
+  "azoresbusLiveInstallBody": "Завантажте безкоштовний застосунок São Miguel Bus, щоб бачити розташування автобусів мережі у реальному часі."
 }

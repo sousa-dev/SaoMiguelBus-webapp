@@ -969,5 +969,9 @@
   "minibusLiveCta": "实时",
   "minibusLiveCtaHint": "在地图上实时查看公交车",
   "minibusLiveInstallTitle": "实时查看公交车",
-  "minibusLiveInstallBody": "免费下载 São Miguel Bus 应用，即可实时查看 Mini Bus 的位置。"
+  "minibusLiveInstallBody": "免费下载 São Miguel Bus 应用，即可实时查看 Mini Bus 的位置。",
+  "azoresbusLiveCta": "实时",
+  "azoresbusLiveCtaHint": "在地图上实时查看线网巴士",
+  "azoresbusLiveInstallTitle": "实时查看公交车",
+  "azoresbusLiveInstallBody": "免费下载 São Miguel Bus 应用，即可实时查看线网巴士的位置。"
 }

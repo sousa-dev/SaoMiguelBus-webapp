@@ -1044,5 +1044,9 @@
   "minibusLiveCta": "En directo",
   "minibusLiveCtaHint": "Ve los autobuses en el mapa en tiempo real",
   "minibusLiveInstallTitle": "Ver autobuses en tiempo real",
-  "minibusLiveInstallBody": "Descarga la app São Miguel Bus, gratis, para ver la ubicación de los autobuses Mini Bus en tiempo real."
+  "minibusLiveInstallBody": "Descarga la app São Miguel Bus, gratis, para ver la ubicación de los autobuses Mini Bus en tiempo real.",
+  "azoresbusLiveCta": "En directo",
+  "azoresbusLiveCtaHint": "Vea los autobuses de la red en el mapa en tiempo real",
+  "azoresbusLiveInstallTitle": "Ver autobuses en tiempo real",
+  "azoresbusLiveInstallBody": "Descarga la app São Miguel Bus, gratis, para ver la ubicación de los autobuses de la red en tiempo real."
 }
