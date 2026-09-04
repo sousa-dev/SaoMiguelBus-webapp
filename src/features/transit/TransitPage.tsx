@@ -83,6 +83,10 @@ export function TransitPage() {
     [dateStr, bootstrap?.holidays],
   );
 
+  /** Local Date for the searched day — feeds the waiting-state copy so it does
+   *  not claim "today" when the rider picked tomorrow or a later date. */
+  const searchedDate = useMemo(() => new Date(`${dateStr}T00:00:00`), [dateStr]);
+
   /**
    * Switching network empties the form.
    *
@@ -393,7 +397,9 @@ export function TransitPage() {
             </Card>
           ) : null}
 
-          {search.isFetching ? <SearchingState variant="journeys" /> : null}
+          {search.isFetching ? (
+            <SearchingState variant="journeys" date={searchedDate} />
+          ) : null}
 
           {isEmpty && canOfferTransfers ? (
             <EmptyState

@@ -1051,6 +1051,8 @@
   "azoresbusLiveInstallBody": "Descarga la app São Miguel Bus, gratis, para ver la ubicación de los autobuses de la red en tiempo real.",
   "searchingBuses": "Buscando autobuses…",
   "searchingTimetables": "Comprobando los horarios de hoy…",
+  "searchingTimetablesTomorrow": "Comprobando los horarios de mañana…",
+  "searchingTimetablesDate": "Comprobando los horarios de {{date}}…",
   "searchingConnections": "Buscando conexiones…",
   "searchingSorting": "Ordenando por hora de salida…",
   "searchingDirections": "Trazando tu ruta…",

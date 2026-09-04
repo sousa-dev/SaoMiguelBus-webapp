@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Bus } from 'lucide-react';
 
 import { Card } from '@/components/ui';
+import { formatAppDate } from '@/lib/format';
 import { cn } from '@/lib/cn';
 
 /** How long each reassurance message stays on screen. */
@@ -21,6 +22,50 @@ const DIRECTIONS_MESSAGES = [
   ['searchingDeparture', 'Matching the next departures…'],
   ['searchingSteps', 'Putting the steps in order…'],
 ] as const;
+
+function isSameLocalDay(a: Date, b: Date): boolean {
+  return (
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+  );
+}
+
+/**
+ * Two local calendar dates compared at day granularity — the planner's `date` is
+ * a local Date set by the date picker, never an instant in another timezone.
+ */
+function isNextLocalDay(target: Date, ref: Date): boolean {
+  const tomorrow = new Date(ref.getFullYear(), ref.getMonth(), ref.getDate() + 1);
+  return isSameLocalDay(target, tomorrow);
+}
+
+/**
+ * The "today" copy is wrong whenever a rider searched for tomorrow or a later
+ * date. Fall back to a {{date}}-interpolated message for any day that is not
+ * today or tomorrow — keeps the rotating reassurance accurate.
+ */
+function timetablesMessage(date?: Date): {
+  key: string;
+  defaultValue: string;
+  params?: Record<string, string>;
+} {
+  if (!date) {
+    return { key: 'searchingTimetables', defaultValue: "Checking today's timetables…" };
+  }
+  const now = new Date();
+  if (isSameLocalDay(date, now)) {
+    return { key: 'searchingTimetables', defaultValue: "Checking today's timetables…" };
+  }
+  if (isNextLocalDay(date, now)) {
+    return { key: 'searchingTimetablesTomorrow', defaultValue: "Checking tomorrow's timetables…" };
+  }
+  return {
+    key: 'searchingTimetablesDate',
+    defaultValue: 'Checking timetables for {{date}}…',
+    params: { date: formatAppDate(date) },
+  };
+}
 
 /** Gradient sweep that reads as "working", unlike the flat idle pulse. */
 function Shimmer({ className }: { className?: string }) {
@@ -122,8 +167,10 @@ function DirectionsSkeleton() {
  */
 export function SearchingState({
   variant = 'journeys',
+  date,
 }: {
   variant?: 'journeys' | 'directions';
+  date?: Date;
 }) {
   const { t } = useTranslation();
   const messages = variant === 'directions' ? DIRECTIONS_MESSAGES : JOURNEY_MESSAGES;
@@ -137,7 +184,17 @@ export function SearchingState({
     return () => window.clearInterval(id);
   }, [messages]);
 
-  const [key, defaultValue] = messages[index];
+  // Only the timetables line claims "today"; swap it for a date-aware variant
+  // so the message tracks what the rider actually searched for.
+  const [baseKey, baseDefaultValue] = messages[index];
+  const { key, defaultValue, params } = useMemo(() => {
+    if (baseKey !== 'searchingTimetables') {
+      return { key: baseKey, defaultValue: baseDefaultValue, params: undefined };
+    }
+    return timetablesMessage(date);
+  }, [baseKey, baseDefaultValue, date]);
+
+  const options = params ? { defaultValue, ...params } : { defaultValue };
 
   return (
     <div className="flex flex-col gap-4">
@@ -150,7 +207,7 @@ export function SearchingState({
           aria-live="polite"
           className="smb-msg-in text-sm font-medium text-muted"
         >
-          {t(key, { defaultValue })}
+          {t(key, options)}
         </p>
       </div>
       {variant === 'directions' ? (

@@ -976,6 +976,8 @@
   "azoresbusLiveInstallBody": "Завантажте безкоштовний застосунок São Miguel Bus, щоб бачити розташування автобусів мережі у реальному часі.",
   "searchingBuses": "Шукаємо автобуси…",
   "searchingTimetables": "Перевіряємо сьогоднішній розклад…",
+  "searchingTimetablesTomorrow": "Перевіряємо завтрашній розклад…",
+  "searchingTimetablesDate": "Перевіряємо розклад на {{date}}…",
   "searchingConnections": "Шукаємо пересадки…",
   "searchingSorting": "Сортуємо за часом відправлення…",
   "searchingDirections": "Прокладаємо ваш маршрут…",

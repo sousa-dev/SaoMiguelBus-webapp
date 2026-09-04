@@ -976,6 +976,8 @@
   "azoresbusLiveInstallBody": "免费下载 São Miguel Bus 应用，即可实时查看线网巴士的位置。",
   "searchingBuses": "正在搜索巴士…",
   "searchingTimetables": "正在查询今日时刻表…",
+  "searchingTimetablesTomorrow": "正在查询明日时刻表…",
+  "searchingTimetablesDate": "正在查询 {{date}} 时刻表…",
   "searchingConnections": "正在寻找换乘方案…",
   "searchingSorting": "正在按发车时间排序…",
   "searchingDirections": "正在规划你的路线…",
