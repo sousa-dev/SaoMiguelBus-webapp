@@ -8,6 +8,8 @@ import { Search } from 'lucide-react';
 
 import { cn } from '@/lib/cn';
 
+export { SearchingState } from '@/components/ui/SearchingState';
+
 // --- Card --- //
 
 export function Card({

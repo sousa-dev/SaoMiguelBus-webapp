@@ -1048,5 +1048,13 @@
   "azoresbusLiveCta": "En directo",
   "azoresbusLiveCtaHint": "Vea los autobuses de la red en el mapa en tiempo real",
   "azoresbusLiveInstallTitle": "Ver autobuses en tiempo real",
-  "azoresbusLiveInstallBody": "Descarga la app São Miguel Bus, gratis, para ver la ubicación de los autobuses de la red en tiempo real."
+  "azoresbusLiveInstallBody": "Descarga la app São Miguel Bus, gratis, para ver la ubicación de los autobuses de la red en tiempo real.",
+  "searchingBuses": "Buscando autobuses…",
+  "searchingTimetables": "Comprobando los horarios de hoy…",
+  "searchingConnections": "Buscando conexiones…",
+  "searchingSorting": "Ordenando por hora de salida…",
+  "searchingDirections": "Trazando tu ruta…",
+  "searchingWalking": "Midiendo los tramos a pie…",
+  "searchingDeparture": "Cruzando con las próximas salidas…",
+  "searchingSteps": "Ordenando los pasos…"
 }

@@ -973,5 +973,13 @@
   "azoresbusLiveCta": "Наживо",
   "azoresbusLiveCtaHint": "Дивіться автобуси мережі на карті в реальному часі",
   "azoresbusLiveInstallTitle": "Дивіться автобуси в реальному часі",
-  "azoresbusLiveInstallBody": "Завантажте безкоштовний застосунок São Miguel Bus, щоб бачити розташування автобусів мережі у реальному часі."
+  "azoresbusLiveInstallBody": "Завантажте безкоштовний застосунок São Miguel Bus, щоб бачити розташування автобусів мережі у реальному часі.",
+  "searchingBuses": "Шукаємо автобуси…",
+  "searchingTimetables": "Перевіряємо сьогоднішній розклад…",
+  "searchingConnections": "Шукаємо пересадки…",
+  "searchingSorting": "Сортуємо за часом відправлення…",
+  "searchingDirections": "Прокладаємо ваш маршрут…",
+  "searchingWalking": "Рахуємо пішохідні ділянки…",
+  "searchingDeparture": "Звіряємо найближчі відправлення…",
+  "searchingSteps": "Впорядковуємо кроки…"
 }

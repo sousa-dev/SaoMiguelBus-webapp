@@ -13,7 +13,7 @@ import {
   Tag,
 } from 'lucide-react';
 
-import { Button, Card, CenteredSpinner, EmptyState } from '@/components/ui';
+import { Button, Card, EmptyState, SearchingState } from '@/components/ui';
 import { Seo } from '@/components/Seo';
 import { PageHeader } from '@/components/layout/Page';
 import { useBootstrap } from '@/hooks/useBootstrap';
@@ -393,7 +393,7 @@ export function TransitPage() {
             </Card>
           ) : null}
 
-          {search.isFetching ? <CenteredSpinner /> : null}
+          {search.isFetching ? <SearchingState variant="journeys" /> : null}
 
           {isEmpty && canOfferTransfers ? (
             <EmptyState

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import { Bus, Footprints, MapPin, Navigation, Search } from 'lucide-react';
 
-import { Badge, Button, Card, CenteredSpinner, EmptyState } from '@/components/ui';
+import { Badge, Button, Card, EmptyState, SearchingState } from '@/components/ui';
 import { Seo } from '@/components/Seo';
 import { BackLink, PageHeader } from '@/components/layout/Page';
 import { MapView, type MapLine, type MapPoint } from '@/components/MapView';
@@ -149,7 +149,7 @@ export function DirectionsPage() {
         </div>
       </Card>
 
-      {directions.isFetching ? <CenteredSpinner /> : null}
+      {directions.isFetching ? <SearchingState variant="directions" /> : null}
 
       {submitted && !directions.isFetching && routes.length === 0 ? (
         <EmptyState icon={MapPin} title={t('directionsEmptyTitle', { defaultValue: 'No directions found' })} description={t('directionsEmptyBody', { defaultValue: 'Try a different origin, destination or time.' })} />

@@ -973,5 +973,13 @@
   "azoresbusLiveCta": "实时",
   "azoresbusLiveCtaHint": "在地图上实时查看线网巴士",
   "azoresbusLiveInstallTitle": "实时查看公交车",
-  "azoresbusLiveInstallBody": "免费下载 São Miguel Bus 应用，即可实时查看线网巴士的位置。"
+  "azoresbusLiveInstallBody": "免费下载 São Miguel Bus 应用，即可实时查看线网巴士的位置。",
+  "searchingBuses": "正在搜索巴士…",
+  "searchingTimetables": "正在查询今日时刻表…",
+  "searchingConnections": "正在寻找换乘方案…",
+  "searchingSorting": "正在按发车时间排序…",
+  "searchingDirections": "正在规划你的路线…",
+  "searchingWalking": "正在计算步行路段…",
+  "searchingDeparture": "正在匹配最近班次…",
+  "searchingSteps": "正在整理行程步骤…"
 }
