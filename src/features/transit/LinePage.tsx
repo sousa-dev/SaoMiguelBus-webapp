@@ -7,6 +7,7 @@ import { Button, Card, CenteredSpinner, EmptyState } from '@/components/ui';
 import { MapView, type MapLine, type MapPoint } from '@/components/MapView';
 import { Seo } from '@/components/Seo';
 import { BackLink, PageHeader } from '@/components/layout/Page';
+import { AdBanner } from '@/features/ads/components/AdBanner';
 import { useLineShape } from '@/features/transit/hooks';
 import { track } from '@/lib/analytics';
 import { displayRouteNumber, splitStopLabel } from '@/lib/format';
@@ -80,6 +81,10 @@ export function LinePage() {
           ) : null
         }
       />
+
+      <div className="mb-5 empty:hidden">
+        <AdBanner on="line" slot="top" content={Boolean(direction)} />
+      </div>
 
       {!direction ? (
         <EmptyState icon={Bus} title={t('transitLineNoShape', { line: data.code })} />

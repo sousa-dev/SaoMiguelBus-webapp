@@ -1,0 +1,5 @@
+# Authorized digital sellers for app.saomiguelhub.com.
+# AdSense reads ads.txt at the ROOT domain (https://saomiguelhub.com/ads.txt, GitHub Pages repo
+# SaoMiguelHub-Tools/SaoMiguelHub-LandingPage) — keep that file identical to this one.
+google.com, pub-8246676797736648, DIRECT, f08c47fec0942fa0
+# Adsterra: paste the lines shown under Adsterra → Websites → ads.txt once the site is approved.

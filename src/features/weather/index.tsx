@@ -6,6 +6,7 @@ import { CloudSun, Droplets, Wind } from 'lucide-react';
 
 import { Card, CenteredSpinner, Chip, EmptyState, SearchField } from '@/components/ui';
 import { BackLink, PageHeader } from '@/components/layout/Page';
+import { AdBanner } from '@/features/ads/components/AdBanner';
 import { Seo } from '@/components/Seo';
 import { fetchWeatherParish, fetchWeatherParishes } from '@/lib/api';
 import { track } from '@/lib/analytics';
@@ -82,6 +83,10 @@ export function WeatherPage() {
             <Chip key={c} label={c} active={concelho === c} onClick={() => setConcelho(c)} />
           ))}
         </div>
+      </div>
+
+      <div className="mb-5 empty:hidden">
+        <AdBanner on="weather" slot="top" content={filtered.length > 0} />
       </div>
 
       {filtered.length === 0 ? (

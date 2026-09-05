@@ -6,6 +6,7 @@ import { Check, MapPin, ThumbsDown, ThumbsUp, TriangleAlert } from 'lucide-react
 
 import { Badge, Button, Card, CenteredSpinner, Chip, EmptyState, SegmentedControl } from '@/components/ui';
 import { BackLink, PageHeader } from '@/components/layout/Page';
+import { AdBanner } from '@/features/ads/components/AdBanner';
 import { Seo } from '@/components/Seo';
 import { MapView, type MapPoint } from '@/components/MapView';
 import {
@@ -93,6 +94,10 @@ export function TrafficPage() {
         {(categories.data ?? []).map((c) => (
           <Chip key={c.id} label={c.name} active={category === c.slug} onClick={() => setCategory(c.slug)} />
         ))}
+      </div>
+
+      <div className="mb-5 empty:hidden">
+        <AdBanner on="traffic" slot="top" content={!reports.isLoading && (reports.data ?? []).length > 0} />
       </div>
 
       {reports.isLoading ? (

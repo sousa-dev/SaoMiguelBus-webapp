@@ -20,6 +20,11 @@ export const WEB_ANALYTICS_PARITY = [
   { module: 'transit', event_type: 'internal_ad_impression', source: 'features/ads/' },
   { module: 'transit', event_type: 'internal_ad_click', source: 'features/ads/' },
   { module: 'transit', event_type: 'interstitial_upsell_click', source: 'features/ads/' },
+  // Third-party network tier (AdSense / fallback network) — fill rate per slot.
+  { module: 'transit', event_type: 'ad_network_request', source: 'features/ads/providers/network-analytics.ts' },
+  { module: 'transit', event_type: 'ad_network_filled', source: 'features/ads/providers/network-analytics.ts' },
+  { module: 'transit', event_type: 'ad_network_unfilled', source: 'features/ads/providers/network-analytics.ts' },
+  { module: 'transit', event_type: 'ad_network_click', source: 'features/ads/providers/network-analytics.ts' },
   { module: 'seismic', event_type: 'view', source: 'features/earthquakes/' },
   { module: 'seismic', event_type: 'filter', source: 'features/earthquakes/' },
   { module: 'seismic', event_type: 'map_marker', source: 'features/earthquakes/' },

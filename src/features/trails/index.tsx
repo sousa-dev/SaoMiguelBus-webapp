@@ -6,6 +6,7 @@ import { Download, Mountain, Navigation, Route as RouteIcon } from 'lucide-react
 
 import { Badge, Button, Card, CenteredSpinner, Chip, EmptyState, SearchField } from '@/components/ui';
 import { BackLink, PageHeader } from '@/components/layout/Page';
+import { AdBanner } from '@/features/ads/components/AdBanner';
 import { Seo } from '@/components/Seo';
 import { MapView, type MapPoint } from '@/components/MapView';
 import { fetchTrail, fetchTrails } from '@/lib/api';
@@ -168,6 +169,10 @@ export function TrailsPage() {
             />
           ))}
         </div>
+      </div>
+
+      <div className="mb-5 empty:hidden">
+        <AdBanner on="trails" slot="top" content={!trails.isLoading && filtered.length > 0} />
       </div>
 
       {trails.isLoading ? (

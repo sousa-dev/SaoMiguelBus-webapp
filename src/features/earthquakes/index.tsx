@@ -6,6 +6,7 @@ import { Activity, MapPin, Waves } from 'lucide-react';
 
 import { Badge, Card, CenteredSpinner, Chip, EmptyState, SegmentedControl } from '@/components/ui';
 import { BackLink, PageHeader } from '@/components/layout/Page';
+import { AdBanner } from '@/features/ads/components/AdBanner';
 import { Seo } from '@/components/Seo';
 import { MapView, type MapPoint } from '@/components/MapView';
 import { fetchSeismicEvent, fetchSeismicEvents } from '@/lib/api';
@@ -116,6 +117,10 @@ export function EarthquakesPage() {
             }}
           />
         ))}
+      </div>
+
+      <div className="mb-5 empty:hidden">
+        <AdBanner on="earthquakes" slot="top" content={!events.isLoading && (events.data ?? []).length > 0} />
       </div>
 
       {events.isLoading ? (

@@ -25,6 +25,7 @@ import {
 import { formatAppDate } from '@/lib/format';
 import { AZORES_ARCHIPELAGO_VIEW } from '@/lib/map-bounds';
 import { weatherCodeEmoji, weatherCodeLabelKey } from '@/lib/weather-codes';
+import { AdBanner } from '@/features/ads/components/AdBanner';
 
 const DEFAULT_PARISH_SLUG = 'sao-sebastiao-ponta-delgada';
 
@@ -148,6 +149,8 @@ export function HomePage() {
           {t('searchButton')}
         </Link>
       </div>
+
+      <AdBanner on="hub" slot="top" />
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         {enabled.includes('weather') && parish ? (
