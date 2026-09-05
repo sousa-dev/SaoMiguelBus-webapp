@@ -6,6 +6,7 @@ import { Clock, Compass, ExternalLink, Star } from 'lucide-react';
 
 import { Badge, Button, Card, CenteredSpinner, Chip, EmptyState, SearchField } from '@/components/ui';
 import { BackLink, PageHeader } from '@/components/layout/Page';
+import { AdBanner } from '@/features/ads/components/AdBanner';
 import { Seo } from '@/components/Seo';
 import { fetchTour, fetchTours } from '@/lib/api';
 import { track } from '@/lib/analytics';
@@ -110,6 +111,10 @@ export function ToursPage() {
             />
           ))}
         </div>
+      </div>
+
+      <div className="mb-5 empty:hidden">
+        <AdBanner on="tours" slot="top" content={visible.length > 0} />
       </div>
 
       {visible.length === 0 ? (

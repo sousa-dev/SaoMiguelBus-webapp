@@ -387,7 +387,9 @@ export function TransitPage() {
               destination={routeWeather.data.destination}
             />
           ) : null}
-          {canShowAds ? <AdBanner on="home" slot="top" /> : null}
+          {canShowAds ? (
+            <AdBanner on="home" slot="top" content={hasResults && !search.isFetching} />
+          ) : null}
 
           {!searchEnabled && !hasResults ? (
             <Card className="p-6">

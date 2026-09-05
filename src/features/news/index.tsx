@@ -14,6 +14,7 @@ import {
   SegmentedControl,
 } from '@/components/ui';
 import { BackLink, PageHeader } from '@/components/layout/Page';
+import { AdBanner } from '@/features/ads/components/AdBanner';
 import { Seo } from '@/components/Seo';
 import { fetchNewsArticle, fetchNewsArticles, fetchNewsSources } from '@/lib/api';
 import { track } from '@/lib/analytics';
@@ -102,6 +103,10 @@ export function NewsPage() {
           onChange={(e) => setQuery(e.target.value)}
           className="max-w-md"
         />
+      </div>
+
+      <div className="mb-5 empty:hidden">
+        <AdBanner on="news" slot="top" content={!articles.isLoading && (articles.data?.length ?? 0) > 0} />
       </div>
 
       {articles.isLoading ? (

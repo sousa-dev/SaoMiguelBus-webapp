@@ -232,3 +232,9 @@ body {
     background-image: none;
   }
 }
+
+/* Reserved network ad slot (features/ads/components/AdSlotFrame). Height is set inline once the
+   container is measured; the min-height keeps the first paint from collapsing. */
+.ad-frame {
+  min-height: 3.5rem;
+}

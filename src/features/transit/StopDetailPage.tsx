@@ -7,6 +7,7 @@ import { Card, CenteredSpinner, EmptyState } from '@/components/ui';
 import { MapView } from '@/components/MapView';
 import { Seo } from '@/components/Seo';
 import { BackLink, PageHeader } from '@/components/layout/Page';
+import { AdBanner } from '@/features/ads/components/AdBanner';
 import { DepartureRow } from '@/features/transit/components/DepartureRow';
 import { useStopDetail } from '@/features/transit/hooks';
 import { useBootstrap } from '@/hooks/useBootstrap';
@@ -96,6 +97,10 @@ export function StopDetailPage() {
           </button>
         }
       />
+
+      <div className="mb-4 empty:hidden">
+        <AdBanner on="stop" slot="top" />
+      </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <div className="flex flex-col gap-4">

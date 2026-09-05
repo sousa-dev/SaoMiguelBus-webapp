@@ -49,8 +49,9 @@ export function VerifiedByOwnerBadge({ className }: { className?: string }) {
   };
 
   useLayoutEffect(() => {
+    // Closed: nothing is rendered (see `open && tooltipStyle` below), so no state reset is needed;
+    // reopening recomputes the position before paint.
     if (!open) {
-      setTooltipStyle(null);
       return;
     }
     updatePosition();
