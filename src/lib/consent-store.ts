@@ -1,0 +1,99 @@
+import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
+
+import { postConsent } from '@/lib/api';
+import type { ConsentPurposes } from '@/lib/types';
+
+const CONSENT_KEY = 'azores_hub_consent';
+
+export const defaultPurposes: ConsentPurposes = {
+  strictly_necessary: true,
+  analytics: false,
+  ads: false,
+  personalization: false,
+};
+
+interface ConsentState {
+  decided: boolean;
+  purposes: ConsentPurposes;
+  policyVersion: string | null;
+  setPurposes: (purposes: ConsentPurposes) => void;
+  acceptAll: (policyVersion?: string) => Promise<void>;
+  rejectNonEssential: (policyVersion?: string) => Promise<void>;
+  saveCustom: (purposes: ConsentPurposes, policyVersion?: string) => Promise<void>;
+  hasAnalyticsConsent: () => boolean;
+  requireReconsent: () => void;
+}
+
+async function syncToBackend(purposes: ConsentPurposes) {
+  try {
+    const { getOrCreateSessionId } = await import('@/lib/session');
+    const sessionId = getOrCreateSessionId();
+    await postConsent(sessionId, purposes);
+  } catch {
+    // Offline / dev without backend — local CMP still applies.
+  }
+}
+
+async function purgeAnalyticsIfRejected(purposes: ConsentPurposes) {
+  if (!purposes.analytics) {
+    const { purgeAnalyticsQueue } = await import('@/lib/analytics-queue');
+    await purgeAnalyticsQueue();
+  }
+}
+
+function persistDecision(
+  set: (partial: Partial<ConsentState>) => void,
+  purposes: ConsentPurposes,
+  policyVersion?: string,
+) {
+  set({
+    decided: true,
+    purposes,
+    ...(policyVersion ? { policyVersion } : {}),
+  });
+}
+
+export const useConsentStore = create<ConsentState>()(
+  persist(
+    (set, get) => ({
+      decided: false,
+      purposes: defaultPurposes,
+      policyVersion: null,
+      setPurposes: (purposes) => set({ purposes }),
+      hasAnalyticsConsent: () => get().decided && get().purposes.analytics,
+      requireReconsent: () => set({ decided: false }),
+      acceptAll: async (policyVersion) => {
+        const purposes: ConsentPurposes = {
+          strictly_necessary: true,
+          analytics: true,
+          ads: true,
+          personalization: true,
+        };
+        await syncToBackend(purposes);
+        persistDecision(set, purposes, policyVersion);
+      },
+      rejectNonEssential: async (policyVersion) => {
+        const purposes = { ...defaultPurposes };
+        await syncToBackend(purposes);
+        await purgeAnalyticsIfRejected(purposes);
+        persistDecision(set, purposes, policyVersion);
+      },
+      saveCustom: async (purposes, policyVersion) => {
+        const normalized = { ...defaultPurposes, ...purposes, strictly_necessary: true };
+        await syncToBackend(normalized);
+        await purgeAnalyticsIfRejected(normalized);
+        persistDecision(set, normalized, policyVersion);
+      },
+    }),
+    {
+      name: CONSENT_KEY,
+      storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({
+        decided: state.decided,
+        purposes: state.purposes,
+        policyVersion: state.policyVersion,
+      }),
+    },
+  ),
+);

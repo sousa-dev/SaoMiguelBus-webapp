@@ -1,0 +1,17 @@
+{
+  "name": "São Miguel Bus",
+  "short_name": "SMB",
+  "description": "Bus schedules, weather, news, trails and more for São Miguel, Azores.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f6f6",
+  "theme_color": "#218732",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

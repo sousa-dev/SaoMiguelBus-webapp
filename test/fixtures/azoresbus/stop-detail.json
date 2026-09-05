@@ -1,0 +1,95 @@
+{
+  "id": 611,
+  "name": "PONTA DELGADA (ALFÂNDEGA)",
+  "lat": 37.738011,
+  "lon": -25.6697985,
+  "dataset": "azoresbus",
+  "poles": [
+    {
+      "code": "1001",
+      "name": "PONTA DELGADA (ALFÂNDEGA)",
+      "lat": 37.738394,
+      "lon": -25.669207
+    },
+    {
+      "code": "1002",
+      "name": "PONTA DELGADA (ALFÂNDEGA)",
+      "lat": 37.737628,
+      "lon": -25.67039
+    }
+  ],
+  "lines": [
+    "101",
+    "102",
+    "103",
+    "105",
+    "108",
+    "110",
+    "200",
+    "202",
+    "203",
+    "205",
+    "206",
+    "208",
+    "210",
+    "211",
+    "212",
+    "217",
+    "218",
+    "219",
+    "221",
+    "222",
+    "301",
+    "302",
+    "303",
+    "304",
+    "305",
+    "306",
+    "307",
+    "311",
+    "312",
+    "313",
+    "314",
+    "315",
+    "318",
+    "335",
+    "E01",
+    "N01",
+    "N02",
+    "N03",
+    "N04",
+    "N05"
+  ],
+  "departures": [
+    {
+      "tripId": 1914,
+      "route": "N02",
+      "time": "00h01",
+      "dayOffset": 0,
+      "sequence": 2,
+      "headsign": "00:00  »  01:05",
+      "code": "1002",
+      "destination": "STO. ANTÓNIO BAIXO (LG. DA CRUZ)"
+    },
+    {
+      "tripId": 1477,
+      "route": "303",
+      "time": "06h00",
+      "dayOffset": 0,
+      "sequence": 1,
+      "headsign": "06:00  »  06:50",
+      "code": "1001",
+      "destination": "PONTA DELGADA (ALFÂNDEGA)"
+    },
+    {
+      "tripId": 1428,
+      "route": "301",
+      "time": "06h30",
+      "dayOffset": 0,
+      "sequence": 1,
+      "headsign": "06:30  »  07:25",
+      "code": "1001",
+      "destination": "PONTA DELGADA (ALFÂNDEGA)"
+    }
+  ]
+}

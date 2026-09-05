@@ -1,0 +1,145 @@
+{
+  "journey": {
+    "id": "1812-9:1138-6",
+    "transfers": 1,
+    "start": "08h48",
+    "end": "09h57",
+    "durationMinutes": 69,
+    "waitMinutes": 24,
+    "dayOffset": 0,
+    "typeOfDay": "WEEKDAY",
+    "legs": [
+      {
+        "kind": "ride",
+        "tripId": 1812,
+        "route": "318",
+        "likesPercent": 100,
+        "dislikesPercent": 0,
+        "information": {},
+        "board": {
+          "name": "FURNAS (LG. DAS CALDEIRAS)",
+          "time": "08h48",
+          "sequence": 9,
+          "dayOffset": 0
+        },
+        "alight": {
+          "name": "FURNAS (LARGO DO TEATRO)",
+          "time": "08h49",
+          "sequence": 10,
+          "dayOffset": 0
+        },
+        "stops": [
+          {
+            "stopId": 397,
+            "name": "FURNAS (LG. DAS CALDEIRAS)",
+            "time": "08h48",
+            "sequence": 9
+          },
+          {
+            "stopId": 396,
+            "name": "FURNAS (LARGO DO TEATRO)",
+            "time": "08h49",
+            "sequence": 10
+          },
+          {
+            "stopId": 397,
+            "name": "FURNAS (LG. DAS CALDEIRAS)",
+            "time": "08h48",
+            "sequence": 9
+          },
+          {
+            "stopId": 396,
+            "name": "FURNAS (LARGO DO TEATRO)",
+            "time": "08h49",
+            "sequence": 10
+          }
+        ],
+        "boarding": {
+          "code": "4046",
+          "lat": 37.772934,
+          "lon": -25.3044,
+          "sequence": 9,
+          "dayOffset": 0
+        },
+        "alighting": {
+          "code": "4045",
+          "lat": 37.77352,
+          "lon": -25.311057,
+          "sequence": 10,
+          "dayOffset": 0
+        }
+      },
+      {
+        "kind": "transfer",
+        "at": "FURNAS (POLÍCIA)",
+        "from": "FURNAS (LARGO DO TEATRO)",
+        "waitMinutes": 24,
+        "walkMinutes": 3,
+        "slackMinutes": 21,
+        "tight": true,
+        "fromRoute": "318",
+        "toRoute": "110"
+      },
+      {
+        "kind": "ride",
+        "tripId": 1138,
+        "route": "110",
+        "likesPercent": 100,
+        "dislikesPercent": 0,
+        "information": {},
+        "board": {
+          "name": "FURNAS (POLÍCIA)",
+          "time": "09h13",
+          "sequence": 6,
+          "dayOffset": 0
+        },
+        "alight": {
+          "name": "RIBEIRA GRANDE (ROSÁRIO)",
+          "time": "09h57",
+          "sequence": 33,
+          "dayOffset": 0
+        },
+        "stops": [
+          {
+            "stopId": 401,
+            "name": "FURNAS (POLÍCIA)",
+            "time": "09h13",
+            "sequence": 6
+          },
+          {
+            "stopId": 388,
+            "name": "FURNAS (CALDEIRAS)",
+            "time": "09h15",
+            "sequence": 7
+          },
+          {
+            "stopId": 717,
+            "name": "RIBEIRA GRANDE (EBI RIBEIRA GRANDE)",
+            "time": "09h57",
+            "sequence": 32
+          },
+          {
+            "stopId": 722,
+            "name": "RIBEIRA GRANDE (ROSÁRIO)",
+            "time": "09h57",
+            "sequence": 33
+          }
+        ],
+        "boarding": {
+          "code": "4052",
+          "lat": 37.772356,
+          "lon": -25.309634,
+          "sequence": 6,
+          "dayOffset": 0
+        },
+        "alighting": {
+          "code": "5013",
+          "lat": 37.824609,
+          "lon": -25.517155,
+          "sequence": 33,
+          "dayOffset": 0
+        }
+      }
+    ]
+  }
+}
