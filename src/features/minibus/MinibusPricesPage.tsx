@@ -15,7 +15,7 @@ export function MinibusPricesPage() {
 
   useEffect(() => {
     if (tariffsQuery.data) {
-      track('minibus', 'prices_view', { screen: 'prices' });
+      track('minibus', 'view', { screen: 'prices' });
     }
   }, [tariffsQuery.data]);
 

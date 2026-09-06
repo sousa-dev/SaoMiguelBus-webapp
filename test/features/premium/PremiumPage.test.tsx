@@ -161,7 +161,7 @@ describe('PremiumPage', () => {
     api.registerGuestAccount.mockResolvedValue({ token: 'newtok', user: guestUser });
     api.fetchMe.mockResolvedValue(guestUser);
     const m = await render();
-    const continueBtn = buttons().find((b) => b.textContent === 'Continue')!;
+    const continueBtn = buttons().find((b) => b.textContent === 'Start free trial')!;
     await act(async () => {
       continueBtn.click();
     });
@@ -194,7 +194,7 @@ describe('PremiumPage', () => {
       new ApiRequestError(400, '', { code: 'email_taken', message: 'taken' }),
     );
     await render();
-    const continueBtn = buttons().find((b) => b.textContent === 'Continue')!;
+    const continueBtn = buttons().find((b) => b.textContent === 'Start free trial')!;
     await act(async () => {
       continueBtn.click();
     });

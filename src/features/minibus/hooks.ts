@@ -128,6 +128,8 @@ export function useMinibusRouteSearch(analyticsScreen: string) {
       origin: submitted.origin,
       destination: submitted.destination,
       results_count: routeQuery.data?.journeys.length ?? 0,
+      offline: false,
+      source: 'api',
     });
   }, [submitted, routeQuery.isFetching, routeQuery.data]);
 

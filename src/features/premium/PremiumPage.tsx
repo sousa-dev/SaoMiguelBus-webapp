@@ -170,6 +170,7 @@ export function PremiumPage() {
 
   const onGuestSubmit = async (email: string) => {
     setGuestError(null);
+    track('billing', 'guest_checkout_submit', { source });
     try {
       await registerGuest.mutateAsync({ email });
       guestCreated.current = true;
@@ -179,6 +180,7 @@ export function PremiumPage() {
     } catch (caught) {
       const ui = authErrorFromUnknown(caught);
       if (ui.code === 'email_taken') {
+        track('billing', 'guest_checkout_error', { source, code: 'email_taken' });
         setGuestOpen(false);
         openSignInDialog({
           reason: 'purchase',
@@ -189,6 +191,7 @@ export function PremiumPage() {
         });
         return;
       }
+      track('billing', 'guest_checkout_error', { source, code: ui.code ?? 'unknown' });
       setGuestError(formatAuthErrorMessage(ui, t) || t('premiumGuestCheckoutError'));
     }
   };
@@ -197,6 +200,7 @@ export function PremiumPage() {
     setSetPasswordError(null);
     try {
       await setPasswordMutation.mutateAsync({ password });
+      track('billing', 'set_password_success', { source });
       setSetPasswordOpen(false);
       showNotice({
         title: t('premiumSetPasswordSuccessTitle'),
@@ -204,6 +208,7 @@ export function PremiumPage() {
       });
     } catch (caught) {
       const ui = authErrorFromUnknown(caught);
+      track('billing', 'set_password_error', { source });
       setSetPasswordError(formatAuthErrorMessage(ui, t));
     }
   };

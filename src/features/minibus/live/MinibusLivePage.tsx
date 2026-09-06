@@ -245,7 +245,7 @@ export function MinibusLivePage() {
   );
 
   useEffect(() => {
-    track('minibus', 'live_view', { screen: 'live' });
+    track('minibus', 'view', { screen: 'live' });
   }, []);
 
   useEffect(() => {

@@ -3,6 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 
 import { useAuthStore } from '@/features/account/auth-store';
 import { useReconcileEntitlement } from '@/features/premium/hooks/useReconcileEntitlement';
+import { packageTrialDays } from '@/features/premium/lib/package-display';
 import { isPurchaseCancelled, purchaseErrorMessageKey } from '@/features/premium/lib/purchase-errors';
 import {
   ensureRevenueCat,
@@ -37,21 +38,24 @@ export function usePremiumPurchases(options: Options) {
       const user = useAuthStore.getState().user;
       if (!user) throw new SignInRequiredError();
       await ensureRevenueCat(user);
-      track('billing', 'purchase_start', { package_id: pkg.identifier, source });
+      const trial = packageTrialDays(pkg) != null;
+      track('billing', 'purchase_start', { package_id: pkg.identifier, source, trial });
       return purchaseWebPackage(pkg, user.email);
     },
     onSuccess: async (info, pkg) => {
       await reconcile(info);
-      track('billing', 'purchase_success', { package_id: pkg.identifier, source });
+      const trial = packageTrialDays(pkg) != null;
+      track('billing', 'purchase_success', { package_id: pkg.identifier, source, trial });
       onPurchased?.();
     },
     onError: (error, pkg) => {
+      const trial = packageTrialDays(pkg) != null;
       if (isPurchaseCancelled(error)) {
-        track('billing', 'purchase_cancel', { package_id: pkg.identifier, source });
+        track('billing', 'purchase_cancel', { package_id: pkg.identifier, source, trial });
         return;
       }
       const key = purchaseErrorMessageKey(error);
-      track('billing', 'purchase_error', { package_id: pkg.identifier, source, code: key });
+      track('billing', 'purchase_error', { package_id: pkg.identifier, source, trial, code: key });
       onPurchaseFailed?.(key);
     },
   });
