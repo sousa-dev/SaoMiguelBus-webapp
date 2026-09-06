@@ -9,6 +9,7 @@ import { PRIVACY_PATH, TERMS_PATH } from '@/lib/app-links';
 import { HUB_NAV, NAV_MODULES } from '@/lib/modules';
 import { cn } from '@/lib/cn';
 import { HeaderActions } from '@/components/layout/HeaderActions';
+import { MobileTabBar } from '@/components/layout/MobileTabBar';
 import { AppInstallBanner, GetTheAppCard } from '@/components/AppInstall';
 import { AnalyticsLifecycle } from '@/components/consent/AnalyticsLifecycle';
 import { ConsentBanner } from '@/components/consent/ConsentBanner';
@@ -21,6 +22,7 @@ import { useRevenueCatBootstrap } from '@/features/premium/hooks/useRevenueCatBo
 import { SETTINGS_PATH } from '@/features/premium/lib/paywall-route';
 import { useCanShowAds } from '@/features/premium/usePremium';
 import { NoticeDialogHost } from '@/components/ui/NoticeDialogHost';
+import { HopOnHopOffSheetHost } from '@/features/hop-on-hop-off/components/HopOnHopOffSheetHost';
 import { useAutoTrackPinnedRoutes } from '@/features/transit/pinned/hooks/useAutoTrackPinnedRoutes';
 import { useScheduleTransition } from '@/features/transit/schedule-hooks';
 
@@ -180,18 +182,20 @@ export function AppShell() {
 
         <main
           key={location.pathname}
-          className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 pb-44 lg:px-8 lg:py-8 lg:pb-8"
+          className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 pb-56 lg:px-8 lg:py-8 lg:pb-8"
         >
           <Outlet />
         </main>
       </div>
 
+      <MobileTabBar />
       <AppInstallBanner />
       <StoreChooserModal />
       <ConsentBanner />
       <AnalyticsLifecycle />
       <NoticeDialogHost />
       <SignInDialogHost />
+      <HopOnHopOffSheetHost />
       {canShowAds ? <SessionAdOrchestrator bootstrapReady={bootstrapReady} /> : null}
     </div>
   );

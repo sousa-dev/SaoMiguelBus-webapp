@@ -1215,5 +1215,16 @@
   "azoresbusLiveUnavailableShort": "Недоступно",
   "azoresbusLiveOfflineShort": "Офлайн",
   "minibusLiveUnavailableShort": "Недоступно",
-  "minibusLiveOfflineShort": "Офлайн"
+  "minibusLiveOfflineShort": "Офлайн",
+  "hopOnOffCtaTitle": "Sightseeing hop-on-hop-off bus",
+  "hopOnOffCtaSubtitle": "Explore São Miguel at your pace",
+  "hopOnOffBadge": "For visitors",
+  "hopOnOffSheetTitle": "Sightseeing hop-on-hop-off bus",
+  "hopOnOffSheetBody": "Discover São Miguel with a hop-on-hop-off bus tour by Azores on Route. Explore the island at your own pace.",
+  "hopOnOffSheetBullet1": "• Two routes: Sete Cidades and Gorreana",
+  "hopOnOffSheetBullet2": "• Daily service, 9:00–19:00, single-decker buses",
+  "hopOnOffSheetBullet3": "• Ticket includes partner discounts on island experiences",
+  "hopOnOffSheetDisclaimer": "Opens GetYourGuide in your browser. Booking and payment are handled by the partner.",
+  "hopOnOffSheetBookButton": "Learn more & book",
+  "hopOnOffSheetClose": "Close"
 }

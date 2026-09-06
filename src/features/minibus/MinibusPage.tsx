@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Seo } from '@/components/Seo';
 import { PageHeader } from '@/components/layout/Page';
 import { AdBanner } from '@/features/ads/components/AdBanner';
+import { HopOnHopOffCtaRow } from '@/features/hop-on-hop-off/components/HopOnHopOffCtaRow';
 import { useCanShowAds } from '@/features/premium/usePremium';
 import { useNetworkOnline } from '@/lib/hooks/useNetworkOnline';
 import { useBootstrap } from '@/hooks/useBootstrap';
@@ -72,6 +73,7 @@ export function MinibusPage() {
           <>
             <MinibusPricesLink />
             {showTransitLink ? <MinibusTransitLink /> : null}
+            <HopOnHopOffCtaRow source="minibus" />
             {canShowAds ? <AdBanner on="minibus" slot="instructions" /> : null}
           </>
         ) : null}

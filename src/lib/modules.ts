@@ -44,3 +44,14 @@ export const NAV_MODULES: NavModule[] = [
 export function getModule(key: ModuleKey): NavModule | undefined {
   return NAV_MODULES.find((m) => m.key === key);
 }
+
+/** The mobile app's fixed bottom tab bar: Início, then these four (filtered by enabled modules). */
+export const FIXED_TAB_MODULE_KEYS: ModuleKey[] = ['transit', 'events', 'minibus', 'weather'];
+
+/** The bottom-tab-bar modules (Início excluded — it's rendered separately, always first). */
+export function orderedTabModules(enabledKeys: ModuleKey[]): NavModule[] {
+  const enabled = new Set(enabledKeys);
+  return FIXED_TAB_MODULE_KEYS.filter((key) => enabled.has(key))
+    .map((key) => getModule(key))
+    .filter((m): m is NavModule => m != null);
+}

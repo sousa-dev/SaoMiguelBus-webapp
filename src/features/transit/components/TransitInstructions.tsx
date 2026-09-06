@@ -4,6 +4,7 @@ import { BusFront, ChevronDown, Tag } from 'lucide-react';
 
 import { Card } from '@/components/ui';
 import { AdBanner } from '@/features/ads/components/AdBanner';
+import { HopOnHopOffCtaRow } from '@/features/hop-on-hop-off/components/HopOnHopOffCtaRow';
 import { useCanShowAds } from '@/features/premium/usePremium';
 
 /**
@@ -45,6 +46,8 @@ export function TransitInstructions() {
           <ChevronDown size={16} className="-rotate-90 text-muted" />
         </Card>
       </Link>
+
+      <HopOnHopOffCtaRow source="transit" />
 
       {canShowAds ? <AdBanner on="home" slot="instructions" /> : null}
     </div>
