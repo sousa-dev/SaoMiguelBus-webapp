@@ -33,6 +33,10 @@ import type { MinibusLine, MinibusTrackingMeta, MinibusVehicleDetail, MinibusVeh
 const TRY_AGAIN_COOLDOWN_MS = 10_000;
 const STATUS_KEYS = vehicleStatusI18nKeys('minibusLive');
 
+/** Ponta Delgada city centre — the PDL MiniBus service area, not the whole island. */
+const MINIBUS_MAP_CENTER = { lat: 37.7394, lng: -25.6754 };
+const MINIBUS_MAP_ZOOM = 13;
+
 function MinibusFreshness({ meta, isRefetching }: { meta: MinibusTrackingMeta | undefined; isRefetching: boolean }) {
   const { t, i18n } = useTranslation();
   const labels = buildTrackingFreshnessLabels(
@@ -255,6 +259,8 @@ export function MinibusLivePage() {
               routePolyline={routePolyline}
               routeColor={selectedLine?.color ? `#${selectedLine.color.replace(/^#/, '')}` : null}
               onSelectVehicle={(id) => setSelectedVehicleId(id)}
+              fallbackCenter={MINIBUS_MAP_CENTER}
+              fallbackZoom={MINIBUS_MAP_ZOOM}
             />
             {fleetQuery.isPending ? (
               <div className="pointer-events-none absolute inset-0 z-[500] flex items-center justify-center bg-surface/60">

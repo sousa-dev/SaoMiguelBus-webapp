@@ -29,9 +29,6 @@ function NavItems({ onNavigate }: { onNavigate?: () => void }) {
   const { data: bootstrap } = useBootstrap();
   const enabled = resolveEnabledModules(bootstrap?.island?.enabledModules);
   const visible = NAV_MODULES.filter((m) => enabled.includes(m.key));
-  // Bus-focused nav: transit leads, "Início" (the hub) follows, then the rest.
-  const transit = visible.find((m) => m.key === 'transit');
-  const rest = visible.filter((m) => m.key !== 'transit');
 
   const itemClass = ({ isActive }: { isActive: boolean }) =>
     cn(
@@ -43,17 +40,11 @@ function NavItems({ onNavigate }: { onNavigate?: () => void }) {
 
   return (
     <nav className="flex flex-col gap-1">
-      {transit ? (
-        <NavLink to={transit.route} className={itemClass} onClick={onNavigate}>
-          <transit.Icon size={20} strokeWidth={2} />
-          {t(transit.labelKey)}
-        </NavLink>
-      ) : null}
       <NavLink to={HUB_NAV.route} end className={itemClass} onClick={onNavigate}>
         <HUB_NAV.Icon size={20} strokeWidth={2} />
         {t(HUB_NAV.labelKey)}
       </NavLink>
-      {rest.map((m) => (
+      {visible.map((m) => (
         <NavLink key={m.key} to={m.route} className={itemClass} onClick={onNavigate}>
           <m.Icon size={20} strokeWidth={2} />
           {t(m.labelKey)}

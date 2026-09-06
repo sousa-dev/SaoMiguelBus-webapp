@@ -1,5 +1,5 @@
 import L from 'leaflet';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { MapContainer, Marker, Polyline, TileLayer, useMap } from 'react-leaflet';
 
 import { staticIslandConfig } from '@/config/island';
@@ -22,6 +22,9 @@ type Props = {
   routeColor?: string | null;
   onSelectVehicle: (vehicleId: string) => void;
   className?: string;
+  /** Shown when the fleet is empty. Defaults to the island-wide view (AzoresBus is island-wide). */
+  fallbackCenter?: { lat: number; lng: number };
+  fallbackZoom?: number;
 };
 
 function busIcon(vehicle: LiveMapVehicle, selected: boolean) {
@@ -61,6 +64,36 @@ function FocusOn({ vehicle }: { vehicle: LiveMapVehicle | null }) {
 }
 
 /**
+ * The initial `center`/`zoom` react-leaflet is given only ever apply to the very first paint,
+ * which usually happens before the fleet has loaded. Once real vehicle positions arrive, fit the
+ * view to them — but only the first time, so a later poll never yanks the map from under a rider
+ * who has since panned around.
+ */
+function FitToFleetOnce({
+  vehicles,
+  fallbackCenter,
+  fallbackZoom,
+}: {
+  vehicles: LiveMapVehicle[];
+  fallbackCenter: { lat: number; lng: number };
+  fallbackZoom: number;
+}) {
+  const map = useMap();
+  const fitted = useRef(false);
+  useEffect(() => {
+    if (fitted.current || vehicles.length === 0) return;
+    fitted.current = true;
+    const view = viewForCoords(
+      vehicles.map((v) => [v.position.lat, v.position.lon] as [number, number]),
+      fallbackCenter,
+      fallbackZoom,
+    );
+    map.setView(view.center, view.zoom);
+  }, [fallbackCenter, fallbackZoom, map, vehicles]);
+  return null;
+}
+
+/**
  * The live fleet on OpenStreetMap tiles. The initial view is fitted once, to the first
  * non-empty fleet, so a later poll never yanks the map away from where the rider panned.
  */
@@ -72,12 +105,14 @@ export function LiveVehicleMap({
   routeColor,
   onSelectVehicle,
   className,
+  fallbackCenter = staticIslandConfig.mapCenter,
+  fallbackZoom = 10,
 }: Props) {
   const [initialView] = useState(() =>
     viewForCoords(
       vehicles.map((v) => [v.position.lat, v.position.lon] as [number, number]),
-      staticIslandConfig.mapCenter,
-      10,
+      fallbackCenter,
+      fallbackZoom,
     ),
   );
   const focused = useMemo(
@@ -111,6 +146,7 @@ export function LiveVehicleMap({
         />
       ))}
       <FocusOn vehicle={focused} />
+      <FitToFleetOnce vehicles={vehicles} fallbackCenter={fallbackCenter} fallbackZoom={fallbackZoom} />
       <KeepSized />
     </MapContainer>
   );

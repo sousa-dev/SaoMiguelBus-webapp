@@ -209,7 +209,7 @@ export function TransitPage() {
         {/* Planner column */}
         <div ref={plannerRef} className="flex flex-col gap-4 lg:sticky lg:top-24 lg:self-start">
           {resolvedDataset === 'azoresbus' ? (
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="grid grid-cols-2 gap-3">
               <TransitMapLinks />
               <LiveEntryCard showTracking={showTracking} isOnline={isOnline} />
             </div>
