@@ -17,7 +17,8 @@ import { usePremiumManage } from '@/features/premium/hooks/usePremiumManage';
 import { usePremiumPurchases } from '@/features/premium/hooks/usePremiumPurchases';
 import { useWebOfferings } from '@/features/premium/hooks/useWebOfferings';
 import { packageDurationLabel, packageTrialDays } from '@/features/premium/lib/package-display';
-import { packagePriceLabel, sortPackages } from '@/features/premium/lib/revenuecat-packages';
+import type { BillingPeriod } from '@/features/premium/lib/revenuecat-packages';
+import { packagePriceWithPeriodLabel, sortPackages } from '@/features/premium/lib/revenuecat-packages';
 import { isRevenueCatSandbox } from '@/features/premium/lib/revenuecat-web';
 import { useEntitlement, usePremium } from '@/features/premium/usePremium';
 import { track } from '@/lib/analytics';
@@ -49,7 +50,19 @@ function PackageTile({
   onSelect: () => void;
 }) {
   const { t } = useTranslation();
-  const { price } = packagePriceLabel(pkg);
+  const periodUnitLabel = (period: BillingPeriod): string | null => {
+    switch (period) {
+      case 'week':
+        return t('premiumPricePeriodWeek');
+      case 'month':
+        return t('premiumPricePeriodMonth');
+      case 'year':
+        return t('premiumPricePeriodYear');
+      default:
+        return null;
+    }
+  };
+  const price = packagePriceWithPeriodLabel(pkg, periodUnitLabel);
   const duration = packageDurationLabel(pkg);
   const trialDays = packageTrialDays(pkg);
   const durationLabel =
