@@ -2,7 +2,7 @@ import type { Package } from '@revenuecat/purchases-js';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
-import { Ban, Check, Crown, MapPin, Pin, ShieldCheck } from 'lucide-react';
+import { Check, Crown } from 'lucide-react';
 
 import { Seo } from '@/components/Seo';
 import { Badge, Button, Card, Skeleton } from '@/components/ui';
@@ -25,11 +25,18 @@ import { PRIVACY_PATH, TERMS_PATH } from '@/lib/app-links';
 import { formatAppDate } from '@/lib/format';
 import { showNotice } from '@/lib/notice-store';
 
+// Exact copy and order from the mobile paywall (RevenueCat-hosted) — see
+// `premiumFeatureOfflineSchedules`/`premiumFeatureArrivalNotifications` below,
+// which are mobile-only today; `MobileOnlyFeaturesNotice` further down the
+// page is what clarifies that, matching how mobile's own paywall doesn't
+// distinguish them either (every feature here is real, just not all of them
+// ship on web yet).
 const FEATURES = [
-  { key: 'premiumFeatureAdRemoval', Icon: Ban },
-  { key: 'premiumFeaturePinnedRoutes', Icon: Pin },
-  { key: 'premiumFeatureBusTracking', Icon: MapPin },
-  { key: 'premiumFeatureBadge', Icon: ShieldCheck },
+  'premiumFeature1',
+  'premiumFeatureOfflineSchedules',
+  'premiumFeatureLiveLocation',
+  'premiumFeaturePinRoutesDaily',
+  'premiumFeatureArrivalNotifications',
 ] as const;
 
 function PackageTile({
@@ -201,9 +208,9 @@ export function PremiumPage() {
         </span>
         <h1 className="text-2xl font-extrabold text-content">{t('getPremiumTitle')}</h1>
         <p className="rounded-full bg-success-surface px-3 py-1 text-xs font-semibold text-success">
-          {t('supportDeveloper')}
+          {t('premiumBonusBanner')}
         </p>
-        <p className="text-sm text-muted">{t('premiumPageDescription')}</p>
+        <p className="text-sm text-muted">{t('premiumSubscribeSubtitle')}</p>
 
         {isPremium ? (
           <Card as="section" className="w-full p-5 text-left">
@@ -230,7 +237,7 @@ export function PremiumPage() {
         ) : (
           <>
             <ul className="flex w-full flex-col gap-2 text-left">
-              {FEATURES.map(({ key }) => (
+              {FEATURES.map((key) => (
                 <li key={key} className="flex items-center gap-3 text-sm text-content">
                   <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-success text-white">
                     <Check size={12} strokeWidth={3} />
@@ -259,7 +266,7 @@ export function PremiumPage() {
                   ))}
                 </div>
                 {isRevenueCatSandbox() ? <Badge tone="warning">{t('premiumSandboxBadge')}</Badge> : null}
-                <p className="text-xs text-muted">{t('premiumTerms')}</p>
+                <p className="text-xs text-muted">{t('premiumAutoRenewDisclaimer')}</p>
                 <Button size="lg" className="w-full" disabled={busy || !selectedPackage} onClick={onContinue}>
                   {t('premiumContinueButton')}
                 </Button>

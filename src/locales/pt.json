@@ -1415,5 +1415,12 @@
   "hopOnOffSheetBullet3": "• Bilhete inclui descontos em experiências com parceiros na ilha",
   "hopOnOffSheetDisclaimer": "Abre a GetYourGuide no seu browser. Reserva e pagamento no parceiro.",
   "hopOnOffSheetBookButton": "Saber mais e reservar",
-  "hopOnOffSheetClose": "Fechar"
+  "hopOnOffSheetClose": "Fechar",
+  "premiumBonusBanner": "Bónus: Apoie um programador açoriano",
+  "premiumSubscribeSubtitle": "Subscreva para funcionalidades adicionais",
+  "premiumFeatureOfflineSchedules": "Acesso offline aos horários dos autocarros",
+  "premiumFeatureLiveLocation": "Localização de autocarros estimada em tempo real e previsões de chegada",
+  "premiumFeaturePinRoutesDaily": "Fixe rotas favoritas para acompanhamento diário",
+  "premiumFeatureArrivalNotifications": "Notificações para chegada e aproximação dos autocarros",
+  "premiumAutoRenewDisclaimer": "A subscrição é renovada automaticamente a menos que seja cancelada. Podes gerir ou cancelar a subscrição em qualquer altura nas definições da tua conta."
 }

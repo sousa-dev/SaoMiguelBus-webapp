@@ -19,12 +19,13 @@ export function periodFromDuration(duration: string | null | undefined): Billing
 
 function rank(pkg: Package): number {
   const period = periodFromDuration(pkg.webBillingProduct?.normalPeriodDuration);
-  if (pkg.packageType === '$rc_monthly' || period === 'month') return 0;
-  if (pkg.packageType === '$rc_annual' || period === 'year') return 1;
-  return 2;
+  if (pkg.packageType === '$rc_weekly' || period === 'week') return 0;
+  if (pkg.packageType === '$rc_monthly' || period === 'month') return 1;
+  if (pkg.packageType === '$rc_annual' || period === 'year') return 2;
+  return 3;
 }
 
-/** Monthly first, then yearly, then the rest; stable within a rank. */
+/** Weekly, then monthly, then yearly, then the rest; stable within a rank. */
 export function sortPackages(packages: Package[]): Package[] {
   return packages
     .map((pkg, index) => ({ pkg, index, rank: rank(pkg) }))

@@ -1226,5 +1226,12 @@
   "hopOnOffSheetBullet3": "• Ticket includes partner discounts on island experiences",
   "hopOnOffSheetDisclaimer": "Opens GetYourGuide in your browser. Booking and payment are handled by the partner.",
   "hopOnOffSheetBookButton": "Learn more & book",
-  "hopOnOffSheetClose": "Close"
+  "hopOnOffSheetClose": "Close",
+  "premiumBonusBanner": "Bonus: Support an Azorean developer",
+  "premiumSubscribeSubtitle": "Subscribe for additional features",
+  "premiumFeatureOfflineSchedules": "Offline access to bus schedules",
+  "premiumFeatureLiveLocation": "Estimated real-time bus location and arrival forecasts",
+  "premiumFeaturePinRoutesDaily": "Pin favorite routes for daily tracking",
+  "premiumFeatureArrivalNotifications": "Notifications for bus arrival and approach",
+  "premiumAutoRenewDisclaimer": "The subscription renews automatically unless cancelled. You can manage or cancel it anytime in your account settings."
 }

@@ -30,16 +30,16 @@ describe('periodFromDuration', () => {
 });
 
 describe('sortPackages', () => {
-  it('orders monthly, then yearly, then everything else, keeping relative order', () => {
+  it('orders weekly, then monthly, then yearly, then everything else, keeping relative order', () => {
     const annual = pkg('$rc_annual', 'P1Y', '€19.99');
     const monthly = pkg('$rc_monthly', 'P1M');
     const lifetime = pkg('$rc_lifetime', null, '€49.99');
     const weekly = pkg('$rc_weekly', 'P1W');
     expect(sortPackages([lifetime, annual, weekly, monthly]).map((p) => p.identifier)).toEqual([
+      '$rc_weekly',
       '$rc_monthly',
       '$rc_annual',
       '$rc_lifetime',
-      '$rc_weekly',
     ]);
   });
 });
