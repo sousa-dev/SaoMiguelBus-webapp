@@ -76,6 +76,22 @@ describe('ensureRevenueCat', () => {
   });
 });
 
+describe('internal-test-email sandbox switch', () => {
+  it('closes the production-key instance and reconfigures fresh when a sousadev.com user signs in', async () => {
+    setRevenueCatConfigForTests({ apiKey: 'rcb_prod', sandbox: false, entitlementId: 'x' });
+    await ensureRevenueCat(user);
+    expect(sdk.Purchases.configure).toHaveBeenCalledWith({ apiKey: 'rcb_prod', appUserId: 'smb_user_7' });
+
+    setRevenueCatConfigForTests({ apiKey: 'rcb_sb_test', sandbox: true, entitlementId: 'x' });
+    const dev = { ...user, id: 9, email: 'dev@sousadev.com' };
+    await ensureRevenueCat(dev);
+
+    expect(sdk.instance.close).toHaveBeenCalledTimes(1);
+    expect(sdk.Purchases.configure).toHaveBeenCalledTimes(2);
+    expect(sdk.Purchases.configure).toHaveBeenLastCalledWith({ apiKey: 'rcb_sb_test', appUserId: 'smb_user_9' });
+  });
+});
+
 describe('ensureRevenueCatAnonymous', () => {
   it('configures with a persisted anonymous id and later switches to the account', async () => {
     localStorage.clear();

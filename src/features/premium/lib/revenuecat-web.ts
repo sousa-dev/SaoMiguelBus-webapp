@@ -1,5 +1,6 @@
 import type { CustomerInfo, Offering, Package, Purchases } from '@revenuecat/purchases-js';
 
+import { useAuthStore } from '@/features/account/auth-store';
 import {
   getRevenueCatConfig,
   setRevenueCatConfigForTests,
@@ -30,10 +31,14 @@ const defaultLoader: SdkLoader = () =>
 let loadSdk: SdkLoader = defaultLoader;
 let instance: Purchases | null = null;
 let instanceUserId: string | null = null;
+let instanceApiKey: string | null = null;
 let pending: Promise<Purchases | null> | null = null;
 
+/** Resolves against the currently signed-in account, so an `@sousadev.com` team member always
+ * gets the sandbox key in production (test cards, no charges) while every other user gets the
+ * live key — see `resolveWebBillingApiKey`. */
 function config(): RevenueCatConfig {
-  return getRevenueCatConfig();
+  return getRevenueCatConfig(useAuthStore.getState().user?.email);
 }
 
 export function isRevenueCatConfigured(): boolean {
@@ -53,19 +58,27 @@ export function revenueCatEntitlementId(): string {
  * different account signs in. Returns null when purchases are not configured.
  */
 export function ensureRevenueCat(user: AuthUser): Promise<Purchases | null> {
-  const { apiKey } = config();
+  const { apiKey } = getRevenueCatConfig(user.email);
   if (!apiKey || typeof window === 'undefined') return Promise.resolve(null);
   const appUserId = revenueCatAppUserId(user);
 
-  if (instance && instanceUserId === appUserId) return Promise.resolve(instance);
+  if (instance && instanceApiKey === apiKey && instanceUserId === appUserId) return Promise.resolve(instance);
   if (pending) return pending.then(() => ensureRevenueCat(user));
 
   pending = (async () => {
+    // purchases-js can't swap API keys on an already-configured instance — an internal-test
+    // account switching between the live and sandbox key needs a fresh instance, same as sign-out.
+    if (instance && instanceApiKey !== apiKey) {
+      instance.close();
+      instance = null;
+      instanceUserId = null;
+    }
+
     if (instance) {
       await instance.changeUser(appUserId);
     } else {
       const { Purchases } = await loadSdk();
-      if (Purchases.isConfigured()) {
+      if (Purchases.isConfigured() && instanceApiKey === apiKey) {
         instance = Purchases.getSharedInstance();
         if (instanceUserId !== appUserId) await instance.changeUser(appUserId);
       } else {
@@ -73,6 +86,7 @@ export function ensureRevenueCat(user: AuthUser): Promise<Purchases | null> {
       }
     }
     instanceUserId = appUserId;
+    instanceApiKey = apiKey;
     return instance;
   })();
 
@@ -105,6 +119,7 @@ export function ensureRevenueCatAnonymous(): Promise<Purchases | null> {
       }
       instance = Purchases.configure({ apiKey, appUserId });
       instanceUserId = appUserId;
+      instanceApiKey = apiKey;
     }
     return instance;
   })();
@@ -118,6 +133,7 @@ export function closeRevenueCat(): void {
   instance?.close();
   instance = null;
   instanceUserId = null;
+  instanceApiKey = null;
 }
 
 /** The current offering, or null when it has no packages (dashboard not set up yet). */
@@ -147,6 +163,7 @@ export function setRevenueCatSdkLoaderForTests(loader: (() => Promise<unknown>) 
 export function resetRevenueCatForTests(): void {
   instance = null;
   instanceUserId = null;
+  instanceApiKey = null;
   pending = null;
   loadSdk = defaultLoader;
   setRevenueCatConfigForTests(null);
