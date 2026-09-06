@@ -57,6 +57,25 @@ npm run lint
 | `VITE_ADSTERRA_NATIVE_TOP` / `_INLINE` / `_SIDEBAR` / `_FOOTER` | _(empty)_ | Adsterra Native Banner `invoke.js` URL per placement |
 | `VITE_ADSTERRA_FRAME_HEIGHT` | `120` | height in px reserved for an Adsterra native unit |
 | `VITE_WEB_AD_MOCK_RESULT` | `filled` | dev only: `unfilled` makes the `mock` provider fall through to the house creative |
+| `VITE_REVENUECAT_WEB_KEY` | _(empty)_ | RevenueCat Web Billing public key (`rcb_…`) used by production builds |
+| `VITE_REVENUECAT_WEB_SANDBOX_KEY` | _(empty)_ | sandbox key (`rcb_sb_…`) preferred by non-production builds; Stripe test cards, no charges |
+| `VITE_REVENUECAT_ENTITLEMENT_ID` | `Sao Miguel Hub Premium` | entitlement identifier shared with the mobile apps |
+
+## Accounts & premium
+
+- **Accounts** are email + password against `/api/v3/auth/*` (`src/features/account/`). The DRF token
+  is kept in `localStorage` (`azores_hub_auth`) and sent as `Authorization: Token …` by `src/lib/api.ts`;
+  a 401 on a token-bearing request clears the session.
+- **Entitlement** (`src/features/premium/entitlement-store.ts`) merges the backend answer
+  (`GET /api/v3/billing/entitlement`, signed-in only) with RevenueCat's `CustomerInfo`. `useCanShowAds()`
+  is false for premium users and during the short first-fetch window after sign-in.
+- **Purchases** use RevenueCat Web Billing (`@revenuecat/purchases-js`, loaded lazily on `/premium`).
+  Signed-in users are identified as `smb_user_<id>`, the same id the API webhook maps to the account,
+  so a web purchase unlocks the mobile app and vice versa. Anonymous visitors see prices and are asked
+  to sign in before paying. `/settings` hosts account, premium status, manage (RevenueCat portal),
+  restore, language, consent and about.
+- **Legacy `premiumEmail` cookie** holders get a one-time notice to sign in with that email; the API
+  restores their entitlement from the old allow-list on register/login.
 
 ## Display ads
 

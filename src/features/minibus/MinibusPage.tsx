@@ -11,12 +11,14 @@ import { track } from '@/lib/analytics';
 import { MinibusAttributionFooter } from './components/MinibusAttributionFooter';
 import { MinibusDocumentImage } from './components/MinibusDocumentImage';
 import { MinibusLineCard } from './components/MinibusLineCard';
-import { MinibusLiveTeaser } from './components/MinibusLiveTeaser';
+import { MinibusLiveEntryCard } from '@/features/minibus/live/components/MinibusLiveEntryCard';
+import { useNetworkOnline } from '@/lib/hooks/useNetworkOnline';
 import { MinibusTariffTable } from './components/MinibusTariffTable';
 import { useMinibusLines, useMinibusTariffs } from './hooks';
 
 export function MinibusPage() {
   const { t } = useTranslation();
+  const isOnline = useNetworkOnline();
   const linesQuery = useMinibusLines();
   const tariffsQuery = useMinibusTariffs();
 
@@ -45,7 +47,7 @@ export function MinibusPage() {
           </Card>
         </Link>
 
-        <MinibusLiveTeaser />
+        <MinibusLiveEntryCard isOnline={isOnline} />
 
         <section>
           <h2 className="mb-3 text-lg font-extrabold text-content">{t('minibusSectionLines')}</h2>

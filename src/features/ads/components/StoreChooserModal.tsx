@@ -1,44 +1,8 @@
 import { useTranslation } from 'react-i18next';
-import { Apple, Smartphone, X } from 'lucide-react';
+import { X } from 'lucide-react';
 
 import { useStoreChooserStore } from '@/features/ads/lib/store-chooser-store';
-import { isStoreConfigured, storeLink } from '@/lib/app-links';
-import { cn } from '@/lib/cn';
-
-function StoreButton({
-  platform,
-  className,
-}: {
-  platform: 'ios' | 'android';
-  className?: string;
-}) {
-  const { t } = useTranslation();
-  const configured = isStoreConfigured(platform);
-  const href = storeLink(platform);
-  const Icon = platform === 'ios' ? Apple : Smartphone;
-  const storeLabel = platform === 'ios' ? t('appInstallIos') : t('appInstallAndroid');
-
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noreferrer"
-      className={cn(
-        'inline-flex items-center gap-2 rounded-xl bg-secondary px-4 py-2 text-white transition hover:opacity-90',
-        !configured && 'border border-white/25 bg-secondary/80',
-        className,
-      )}
-    >
-      <Icon size={18} />
-      <span className="flex flex-col items-start leading-tight">
-        <span className="text-[10px] font-medium opacity-80">{t('appInstallStorePrefix')}</span>
-        <span className="text-sm font-bold">
-          {configured ? storeLabel : t('appInstallComingSoon')}
-        </span>
-      </span>
-    </a>
-  );
-}
+import { StoreButton } from '@/components/StoreButtons';
 
 /** Desktop chooser when premium CTA cannot infer a single store. */
 export function StoreChooserModal() {

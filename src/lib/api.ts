@@ -1,17 +1,26 @@
 import { staticIslandConfig } from '@/config/island';
-import { ApiRequestError } from '@/lib/api-errors';
 import {
   journeyFromSearchResult,
   shouldFallBackToDirectSearch,
 } from '@/features/transit/lib/journey-fallback';
+import i18n from '@/lib/i18n';
 import { getAnalyticsPlatform, getAppVersion } from '@/lib/platform';
 import { getOrCreateSessionId } from '@/lib/session';
 import type {
   AdPayload,
+  AuthResponse,
+  AuthUser,
+  AzoresbusRoutesResponse,
+  AzoresbusStopArrivalsResponse,
+  AzoresbusTrackingHealthResponse,
+  AzoresbusVehicleDetailResponse,
+  AzoresbusVehiclesResponse,
   BootstrapResponse,
   ConfirmVote,
   ConsentPurposes,
   DirectionsResponse,
+  Entitlement,
+  LiveVehicleCountsResponse,
   MarketplaceProvider,
   MarketplaceProvidersResult,
   MarketplaceReview,
@@ -23,19 +32,23 @@ import type {
   MinibusNetworkResponse,
   MinibusRouteSearchResponse,
   MinibusTariffsResponse,
+  MinibusTrackingHealthResponse,
+  MinibusVehicleDetailResponse,
+  MinibusVehiclesResponse,
   NewsArticle,
   NewsSource,
   ParishWeather,
+  RouteWeather,
   SeismicEvent,
   ServiceCategory,
   Stop,
+  TariffsResponse,
   TourDetail,
   TourSummary,
   TrafficCategory,
   TrafficReport,
   TrailDetail,
   TrailsListResponse,
-  TariffsResponse,
   TransitDataset,
   TransitJourney,
   TransitJourneySearch,
@@ -44,8 +57,8 @@ import type {
   TransitLineShape,
   TransitSearchResult,
   TransitStopDetail,
+  TransitTripsLiveResponse,
   TripDetail,
-  RouteWeather,
   WeatherParishesResponse,
 } from '@/lib/types';
 
@@ -56,24 +69,40 @@ export function getApiBase(): string {
 }
 
 export { ApiRequestError } from '@/lib/api-errors';
+import { ApiRequestError, parseApiErrorBody } from '@/lib/api-errors';
+import { getAuthToken, useAuthStore } from '@/features/account/auth-store';
+
+/** Authorization header for the signed-in user, if any (DRF opaque token). */
+function authHeaders(): Record<string, string> {
+  const token = getAuthToken();
+  return token ? { Authorization: `Token ${token}` } : {};
+}
 
 function baseHeaders(extra?: HeadersInit): HeadersInit {
   return {
     'Content-Type': 'application/json',
     'X-Island': staticIslandConfig.islandKey,
+    // Pseudonymous session id: throttling key for the live endpoints, consent lookup elsewhere.
+    'X-Session-Id': getOrCreateSessionId(),
+    ...authHeaders(),
     ...(extra ?? {}),
   };
 }
 
 async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
   const url = `${API_BASE}${path}`;
+  const sentToken = Boolean(getAuthToken());
   const response = await fetch(url, {
     ...init,
     headers: baseHeaders(init?.headers),
   });
   if (!response.ok) {
     const body = await response.text();
-    throw new ApiRequestError(response.status, body);
+    // A 401 on a token-bearing request means the token is stale — drop the session.
+    if (response.status === 401 && sentToken) {
+      useAuthStore.getState().clearSession();
+    }
+    throw new ApiRequestError(response.status, body, parseApiErrorBody(body));
   }
   return (await response.json()) as T;
 }
@@ -536,10 +565,7 @@ export async function fetchProviders(params?: {
 }
 
 export async function fetchProvider(providerId: number): Promise<MarketplaceProvider> {
-  const sessionId = getOrCreateSessionId();
-  return apiFetch<MarketplaceProvider>(`/api/v3/marketplace/providers/${providerId}`, {
-    headers: { 'X-Session-Id': sessionId },
-  });
+  return apiFetch<MarketplaceProvider>(`/api/v3/marketplace/providers/${providerId}`);
 }
 
 export async function fetchReviews(providerId: number): Promise<MarketplaceReview[]> {
@@ -556,7 +582,6 @@ export async function submitReview(
   const sessionId = getOrCreateSessionId();
   return apiFetch<MarketplaceReview>(`/api/v3/marketplace/providers/${providerId}/reviews`, {
     method: 'POST',
-    headers: { 'X-Session-Id': sessionId },
     body: JSON.stringify({ ...payload, session_id: sessionId }),
   });
 }
@@ -583,10 +608,7 @@ export async function fetchTrafficReports(params?: {
 }
 
 export async function fetchTrafficReport(reportId: number): Promise<TrafficReport> {
-  const sessionId = getOrCreateSessionId();
-  return apiFetch<TrafficReport>(`/api/v3/traffic/reports/${reportId}`, {
-    headers: { 'X-Session-Id': sessionId },
-  });
+  return apiFetch<TrafficReport>(`/api/v3/traffic/reports/${reportId}`);
 }
 
 export async function confirmTrafficReport(
@@ -596,7 +618,6 @@ export async function confirmTrafficReport(
   const sessionId = getOrCreateSessionId();
   return apiFetch<TrafficReport>(`/api/v3/traffic/reports/${reportId}/confirm`, {
     method: 'POST',
-    headers: { 'X-Session-Id': sessionId },
     body: JSON.stringify({ session_id: sessionId, vote }),
   });
 }
@@ -627,15 +648,6 @@ export async function recordAdClick(id: number): Promise<void> {
   }
 }
 
-export async function verifySubscriptionEmail(email: string): Promise<{
-  hasActiveSubscription: boolean;
-  expiresAt?: string;
-}> {
-  return apiFetch('/api/v1/subscription/verify/', {
-    method: 'POST',
-    body: JSON.stringify({ email }),
-  });
-}
 
 // --- Consent & analytics --- //
 
@@ -661,7 +673,150 @@ export async function postAnalyticsEvents(
       session_id: sessionId,
       platform: getAnalyticsPlatform(),
       app_version: getAppVersion(),
+      locale: i18n.language,
       events,
     }),
   });
 }
+
+// --- Accounts & premium entitlement (mirrors the Expo client) --- //
+
+export async function registerAccount(input: {
+  email: string;
+  password: string;
+  displayName?: string;
+}): Promise<AuthResponse> {
+  return apiFetch<AuthResponse>('/api/v3/auth/register', {
+    method: 'POST',
+    body: JSON.stringify({
+      email: input.email,
+      password: input.password,
+      display_name: input.displayName ?? '',
+    }),
+  });
+}
+
+export async function loginAccount(input: {
+  email: string;
+  password: string;
+}): Promise<AuthResponse> {
+  return apiFetch<AuthResponse>('/api/v3/auth/login', {
+    method: 'POST',
+    body: JSON.stringify(input),
+  });
+}
+
+export async function fetchMe(): Promise<AuthUser> {
+  return apiFetch<AuthUser>('/api/v3/auth/me');
+}
+
+export async function logoutAccount(): Promise<void> {
+  await apiFetch<{ status: string }>('/api/v3/auth/logout', { method: 'POST' });
+}
+
+/** Permanently delete the signed-in user's account and its entitlements. */
+export async function deleteAccount(): Promise<void> {
+  await apiFetch<{ status: string }>('/api/v3/auth/account', { method: 'DELETE' });
+}
+
+/** Authoritative premium entitlement for the signed-in user (401 when signed out). */
+export async function fetchEntitlement(): Promise<Entitlement> {
+  return apiFetch<Entitlement>('/api/v3/billing/entitlement');
+}
+
+// --- Azoresbus live overlay for tracked journeys --- //
+
+/** The API caps `tripIds` at five per request. */
+const TRIPS_LIVE_MAX_IDS = 5;
+
+/**
+ * Live vehicle per trip id. Failures collapse to no trips: the tracking widget then keeps its
+ * timetable estimate and says so, which is the honest answer when the feed is off or throttled.
+ */
+export async function fetchTransitTripsLive(tripIds: number[]): Promise<TransitTripsLiveResponse> {
+  const unique = [...new Set(tripIds)];
+  if (unique.length === 0) {
+    return { trips: [] };
+  }
+  const chunks: number[][] = [];
+  for (let i = 0; i < unique.length; i += TRIPS_LIVE_MAX_IDS) {
+    chunks.push(unique.slice(i, i + TRIPS_LIVE_MAX_IDS));
+  }
+  const answers = await Promise.all(
+    chunks.map(async (chunk) => {
+      try {
+        const response = await apiFetch<TransitTripsLiveResponse>(
+          `/api/v3/azoresbus/trips/live?tripIds=${chunk.join(',')}`,
+        );
+        return response.trips;
+      } catch {
+        return [];
+      }
+    }),
+  );
+  return { trips: answers.flat() };
+}
+
+// --- Live vehicle tracking (AzoresBus + PDL MiniBus AVL proxies) --- //
+
+export async function fetchAzoresbusVehicles(): Promise<AzoresbusVehiclesResponse> {
+  return apiFetch<AzoresbusVehiclesResponse>('/api/v3/azoresbus/vehicles');
+}
+
+/** Note the bare vehicle: unlike minibus there is no `{ vehicle: … }` wrapper. */
+export async function fetchAzoresbusVehicle(vehicleId: string): Promise<AzoresbusVehicleDetailResponse> {
+  return apiFetch<AzoresbusVehicleDetailResponse>(
+    `/api/v3/azoresbus/vehicles/${encodeURIComponent(vehicleId)}`,
+  );
+}
+
+export async function fetchAzoresbusRoutes(): Promise<AzoresbusRoutesResponse> {
+  return apiFetch<AzoresbusRoutesResponse>('/api/v3/azoresbus/routes');
+}
+
+export async function fetchAzoresbusStopArrivals(stopId: number): Promise<AzoresbusStopArrivalsResponse> {
+  return apiFetch<AzoresbusStopArrivalsResponse>(`/api/v3/azoresbus/stops/${stopId}/arrivals`);
+}
+
+/**
+ * Availability probe. The server answers an outage with HTTP 502 carrying `status: 'unavailable'`,
+ * so `apiFetch` rejects on what is actually a good answer. Normalising it here keeps every caller
+ * on one shape and stops react-query retrying a verdict we already have. Transport failures
+ * still reject.
+ */
+export async function fetchAzoresbusTrackingHealth(options?: {
+  force?: boolean;
+}): Promise<AzoresbusTrackingHealthResponse> {
+  const query = options?.force ? '?force=1' : '';
+  try {
+    return await apiFetch<AzoresbusTrackingHealthResponse>(`/api/v3/azoresbus/tracking/health${query}`);
+  } catch (error) {
+    if (error instanceof ApiRequestError) {
+      return { status: 'unavailable', vehicles: 0 };
+    }
+    throw error;
+  }
+}
+
+/** Cached per-operator vehicle counts for hub cards; never reaches the AVL vendor. */
+export async function fetchLiveVehicleCounts(): Promise<LiveVehicleCountsResponse> {
+  return apiFetch<LiveVehicleCountsResponse>('/api/v3/transit/live-counts');
+}
+
+export async function fetchMinibusVehicles(): Promise<MinibusVehiclesResponse> {
+  return apiFetch<MinibusVehiclesResponse>('/api/v3/minibus/vehicles');
+}
+
+export async function fetchMinibusVehicle(trackingId: string): Promise<MinibusVehicleDetailResponse> {
+  return apiFetch<MinibusVehicleDetailResponse>(
+    `/api/v3/minibus/vehicles/${encodeURIComponent(trackingId)}`,
+  );
+}
+
+export async function fetchMinibusTrackingHealth(options?: {
+  force?: boolean;
+}): Promise<MinibusTrackingHealthResponse> {
+  const query = options?.force ? '?force=1' : '';
+  return apiFetch<MinibusTrackingHealthResponse>(`/api/v3/minibus/tracking/health${query}`);
+}
+

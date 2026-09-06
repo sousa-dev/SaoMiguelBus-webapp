@@ -209,3 +209,23 @@ export function normalizeSearchText(value: string): string {
     .toLowerCase()
     .trim();
 }
+
+/** "quinta-feira, 20 ago." for an ISO date, in the given locale (mirrors the Expo helper). */
+export function formatWeekdayDate(isoDate: string, locale?: string): string {
+  const [year, month, day] = isoDate.split('-').map((part) => parseInt(part, 10));
+  if (!Number.isFinite(year) || !Number.isFinite(month) || !Number.isFinite(day)) {
+    return isoDate;
+  }
+  const date = new Date(year, month - 1, day);
+  const resolvedLocale = locale ?? (typeof navigator !== 'undefined' ? navigator.language : 'pt');
+  try {
+    return new Intl.DateTimeFormat(resolvedLocale, {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'short',
+    }).format(date);
+  } catch {
+    return isoDate;
+  }
+}
+

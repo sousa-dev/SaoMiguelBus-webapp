@@ -1,7 +1,7 @@
 import { Crown } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-import { openPremiumStore } from '@/features/ads/lib/premium-cta';
+import { usePremiumCta } from '@/features/premium/hooks/usePremiumCta';
 import { track } from '@/lib/analytics';
 import { Button } from '@/components/ui';
 
@@ -13,13 +13,14 @@ type Props = {
 /** Shown after an internal interstitial closes — store upsell (no in-web paywall). */
 export function PremiumUpsellModal({ visible, onDismiss }: Props) {
   const { t } = useTranslation();
+  const openPaywall = usePremiumCta();
 
   if (!visible) return null;
 
   const onUpgrade = () => {
     track('transit', 'interstitial_upsell_click', { source: 'post_video_modal' });
     onDismiss();
-    openPremiumStore();
+    openPaywall('interstitial_upsell');
   };
 
   return (

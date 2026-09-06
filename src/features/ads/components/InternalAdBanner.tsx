@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { ChevronRight, Crown, type LucideIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-import { openPremiumStore } from '@/features/ads/lib/premium-cta';
+import { usePremiumCta } from '@/features/premium/hooks/usePremiumCta';
 import type { InternalAdCreative } from '@/features/ads/lib/internal-ads/types';
 import { track } from '@/lib/analytics';
 import { getModule } from '@/lib/modules';
@@ -17,6 +17,7 @@ type Props = {
 
 export function InternalAdBanner({ creative, on = 'home', slot = 'top' }: Props) {
   const { t } = useTranslation();
+  const openPaywall = usePremiumCta();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -43,7 +44,7 @@ export function InternalAdBanner({ creative, on = 'home', slot = 'top' }: Props)
       surface: 'banner',
     });
     if (creative.kind === 'paywall') {
-      openPremiumStore();
+      openPaywall('house_banner');
       return;
     }
     if (module?.route) {
