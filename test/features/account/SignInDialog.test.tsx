@@ -6,6 +6,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 const api = vi.hoisted(() => ({
   loginAccount: vi.fn(),
   registerAccount: vi.fn(),
+  registerGuestAccount: vi.fn(),
+  setPassword: vi.fn(),
   fetchMe: vi.fn(),
   logoutAccount: vi.fn(),
   deleteAccount: vi.fn(),

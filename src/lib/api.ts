@@ -706,6 +706,22 @@ export async function loginAccount(input: {
   });
 }
 
+/** Creates a passwordless account for a checkout email — claimed later via `setPassword`. */
+export async function registerGuestAccount(input: { email: string }): Promise<AuthResponse> {
+  return apiFetch<AuthResponse>('/api/v3/auth/register-guest', {
+    method: 'POST',
+    body: JSON.stringify(input),
+  });
+}
+
+/** Sets the signed-in user's password (claims a guest-checkout account). */
+export async function setPassword(input: { password: string }): Promise<void> {
+  await apiFetch<{ status: string }>('/api/v3/auth/set-password', {
+    method: 'POST',
+    body: JSON.stringify(input),
+  });
+}
+
 export async function fetchMe(): Promise<AuthUser> {
   return apiFetch<AuthUser>('/api/v3/auth/me');
 }

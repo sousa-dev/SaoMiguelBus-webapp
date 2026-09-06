@@ -3,7 +3,14 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '@/features/account/auth-store';
 import { useEntitlementStore } from '@/features/premium/entitlement-store';
 import { closeRevenueCat } from '@/features/premium/lib/revenuecat-web';
-import { deleteAccount, loginAccount, logoutAccount, registerAccount } from '@/lib/api';
+import {
+  deleteAccount,
+  loginAccount,
+  logoutAccount,
+  registerAccount,
+  registerGuestAccount,
+  setPassword as setPasswordRequest,
+} from '@/lib/api';
 import type { AuthResponse } from '@/lib/types';
 
 const ENTITLEMENT_KEY = ['billing', 'entitlement'] as const;
@@ -22,7 +29,9 @@ export function useAuth() {
   };
 
   const register = useMutation({ mutationFn: registerAccount, onSuccess: onSession });
+  const registerGuest = useMutation({ mutationFn: registerGuestAccount, onSuccess: onSession });
   const login = useMutation({ mutationFn: loginAccount, onSuccess: onSession });
+  const setPassword = useMutation({ mutationFn: setPasswordRequest });
 
   const logout = useMutation({
     mutationFn: async () => {
@@ -55,7 +64,9 @@ export function useAuth() {
     user,
     isSignedIn: Boolean(token),
     register,
+    registerGuest,
     login,
+    setPassword,
     logout,
     deleteAccount: deleteAccountMutation,
   };

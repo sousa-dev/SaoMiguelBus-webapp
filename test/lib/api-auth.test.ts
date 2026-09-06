@@ -2,7 +2,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useAuthStore } from '@/features/account/auth-store';
-import { fetchEntitlement, fetchMe, registerAccount } from '@/lib/api';
+import { fetchEntitlement, fetchMe, registerAccount, registerGuestAccount, setPassword } from '@/lib/api';
 import { ApiRequestError, parseApiErrorBody } from '@/lib/api-errors';
 
 const user = { id: 7, email: 'a@b.c', displayName: 'A', dateJoined: '2026-01-01', isSuperuser: false };
@@ -80,6 +80,24 @@ describe('apiFetch auth headers', () => {
       password: 'pw',
       display_name: 'A',
     });
+  });
+
+  it('posts register-guest with just the email', async () => {
+    const fetchMock = respond(201, { token: 't', user });
+    vi.stubGlobal('fetch', fetchMock);
+    await registerGuestAccount({ email: 'guest@b.c' });
+    const init = fetchMock.mock.calls[0][1] as RequestInit;
+    expect(fetchMock.mock.calls[0][0]).toContain('/api/v3/auth/register-guest');
+    expect(JSON.parse(init.body as string)).toEqual({ email: 'guest@b.c' });
+  });
+
+  it('posts the new password with the signed-in token header', async () => {
+    useAuthStore.setState({ token: 'tok123', user });
+    const fetchMock = respond(200, { status: 'ok' });
+    vi.stubGlobal('fetch', fetchMock);
+    await setPassword({ password: 'newpw' });
+    expect(sentHeaders(fetchMock).Authorization).toBe('Token tok123');
+    expect(fetchMock.mock.calls[0][0]).toContain('/api/v3/auth/set-password');
   });
 });
 

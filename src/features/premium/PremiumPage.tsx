@@ -1,18 +1,22 @@
 import type { Package } from '@revenuecat/purchases-js';
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
-import { Ban, Crown, MapPin, Pin, ShieldCheck } from 'lucide-react';
+import { Ban, Check, Crown, MapPin, Pin, ShieldCheck } from 'lucide-react';
 
-import { PageHeader } from '@/components/layout/Page';
 import { Seo } from '@/components/Seo';
 import { Badge, Button, Card, Skeleton } from '@/components/ui';
 import { useAuthStore } from '@/features/account/auth-store';
+import { authErrorFromUnknown, formatAuthErrorMessage } from '@/features/account/lib/auth-errors';
+import { useAuth } from '@/features/account/hooks/useAuth';
 import { openSignInDialog } from '@/features/account/lib/sign-in-dialog-store';
+import { GuestCheckoutDialog } from '@/features/premium/components/GuestCheckoutDialog';
 import { MobileOnlyFeaturesNotice } from '@/features/premium/components/MobileOnlyFeaturesNotice';
+import { SetPasswordDialog } from '@/features/premium/components/SetPasswordDialog';
 import { usePremiumManage } from '@/features/premium/hooks/usePremiumManage';
 import { usePremiumPurchases } from '@/features/premium/hooks/usePremiumPurchases';
 import { useWebOfferings } from '@/features/premium/hooks/useWebOfferings';
+import { packageDurationLabel, packageTrialDays } from '@/features/premium/lib/package-display';
 import { packagePriceLabel, sortPackages } from '@/features/premium/lib/revenuecat-packages';
 import { isRevenueCatSandbox } from '@/features/premium/lib/revenuecat-web';
 import { useEntitlement, usePremium } from '@/features/premium/usePremium';
@@ -28,29 +32,52 @@ const FEATURES = [
   { key: 'premiumFeatureBadge', Icon: ShieldCheck },
 ] as const;
 
-const PERIOD_KEY = {
-  month: 'premiumPerMonth',
-  year: 'premiumPerYear',
-  week: 'premiumPerWeek',
-  other: null,
-} as const;
-
-function PackageButton({ pkg, onSelect, busy }: { pkg: Package; onSelect: (pkg: Package) => void; busy: boolean }) {
+function PackageTile({
+  pkg,
+  selected,
+  onSelect,
+}: {
+  pkg: Package;
+  selected: boolean;
+  onSelect: () => void;
+}) {
   const { t } = useTranslation();
-  const { price, period } = packagePriceLabel(pkg);
-  const periodKey = PERIOD_KEY[period];
+  const { price } = packagePriceLabel(pkg);
+  const duration = packageDurationLabel(pkg);
+  const trialDays = packageTrialDays(pkg);
+  const durationLabel =
+    duration.unit === 'days' ? t('premiumDurationDays', { count: duration.value }) : t('premiumDurationMonths', { count: duration.value });
+
   return (
-    <Button size="lg" disabled={busy} onClick={() => onSelect(pkg)} className="w-full justify-between">
-      <span>{t('premiumSubscribeButton')}</span>
-      <span className="font-extrabold">
-        {price}
-        {periodKey ? <span className="font-medium opacity-80"> / {t(periodKey)}</span> : null}
-      </span>
-    </Button>
+    <button
+      type="button"
+      onClick={onSelect}
+      className={`relative flex flex-1 flex-col items-center gap-1 rounded-2xl border-2 p-3 text-center transition ${
+        selected ? 'border-primary bg-primary/5' : 'border-border bg-surface hover:border-outline'
+      }`}
+    >
+      {selected ? (
+        <span className="absolute -top-2.5 right-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-on-primary">
+          <Check size={12} strokeWidth={3} />
+        </span>
+      ) : null}
+      {trialDays ? (
+        <Badge tone="success" className="absolute -top-2.5 left-1/2 -translate-x-1/2 whitespace-nowrap">
+          {t('premiumFreeTrialDays', { count: trialDays })}
+        </Badge>
+      ) : null}
+      <span className="mt-2 text-2xl font-extrabold text-content">{duration.value}</span>
+      <span className="text-[11px] font-bold uppercase tracking-wide text-muted">{durationLabel}</span>
+      {trialDays ? (
+        <span className="mt-1 text-xs font-semibold text-primary">{t('premiumFreeTrialThenPrice', { price })}</span>
+      ) : (
+        <span className="mt-1 text-sm font-bold text-content">{price}</span>
+      )}
+    </button>
   );
 }
 
-/** `/premium` — feature list, RevenueCat Web Billing packages, status/manage/restore, mobile-only notice. */
+/** `/premium` — a mobile-style tiered paywall backed by RevenueCat Web Billing. */
 export function PremiumPage() {
   const { t } = useTranslation();
   const [params] = useSearchParams();
@@ -60,11 +87,27 @@ export function PremiumPage() {
   const entitlement = useEntitlement();
   const offerings = useWebOfferings();
   const manage = usePremiumManage();
+  const { registerGuest, setPassword: setPasswordMutation } = useAuth();
+
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [guestOpen, setGuestOpen] = useState(false);
+  const [guestError, setGuestError] = useState<string | null>(null);
+  const [setPasswordOpen, setSetPasswordOpen] = useState(false);
+  const [setPasswordError, setSetPasswordError] = useState<string | null>(null);
+  const pendingPackage = useRef<Package | null>(null);
+  const guestCreated = useRef(false);
+  const [guestEmail, setGuestEmail] = useState('');
 
   const { purchase, restore } = usePremiumPurchases({
     source,
-    onPurchased: () =>
-      showNotice({ title: t('premiumPurchaseSuccessTitle'), message: t('premiumPurchaseSuccessMessage') }),
+    onPurchased: () => {
+      if (guestCreated.current) {
+        guestCreated.current = false;
+        setSetPasswordOpen(true);
+        return;
+      }
+      showNotice({ title: t('premiumPurchaseSuccessTitle'), message: t('premiumPurchaseSuccessMessage') });
+    },
     onPurchaseFailed: (key) => showNotice({ title: t('premiumPurchaseErrorTitle'), message: t(key) }),
     onRestored: (premium) =>
       showNotice({
@@ -87,40 +130,83 @@ export function PremiumPage() {
     });
   }, [offeringSettled, offerings.data?.identifier, source]);
 
-  const onSubscribe = (pkg: Package) => {
-    if (!user) {
-      openSignInDialog({ reason: 'purchase', onSuccess: () => purchase.mutate(pkg) });
+  const packages = useMemo(() => (offerings.data ? sortPackages(offerings.data.availablePackages) : []), [offerings.data]);
+
+  // Default to the trial package if one exists, else the first (monthly-first-sorted) package —
+  // derived at render time rather than via an effect, so there is no extra render round-trip.
+  const defaultPackage = useMemo(
+    () => packages.find((pkg) => packageTrialDays(pkg) != null) ?? packages[0] ?? null,
+    [packages],
+  );
+  const selectedPackage = (selectedId ? packages.find((pkg) => pkg.identifier === selectedId) : null) ?? defaultPackage;
+  const busy = purchase.isPending || restore.isPending || manage.busy || registerGuest.isPending;
+
+  const onContinue = () => {
+    if (!selectedPackage) return;
+    if (user) {
+      purchase.mutate(selectedPackage);
       return;
     }
-    purchase.mutate(pkg);
+    pendingPackage.current = selectedPackage;
+    setGuestError(null);
+    setGuestOpen(true);
   };
 
-  const packages = offerings.data ? sortPackages(offerings.data.availablePackages) : [];
-  const busy = purchase.isPending || restore.isPending || manage.busy;
+  const onGuestSubmit = async (email: string) => {
+    setGuestError(null);
+    try {
+      await registerGuest.mutateAsync({ email });
+      guestCreated.current = true;
+      setGuestEmail(email);
+      setGuestOpen(false);
+      if (pendingPackage.current) purchase.mutate(pendingPackage.current);
+    } catch (caught) {
+      const ui = authErrorFromUnknown(caught);
+      if (ui.code === 'email_taken') {
+        setGuestOpen(false);
+        openSignInDialog({
+          reason: 'purchase',
+          prefillEmail: email,
+          onSuccess: () => {
+            if (pendingPackage.current) purchase.mutate(pendingPackage.current);
+          },
+        });
+        return;
+      }
+      setGuestError(formatAuthErrorMessage(ui, t) || t('premiumGuestCheckoutError'));
+    }
+  };
+
+  const onSetPasswordSubmit = async (password: string) => {
+    setSetPasswordError(null);
+    try {
+      await setPasswordMutation.mutateAsync({ password });
+      setSetPasswordOpen(false);
+      showNotice({
+        title: t('premiumSetPasswordSuccessTitle'),
+        message: t('premiumSetPasswordSuccessMessage'),
+      });
+    } catch (caught) {
+      const ui = authErrorFromUnknown(caught);
+      setSetPasswordError(formatAuthErrorMessage(ui, t));
+    }
+  };
 
   return (
     <>
       <Seo title={t('premiumPageTitle')} />
-      <PageHeader title={t('premiumPageTitle')} subtitle={t('premiumPageDescription')} />
-      <div className="flex max-w-2xl flex-col gap-4">
-        <Card as="section" className="p-5">
-          <div className="mb-3 flex items-center gap-2">
-            <Crown size={22} className="text-accent" strokeWidth={2.5} />
-            <h2 className="text-base font-bold text-content">{t('premiumFeaturesTitle')}</h2>
-            {isRevenueCatSandbox() ? <Badge tone="warning">{t('premiumSandboxBadge')}</Badge> : null}
-          </div>
-          <ul className="flex flex-col gap-2">
-            {FEATURES.map(({ key, Icon }) => (
-              <li key={key} className="flex items-center gap-3 text-sm text-content">
-                <Icon size={18} className="shrink-0 text-primary" />
-                {t(key)}
-              </li>
-            ))}
-          </ul>
-        </Card>
+      <div className="mx-auto flex max-w-md flex-col items-center gap-4 py-4 text-center">
+        <span className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-accent text-on-primary shadow-lg">
+          <Crown size={30} strokeWidth={2} />
+        </span>
+        <h1 className="text-2xl font-extrabold text-content">{t('getPremiumTitle')}</h1>
+        <p className="rounded-full bg-success-surface px-3 py-1 text-xs font-semibold text-success">
+          {t('supportDeveloper')}
+        </p>
+        <p className="text-sm text-muted">{t('premiumPageDescription')}</p>
 
         {isPremium ? (
-          <Card as="section" className="p-5">
+          <Card as="section" className="w-full p-5 text-left">
             <p className="text-sm font-bold text-content">{t('premiumActive')}</p>
             {entitlement?.currentPeriodEnd ? (
               <p className="text-xs text-muted">
@@ -142,48 +228,85 @@ export function PremiumPage() {
             </div>
           </Card>
         ) : (
-          <Card as="section" className="p-5">
+          <>
+            <ul className="flex w-full flex-col gap-2 text-left">
+              {FEATURES.map(({ key }) => (
+                <li key={key} className="flex items-center gap-3 text-sm text-content">
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-success text-white">
+                    <Check size={12} strokeWidth={3} />
+                  </span>
+                  {t(key)}
+                </li>
+              ))}
+            </ul>
+
             {offerings.isPending ? (
-              <div className="flex flex-col gap-2">
-                <Skeleton className="h-12" />
-                <Skeleton className="h-12" />
+              <div className="flex w-full gap-2">
+                <Skeleton className="h-24 flex-1" />
+                <Skeleton className="h-24 flex-1" />
+                <Skeleton className="h-24 flex-1" />
               </div>
             ) : packages.length > 0 ? (
-              <div className="flex flex-col gap-2">
-                {packages.map((pkg) => (
-                  <PackageButton key={pkg.identifier} pkg={pkg} onSelect={onSubscribe} busy={busy} />
-                ))}
-                {!user ? <p className="text-xs text-muted">{t('premiumSignInToBuy')}</p> : null}
-                {user ? (
-                  <button
-                    type="button"
-                    disabled={busy}
-                    onClick={() => restore.mutate()}
-                    className="self-start text-xs text-muted underline-offset-2 hover:underline"
-                  >
-                    {t('premiumRestore')}
-                  </button>
-                ) : null}
-              </div>
+              <>
+                <div className="flex w-full gap-2 pt-2">
+                  {packages.map((pkg) => (
+                    <PackageTile
+                      key={pkg.identifier}
+                      pkg={pkg}
+                      selected={pkg.identifier === selectedPackage?.identifier}
+                      onSelect={() => setSelectedId(pkg.identifier)}
+                    />
+                  ))}
+                </div>
+                {isRevenueCatSandbox() ? <Badge tone="warning">{t('premiumSandboxBadge')}</Badge> : null}
+                <p className="text-xs text-muted">{t('premiumTerms')}</p>
+                <Button size="lg" className="w-full" disabled={busy || !selectedPackage} onClick={onContinue}>
+                  {t('premiumContinueButton')}
+                </Button>
+              </>
             ) : (
               <p className="text-sm text-muted">{t('premiumOfferingUnavailable')}</p>
             )}
-          </Card>
+          </>
         )}
 
         <MobileOnlyFeaturesNotice />
 
         <p className="text-xs text-muted">
-          {t('premiumTerms')}{' '}
-          <a href={TERMS_PATH} className="underline">
+          {user ? (
+            <>
+              <button type="button" disabled={busy} onClick={() => restore.mutate()} className="underline-offset-2 hover:underline">
+                {t('premiumRestore')}
+              </button>
+              {' · '}
+            </>
+          ) : null}
+          <a href={TERMS_PATH} className="underline-offset-2 hover:underline">
             {t('termsAndConditions')}
           </a>{' '}
           ·{' '}
-          <a href={PRIVACY_PATH} className="underline">
+          <a href={PRIVACY_PATH} className="underline-offset-2 hover:underline">
             {t('privacyPolicy')}
           </a>
         </p>
       </div>
+
+      <GuestCheckoutDialog
+        open={guestOpen}
+        pending={registerGuest.isPending}
+        error={guestError}
+        onClose={() => setGuestOpen(false)}
+        onSubmit={onGuestSubmit}
+      />
+      <SetPasswordDialog
+        open={setPasswordOpen}
+        email={guestEmail}
+        pending={setPasswordMutation.isPending}
+        error={setPasswordError}
+        onClose={() => setSetPasswordOpen(false)}
+        onSkip={() => setSetPasswordOpen(false)}
+        onSubmit={onSetPasswordSubmit}
+      />
     </>
   );
 }
