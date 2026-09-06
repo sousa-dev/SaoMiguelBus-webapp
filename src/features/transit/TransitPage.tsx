@@ -195,13 +195,15 @@ export function TransitPage() {
   return (
     <>
       <Seo modulePath="/transit" />
-      <PageHeader title={t('navBarSearchLabel')} subtitle={t('homeInstructionsTitle')} />
+      <PageHeader title={t('navBarSearchLabel')} />
 
       <LegacyPremiumNotice />
       <ActiveTrackingSection />
       <PinnedRoutesSection onSelect={apply} />
       {canShowAds ? (
-        <AdBanner on="home" slot="top" content={hasResults && !search.isFetching} />
+        <div className="mb-4">
+          <AdBanner on="home" slot="top" content={hasResults && !search.isFetching} />
+        </div>
       ) : null}
       <ScheduleChangeBanner />
 

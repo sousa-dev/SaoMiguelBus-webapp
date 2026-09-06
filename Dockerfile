@@ -18,9 +18,9 @@ ARG VITE_BASE_DOMAIN=saomiguelbus.com
 ARG VITE_ANDROID_APP_URL=
 ARG VITE_IOS_APP_URL=https://apps.apple.com/app/id6777066837
 ARG VITE_IOS_APP_ID=6777066837
-# Display ads (see .env.example). Defaults serve the Adsterra Native Banner placements; set
-# VITE_WEB_AD_PROVIDERS=adsense,adsterra once the AdSense site review passes.
-ARG VITE_WEB_AD_PROVIDERS=adsterra
+# Display ads (see .env.example). AdSense is tried first; it no-ops until
+# VITE_ADSENSE_SLOT_* are set, so Adsterra serves as the fallback until then.
+ARG VITE_WEB_AD_PROVIDERS=adsense,adsterra
 ARG VITE_ADSENSE_CLIENT=ca-pub-8246676797736648
 ARG VITE_ADSENSE_SLOT_TOP=
 ARG VITE_ADSENSE_SLOT_INLINE=
