@@ -1,20 +1,27 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Menu, X } from 'lucide-react';
+import { Menu, Settings, X } from 'lucide-react';
 
 import { resolveEnabledModules } from '@/config/island';
 import { useBootstrap } from '@/hooks/useBootstrap';
 import { PRIVACY_PATH, TERMS_PATH } from '@/lib/app-links';
 import { HUB_NAV, NAV_MODULES } from '@/lib/modules';
 import { cn } from '@/lib/cn';
-import { LanguagePicker } from '@/components/layout/LanguagePicker';
+import { HeaderActions } from '@/components/layout/HeaderActions';
 import { AppInstallBanner, GetTheAppCard } from '@/components/AppInstall';
 import { AnalyticsLifecycle } from '@/components/consent/AnalyticsLifecycle';
 import { ConsentBanner } from '@/components/consent/ConsentBanner';
 import { SessionAdOrchestrator } from '@/features/ads/components/SessionAdOrchestrator';
 import { StoreChooserModal } from '@/features/ads/components/StoreChooserModal';
-import { useCanShowAds, usePremiumStore } from '@/features/premium/usePremium';
+import { useAuthBootstrap } from '@/features/account/hooks/useAuthBootstrap';
+import { SignInDialogHost } from '@/features/account/components/SignInDialogHost';
+import { useEntitlementSync } from '@/features/premium/hooks/useEntitlementSync';
+import { useRevenueCatBootstrap } from '@/features/premium/hooks/useRevenueCatBootstrap';
+import { SETTINGS_PATH } from '@/features/premium/lib/paywall-route';
+import { useCanShowAds } from '@/features/premium/usePremium';
+import { NoticeDialogHost } from '@/components/ui/NoticeDialogHost';
+import { useAutoTrackPinnedRoutes } from '@/features/transit/pinned/hooks/useAutoTrackPinnedRoutes';
 import { useScheduleTransition } from '@/features/transit/schedule-hooks';
 
 function NavItems({ onNavigate }: { onNavigate?: () => void }) {
@@ -22,6 +29,9 @@ function NavItems({ onNavigate }: { onNavigate?: () => void }) {
   const { data: bootstrap } = useBootstrap();
   const enabled = resolveEnabledModules(bootstrap?.island?.enabledModules);
   const visible = NAV_MODULES.filter((m) => enabled.includes(m.key));
+  // Bus-focused nav: transit leads, "Início" (the hub) follows, then the rest.
+  const transit = visible.find((m) => m.key === 'transit');
+  const rest = visible.filter((m) => m.key !== 'transit');
 
   const itemClass = ({ isActive }: { isActive: boolean }) =>
     cn(
@@ -33,17 +43,44 @@ function NavItems({ onNavigate }: { onNavigate?: () => void }) {
 
   return (
     <nav className="flex flex-col gap-1">
+      {transit ? (
+        <NavLink to={transit.route} className={itemClass} onClick={onNavigate}>
+          <transit.Icon size={20} strokeWidth={2} />
+          {t(transit.labelKey)}
+        </NavLink>
+      ) : null}
       <NavLink to={HUB_NAV.route} end className={itemClass} onClick={onNavigate}>
         <HUB_NAV.Icon size={20} strokeWidth={2} />
         {t(HUB_NAV.labelKey)}
       </NavLink>
-      {visible.map((m) => (
+      {rest.map((m) => (
         <NavLink key={m.key} to={m.route} className={itemClass} onClick={onNavigate}>
           <m.Icon size={20} strokeWidth={2} />
           {t(m.labelKey)}
         </NavLink>
       ))}
     </nav>
+  );
+}
+
+function SettingsNavLink({ onNavigate }: { onNavigate?: () => void }) {
+  const { t } = useTranslation();
+  return (
+    <NavLink
+      to={SETTINGS_PATH}
+      onClick={onNavigate}
+      className={({ isActive }) =>
+        cn(
+          'flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-semibold transition',
+          isActive
+            ? 'bg-primary/12 text-primary'
+            : 'text-content/80 hover:bg-surface-variant hover:text-content',
+        )
+      }
+    >
+      <Settings size={20} strokeWidth={2} />
+      {t('settingsTitle')}
+    </NavLink>
   );
 }
 
@@ -89,9 +126,12 @@ export function AppShell() {
   // parked on any page still crosses the cutover, not just the transit one.
   useScheduleTransition(bootstrapData?.transitSchedule);
 
-  useEffect(() => {
-    void usePremiumStore.getState().refresh();
-  }, []);
+  // Account session → authoritative entitlement → ad suppression, in that order.
+  useAuthBootstrap();
+  useEntitlementSync();
+  useRevenueCatBootstrap();
+  // Pinned routes arm themselves when due (premium; page load + tab visible).
+  useAutoTrackPinnedRoutes();
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -100,6 +140,7 @@ export function AppShell() {
         <Brand />
         <NavItems />
         <div className="mt-auto flex flex-col gap-3">
+          <SettingsNavLink />
           <GetTheAppCard />
           <SidebarLegalLinks />
           <p className="px-1 text-xs text-muted">© {new Date().getFullYear()} São Miguel Bus</p>
@@ -124,7 +165,8 @@ export function AppShell() {
               </button>
             </div>
             <NavItems onNavigate={() => setMobileOpen(false)} />
-            <div className="mt-auto">
+            <div className="mt-auto flex flex-col gap-3">
+              <SettingsNavLink onNavigate={() => setMobileOpen(false)} />
               <SidebarLegalLinks />
             </div>
           </div>
@@ -142,9 +184,7 @@ export function AppShell() {
           <div className="lg:hidden">
             <Brand />
           </div>
-          <div className="ml-auto flex items-center gap-2">
-            <LanguagePicker />
-          </div>
+          <HeaderActions />
         </header>
 
         <main
@@ -159,6 +199,8 @@ export function AppShell() {
       <StoreChooserModal />
       <ConsentBanner />
       <AnalyticsLifecycle />
+      <NoticeDialogHost />
+      <SignInDialogHost />
       {canShowAds ? <SessionAdOrchestrator bootstrapReady={bootstrapReady} /> : null}
     </div>
   );

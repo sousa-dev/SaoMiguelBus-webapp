@@ -61,69 +61,86 @@ export interface JourneySearchParams {
   enabled: boolean;
 }
 
-export function useJourneySearch(params: JourneySearchParams) {
-  const dataset = useTransitDataset();
-  const maxTransfers = params.allowTransfers ? 1 : 0;
+/** What identifies one journey search in the cache. Shared with follow/auto-track. */
+export interface JourneySearchKey {
+  origin: string;
+  destination: string;
+  day: string;
+  start: string;
+  maxTransfers: number;
+  dataset: TransitDataset | null;
+}
 
-  return useQuery<TransitJourneySearch>({
-    queryKey: [
-      'transit',
-      'journeys',
-      {
-        origin: params.origin,
-        destination: params.destination,
-        day: params.day,
-        start: params.start,
-      },
-      datasetKey(dataset),
-      maxTransfers,
-    ],
-    queryFn: async () => {
-      const result = await searchTransitJourneys({
-        origin: params.origin,
-        destination: params.destination,
-        day: params.day,
-        start: params.start,
+export function journeySearchQueryKey(key: JourneySearchKey) {
+  return [
+    'transit',
+    'journeys',
+    { origin: key.origin, destination: key.destination, day: key.day, start: key.start },
+    datasetKey(key.dataset),
+    key.maxTransfers,
+  ] as const;
+}
+
+/**
+ * One journey search, plus the whole-day probe that lets an empty late search say whether
+ * earlier buses exist. `source` tags the analytics event (`search`, `follow_pin`, `auto_track`).
+ */
+export async function fetchJourneySearchResult(
+  key: JourneySearchKey & { source?: string },
+): Promise<TransitJourneySearch> {
+  const { origin, destination, day, start, maxTransfers, dataset } = key;
+  const result = await searchTransitJourneys({ origin, destination, day, start, maxTransfers, dataset });
+
+  // A late search returning nothing is not "no connection between these
+  // stops" — re-ask for the whole day so the empty state can say which it
+  // is. One extra request, only on an empty result, only when a time was set.
+  let earlierJourneysAvailable: number | undefined;
+  if (result.journeys.length === 0 && start !== FULL_DAY_START) {
+    try {
+      const wholeDay = await searchTransitJourneys({
+        origin,
+        destination,
+        day,
+        start: FULL_DAY_START,
         maxTransfers,
         dataset,
       });
-
-      // A late search returning nothing is not "no connection between these
-      // stops" — re-ask for the whole day so the empty state can say which it
-      // is. One extra request, only on an empty result, only when a time was set.
-      let earlierJourneysAvailable: number | undefined;
-      if (result.journeys.length === 0 && params.start !== FULL_DAY_START) {
-        try {
-          const wholeDay = await searchTransitJourneys({
-            origin: params.origin,
-            destination: params.destination,
-            day: params.day,
-            start: FULL_DAY_START,
-            maxTransfers,
-            dataset,
-          });
-          if (wholeDay.journeys.length > 0) {
-            earlierJourneysAvailable = wholeDay.journeys.length;
-          }
-        } catch {
-          // The primary answer stands; this only enriches the empty state.
-        }
+      if (wholeDay.journeys.length > 0) {
+        earlierJourneysAvailable = wholeDay.journeys.length;
       }
+    } catch {
+      // The primary answer stands; this only enriches the empty state.
+    }
+  }
 
-      track('transit', 'search', {
-        origin: params.origin,
-        destination: params.destination,
-        day_type: params.day,
-        start_time: params.start,
-        results_count: result.journeys.length,
-        max_transfers: maxTransfers,
-        dataset: datasetKey(dataset),
-      });
+  track('transit', 'search', {
+    origin,
+    destination,
+    day_type: day,
+    start_time: start,
+    results_count: result.journeys.length,
+    max_transfers: maxTransfers,
+    dataset: datasetKey(dataset),
+    source: key.source ?? 'search',
+  });
 
-      return earlierJourneysAvailable != null
-        ? { ...result, earlierJourneysAvailable }
-        : result;
-    },
+  return earlierJourneysAvailable != null ? { ...result, earlierJourneysAvailable } : result;
+}
+
+export function useJourneySearch(params: JourneySearchParams) {
+  const dataset = useTransitDataset();
+  const key: JourneySearchKey = {
+    origin: params.origin,
+    destination: params.destination,
+    day: params.day,
+    start: params.start,
+    maxTransfers: params.allowTransfers ? 1 : 0,
+    dataset,
+  };
+
+  return useQuery<TransitJourneySearch>({
+    queryKey: journeySearchQueryKey(key),
+    queryFn: () => fetchJourneySearchResult(key),
     enabled: params.enabled && Boolean(params.origin && params.destination),
   });
 }

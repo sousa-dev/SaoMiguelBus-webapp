@@ -37,6 +37,8 @@ npm run lint       # eslint
 | `VITE_ISLAND_KEY` | tenant key sent as the `X-Island` header |
 | `VITE_SITE_URL` / `VITE_BASE_DOMAIN` | canonical URL + module-subdomain root (SEO) |
 | `VITE_ANDROID_APP_URL` / `VITE_IOS_APP_URL` / `VITE_IOS_APP_ID` | native app install promotion |
+| `VITE_WEB_AD_PROVIDERS`, `VITE_ADSTERRA_NATIVE_*`, `VITE_ADSENSE_*` | display-ad waterfall (see README “Display ads”) |
+| `VITE_REVENUECAT_WEB_KEY` / `VITE_REVENUECAT_WEB_SANDBOX_KEY` / `VITE_REVENUECAT_ENTITLEMENT_ID` | RevenueCat Web Billing (see README “Accounts & premium”) |
 
 ### Deployment (Docker / Dokploy)
 

@@ -1,7 +1,7 @@
 import { Crown } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-import { openPremiumStore } from '@/features/ads/lib/premium-cta';
+import { usePremiumCta } from '@/features/premium/hooks/usePremiumCta';
 import { resolveAdHref } from '@/features/ads/lib/ad-link';
 import { track } from '@/lib/analytics';
 import { recordAdClick } from '@/lib/api';
@@ -16,6 +16,7 @@ type Props = {
 
 export function FirstPartyInterstitialModal({ visible, ad, onDismiss }: Props) {
   const { t } = useTranslation();
+  const openPaywall = usePremiumCta();
 
   if (!visible) return null;
 
@@ -31,7 +32,7 @@ export function FirstPartyInterstitialModal({ visible, ad, onDismiss }: Props) {
   const onUpgrade = () => {
     track('transit', 'interstitial_upsell_click', { source: 'first_party_modal' });
     onDismiss();
-    openPremiumStore();
+    openPaywall('first_party_interstitial');
   };
 
   return (

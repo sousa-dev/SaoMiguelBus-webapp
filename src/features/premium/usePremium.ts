@@ -1,57 +1,41 @@
-import { create } from 'zustand';
-
 import {
-  clearPremiumCookies,
-  getPremiumEmailFromCookie,
-  renewPremiumCookies,
-  type SubscriptionVerifyResult,
-} from '@/features/premium/subscription-cookies';
-import { verifySubscriptionEmail } from '@/lib/api';
+  selectEntitlement,
+  selectIsPremium,
+  useEntitlementStore,
+} from '@/features/premium/entitlement-store';
+import type { Entitlement } from '@/lib/types';
 
-interface PremiumState {
-  isPremium: boolean;
-  isLoading: boolean;
-  userEmail: string | null;
-  refresh: () => Promise<void>;
-}
-
-export const usePremiumStore = create<PremiumState>((set) => ({
-  isPremium: false,
-  isLoading: true,
-  userEmail: null,
-  refresh: async () => {
-    set({ isLoading: true });
-    const savedEmail = getPremiumEmailFromCookie();
-    if (!savedEmail) {
-      set({ isPremium: false, isLoading: false, userEmail: null });
-      return;
-    }
-
-    try {
-      const data: SubscriptionVerifyResult = await verifySubscriptionEmail(savedEmail);
-      if (data.hasActiveSubscription && data.expiresAt) {
-        renewPremiumCookies(savedEmail, data.expiresAt);
-        set({ isPremium: true, isLoading: false, userEmail: savedEmail });
-        return;
-      }
-      clearPremiumCookies();
-      set({ isPremium: false, isLoading: false, userEmail: null });
-    } catch {
-      set({ isPremium: false, isLoading: false, userEmail: savedEmail });
-    }
-  },
-}));
-
+/**
+ * Premium is the merged backend + RevenueCat entitlement (see `entitlement-store`).
+ * The hook names are unchanged from the legacy cookie implementation so ad surfaces did not
+ * need to move.
+ */
 export function usePremium(): boolean {
-  return usePremiumStore((s) => s.isPremium);
+  return useEntitlementStore((s) => selectIsPremium(s));
 }
 
+export function useEntitlement(): Entitlement | null {
+  return useEntitlementStore((s) => selectEntitlement(s));
+}
+
+/** True only while a signed-in user's first entitlement fetch is in flight and nothing is cached. */
 export function usePremiumLoading(): boolean {
-  return usePremiumStore((s) => s.isLoading);
+  return useEntitlementStore((s) => s.syncStatus === 'pending');
 }
 
+/** Ads never render for premium users, and are withheld during the short unknown window. */
 export function useCanShowAds(): boolean {
-  const isPremium = usePremiumStore((s) => s.isPremium);
-  const isLoading = usePremiumStore((s) => s.isLoading);
-  return !isPremium && !isLoading;
+  const isPremium = usePremium();
+  const loading = usePremiumLoading();
+  return !isPremium && !loading;
+}
+
+/** Test-only: force the merged entitlement (null = free, settled). */
+export function setPremiumForTests(entitlement: Entitlement | null): void {
+  useEntitlementStore.setState({
+    backendEntitlement: entitlement,
+    storeEntitlement: null,
+    optimisticUntil: null,
+    syncStatus: 'settled',
+  });
 }

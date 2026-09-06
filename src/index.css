@@ -238,3 +238,28 @@ body {
 .ad-frame {
   min-height: 3.5rem;
 }
+
+/* Live fleet markers (components/map/LiveVehicleMap). `--bus` carries the line colour. */
+.live-bus-icon {
+  background: transparent;
+  border: 0;
+}
+.live-bus {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 11px;
+  border: 2px solid #fff;
+  background: var(--bus, #2563eb);
+  color: #fff;
+  font: 700 11px/1 system-ui, sans-serif;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  white-space: nowrap;
+}
+.live-bus--selected {
+  outline: 3px solid rgba(33, 135, 50, 0.45);
+  transform: scale(1.15);
+}

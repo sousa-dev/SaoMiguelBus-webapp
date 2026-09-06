@@ -13,7 +13,7 @@ import {
 
 import { Card } from '@/components/ui';
 import { JourneyMap } from '@/features/transit/components/JourneyMap';
-import { PinTrackTeaser } from '@/features/transit/components/PinTrackTeaser';
+import { JourneyTrackButton } from '@/features/transit/tracking/components/JourneyTrackButton';
 import { SchedulePreviewChip } from '@/features/transit/components/SchedulePreviewNotice';
 import { journeyRouteLabel } from '@/features/transit/lib/journey-fallback';
 import { cn } from '@/lib/cn';
@@ -231,7 +231,7 @@ function JourneyTimeline({ journey }: { journey: TransitJourney }) {
  * card that looks pressable but is not reads as broken — while the explicit
  * toggle row stays as the affordance that TELLS you it expands.
  */
-export function JourneyCard({ journey }: { journey: TransitJourney }) {
+export function JourneyCard({ journey, searchDay }: { journey: TransitJourney; searchDay?: string }) {
   const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
 
@@ -314,7 +314,7 @@ export function JourneyCard({ journey }: { journey: TransitJourney }) {
           {expanded ? t('transitHideSteps') : t('transitShowSteps')}
           <ChevronDown size={16} className={cn('transition', expanded && 'rotate-180')} />
         </button>
-        <PinTrackTeaser journey={journey} />
+        {searchDay ? <JourneyTrackButton journey={journey} searchDay={searchDay} /> : null}
       </div>
 
       {expanded ? (

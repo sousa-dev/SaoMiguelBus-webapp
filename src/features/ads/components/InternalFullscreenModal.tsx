@@ -4,7 +4,7 @@ import { Crown, Hand, type LucideIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 import { INTERNAL_AD_CLOSE_DELAY_SEC } from '@/features/ads/lib/internal-ad-constants';
-import { openPremiumStore } from '@/features/ads/lib/premium-cta';
+import { usePremiumCta } from '@/features/premium/hooks/usePremiumCta';
 import type { InternalAdCreative, InternalAdSurface } from '@/features/ads/lib/internal-ads/types';
 import { track } from '@/lib/analytics';
 import { getModule } from '@/lib/modules';
@@ -20,6 +20,7 @@ type Props = {
 
 export function InternalFullscreenModal({ visible, creative, surface, onDismiss }: Props) {
   const { t } = useTranslation();
+  const openPaywall = usePremiumCta();
   const navigate = useNavigate();
   const [secondsLeft, setSecondsLeft] = useState(INTERNAL_AD_CLOSE_DELAY_SEC);
 
@@ -60,7 +61,7 @@ export function InternalFullscreenModal({ visible, creative, surface, onDismiss 
     });
     if (creative.kind === 'paywall') {
       onDismiss();
-      openPremiumStore();
+      openPaywall('house_fullscreen');
       return;
     }
     if (module?.route) {

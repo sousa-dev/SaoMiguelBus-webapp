@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 
 import { ExternalRedirect } from '@/components/ExternalRedirect';
@@ -24,6 +25,19 @@ import { TourDetailPage, ToursPage } from '@/features/tours';
 import { TrailDetailPage, TrailsPage } from '@/features/trails';
 import { TrafficDetailPage, TrafficPage } from '@/features/traffic';
 import { MarketplacePage, MarketplaceProviderPage } from '@/features/marketplace';
+import { SettingsPage } from '@/features/settings/SettingsPage';
+
+// Loads the RevenueCat SDK chunk only when someone opens the paywall.
+const PremiumPage = lazy(() =>
+  import('@/features/premium/PremiumPage').then((m) => ({ default: m.PremiumPage })),
+);
+// Live maps carry Leaflet marker code and poll the AVL proxy; keep them out of the shell chunk.
+const LiveMapPage = lazy(() =>
+  import('@/features/transit/live/LiveMapPage').then((m) => ({ default: m.LiveMapPage })),
+);
+const MinibusLivePage = lazy(() =>
+  import('@/features/minibus/live/MinibusLivePage').then((m) => ({ default: m.MinibusLivePage })),
+);
 import { resolveSubdomainPath } from '@/lib/subdomain';
 
 /**
@@ -44,8 +58,25 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <IndexRoute /> },
       { path: 'hub', element: <HomePage /> },
+      { path: 'settings', element: <SettingsPage /> },
+      {
+        path: 'premium',
+        element: (
+          <Suspense fallback={null}>
+            <PremiumPage />
+          </Suspense>
+        ),
+      },
       { path: 'transit', element: <TransitPage /> },
       { path: 'transit/directions', element: <DirectionsPage /> },
+      {
+        path: 'transit/live',
+        element: (
+          <Suspense fallback={null}>
+            <LiveMapPage />
+          </Suspense>
+        ),
+      },
       { path: 'transit/trip/:tripId', element: <TripDetailPage /> },
       { path: 'transit/stop/:stopId', element: <StopDetailPage /> },
       { path: 'transit/line/:code', element: <LinePage /> },
@@ -53,6 +84,14 @@ const router = createBrowserRouter([
       { path: 'transit/prices', element: <PricesPage /> },
       { path: 'minibus', element: <MinibusPage /> },
       { path: 'minibus/search', element: <MinibusSearchPage /> },
+      {
+        path: 'minibus/live',
+        element: (
+          <Suspense fallback={null}>
+            <MinibusLivePage />
+          </Suspense>
+        ),
+      },
       { path: 'minibus/schematic', element: <MinibusSchematicPage /> },
       { path: 'minibus/:slug', element: <MinibusLinePage /> },
       { path: 'news', element: <NewsPage /> },

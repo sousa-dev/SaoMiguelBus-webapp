@@ -1,16 +1,14 @@
+import { useScheduleConfig } from '@/features/transit/schedule-hooks';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   ArrowRightLeft,
   Bus,
-  BusFront,
   ChevronDown,
   Clock,
-  Map as MapIcon,
   Route as RouteIcon,
   Search,
-  Tag,
 } from 'lucide-react';
 
 import { Button, Card, EmptyState, SearchingState } from '@/components/ui';
@@ -21,7 +19,10 @@ import { resolveDayType, splitStopLabel } from '@/lib/format';
 import { cn } from '@/lib/cn';
 import { useProfileStore } from '@/lib/store';
 import { RouteWeatherGrid } from '@/features/transit/components';
-import { AzoresbusLiveTeaser } from '@/features/transit/components/AzoresbusLiveTeaser';
+import { LiveEntryCard } from '@/features/transit/live/components/LiveEntryCard';
+import { TransitMapLinks } from '@/features/transit/components/TransitMapLinks';
+import { TransitInstructions } from '@/features/transit/components/TransitInstructions';
+import { useNetworkOnline } from '@/lib/hooks/useNetworkOnline';
 import { JourneyCard } from '@/features/transit/components/JourneyCard';
 import { ScheduleChangeBanner } from '@/features/transit/components/ScheduleChangeBanner';
 import {
@@ -35,6 +36,9 @@ import {
 import { StopPicker } from '@/features/transit/components/StopPicker';
 import { useJourneySearch, useRouteWeather, useStops } from '@/features/transit/hooks';
 import { useResolvedTransitDataset } from '@/features/transit/schedule-hooks';
+import { LegacyPremiumNotice } from '@/features/account/components/LegacyPremiumNotice';
+import { PinnedRoutesSection } from '@/features/transit/pinned/components/PinnedRoutesSection';
+import { ActiveTrackingSection } from '@/features/transit/tracking/components/ActiveTrackingSection';
 import { AdBanner } from '@/features/ads/components/AdBanner';
 import { InterstitialOrchestrator } from '@/features/ads/components/InterstitialOrchestrator';
 import { useCanShowAds } from '@/features/premium/usePremium';
@@ -55,6 +59,8 @@ export function TransitPage() {
   const { data: bootstrap } = useBootstrap();
   const { data: stops = [], isLoading: stopsLoading } = useStops();
   const resolvedDataset = useResolvedTransitDataset();
+  const { showTracking } = useScheduleConfig();
+  const isOnline = useNetworkOnline();
 
   const recentSearches = useProfileStore((s) => s.recentSearches);
   const addRecentSearch = useProfileStore((s) => s.addRecentSearch);
@@ -189,36 +195,26 @@ export function TransitPage() {
   return (
     <>
       <Seo modulePath="/transit" />
-      <PageHeader
-        title={t('navBarSearchLabel')}
-        subtitle={t('homeInstructionsTitle')}
-        actions={
-          resolvedDataset === 'azoresbus' ? (
-            <div className="flex flex-wrap gap-2">
-              {/* Only AzoresBus carries geometry and poles; on legacy these lead
-                  nowhere, so they are not offered. */}
-              <Link
-                to="/transit/network"
-                className="inline-flex items-center gap-1.5 rounded-xl border border-border px-3 py-2 text-sm font-semibold text-content hover:bg-surface-variant"
-              >
-                <MapIcon size={15} /> {t('transitNetworkMap')}
-              </Link>
-              <Link
-                to="/transit/prices"
-                className="inline-flex items-center gap-1.5 rounded-xl border border-border px-3 py-2 text-sm font-semibold text-content hover:bg-surface-variant"
-              >
-                <Tag size={15} /> {t('transitPricesTitle')}
-              </Link>
-            </div>
-          ) : null
-        }
-      />
+      <PageHeader title={t('navBarSearchLabel')} subtitle={t('homeInstructionsTitle')} />
 
+      <LegacyPremiumNotice />
+      <ActiveTrackingSection />
+      <PinnedRoutesSection onSelect={apply} />
+      {canShowAds ? (
+        <AdBanner on="home" slot="top" content={hasResults && !search.isFetching} />
+      ) : null}
       <ScheduleChangeBanner />
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[380px_1fr]">
         {/* Planner column */}
         <div ref={plannerRef} className="flex flex-col gap-4 lg:sticky lg:top-24 lg:self-start">
+          {resolvedDataset === 'azoresbus' ? (
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <TransitMapLinks />
+              <LiveEntryCard showTracking={showTracking} isOnline={isOnline} />
+            </div>
+          ) : null}
+
           <Card className="p-5">
             <div className="flex flex-col gap-3">
               <StopPicker
@@ -321,20 +317,6 @@ export function TransitPage() {
             </div>
           </Card>
 
-          {resolvedDataset === 'azoresbus' ? <AzoresbusLiveTeaser /> : null}
-
-          <Link to="/minibus">
-            <Card className="flex items-center gap-3 p-4 hover:bg-surface-variant">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#f47216]/12 text-[#f47216]">
-                <BusFront size={18} strokeWidth={2} />
-              </span>
-              <span className="min-w-0 flex-1 text-sm font-semibold text-content">
-                {t('minibusTransitLink')}
-              </span>
-              <ChevronDown size={16} className="-rotate-90 text-muted" />
-            </Card>
-          </Link>
-
           {recentSearches.length > 0 ? (
             <Card className="p-4">
               <button
@@ -387,17 +369,8 @@ export function TransitPage() {
               destination={routeWeather.data.destination}
             />
           ) : null}
-          {canShowAds ? (
-            <AdBanner on="home" slot="top" content={hasResults && !search.isFetching} />
-          ) : null}
 
-          {!searchEnabled && !hasResults ? (
-            <Card className="p-6">
-              <h3 className="mb-1 text-lg font-bold text-content">{t('homeInstructionsTitle')}</h3>
-              <p className="text-sm text-muted">{t('homeInstructionsText')}</p>
-              <p className="mt-2 text-sm text-muted">{t('homeInstructionsText2')}</p>
-            </Card>
-          ) : null}
+          {!searchEnabled && !hasResults ? <TransitInstructions /> : null}
 
           {search.isFetching ? (
             <SearchingState variant="journeys" date={searchedDate} />
@@ -441,7 +414,7 @@ export function TransitPage() {
               <SchedulePreviewStrip />
               <ScheduleValidBadge />
               {journeys.flatMap((journey, index) => {
-                const cards = [<JourneyCard key={journey.id} journey={journey} />];
+                const cards = [<JourneyCard key={journey.id} journey={journey} searchDay={day} />];
                 if (canShowAds && index % 2 === 1) {
                   cards.push(<AdBanner key={`ad-inline-${index}`} on="home" slot={`inline-${index}`} />);
                 }

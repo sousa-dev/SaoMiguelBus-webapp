@@ -109,6 +109,30 @@ export const MODULE_SEO: ModuleSeo[] = [
     },
   },
   {
+    key: 'transit',
+    path: '/transit/live',
+    title: {
+      pt: 'Autocarros em Direto em São Miguel — Mapa ao Vivo',
+      en: 'São Miguel Buses Live — Real-Time Map',
+    },
+    description: {
+      pt: 'Vê onde estão os autocarros da AzoresBus em tempo real no mapa de São Miguel, Açores.',
+      en: 'See where AzoresBus buses are right now on a live map of São Miguel, Azores.',
+    },
+  },
+  {
+    key: 'minibus',
+    path: '/minibus/live',
+    title: {
+      pt: 'PDL MiniBus em Direto — Mapa ao Vivo',
+      en: 'PDL MiniBus Live — Real-Time Map',
+    },
+    description: {
+      pt: 'Localização em tempo real dos MiniBus de Ponta Delgada.',
+      en: 'Real-time location of the Ponta Delgada MiniBus fleet.',
+    },
+  },
+  {
     key: 'minibus',
     path: '/minibus',
     subdomain: 'minibus',

@@ -829,3 +829,304 @@ export interface MinibusRouteSearchResponse extends MinibusMeta {
   destination: MinibusRouteEndpoint;
   journeys: MinibusJourney[];
 }
+
+// --- Accounts & billing (mirrors SaoMiguelBus/lib/types.ts) --- //
+
+export interface AuthUser {
+  id: number;
+  email: string;
+  displayName: string;
+  dateJoined: string;
+  isSuperuser?: boolean;
+}
+
+export interface AuthResponse {
+  token: string;
+  user: AuthUser;
+}
+
+export type EntitlementTier = 'free' | 'premium';
+export type EntitlementSource = 'legacy_email' | 'manual' | 'revenuecat' | 'stripe';
+/** Where the user manages/cancels their subscription. `web` = RevenueCat Web Billing portal. */
+export type ManageVia = 'app_store' | 'play_store' | 'stripe' | 'web' | 'none';
+
+export interface Entitlement {
+  tier: EntitlementTier;
+  source: EntitlementSource | null;
+  status: string | null;
+  currentPeriodEnd: string | null;
+  features: string[];
+  manageVia: ManageVia;
+}
+
+// --- Azoresbus live trip overlay (mirrors SaoMiguelBus/lib/types.ts) --- //
+
+export interface AzoresbusVehiclePosition {
+  lat: number;
+  lon: number;
+}
+
+export type TransitTripLiveState = 'live' | 'not_found' | 'unsupported';
+
+export interface TransitTripLiveNextStop {
+  /** Same sequence space as the trip's stop times. */
+  sequence: number | null;
+  name: string;
+  stopId: number | null;
+  dueInMinutes: number;
+}
+
+export interface TransitTripLiveVehicle {
+  id: string;
+  position: AzoresbusVehiclePosition;
+  /** Seconds late; negative is early; null when upstream omits it. */
+  delaySeconds: number | null;
+  speed: number | null;
+  /** Movement state (`inTransitTo` / `idleAt` / `incomingAt`). */
+  status: string;
+  currentStopSequence: number | null;
+  nextStop: TransitTripLiveNextStop | null;
+  /** Every stop still ahead of the bus, nearest first. `nextStop` is `upcomingStops[0]`. */
+  upcomingStops: TransitTripLiveNextStop[];
+  /** When the fleet position was read. ISO 8601. */
+  capturedAt: string;
+  /** The detail could not be read: position is real, progress is unknown. */
+  stale: boolean;
+}
+
+export interface TransitTripLive {
+  tripId: number;
+  state: TransitTripLiveState;
+  vehicle: TransitTripLiveVehicle | null;
+}
+
+export interface TransitTripsLiveResponse {
+  trips: TransitTripLive[];
+}
+
+// --- Live vehicle tracking (mirrors SaoMiguelBus/lib/types.ts) --- //
+
+export interface MinibusTrackingMeta {
+  cachedAt: string;
+  stale: boolean;
+  trackingCacheStatus?: 'hit' | 'miss' | 'stale';
+  cacheMaxAgeSeconds: number;
+  trackingAttribution: string;
+  trackingSourceUrl: string;
+  trackingUpstreamBaseUrl?: string;
+}
+
+export interface MinibusVehiclePosition {
+  lat: number;
+  lon: number;
+}
+
+export interface MinibusVehicleRoute {
+  id?: string;
+  name?: string;
+  nameShort?: string;
+  description?: string;
+  color?: string;
+  isActive?: boolean;
+}
+
+export interface MinibusVehicleSummary {
+  id: string;
+  position: MinibusVehiclePosition;
+  status: string;
+  /** Fleet list includes color; detail responses may only expose route.color. */
+  color?: string;
+  route?: string | MinibusVehicleRoute | null;
+  fleetId?: string | null;
+}
+
+export interface MinibusCirculationStagePosition {
+  lat: number;
+  lon: number;
+}
+
+export interface MinibusCirculationStage {
+  id?: string;
+  nameShort?: string;
+  name?: string;
+  position?: MinibusCirculationStagePosition;
+}
+
+export interface MinibusCirculation {
+  sequence: number;
+  stage?: MinibusCirculationStage;
+  dueInMinutes?: number | null;
+}
+
+export interface MinibusVehicleJourney {
+  shape?: string | null;
+  circulations?: MinibusCirculation[];
+}
+
+export interface MinibusVehicleDetail extends MinibusVehicleSummary {
+  currentStopSequence?: number | null;
+  journey?: MinibusVehicleJourney | null;
+}
+
+export interface MinibusVehiclesResponse extends MinibusTrackingMeta, MinibusMeta {
+  vehicles: MinibusVehicleSummary[];
+}
+
+export interface MinibusVehicleDetailResponse extends MinibusTrackingMeta, MinibusMeta {
+  vehicle: MinibusVehicleDetail;
+}
+export interface MinibusTrackingHealthResponse extends MinibusMeta {
+  available: boolean;
+  checkedAt: string;
+  recheckAfterSeconds: number;
+  vehicleCount?: number;
+  reason?: string;
+}
+
+
+/**
+ * `nameShort` is the transit `Line.code` for the azoresbus dataset, so it joins
+ * straight onto `/api/v3/transit/lines/<code>/shape` and the line detail screen.
+ *
+ * `color` is a SERVICE CLASS, not an identity: 49 of the 56 routes share
+ * `2D59A9`. Never use it to tell one line from another.
+ */
+export interface AzoresbusRoute {
+  id: string;
+  nameShort: string;
+  name: string;
+  color: string;
+}
+
+export interface AzoresbusCirculationStage {
+  id: string;
+  /** The operator's own spelling, e.g. "P. DELGADA (ALFÂNDEGA)". */
+  name: string;
+  nameShort: string;
+  /**
+   * Our name for this stop, resolved server-side by joining the upstream stage
+   * id against the stop table. Falls back to `name` when the join misses, so it
+   * is always safe to display — prefer it over `name` everywhere.
+   *
+   * It is NOT `name` run through a formatter: the two feeds disagree outright
+   * for about a fifth of stops (the operator's "CASA DA EIRA" is our
+   * "Café Holandês"), so only the id join gives the right answer.
+   */
+  canonicalName?: string;
+  /** Our `Stop.id`, for deep links. Null when the stop predates the last sync. */
+  stopId?: number | null;
+  position?: AzoresbusVehiclePosition;
+}
+
+export interface AzoresbusCirculation {
+  sequence: number;
+  stage: AzoresbusCirculationStage;
+  /** Seconds since local midnight. */
+  departureTime?: number | null;
+  arrivalTime?: number | null;
+  /** Present only from `currentStopSequence` onwards; null means "behind us". */
+  dueInMinutes?: number | null;
+}
+
+export interface AzoresbusVehicleJourney {
+  id: string;
+  type: string;
+  shape: string;
+  /** e.g. "08:35 >> 09:05". */
+  name?: string;
+  start?: string;
+  end?: string;
+  startTime?: number | null;
+  endTime?: number | null;
+  direction?: number | null;
+  isActive?: boolean | null;
+  circulations?: AzoresbusCirculation[];
+}
+
+export interface AzoresbusVehicleSummary {
+  id: string;
+  position: AzoresbusVehiclePosition;
+  /** Punctuality on the list, movement state on the detail. See note above. */
+  status: string;
+  /** Movement state. List only; '' when upstream omits it. */
+  busStatus?: string;
+  /** Seconds late; negative is early. */
+  delay?: number | null;
+  speed?: number | null;
+  /** 6 hex digits, no leading '#'. Service class, not line identity. */
+  color: string;
+  /** Server-enriched from the route index; null until that index is warm. */
+  route?: AzoresbusRoute | null;
+}
+
+export interface AzoresbusVehicleDetail extends AzoresbusVehicleSummary {
+  fleetId: string;
+  /** Empty for every vehicle in the live feed today -- do not build UI on it. */
+  licensePlate: string;
+  currentStopSequence: number | null;
+  route: AzoresbusRoute;
+  journey: AzoresbusVehicleJourney;
+}
+
+export interface AzoresbusVehiclesResponse {
+  vehicles: AzoresbusVehicleSummary[];
+}
+
+/** The detail endpoint returns the vehicle itself -- there is no wrapper. */
+export type AzoresbusVehicleDetailResponse = AzoresbusVehicleDetail;
+
+export interface AzoresbusRoutesResponse {
+  routes: AzoresbusRoute[];
+}
+
+/** One live bus inbound to a stop. */
+export interface AzoresbusStopArrival {
+  vehicleId: string;
+  dueInMinutes: number;
+  lineCode: string;
+  lineName: string;
+  lineColor: string;
+  journeyId: string;
+  /**
+   * True when we could not re-read the vehicle and fell back to an aged
+   * estimate. Show it as approximate rather than hiding the bus.
+   */
+  stale: boolean;
+}
+
+export interface AzoresbusStopArrivalsResponse {
+  arrivals: AzoresbusStopArrival[];
+}
+
+export type AzoresbusTrackingStatus = 'ok' | 'disabled' | 'unavailable';
+
+export interface AzoresbusTrackingHealthResponse {
+  status: AzoresbusTrackingStatus;
+  vehicles: number;
+}
+
+/**
+ * `GET /api/v3/transit/live-counts` — a cached count per operator, fed as a
+ * side effect of real vendor fetches elsewhere (the live map's polling, or
+ * either operator's health probe). Hub screens read this instead of probing
+ * tracking health themselves, so a hub visit never reaches the AVL vendor.
+ *
+ * `unknown` means nothing is recorded (or it expired) -- not the same as
+ * `unavailable`, which is a recorded outage. `disabled` is AzoresBus-only
+ * (island feature flag off).
+ */
+export type LiveVehicleCountStatus = 'ok' | 'unavailable' | 'disabled' | 'unknown';
+
+export interface LiveVehicleCountEntry {
+  status: LiveVehicleCountStatus;
+  vehicles: number | null;
+  recordedAt: string | null;
+}
+
+export interface LiveVehicleCountsResponse {
+  azoresbus: LiveVehicleCountEntry;
+  /** `null` when the PDL MiniBus app is not installed on this deployment. */
+  minibus: LiveVehicleCountEntry | null;
+  ttlSeconds: number;
+}
+

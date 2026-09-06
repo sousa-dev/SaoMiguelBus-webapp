@@ -10,6 +10,8 @@ import { BackLink, PageHeader } from '@/components/layout/Page';
 import { AdBanner } from '@/features/ads/components/AdBanner';
 import { DepartureRow } from '@/features/transit/components/DepartureRow';
 import { useStopDetail } from '@/features/transit/hooks';
+import { StopArrivalsCard } from '@/features/transit/live/components/StopArrivalsCard';
+import { useScheduleConfig } from '@/features/transit/schedule-hooks';
 import { useBootstrap } from '@/hooks/useBootstrap';
 import { track } from '@/lib/analytics';
 import { cn } from '@/lib/cn';
@@ -24,6 +26,7 @@ export function StopDetailPage() {
   const { stopId } = useParams();
   const id = stopId ? Number(stopId) : null;
   const { data: bootstrap } = useBootstrap();
+  const { showTracking } = useScheduleConfig();
 
   // `now` is state and ticks, rather than being read at render time, so the
   // query key changes on a schedule instead of on every re-render.
@@ -110,6 +113,8 @@ export function StopDetailPage() {
           >
             <MapView points={points} />
           </div>
+
+          {showTracking && data.dataset === 'azoresbus' ? <StopArrivalsCard stopId={data.id} /> : null}
 
           {data.poles.length > 0 ? (
             <Card className="p-4">

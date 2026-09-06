@@ -10,14 +10,14 @@ vi.mock('@/lib/api', () => ({
   fetchAd: vi.fn(async () => null),
   recordAdClick: vi.fn(async () => undefined),
   fetchBootstrap: vi.fn(async () => ({ island: { enabledModules: ['weather', 'news'] } })),
-  verifySubscriptionEmail: vi.fn(async () => ({ hasActiveSubscription: false })),
+  fetchEntitlement: vi.fn(async () => ({ tier: 'free' })),
   postConsent: vi.fn(async () => undefined),
 }));
 
 import { AdBanner } from '@/features/ads/components/AdBanner';
 import { resetBlockedProvidersForTests } from '@/features/ads/providers/blocked';
 import { readWebAdConfig, setWebAdConfigForTests } from '@/features/ads/providers/config';
-import { usePremiumStore } from '@/features/premium/usePremium';
+import { setPremiumForTests } from '@/features/premium/usePremium';
 import { defaultPurposes, useConsentStore } from '@/lib/consent-store';
 import { flush, mount, type Mounted } from '../../../helpers/react';
 
@@ -53,7 +53,7 @@ beforeEach(() => {
   track.mockClear();
   resetBlockedProvidersForTests();
   setWebAdConfigForTests(readWebAdConfig({ VITE_WEB_AD_PROVIDERS: 'mock' }));
-  usePremiumStore.setState({ isPremium: false, isLoading: false, userEmail: null });
+  setPremiumForTests(null);
   useConsentStore.setState({ decided: true, purposes: allPurposes });
   Object.defineProperty(HTMLElement.prototype, 'clientWidth', { configurable: true, get: () => 684 });
 });
@@ -66,7 +66,14 @@ afterEach(async () => {
 
 describe('AdBanner waterfall', () => {
   it('renders nothing at all for premium users', async () => {
-    usePremiumStore.setState({ isPremium: true, isLoading: false });
+    setPremiumForTests({
+      tier: 'premium',
+      source: 'revenuecat',
+      status: 'active',
+      currentPeriodEnd: null,
+      features: [],
+      manageVia: 'web',
+    });
     mounted = await render(<AdBanner on="home" slot="top" />);
     await settle();
     expect(mounted.container.innerHTML).toBe('');
