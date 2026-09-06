@@ -72,7 +72,7 @@ function PackageTile({
     <button
       type="button"
       onClick={onSelect}
-      className={`relative flex flex-1 flex-col items-center gap-1 rounded-2xl border-2 p-3 text-center transition ${
+      className={`relative flex flex-1 flex-col items-center gap-1 rounded-2xl border-2 p-3 pt-4 text-center transition ${
         selected ? 'border-primary bg-primary/5' : 'border-border bg-surface hover:border-outline'
       }`}
     >
@@ -82,17 +82,13 @@ function PackageTile({
         </span>
       ) : null}
       {trialDays ? (
-        <Badge tone="success" className="absolute -top-2.5 left-1/2 -translate-x-1/2 whitespace-nowrap">
+        <Badge tone="success" className="absolute -top-2.5 left-1/2 -translate-x-1/2 whitespace-nowrap text-[10px]">
           {t('premiumFreeTrialDays', { count: trialDays })}
         </Badge>
       ) : null}
-      <span className="mt-2 text-2xl font-extrabold text-content">{duration.value}</span>
+      <span className="text-2xl font-extrabold text-content">{duration.value}</span>
       <span className="text-[11px] font-bold uppercase tracking-wide text-muted">{durationLabel}</span>
-      {trialDays ? (
-        <span className="mt-1 text-xs font-semibold text-primary">{t('premiumFreeTrialThenPrice', { price })}</span>
-      ) : (
-        <span className="mt-1 text-sm font-bold text-content">{price}</span>
-      )}
+      <span className="mt-1 text-xs font-bold text-content">{price}</span>
     </button>
   );
 }
@@ -268,7 +264,7 @@ export function PremiumPage() {
               </div>
             ) : packages.length > 0 ? (
               <>
-                <div className="flex w-full gap-2 pt-2">
+                <div className="flex w-full items-stretch gap-2 pt-2">
                   {packages.map((pkg) => (
                     <PackageTile
                       key={pkg.identifier}
