@@ -11,6 +11,8 @@ const api = vi.hoisted(() => ({
   fetchMinibusVehicles: vi.fn(),
   fetchMinibusVehicle: vi.fn(),
   fetchMinibusLines: vi.fn(),
+  fetchMinibusNetwork: vi.fn(),
+  fetchMinibusLine: vi.fn(),
   fetchAd: vi.fn(async () => null),
 }));
 vi.mock('@/lib/api', () => api);
@@ -19,14 +21,23 @@ vi.mock('@/components/map/LiveVehicleMap', () => ({
   LiveVehicleMap: ({
     vehicles,
     onSelectVehicle,
+    stopPins,
+    onSelectStop,
   }: {
     vehicles: Array<{ id: string; lineCode: string | null }>;
     onSelectVehicle: (id: string) => void;
+    stopPins?: Array<{ id: string }>;
+    onSelectStop?: (id: string) => void;
   }) => (
     <div data-testid="map">
       {vehicles.map((v) => (
         <button key={v.id} type="button" data-testid={`vehicle-${v.id}`} onClick={() => onSelectVehicle(v.id)}>
           {v.id}:{v.lineCode ?? '?'}
+        </button>
+      ))}
+      {(stopPins ?? []).map((pin) => (
+        <button key={pin.id} type="button" data-testid={`stop-${pin.id}`} onClick={() => onSelectStop?.(pin.id)}>
+          {pin.id}
         </button>
       ))}
     </div>
@@ -54,8 +65,36 @@ const lines = [
 ];
 const fleet = [
   { id: 'm1', position: { lat: 37.74, lon: -25.67 }, status: 'inTransitTo', color: 'f6bc1c' },
-  { id: 'm2', position: { lat: 37.75, lon: -25.66 }, status: 'idleAt', color: '00964c' },
+  { id: 'm2', position: { lat: 37.75, lon: -25.66 }, status: 'idleAt', color: '00964c', fleetId: '42' },
 ];
+
+function stop(overrides: { key: string; name_pt: string; sequence: number; latitude: number; longitude: number }) {
+  return { ...overrides, match_key: overrides.key, interchange_key: overrides.key, interchange_lines: [] };
+}
+
+const network = {
+  interchanges_by_key: {},
+  lines: [
+    {
+      code: 'A',
+      slug: 'linha-a',
+      name: 'Linha A',
+      color: 'f6bc1c',
+      direction: 'circular',
+      stop_count: 1,
+      stops: [stop({ key: 'a-01', name_pt: 'Portas do Mar', sequence: 1, latitude: 37.74, longitude: -25.67 })],
+    },
+    {
+      code: 'B',
+      slug: 'linha-b',
+      name: 'Linha B',
+      color: '00964c',
+      direction: 'circular',
+      stop_count: 1,
+      stops: [stop({ key: 'b-01', name_pt: 'Hospital', sequence: 1, latitude: 37.75, longitude: -25.66 })],
+    },
+  ],
+};
 
 let mounted: Mounted | null = null;
 
@@ -82,9 +121,13 @@ beforeEach(() => {
   api.fetchMinibusVehicles.mockReset();
   api.fetchMinibusVehicle.mockReset();
   api.fetchMinibusLines.mockReset();
+  api.fetchMinibusNetwork.mockReset();
+  api.fetchMinibusLine.mockReset();
   api.fetchMinibusTrackingHealth.mockResolvedValue({ available: true, checkedAt: meta.cachedAt, recheckAfterSeconds: 30 });
   api.fetchMinibusVehicles.mockResolvedValue({ ...meta, vehicles: fleet });
   api.fetchMinibusLines.mockResolvedValue({ lines });
+  api.fetchMinibusNetwork.mockResolvedValue(network);
+  api.fetchMinibusLine.mockResolvedValue({ ...lines[1], route_shapes: [] });
   api.fetchMinibusVehicle.mockResolvedValue({
     ...meta,
     vehicle: {
@@ -135,5 +178,56 @@ describe('MinibusLivePage', () => {
     m = await render('/minibus/live?line=linha-b');
     expect(m.container.querySelector('[data-testid="vehicle-m1"]')).toBeNull();
     expect(m.container.querySelector('[data-testid="vehicle-m2"]')).not.toBeNull();
+  });
+
+  it('shows a fleet bar listing every visible vehicle, collapsing when one is selected', async () => {
+    const m = await render();
+    expect(m.container.textContent).toContain('Live buses (2)');
+    expect(m.container.textContent).toContain('Fleet 42');
+
+    await act(async () => {
+      m.container.querySelector<HTMLButtonElement>('[data-testid="vehicle-m1"]')!.click();
+    });
+    for (let i = 0; i < 4; i++) {
+      await flush();
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 5));
+      });
+    }
+    // The fleet list collapses once a vehicle is focused; only the header remains.
+    expect(m.container.textContent).not.toContain('Fleet 42');
+  });
+
+  it('shows no stop pins by default, but shows them once the stops toggle is on', async () => {
+    let m = await render();
+    expect(m.container.querySelector('[data-testid="stop-a-01"]')).toBeNull();
+
+    const toggle = Array.from(m.container.querySelectorAll('button')).find((b) => b.textContent === 'Show stops')!;
+    await act(async () => {
+      toggle.click();
+    });
+    expect(m.container.querySelector('[data-testid="stop-a-01"]')).not.toBeNull();
+    expect(m.container.querySelector('[data-testid="stop-b-01"]')).not.toBeNull();
+    await m.unmount();
+
+    // A line filter alone also forces stops on, for just that line.
+    m = await render('/minibus/live?line=linha-b');
+    expect(m.container.querySelector('[data-testid="stop-b-01"]')).not.toBeNull();
+    expect(m.container.querySelector('[data-testid="stop-a-01"]')).toBeNull();
+  });
+
+  it('tapping a stop pin opens a dialog with the lines serving it, no "view live" pill', async () => {
+    const m = await render();
+    const toggle = Array.from(m.container.querySelectorAll('button')).find((b) => b.textContent === 'Show stops')!;
+    await act(async () => {
+      toggle.click();
+    });
+    await act(async () => {
+      m.container.querySelector<HTMLButtonElement>('[data-testid="stop-a-01"]')!.click();
+    });
+    const dialog = document.body.querySelector('[role="dialog"]');
+    expect(dialog).not.toBeNull();
+    expect(dialog!.textContent).toContain('Portas do Mar');
+    expect(dialog!.textContent).not.toContain('View live');
   });
 });

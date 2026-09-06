@@ -1,4 +1,4 @@
-import { ArrowRight, ArrowUpDown } from 'lucide-react';
+import { ArrowRight, ArrowUpDown, Map as MapIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 import { Card } from '@/components/ui';
@@ -9,9 +9,11 @@ import { formatServiceSummary } from '../lib/service-summary';
 export function MinibusJourneyCard({
   journey,
   linesByCode,
+  onViewDirections,
 }: {
   journey: MinibusJourney;
   linesByCode: Map<string, MinibusLine>;
+  onViewDirections?: () => void;
 }) {
   const { t } = useTranslation();
 
@@ -64,6 +66,17 @@ export function MinibusJourneyCard({
           </div>
         );
       })}
+
+      {onViewDirections ? (
+        <button
+          type="button"
+          onClick={onViewDirections}
+          className="flex items-center justify-center gap-1.5 rounded-xl border border-border py-2 text-sm font-semibold text-primary hover:bg-surface-variant"
+        >
+          <MapIcon size={14} />
+          {t('minibusViewDirections')}
+        </button>
+      ) : null}
     </Card>
   );
 }

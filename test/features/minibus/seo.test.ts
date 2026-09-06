@@ -46,6 +46,13 @@ describe('MODULE_SEO', () => {
 
   it('registers the Mini Bus pages that get a prerendered page', () => {
     const minibusPaths = MODULE_SEO.filter((m) => m.key === 'minibus').map((m) => m.path);
-    expect(minibusPaths).toEqual(['/minibus/live', '/minibus', '/minibus/search', '/minibus/schematic']);
+    expect(minibusPaths).toEqual([
+      '/minibus/live',
+      '/minibus',
+      '/minibus/search',
+      '/minibus/network',
+      '/minibus/prices',
+      '/minibus/schematic',
+    ]);
   });
 });

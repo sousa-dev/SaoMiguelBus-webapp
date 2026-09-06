@@ -1,10 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  coordinatesMatch,
   displayStopSequence,
+  hasCoordinates,
   isLoopTerminus,
   lineMapStops,
   networkStopNames,
+  stopCoordinate,
 } from '@/features/minibus/lib/stops';
 import type { MinibusNetwork, MinibusNetworkStop } from '@/lib/types';
 
@@ -99,5 +102,31 @@ describe('networkStopNames', () => {
 
   it('returns an empty list without a network', () => {
     expect(networkStopNames(null)).toEqual([]);
+  });
+});
+
+describe('hasCoordinates / stopCoordinate', () => {
+  it('is true and returns the pair when both are numbers', () => {
+    const s = stop({ sequence: 1, key: 'a-01', latitude: 37.7, longitude: -25.6 });
+    expect(hasCoordinates(s)).toBe(true);
+    expect(stopCoordinate(s)).toEqual({ latitude: 37.7, longitude: -25.6 });
+  });
+
+  it('is false and returns null when a coordinate is missing', () => {
+    const s = stop({ sequence: 1, key: 'a-01', latitude: null, longitude: null });
+    expect(hasCoordinates(s)).toBe(false);
+    expect(stopCoordinate(s)).toBeNull();
+  });
+});
+
+describe('coordinatesMatch', () => {
+  it('matches coordinates within a small epsilon', () => {
+    expect(coordinatesMatch({ latitude: 37.7, longitude: -25.6 }, { latitude: 37.700001, longitude: -25.600001 })).toBe(
+      true,
+    );
+  });
+
+  it('does not match coordinates that genuinely differ', () => {
+    expect(coordinatesMatch({ latitude: 37.7, longitude: -25.6 }, { latitude: 37.71, longitude: -25.61 })).toBe(false);
   });
 });

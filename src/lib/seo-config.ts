@@ -160,6 +160,30 @@ export const MODULE_SEO: ModuleSeo[] = [
   },
   {
     key: 'minibus',
+    path: '/minibus/network',
+    title: {
+      pt: 'Mapa da Rede do Mini Bus de Ponta Delgada',
+      en: 'Ponta Delgada Mini Bus Network Map',
+    },
+    description: {
+      pt: 'Explora todas as paragens do Mini Bus de Ponta Delgada no mapa.',
+      en: 'Browse every stop on the Ponta Delgada Mini Bus network on the map.',
+    },
+  },
+  {
+    key: 'minibus',
+    path: '/minibus/prices',
+    title: {
+      pt: 'Tarifário do Mini Bus de Ponta Delgada',
+      en: 'Ponta Delgada Mini Bus Fares',
+    },
+    description: {
+      pt: 'Consulta os preços dos bilhetes e passes do Mini Bus de Ponta Delgada.',
+      en: 'Check ticket and pass prices for the Ponta Delgada Mini Bus.',
+    },
+  },
+  {
+    key: 'minibus',
     path: '/minibus/schematic',
     title: {
       pt: 'Esquema de Linhas do Mini Bus de Ponta Delgada',

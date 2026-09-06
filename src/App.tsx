@@ -13,8 +13,11 @@ import { LinePage } from '@/features/transit/LinePage';
 import { NetworkPage } from '@/features/transit/NetworkPage';
 import { PricesPage } from '@/features/transit/PricesPage';
 import {
+  MinibusDirectionsPage,
   MinibusLinePage,
+  MinibusNetworkPage,
   MinibusPage,
+  MinibusPricesPage,
   MinibusSchematicPage,
   MinibusSearchPage,
 } from '@/features/minibus';
@@ -84,6 +87,9 @@ const router = createBrowserRouter([
       { path: 'transit/prices', element: <PricesPage /> },
       { path: 'minibus', element: <MinibusPage /> },
       { path: 'minibus/search', element: <MinibusSearchPage /> },
+      { path: 'minibus/directions', element: <MinibusDirectionsPage /> },
+      { path: 'minibus/network', element: <MinibusNetworkPage /> },
+      { path: 'minibus/prices', element: <MinibusPricesPage /> },
       {
         path: 'minibus/live',
         element: (

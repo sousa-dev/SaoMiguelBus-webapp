@@ -11,6 +11,7 @@ import { track } from '@/lib/analytics';
 import { MinibusAttributionFooter } from './components/MinibusAttributionFooter';
 import { MinibusDocumentImage } from './components/MinibusDocumentImage';
 import { MinibusLineCard } from './components/MinibusLineCard';
+import { MinibusNetworkMapLink } from './components/MinibusNetworkMapLink';
 import { MinibusLiveEntryCard } from '@/features/minibus/live/components/MinibusLiveEntryCard';
 import { useNetworkOnline } from '@/lib/hooks/useNetworkOnline';
 import { MinibusTariffTable } from './components/MinibusTariffTable';
@@ -53,6 +54,10 @@ export function MinibusPage() {
           <h2 className="mb-3 text-lg font-extrabold text-content">{t('minibusSectionLines')}</h2>
 
           <div className="mb-4">
+            <MinibusNetworkMapLink />
+          </div>
+
+          <div className="mb-4">
             <MinibusDocumentImage
               documentSlug="network-map"
               alt={t('minibusNetworkMapImageAlt')}
@@ -80,6 +85,12 @@ export function MinibusPage() {
 
         {!loading && !error && tariffsQuery.data ? (
           <section>
+            <div className="mb-3 flex items-center justify-between">
+              <h2 className="text-lg font-extrabold text-content">{t('minibusSectionPricing')}</h2>
+              <Link to="/minibus/prices" className="text-sm font-semibold text-primary hover:underline">
+                {t('minibusTariffs')}
+              </Link>
+            </div>
             <MinibusTariffTable
               tariffs={tariffsQuery.data.tariffs}
               effectiveDate={tariffsQuery.data.tariffs_effective_date}

@@ -1,20 +1,33 @@
-import type { MinibusNetwork, MinibusNetworkStop } from '@/lib/types';
+import type { MinibusNetwork, MinibusNetworkStop, MinibusStopRef } from '@/lib/types';
+
+export type MapCoordinate = { latitude: number; longitude: number };
+
+export function hasCoordinates(stop: Pick<MinibusNetworkStop, 'latitude' | 'longitude'> | MinibusStopRef): boolean {
+  return typeof stop.latitude === 'number' && typeof stop.longitude === 'number';
+}
+
+export function stopCoordinate(
+  stop: Pick<MinibusNetworkStop, 'latitude' | 'longitude'> | MinibusStopRef,
+): MapCoordinate | null {
+  if (!hasCoordinates(stop)) {
+    return null;
+  }
+  return { latitude: stop.latitude as number, longitude: stop.longitude as number };
+}
 
 function orderedStops(stops: MinibusNetworkStop[]): MinibusNetworkStop[] {
   return [...stops].sort((a, b) => a.sequence - b.sequence);
 }
 
-function coordinatesMatch(a: MinibusNetworkStop, b: MinibusNetworkStop): boolean {
-  if (
-    typeof a.latitude !== 'number' ||
-    typeof a.longitude !== 'number' ||
-    typeof b.latitude !== 'number' ||
-    typeof b.longitude !== 'number'
-  ) {
-    return false;
-  }
+export function coordinatesMatch(a: MapCoordinate, b: MapCoordinate): boolean {
   const epsilon = 1e-5;
   return Math.abs(a.latitude - b.latitude) < epsilon && Math.abs(a.longitude - b.longitude) < epsilon;
+}
+
+function stopsCoordinatesMatch(a: MinibusNetworkStop, b: MinibusNetworkStop): boolean {
+  const coordA = stopCoordinate(a);
+  const coordB = stopCoordinate(b);
+  return coordA != null && coordB != null && coordinatesMatch(coordA, coordB);
 }
 
 /**
@@ -29,7 +42,7 @@ export function isLoopTerminus(stop: MinibusNetworkStop, stops: MinibusNetworkSt
   if (!last || !first || last.key !== stop.key) {
     return false;
   }
-  return coordinatesMatch(first, last);
+  return stopsCoordinatesMatch(first, last);
 }
 
 /** Show sequence 1 on the loop-return stop instead of the schematic's last number. */

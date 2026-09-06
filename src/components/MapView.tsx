@@ -83,6 +83,15 @@ function KeepSized() {
   return null;
 }
 
+/** Pans/zooms to `target` whenever it changes — the imperative escape hatch react-leaflet's declarative `center`/`zoom` (init-only) doesn't offer. */
+function FocusOn({ target }: { target: { lat: number; lng: number } | null }) {
+  const map = useMap();
+  useEffect(() => {
+    if (target) map.flyTo([target.lat, target.lng], Math.max(map.getZoom(), 15));
+  }, [map, target]);
+  return null;
+}
+
 export function MapView({
   points = [],
   lines = [],
@@ -91,6 +100,7 @@ export function MapView({
   className,
   fit = true,
   interactive = true,
+  focus = null,
 }: {
   points?: MapPoint[];
   lines?: MapLine[];
@@ -100,6 +110,8 @@ export function MapView({
   fit?: boolean;
   /** When false, renders a static (non-pannable) preview map — used for hub cards. */
   interactive?: boolean;
+  /** Pan/zoom to this point on change (e.g. a selected journey step) — leave null for a static fit. */
+  focus?: { lat: number; lng: number } | null;
 }) {
   const fallbackCenter = center ?? staticIslandConfig.mapCenter;
   const fallbackZoom = zoom ?? 10;
@@ -152,6 +164,7 @@ export function MapView({
           {p.popup ? <Popup>{p.popup}</Popup> : null}
         </CircleMarker>
       ))}
+      <FocusOn target={focus} />
       <KeepSized />
     </MapContainer>
   );

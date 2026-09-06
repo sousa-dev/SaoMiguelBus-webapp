@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { ArrowUpDown, Route } from 'lucide-react';
 
 import { Button, CenteredSpinner, EmptyState } from '@/components/ui';
@@ -10,10 +11,13 @@ import { track } from '@/lib/analytics';
 import { MinibusJourneyCard } from './components/MinibusJourneyCard';
 import { MinibusStopPicker } from './components/MinibusStopPicker';
 import { useMinibusLines, useMinibusNetwork, useMinibusRoute } from './hooks';
+import { setPendingDirections } from './lib/directions-store';
 import { networkStopNames } from './lib/stops';
+import type { MinibusJourney } from '@/lib/types';
 
 export function MinibusSearchPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const linesQuery = useMinibusLines();
   const networkQuery = useMinibusNetwork();
 
@@ -47,6 +51,11 @@ export function MinibusSearchPage() {
   const onSwap = () => {
     setOrigin(destination);
     setDestination(origin);
+  };
+
+  const onViewDirections = (journey: MinibusJourney) => {
+    setPendingDirections(journey);
+    navigate('/minibus/directions');
   };
 
   const onSearch = () => {
@@ -120,6 +129,7 @@ export function MinibusSearchPage() {
                 key={`${journey.legs.map((leg) => leg.board.key).join('-')}-${index}`}
                 journey={journey}
                 linesByCode={linesByCode}
+                onViewDirections={() => onViewDirections(journey)}
               />
             ))}
           </div>

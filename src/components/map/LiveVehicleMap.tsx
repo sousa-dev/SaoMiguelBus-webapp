@@ -13,6 +13,14 @@ export interface LiveMapVehicle {
   color: string;
 }
 
+export interface LiveMapStopPin {
+  id: string;
+  lat: number;
+  lng: number;
+  color: string;
+  highlighted?: boolean;
+}
+
 type Props = {
   vehicles: LiveMapVehicle[];
   selectedVehicleId?: string | null;
@@ -25,6 +33,9 @@ type Props = {
   /** Shown when the fleet is empty. Defaults to the island-wide view (AzoresBus is island-wide). */
   fallbackCenter?: { lat: number; lng: number };
   fallbackZoom?: number;
+  /** Static stop pins drawn alongside the fleet (e.g. minibus network stops). */
+  stopPins?: LiveMapStopPin[];
+  onSelectStop?: (stopId: string) => void;
 };
 
 function busIcon(vehicle: LiveMapVehicle, selected: boolean) {
@@ -34,6 +45,16 @@ function busIcon(vehicle: LiveMapVehicle, selected: boolean) {
     html: `<span class="live-bus${selected ? ' live-bus--selected' : ''}" style="--bus:${vehicle.color}">${label}</span>`,
     iconSize: [40, 22],
     iconAnchor: [20, 11],
+  });
+}
+
+function stopIcon(pin: LiveMapStopPin) {
+  const size = pin.highlighted ? 16 : 10;
+  return L.divIcon({
+    className: 'live-stop-icon',
+    html: `<span class="live-stop${pin.highlighted ? ' live-stop--highlighted' : ''}" style="--stop:${pin.color}"></span>`,
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size / 2],
   });
 }
 
@@ -107,6 +128,8 @@ export function LiveVehicleMap({
   className,
   fallbackCenter = staticIslandConfig.mapCenter,
   fallbackZoom = 10,
+  stopPins = [],
+  onSelectStop,
 }: Props) {
   const [initialView] = useState(() =>
     viewForCoords(
@@ -136,6 +159,14 @@ export function LiveVehicleMap({
       {routePolyline && routePolyline.length > 1 ? (
         <Polyline positions={routePolyline} pathOptions={{ color: routeColor ?? '#1e88e5', weight: 5, opacity: 0.8 }} />
       ) : null}
+      {stopPins.map((pin) => (
+        <Marker
+          key={`stop-${pin.id}`}
+          position={[pin.lat, pin.lng]}
+          icon={stopIcon(pin)}
+          eventHandlers={onSelectStop ? { click: () => onSelectStop(pin.id) } : undefined}
+        />
+      ))}
       {vehicles.map((vehicle) => (
         <Marker
           key={vehicle.id}

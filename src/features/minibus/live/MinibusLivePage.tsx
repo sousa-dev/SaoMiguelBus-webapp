@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Radio, X } from 'lucide-react';
 
-import { LiveVehicleMap, type LiveMapVehicle } from '@/components/map/LiveVehicleMap';
+import { LiveVehicleMap, type LiveMapStopPin, type LiveMapVehicle } from '@/components/map/LiveVehicleMap';
 import { BackLink, PageHeader } from '@/components/layout/Page';
 import { Seo } from '@/components/Seo';
 import { Card, CenteredSpinner, Skeleton, Spinner } from '@/components/ui';
@@ -11,17 +11,21 @@ import { AdBanner } from '@/features/ads/components/AdBanner';
 import { formatCirculationRows, stopDisplayNameFromCirculations } from '@/features/live/lib/liveEtas';
 import { buildTrackingFreshnessLabels } from '@/features/live/lib/trackingFreshness';
 import { formatVehicleStatusLabel, vehicleStatusI18nKeys } from '@/features/live/lib/vehicleStatus';
-import { useMinibusLines } from '@/features/minibus/hooks';
+import { MinibusNetworkStopDialog } from '@/features/minibus/components/MinibusNetworkStopDialog';
+import { useMinibusLine, useMinibusLines, useMinibusNetwork } from '@/features/minibus/hooks';
+import { MinibusLiveFleetBar } from '@/features/minibus/live/components/MinibusLiveFleetBar';
 import {
   isMinibusTrackingAvailable,
   useMinibusTrackingHealth,
 } from '@/features/minibus/live/hooks/useMinibusTrackingHealth';
 import { useMinibusVehicleDetail, useMinibusVehicles } from '@/features/minibus/live/hooks/useMinibusTrackingQueries';
+import { liveFilteredLineRoute } from '@/features/minibus/live/lib/liveFilteredLineRoute';
 import {
   filterVehiclesByLineSlug,
   resolveLineForVehicle,
   vehicleLineColorHex,
 } from '@/features/minibus/live/lib/vehicleColor';
+import { findLiveMapStopPin, liveNetworkMapStops } from '@/features/minibus/lib/liveNetworkMapStops';
 import { TrackingUnavailable } from '@/features/transit/live/components/TrackingUnavailable';
 import { track } from '@/lib/analytics';
 import { cn } from '@/lib/cn';
@@ -145,6 +149,8 @@ export function MinibusLivePage() {
   const visible = useDocumentVisible();
   const [selectedLineSlug, setSelectedLineSlug] = useState<string | null>(initialLine);
   const [selectedVehicleId, setSelectedVehicleId] = useState<string | null>(null);
+  const [showStops, setShowStops] = useState(Boolean(initialLine));
+  const [selectedStopKey, setSelectedStopKey] = useState<string | null>(null);
   const [cooldownUntil, setCooldownUntil] = useState(0);
   const [cooldownSeconds, setCooldownSeconds] = useState(0);
 
@@ -158,6 +164,9 @@ export function MinibusLivePage() {
   });
   const linesQuery = useMinibusLines();
   const lines = useMemo(() => linesQuery.data?.lines ?? [], [linesQuery.data]);
+  const networkQuery = useMinibusNetwork();
+  const network = networkQuery.data ?? null;
+  const filteredLineQuery = useMinibusLine(selectedLineSlug ?? undefined);
 
   const vehicles = useMemo(() => fleetQuery.data?.vehicles ?? [], [fleetQuery.data]);
   const visibleVehicles = useMemo(
@@ -174,12 +183,66 @@ export function MinibusLivePage() {
       })),
     [lines, visibleVehicles],
   );
-  const routePolyline = useMemo(() => {
+  const vehicleRoutePolyline = useMemo(() => {
     const shape = detailQuery.data?.vehicle.journey?.shape;
     if (!shape) return undefined;
     const points = decodePolyline(shape);
     return points.length > 1 ? points : undefined;
   }, [detailQuery.data?.vehicle.journey?.shape]);
+
+  // Selecting a line chip or a vehicle always forces stops on, regardless of the toggle.
+  const showMapStops = showStops || selectedLineSlug != null || selectedVehicleId != null;
+  const mapNetworkStops = useMemo(() => {
+    if (!showMapStops) return [];
+    return liveNetworkMapStops(network, lines, selectedLineSlug);
+  }, [lines, network, selectedLineSlug, showMapStops]);
+  const mapStopPins = useMemo<LiveMapStopPin[]>(
+    () =>
+      mapNetworkStops.flatMap((pin) => {
+        const { latitude, longitude } = pin.stop;
+        if (typeof latitude !== 'number' || typeof longitude !== 'number') return [];
+        return [
+          {
+            id: pin.stop.key,
+            lat: latitude,
+            lng: longitude,
+            color: `#${pin.lineColor.replace(/^#/, '')}`,
+            highlighted: pin.stop.key === selectedStopKey,
+          },
+        ];
+      }),
+    [mapNetworkStops, selectedStopKey],
+  );
+  const selectedStopPin = selectedStopKey ? findLiveMapStopPin(mapNetworkStops, selectedStopKey) : null;
+
+  const filteredNetworkLine = useMemo(
+    () => (selectedLineSlug ? (network?.lines.find((line) => line.slug === selectedLineSlug) ?? null) : null),
+    [network, selectedLineSlug],
+  );
+  const filteredLine = useMemo(
+    () => (selectedLineSlug ? (lines.find((line) => line.slug === selectedLineSlug) ?? null) : null),
+    [lines, selectedLineSlug],
+  );
+  const filteredLineRoutePolyline = useMemo(() => {
+    if (selectedVehicleId || !selectedLineSlug) return undefined;
+    const routeShapes = filteredLineQuery.data?.route_shapes ?? filteredLine?.route_shapes ?? null;
+    return liveFilteredLineRoute(filteredNetworkLine, routeShapes);
+  }, [filteredLine, filteredLineQuery.data, filteredNetworkLine, selectedLineSlug, selectedVehicleId]);
+
+  const onShowStopsChange = useCallback((next: boolean) => {
+    setShowStops(next);
+    // A line filter alone would keep stops visible regardless — clear it so the toggle actually hides them.
+    if (!next) setSelectedLineSlug(null);
+  }, []);
+
+  const onSelectStop = useCallback(
+    (stopKey: string) => {
+      if (!showMapStops) return;
+      setSelectedVehicleId(null);
+      setSelectedStopKey(stopKey);
+    },
+    [showMapStops],
+  );
 
   useEffect(() => {
     track('minibus', 'live_view', { screen: 'live' });
@@ -231,7 +294,7 @@ export function MinibusLivePage() {
     body = (
       <div className="flex flex-col gap-3">
         {lines.length > 0 ? (
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <button type="button" onClick={() => setSelectedLineSlug(null)} className={chip(selectedLineSlug == null)}>
               {t('minibusLiveFilterAll')}
             </button>
@@ -247,6 +310,15 @@ export function MinibusLivePage() {
                 {line.code}
               </button>
             ))}
+            <button
+              type="button"
+              aria-pressed={showStops}
+              disabled={selectedVehicleId != null}
+              onClick={() => onShowStopsChange(!showStops)}
+              className={cn(chip(showStops), 'ml-auto disabled:cursor-not-allowed disabled:opacity-50')}
+            >
+              {t('minibusLiveShowStops')}
+            </button>
           </div>
         ) : null}
         <MinibusFreshness meta={fleetQuery.data} isRefetching={fleetQuery.isRefetching} />
@@ -256,9 +328,17 @@ export function MinibusLivePage() {
               vehicles={mapVehicles}
               selectedVehicleId={selectedVehicleId}
               focusVehicleId={selectedVehicleId}
-              routePolyline={routePolyline}
-              routeColor={selectedLine?.color ? `#${selectedLine.color.replace(/^#/, '')}` : null}
+              routePolyline={vehicleRoutePolyline ?? filteredLineRoutePolyline}
+              routeColor={
+                selectedLine?.color
+                  ? `#${selectedLine.color.replace(/^#/, '')}`
+                  : !selectedVehicleId && filteredLine?.color
+                    ? `#${filteredLine.color.replace(/^#/, '')}`
+                    : null
+              }
               onSelectVehicle={(id) => setSelectedVehicleId(id)}
+              stopPins={mapStopPins}
+              onSelectStop={onSelectStop}
               fallbackCenter={MINIBUS_MAP_CENTER}
               fallbackZoom={MINIBUS_MAP_ZOOM}
             />
@@ -274,15 +354,25 @@ export function MinibusLivePage() {
               </div>
             ) : null}
           </div>
-          {selectedVehicleId ? (
-            <MinibusVehiclePanel
-              summary={selectedSummary}
-              line={selectedLine}
-              detail={detailQuery.data?.vehicle}
-              isLoading={detailQuery.isPending}
-              onClose={() => setSelectedVehicleId(null)}
+          <div className="flex flex-col gap-3">
+            {selectedVehicleId ? (
+              <MinibusVehiclePanel
+                summary={selectedSummary}
+                line={selectedLine}
+                detail={detailQuery.data?.vehicle}
+                isLoading={detailQuery.isPending}
+                onClose={() => setSelectedVehicleId(null)}
+              />
+            ) : null}
+            <MinibusLiveFleetBar
+              vehicles={visibleVehicles}
+              lines={lines}
+              selectedVehicleId={selectedVehicleId}
+              selectedLine={selectedLineSlug ? (filteredLine ?? null) : null}
+              onSelectVehicle={(id) => setSelectedVehicleId(id)}
+              onClearVehicle={() => setSelectedVehicleId(null)}
             />
-          ) : null}
+          </div>
         </div>
         {fleetQuery.data?.trackingAttribution ? (
           <p className="text-xs text-muted">
@@ -310,6 +400,7 @@ export function MinibusLivePage() {
         <AdBanner on="minibus" slot="top" content={hasFleet} />
       </div>
       {body}
+      <MinibusNetworkStopDialog pin={selectedStopPin} onClose={() => setSelectedStopKey(null)} showViewLive={false} />
       <p className="sr-only">
         <Link to="/minibus">{t('navBarMinibusLabel')}</Link>
       </p>
