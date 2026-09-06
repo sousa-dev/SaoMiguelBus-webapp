@@ -1,8 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { ArrowUpDown, Route } from 'lucide-react';
 
-import { Button } from '@/components/ui';
-
 import { MinibusStopPicker } from './MinibusStopPicker';
 
 /** Origin/destination/swap/search — the planner shared by the MiniBus hub and `/minibus/search`. */
@@ -39,7 +37,7 @@ export function MinibusPlannerForm({
           type="button"
           aria-label={t('minibusSwap')}
           onClick={onSwap}
-          className="rounded-full border border-border p-2 text-muted hover:text-content"
+          className="rounded-full bg-[#f47216]/[0.14] p-2 text-[#f47216] hover:bg-[#f47216]/20"
         >
           <ArrowUpDown size={16} />
         </button>
@@ -53,15 +51,15 @@ export function MinibusPlannerForm({
         clearLabel={t('clearInput')}
       />
 
-      <Button
-        variant="primary"
-        icon={Route}
+      <button
+        type="button"
         onClick={onSearch}
         disabled={!origin.trim() || !destination.trim()}
-        className="mt-2"
+        className="mt-2 flex h-11 items-center justify-center gap-2 rounded-xl border-2 border-[#f47216] text-sm font-semibold text-[#f47216] transition hover:bg-[#f47216]/10 disabled:cursor-not-allowed disabled:opacity-50"
       >
+        <Route size={18} />
         {t('minibusSearchCta')}
-      </Button>
+      </button>
     </div>
   );
 }

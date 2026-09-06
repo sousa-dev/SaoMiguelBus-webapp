@@ -10,7 +10,7 @@ export function MinibusPricesLink() {
   return (
     <Link to="/minibus/prices">
       <Card className="flex items-center gap-3 p-4 hover:bg-surface-variant">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent/15 text-accent">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#f47216]/12 text-[#f47216]">
           <Ticket size={18} strokeWidth={2} />
         </span>
         <span className="min-w-0 flex-1 text-sm font-semibold text-content">{t('minibusTariffs')}</span>

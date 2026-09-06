@@ -85,7 +85,9 @@ export function MinibusNetworkPage() {
         id: pin.stop.key,
         lat: latitude,
         lng: longitude,
-        color: isFocused ? '#6366f1' : `#${pin.lineColor.replace(/^#/, '')}`,
+        // Focus colour matches mobile's network screen (FOCUS_COLOR), a darker
+        // shade of the module's orange accent rather than an unrelated hue.
+        color: isFocused ? '#c2410c' : `#${pin.lineColor.replace(/^#/, '')}`,
         radius: isFocused ? 11 : 6,
         popup: (
           <span className="text-xs">
@@ -179,7 +181,7 @@ export function MinibusNetworkPage() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder={t('minibusNetworkSearchPlaceholder')}
-              className="h-10 w-full rounded-xl border border-border bg-surface pl-9 pr-3 text-sm text-content placeholder:text-muted focus:border-primary focus:outline-none"
+              className="h-10 w-full rounded-xl border border-border bg-surface pl-9 pr-3 text-sm text-content placeholder:text-muted focus:border-[#f47216] focus:outline-none"
             />
           </div>
 
@@ -199,7 +201,7 @@ export function MinibusNetworkPage() {
                   >
                     <MapPin
                       size={14}
-                      className={cn('shrink-0', pin.stop.key === focusedStopKey ? 'text-primary' : 'text-muted')}
+                      className={cn('shrink-0', pin.stop.key === focusedStopKey ? 'text-[#f47216]' : 'text-muted')}
                     />
                     <span className="min-w-0 flex-1 truncate text-sm text-content">{pin.stop.name_pt}</span>
                   </button>

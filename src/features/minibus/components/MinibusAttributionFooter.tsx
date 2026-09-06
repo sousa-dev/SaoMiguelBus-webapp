@@ -21,7 +21,7 @@ export function MinibusAttributionFooter({
             href={sourceUrl}
             target="_blank"
             rel="noreferrer noopener"
-            className="inline-flex items-center gap-1 font-semibold text-primary hover:underline"
+            className="inline-flex items-center gap-1 font-semibold text-[#f47216] hover:underline"
           >
             <ExternalLink size={12} />
             {t('minibusSourceLink')}

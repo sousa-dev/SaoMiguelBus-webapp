@@ -130,8 +130,8 @@ function MinibusVehiclePanel({
         <ol className="mt-3 max-h-64 overflow-y-auto">
           {rows.map((row) => (
             <li key={row.sequence} className="flex items-center gap-2 border-b border-border py-1.5 text-sm last:border-b-0">
-              <span className={cn('min-w-0 flex-1 truncate', row.isCurrent && 'font-bold text-primary')}>{row.stopName}</span>
-              <span className={cn('shrink-0 tabular-nums', row.isCurrent ? 'font-bold text-primary' : 'text-muted')}>{row.etaLabel}</span>
+              <span className={cn('min-w-0 flex-1 truncate', row.isCurrent && 'font-bold text-[#f47216]')}>{row.stopName}</span>
+              <span className={cn('shrink-0 tabular-nums', row.isCurrent ? 'font-bold text-[#f47216]' : 'text-muted')}>{row.etaLabel}</span>
             </li>
           ))}
         </ol>
@@ -289,7 +289,9 @@ export function MinibusLivePage() {
     const chip = (active: boolean) =>
       cn(
         'inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1 text-sm font-semibold transition',
-        active ? 'border-primary bg-primary text-on-primary' : 'border-border bg-surface text-content hover:border-outline',
+        active
+          ? 'border-[#f47216] bg-[#f47216] text-white'
+          : 'border-border bg-surface text-content hover:border-outline',
       );
     body = (
       <div className="flex flex-col gap-3">

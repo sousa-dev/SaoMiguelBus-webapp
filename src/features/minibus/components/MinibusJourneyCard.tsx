@@ -71,7 +71,7 @@ export function MinibusJourneyCard({
         <button
           type="button"
           onClick={onViewDirections}
-          className="flex items-center justify-center gap-1.5 rounded-xl border border-border py-2 text-sm font-semibold text-primary hover:bg-surface-variant"
+          className="flex items-center justify-center gap-1.5 rounded-xl border border-border py-2 text-sm font-semibold text-[#f47216] hover:bg-surface-variant"
         >
           <MapIcon size={14} />
           {t('minibusViewDirections')}

@@ -40,7 +40,7 @@ export function MinibusStopPicker({
       <div className="relative">
         <MapPin
           size={18}
-          className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted"
+          className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#f47216]"
         />
         <input
           value={query}
@@ -58,7 +58,7 @@ export function MinibusStopPicker({
           }}
           onFocus={() => setOpen(true)}
           onBlur={() => setTimeout(() => setOpen(false), 150)}
-          className="h-12 w-full rounded-xl border border-border bg-surface pl-10 pr-10 text-sm text-content placeholder:text-muted focus:border-primary focus:outline-none"
+          className="h-12 w-full rounded-xl border border-border bg-surface pl-10 pr-10 text-sm text-content placeholder:text-muted focus:border-[#f47216] focus:outline-none"
         />
         {query.length > 0 ? (
           <button

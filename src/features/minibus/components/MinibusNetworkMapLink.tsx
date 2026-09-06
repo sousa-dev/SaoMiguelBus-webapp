@@ -10,7 +10,7 @@ export function MinibusNetworkMapLink({ stopsCount }: { stopsCount?: number }) {
   return (
     <Link to="/minibus/network" className="block h-full">
       <Card className="flex h-full items-center gap-3 p-4 hover:bg-surface-variant">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/12 text-primary">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#f47216]/12 text-[#f47216]">
           <MapIcon size={18} strokeWidth={2} />
         </span>
         <span className="min-w-0 flex-1">

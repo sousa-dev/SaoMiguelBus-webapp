@@ -39,7 +39,7 @@ export function MinibusLiveEntryCard({ isOnline, source = 'minibus_hub' }: { isO
         !enabled && 'opacity-55',
       )}
     >
-      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent text-on-accent">
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#f47216] text-white">
         {isOnline ? <Radio size={18} strokeWidth={2} /> : <WifiOff size={18} strokeWidth={2} />}
       </span>
       <span className="min-w-0 flex-1">
