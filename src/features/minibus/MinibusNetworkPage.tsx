@@ -2,10 +2,12 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ChevronLeft, ChevronRight, MapPin, Search } from 'lucide-react';
 
-import { Card, CenteredSpinner } from '@/components/ui';
+import { Card, CenteredSpinner, SegmentedControl } from '@/components/ui';
 import { MapView, type MapPoint } from '@/components/MapView';
 import { Seo } from '@/components/Seo';
 import { BackLink, PageHeader } from '@/components/layout/Page';
+import { MinibusDocumentImage } from '@/features/minibus/components/MinibusDocumentImage';
+import { MinibusLineCard } from '@/features/minibus/components/MinibusLineCard';
 import { MinibusNetworkStopDialog } from '@/features/minibus/components/MinibusNetworkStopDialog';
 import { useMinibusLines, useMinibusNetwork } from '@/features/minibus/hooks';
 import { liveNetworkMapStops, type MinibusLiveMapStopPin } from '@/features/minibus/lib/liveNetworkMapStops';
@@ -28,6 +30,7 @@ export function MinibusNetworkPage() {
   const networkQuery = useMinibusNetwork();
   const linesQuery = useMinibusLines();
 
+  const [tab, setTab] = useState<'map' | 'lines'>('map');
   const [query, setQuery] = useState('');
   const debouncedQuery = useDebounced(query, 300);
   const [focusedStopKey, setFocusedStopKey] = useState<string | null>(null);
@@ -100,8 +103,38 @@ export function MinibusNetworkPage() {
     <>
       <Seo modulePath="/minibus/network" />
       <BackLink to="/minibus" label={t('navBarMinibusLabel')} />
-      <PageHeader title={t('minibusNetworkMap')} subtitle={t('minibusNetworkTapStop')} />
+      <PageHeader title={t('minibusNetworkMap')} subtitle={tab === 'map' ? t('minibusNetworkTapStop') : undefined} />
 
+      <div className="mb-4">
+        <SegmentedControl
+          value={tab}
+          onChange={setTab}
+          options={[
+            { value: 'map', label: t('minibusMapTab') },
+            { value: 'lines', label: t('minibusSectionLines') },
+          ]}
+        />
+      </div>
+
+      {tab === 'lines' ? (
+        <div className="flex max-w-2xl flex-col gap-4">
+          <MinibusDocumentImage
+            documentSlug="network-map"
+            alt={t('minibusNetworkMapImageAlt')}
+            title={t('minibusNetworkMap')}
+            tapHint={t('minibusNetworkMapTapToZoom')}
+            fullscreenLabel={t('minibusNetworkMapOpenFullscreen')}
+            closeLabel={t('close')}
+          />
+          {linesQuery.data ? (
+            <div className="flex flex-col gap-3">
+              {linesQuery.data.lines.map((line) => (
+                <MinibusLineCard key={line.slug} line={line} />
+              ))}
+            </div>
+          ) : null}
+        </div>
+      ) : (
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_340px]">
         <div className="flex flex-col gap-2">
           <div
@@ -176,6 +209,7 @@ export function MinibusNetworkPage() {
           )}
         </Card>
       </div>
+      )}
 
       <MinibusNetworkStopDialog pin={openPin} onClose={() => setOpenPin(null)} />
     </>

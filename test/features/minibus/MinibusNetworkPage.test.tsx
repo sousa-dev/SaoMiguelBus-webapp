@@ -8,6 +8,7 @@ vi.mock('@/lib/analytics', () => ({ track: vi.fn() }));
 const api = vi.hoisted(() => ({
   fetchMinibusNetwork: vi.fn(),
   fetchMinibusLines: vi.fn(),
+  getApiBase: vi.fn(() => 'https://api.test'),
 }));
 vi.mock('@/lib/api', () => api);
 vi.mock('@/components/MapView', () => ({
@@ -141,6 +142,17 @@ describe('MinibusNetworkPage', () => {
     expect(dialog).not.toBeNull();
     expect(dialog!.textContent).toContain('Portas do Mar');
     expect(dialog!.textContent).toContain('A');
+  });
+
+  it('switches to the Lines tab to show the schematic image and the line list', async () => {
+    const m = await render();
+    const linesTab = Array.from(m.container.querySelectorAll('button')).find((b) => b.textContent === 'Lines')!;
+    await act(async () => {
+      linesTab.click();
+    });
+    expect(m.container.querySelector('[data-testid="map"]')).toBeNull();
+    expect(m.container.querySelector('img')).not.toBeNull();
+    expect(m.container.textContent).toContain('Linha A');
   });
 
   it('says when nothing matches the search', async () => {
