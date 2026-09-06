@@ -99,13 +99,15 @@ function SidebarLegalLinks() {
 
 function Brand() {
   return (
-    <div className="flex items-center gap-2.5 px-1">
-      <img src="/logo.png" alt="" className="h-9 w-9 rounded-xl" />
-      <div className="leading-tight">
-        <p className="text-[15px] font-extrabold text-content">São Miguel Bus</p>
-        <p className="text-xs text-muted">São Miguel Bus</p>
+    <NavLink to="/transit" className="flex min-w-0 items-center gap-2.5 px-1">
+      <img src="/logo.png" alt="" className="h-9 w-9 shrink-0 rounded-xl" />
+      <div className="min-w-0 leading-tight">
+        <p className="truncate text-sm font-extrabold text-content sm:text-[15px]">
+          São Miguel Bus
+        </p>
+        <p className="truncate text-xs text-muted">São Miguel Bus</p>
       </div>
-    </div>
+    </NavLink>
   );
 }
 
@@ -174,7 +176,7 @@ export function AppShell() {
           >
             <Menu size={22} />
           </button>
-          <div className="lg:hidden">
+          <div className="min-w-0 flex-1 lg:hidden">
             <Brand />
           </div>
           <HeaderActions />
