@@ -277,7 +277,9 @@ export function PremiumPage() {
                 {isRevenueCatSandbox() ? <Badge tone="warning">{t('premiumSandboxBadge')}</Badge> : null}
                 <p className="text-xs text-muted">{t('premiumAutoRenewDisclaimer')}</p>
                 <Button size="lg" className="w-full" disabled={busy || !selectedPackage} onClick={onContinue}>
-                  {t('premiumContinueButton')}
+                  {selectedPackage && packageTrialDays(selectedPackage) != null
+                    ? t('premiumStartTrialButton')
+                    : t('premiumContinueButton')}
                 </Button>
               </>
             ) : (

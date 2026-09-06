@@ -1234,6 +1234,7 @@
   "premiumSignInToBuy": "You will be asked to sign in or create an account before paying, so the subscription follows you to the mobile app.",
   "premiumSandboxBadge": "Test mode",
   "premiumContinueButton": "Continue",
+  "premiumStartTrialButton": "Start free trial",
   "premiumFreeTrialDays": "{{count}} day free trial",
   "premiumFreeTrialThenPrice": "Free trial, then {{price}}",
   "premiumDurationDays": "{{count}} days",
