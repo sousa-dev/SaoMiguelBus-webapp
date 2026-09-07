@@ -121,3 +121,12 @@ export function getWebAdConfig(): WebAdConfig {
 export function setWebAdConfigForTests(config: WebAdConfig | null): void {
   cached = config;
 }
+
+/**
+ * True when Adsterra has at least one placement invoke URL set AND is enabled via
+ * `VITE_WEB_AD_PROVIDERS`. When true, every ad surface should show Adsterra only —
+ * no first-party campaign ads, no internal/house creative, no other network provider.
+ */
+export function isAdsterraConfigured(config: WebAdConfig = getWebAdConfig()): boolean {
+  return config.providers.includes('adsterra') && Object.values(config.adsterra.invoke).some(Boolean);
+}

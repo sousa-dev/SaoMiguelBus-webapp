@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { FirstPartyAdBanner } from '@/features/ads/components/FirstPartyAdBanner';
@@ -6,6 +7,7 @@ import { NetworkAdSlot } from '@/features/ads/components/NetworkAdSlot';
 import { useAd } from '@/features/ads/hooks/useAd';
 import { isNetworkAdAllowedOnPath, resolvePlacement } from '@/features/ads/lib/placement-policy';
 import { useNetworkConsentMode } from '@/features/ads/providers/consent-mode';
+import { isAdsterraConfigured } from '@/features/ads/providers/config';
 import { getNetworkProviders } from '@/features/ads/providers/registry';
 import type { AdPlacement } from '@/features/ads/providers/types';
 
@@ -28,12 +30,32 @@ const noop = () => {};
 /**
  * Waterfall: first-party campaign → network providers (env order, consent permitting) → house
  * creative. Premium users see nothing.
+ *
+ * Exception: once Adsterra is configured (`isAdsterraConfigured`), it is the *only* ad source —
+ * no first-party campaign, no other network provider, no house creative fallback.
  */
 export function AdBanner({ on, slot = 'top', placement, content = true }: Props) {
   const { kind, ad, internalCreative, openAd } = useAd(on, slot);
   const { pathname } = useLocation();
   const consentMode = useNetworkConsentMode();
   const providers = getNetworkProviders();
+  const adsterraOnly = isAdsterraConfigured();
+  const [adsterraExhausted, setAdsterraExhausted] = useState(false);
+
+  if (adsterraOnly) {
+    const networkEligible = consentMode !== 'blocked' && content && isNetworkAdAllowedOnPath(pathname);
+    if (!networkEligible || adsterraExhausted) return null;
+    return (
+      <NetworkAdSlot
+        on={on}
+        slot={String(slot)}
+        placement={placement ?? resolvePlacement(slot)}
+        consentMode={consentMode}
+        providers={providers.filter((provider) => provider.id === 'adsterra')}
+        onExhausted={() => setAdsterraExhausted(true)}
+      />
+    );
+  }
 
   if (kind === 'first-party' && ad) {
     return <FirstPartyAdBanner ad={ad} onOpen={openAd} on={on} />;

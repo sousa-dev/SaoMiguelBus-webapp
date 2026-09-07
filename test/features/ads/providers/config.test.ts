@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { parseProviderList, readWebAdConfig } from '@/features/ads/providers/config';
+import { isAdsterraConfigured, parseProviderList, readWebAdConfig } from '@/features/ads/providers/config';
 
 describe('parseProviderList', () => {
   it('returns no network providers when the variable is unset or empty', () => {
@@ -62,5 +62,28 @@ describe('readWebAdConfig', () => {
   it('defaults the mock provider to filled', () => {
     expect(readWebAdConfig({}).mock.result).toBe('filled');
     expect(readWebAdConfig({ VITE_WEB_AD_MOCK_RESULT: 'unfilled' }).mock.result).toBe('unfilled');
+  });
+});
+
+describe('isAdsterraConfigured', () => {
+  it('is false when Adsterra is not in the provider list, even with invoke urls set', () => {
+    const config = readWebAdConfig({
+      VITE_WEB_AD_PROVIDERS: 'adsense',
+      VITE_ADSTERRA_NATIVE_TOP: 'https://pl1.profitablecpmrate.com/aaaa/invoke.js',
+    });
+    expect(isAdsterraConfigured(config)).toBe(false);
+  });
+
+  it('is false when Adsterra is listed but has no invoke url for any placement', () => {
+    const config = readWebAdConfig({ VITE_WEB_AD_PROVIDERS: 'adsterra' });
+    expect(isAdsterraConfigured(config)).toBe(false);
+  });
+
+  it('is true once Adsterra is listed and at least one placement has an invoke url', () => {
+    const config = readWebAdConfig({
+      VITE_WEB_AD_PROVIDERS: 'adsense,adsterra',
+      VITE_ADSTERRA_NATIVE_TOP: 'https://pl1.profitablecpmrate.com/aaaa/invoke.js',
+    });
+    expect(isAdsterraConfigured(config)).toBe(true);
   });
 });
