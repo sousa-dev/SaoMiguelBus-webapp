@@ -79,6 +79,10 @@ export function readWebAdConfig(env: WebAdEnv): WebAdConfig {
       }),
       frameHeight: resolveFrameHeight(env.VITE_ADSTERRA_FRAME_HEIGHT),
     },
+    infolinks: {
+      pid: clean(env.VITE_INFOLINKS_PID),
+      wsid: clean(env.VITE_INFOLINKS_WSID),
+    },
     mock: {
       result: env.VITE_WEB_AD_MOCK_RESULT?.trim().toLowerCase() === 'unfilled' ? 'unfilled' : 'filled',
     },
@@ -103,6 +107,8 @@ function readStaticEnv(): WebAdEnv {
     VITE_ADSTERRA_NATIVE_SIDEBAR: import.meta.env.VITE_ADSTERRA_NATIVE_SIDEBAR as string | undefined,
     VITE_ADSTERRA_NATIVE_FOOTER: import.meta.env.VITE_ADSTERRA_NATIVE_FOOTER as string | undefined,
     VITE_ADSTERRA_FRAME_HEIGHT: import.meta.env.VITE_ADSTERRA_FRAME_HEIGHT as string | undefined,
+    VITE_INFOLINKS_PID: import.meta.env.VITE_INFOLINKS_PID as string | undefined,
+    VITE_INFOLINKS_WSID: import.meta.env.VITE_INFOLINKS_WSID as string | undefined,
     VITE_WEB_AD_MOCK_RESULT: import.meta.env.VITE_WEB_AD_MOCK_RESULT as string | undefined,
     DEV: import.meta.env.DEV,
   };
@@ -129,4 +135,13 @@ export function setWebAdConfigForTests(config: WebAdConfig | null): void {
  */
 export function isAdsterraConfigured(config: WebAdConfig = getWebAdConfig()): boolean {
   return config.providers.includes('adsterra') && Object.values(config.adsterra.invoke).some(Boolean);
+}
+
+/**
+ * True once an Infolinks publisher id is set. Unlike the network `providers` list, Infolinks
+ * isn't part of the banner waterfall (see WebAdConfig.infolinks doc), so its own env var is
+ * sufficient — no `VITE_WEB_AD_PROVIDERS` entry needed.
+ */
+export function isInfolinksConfigured(config: WebAdConfig = getWebAdConfig()): boolean {
+  return config.infolinks.pid != null;
 }

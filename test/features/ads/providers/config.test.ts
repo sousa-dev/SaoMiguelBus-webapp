@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
-import { isAdsterraConfigured, parseProviderList, readWebAdConfig } from '@/features/ads/providers/config';
+import {
+  isAdsterraConfigured,
+  isInfolinksConfigured,
+  parseProviderList,
+  readWebAdConfig,
+} from '@/features/ads/providers/config';
 
 describe('parseProviderList', () => {
   it('returns no network providers when the variable is unset or empty', () => {
@@ -85,5 +90,20 @@ describe('isAdsterraConfigured', () => {
       VITE_ADSTERRA_NATIVE_TOP: 'https://pl1.profitablecpmrate.com/aaaa/invoke.js',
     });
     expect(isAdsterraConfigured(config)).toBe(true);
+  });
+});
+
+describe('Infolinks config', () => {
+  it('reads pid/wsid from env, leaving them null when unset', () => {
+    expect(readWebAdConfig({}).infolinks).toEqual({ pid: null, wsid: null });
+    const config = readWebAdConfig({ VITE_INFOLINKS_PID: '3447644', VITE_INFOLINKS_WSID: '0' });
+    expect(config.infolinks).toEqual({ pid: '3447644', wsid: '0' });
+  });
+
+  it('isInfolinksConfigured is true once a pid is set, independent of VITE_WEB_AD_PROVIDERS', () => {
+    expect(isInfolinksConfigured(readWebAdConfig({}))).toBe(false);
+    expect(
+      isInfolinksConfigured(readWebAdConfig({ VITE_WEB_AD_PROVIDERS: 'adsterra', VITE_INFOLINKS_PID: '3447644' })),
+    ).toBe(true);
   });
 });

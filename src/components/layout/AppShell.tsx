@@ -14,6 +14,7 @@ import { AppInstallBanner, GetTheAppCard } from '@/components/AppInstall';
 import { AnalyticsLifecycle } from '@/components/consent/AnalyticsLifecycle';
 import { ConsentBanner } from '@/components/consent/ConsentBanner';
 import { AdBanner } from '@/features/ads/components/AdBanner';
+import { InfolinksScript } from '@/features/ads/components/InfolinksScript';
 import { SessionAdOrchestrator } from '@/features/ads/components/SessionAdOrchestrator';
 import { StoreChooserModal } from '@/features/ads/components/StoreChooserModal';
 import { useAuthBootstrap } from '@/features/account/hooks/useAuthBootstrap';
@@ -212,6 +213,7 @@ export function AppShell() {
       <StoreChooserModal />
       <ConsentBanner />
       <AnalyticsLifecycle />
+      <InfolinksScript />
       <NoticeDialogHost />
       <SignInDialogHost />
       <HopOnHopOffSheetHost />
