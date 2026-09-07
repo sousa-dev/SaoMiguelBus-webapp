@@ -13,6 +13,7 @@ import { MobileTabBar } from '@/components/layout/MobileTabBar';
 import { AppInstallBanner, GetTheAppCard } from '@/components/AppInstall';
 import { AnalyticsLifecycle } from '@/components/consent/AnalyticsLifecycle';
 import { ConsentBanner } from '@/components/consent/ConsentBanner';
+import { AdBanner } from '@/features/ads/components/AdBanner';
 import { SessionAdOrchestrator } from '@/features/ads/components/SessionAdOrchestrator';
 import { StoreChooserModal } from '@/features/ads/components/StoreChooserModal';
 import { useAuthBootstrap } from '@/features/account/hooks/useAuthBootstrap';
@@ -182,12 +183,28 @@ export function AppShell() {
           <HeaderActions />
         </header>
 
-        <main
-          key={location.pathname}
-          className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 pb-56 lg:px-8 lg:py-8 lg:pb-8"
-        >
-          <Outlet />
-        </main>
+        <div className="flex w-full flex-1">
+          {/* Experimental: fills the wide-desktop gutters either side of the centered content
+              column with a sidebar ad slot. Remove this pair of <aside> blocks to revert. */}
+          {canShowAds ? (
+            <aside className="hidden w-64 shrink-0 pt-6 2xl:block">
+              <AdBanner on="shell" slot="rail-left" placement="sidebar" />
+            </aside>
+          ) : null}
+
+          <main
+            key={location.pathname}
+            className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 pb-56 lg:px-8 lg:py-8 lg:pb-8"
+          >
+            <Outlet />
+          </main>
+
+          {canShowAds ? (
+            <aside className="hidden w-64 shrink-0 pt-6 2xl:block">
+              <AdBanner on="shell" slot="rail-right" placement="sidebar" />
+            </aside>
+          ) : null}
+        </div>
       </div>
 
       <MobileTabBar />
