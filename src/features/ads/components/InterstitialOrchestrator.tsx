@@ -16,6 +16,7 @@ import {
   markInterstitialDismissed,
   persistInterstitialSessionState,
 } from '@/features/ads/lib/interstitial-storage';
+import { isAdsterraConfigured } from '@/features/ads/providers/config';
 import { useCanShowAds } from '@/features/premium/usePremium';
 import { resolveEnabledModules } from '@/config/island';
 import { fetchAd } from '@/lib/api';
@@ -95,6 +96,13 @@ export function InterstitialOrchestrator({ trigger, ready }: Props) {
           persistInterstitialSessionState(decision.nextState);
         }
         if (!decision.show) {
+          return;
+        }
+
+        // No Adsterra interstitial unit exists, so once Adsterra is configured it stays
+        // the only ad source: skip the first-party campaign and house creative entirely.
+        if (isAdsterraConfigured()) {
+          setShowUpsell(true);
           return;
         }
 

@@ -40,3 +40,13 @@ export function packagePriceLabel(pkg: Package): { price: string; period: Billin
     period: periodFromDuration(product.normalPeriodDuration),
   };
 }
+
+/** e.g. "€1,99/mês" — makes clear the price recurs per billing period, not a one-off pass. */
+export function packagePriceWithPeriodLabel(
+  pkg: Package,
+  periodUnitLabel: (period: BillingPeriod) => string | null,
+): string {
+  const { price, period } = packagePriceLabel(pkg);
+  const unit = periodUnitLabel(period);
+  return unit ? `${price}/${unit}` : price;
+}

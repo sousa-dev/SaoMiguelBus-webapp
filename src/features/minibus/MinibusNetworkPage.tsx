@@ -38,7 +38,7 @@ export function MinibusNetworkPage() {
   const listRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
-    track('minibus', 'network_view', {});
+    track('minibus', 'view', { screen: 'network' });
   }, []);
 
   const pins = useMemo(

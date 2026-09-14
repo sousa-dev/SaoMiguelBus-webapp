@@ -18,6 +18,7 @@ import { AdBanner } from '@/features/ads/components/AdBanner';
 import { resetBlockedProvidersForTests } from '@/features/ads/providers/blocked';
 import { readWebAdConfig, setWebAdConfigForTests } from '@/features/ads/providers/config';
 import { setPremiumForTests } from '@/features/premium/usePremium';
+import { fetchAd } from '@/lib/api';
 import { defaultPurposes, useConsentStore } from '@/lib/consent-store';
 import { flush, mount, type Mounted } from '../../../helpers/react';
 
@@ -129,5 +130,42 @@ describe('AdBanner waterfall', () => {
     expect(frame).not.toBeNull();
     expect(frame.querySelector('button')).not.toBeNull();
     expect(events()).toEqual(['ad_network_request', 'ad_network_unfilled', 'internal_ad_impression']);
+  });
+});
+
+describe('AdBanner — Adsterra configured (exclusive)', () => {
+  const INVOKE = 'https://pl1234567.profitablecpmrate.com/0123456789abcdef0123456789abcdef/invoke.js';
+
+  it('requests only Adsterra and ignores a first-party ad even when one is returned', async () => {
+    setWebAdConfigForTests(
+      readWebAdConfig({ VITE_WEB_AD_PROVIDERS: 'adsense,adsterra', VITE_ADSTERRA_NATIVE_TOP: INVOKE }),
+    );
+    vi.mocked(fetchAd).mockResolvedValueOnce({
+      id: 1,
+      entity: 'Our own promo',
+      description: '',
+      media: '',
+      start: null,
+      end: null,
+      action: null,
+      target: null,
+    });
+    mounted = await render(<AdBanner on="home" slot="top" />);
+    await settle();
+    // FirstPartyAdBanner is the only component that would fire this for the returned ad.
+    expect(events()).not.toContain('ad_impression');
+    expect(mounted.container.querySelector('iframe')).not.toBeNull();
+    const requestEvents = track.mock.calls.filter((call) => call[1] === 'ad_network_request');
+    expect(requestEvents).toHaveLength(1);
+    expect(requestEvents[0][2]).toMatchObject({ provider: 'adsterra' });
+  });
+
+  it('shows nothing (not the house creative) once Adsterra is unfilled', async () => {
+    setWebAdConfigForTests(readWebAdConfig({ VITE_WEB_AD_PROVIDERS: 'adsterra', VITE_ADSTERRA_NATIVE_TOP: INVOKE }));
+    mounted = await render(<AdBanner on="home" slot="top" />);
+    await settle();
+    // Adsterra never fills in jsdom (no script execution inside the srcdoc iframe), so this
+    // exercises the still-requesting state — asserting no house/first-party content ever appears.
+    expect(mounted.container.querySelector('button')).toBeNull(); // no InternalAdBanner/FirstPartyAdBanner
   });
 });

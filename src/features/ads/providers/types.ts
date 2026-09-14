@@ -68,6 +68,8 @@ export interface WebAdEnv {
   VITE_ADSTERRA_NATIVE_SIDEBAR?: string;
   VITE_ADSTERRA_NATIVE_FOOTER?: string;
   VITE_ADSTERRA_FRAME_HEIGHT?: string;
+  VITE_INFOLINKS_PID?: string;
+  VITE_INFOLINKS_WSID?: string;
   VITE_WEB_AD_MOCK_RESULT?: string;
   DEV?: boolean;
 }
@@ -82,6 +84,15 @@ export interface WebAdConfig {
   adsterra: {
     invoke: Record<AdPlacement, string | null>;
     frameHeight: number;
+  };
+  /**
+   * Infolinks has no per-slot API of its own — one global script scans the page's own text and
+   * injects in-text/in-tag ad units itself, so it sits outside the banner waterfall entirely
+   * (see InfolinksScript, mounted once in AppShell).
+   */
+  infolinks: {
+    pid: string | null;
+    wsid: string | null;
   };
   mock: {
     result: 'filled' | 'unfilled';

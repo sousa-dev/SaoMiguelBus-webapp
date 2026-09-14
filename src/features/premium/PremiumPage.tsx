@@ -17,7 +17,8 @@ import { usePremiumManage } from '@/features/premium/hooks/usePremiumManage';
 import { usePremiumPurchases } from '@/features/premium/hooks/usePremiumPurchases';
 import { useWebOfferings } from '@/features/premium/hooks/useWebOfferings';
 import { packageDurationLabel, packageTrialDays } from '@/features/premium/lib/package-display';
-import { packagePriceLabel, sortPackages } from '@/features/premium/lib/revenuecat-packages';
+import type { BillingPeriod } from '@/features/premium/lib/revenuecat-packages';
+import { packagePriceWithPeriodLabel, sortPackages } from '@/features/premium/lib/revenuecat-packages';
 import { isRevenueCatSandbox } from '@/features/premium/lib/revenuecat-web';
 import { useEntitlement, usePremium } from '@/features/premium/usePremium';
 import { track } from '@/lib/analytics';
@@ -49,7 +50,19 @@ function PackageTile({
   onSelect: () => void;
 }) {
   const { t } = useTranslation();
-  const { price } = packagePriceLabel(pkg);
+  const periodUnitLabel = (period: BillingPeriod): string | null => {
+    switch (period) {
+      case 'week':
+        return t('premiumPricePeriodWeek');
+      case 'month':
+        return t('premiumPricePeriodMonth');
+      case 'year':
+        return t('premiumPricePeriodYear');
+      default:
+        return null;
+    }
+  };
+  const price = packagePriceWithPeriodLabel(pkg, periodUnitLabel);
   const duration = packageDurationLabel(pkg);
   const trialDays = packageTrialDays(pkg);
   const durationLabel =
@@ -59,7 +72,7 @@ function PackageTile({
     <button
       type="button"
       onClick={onSelect}
-      className={`relative flex flex-1 flex-col items-center gap-1 rounded-2xl border-2 p-3 text-center transition ${
+      className={`relative flex flex-1 flex-col items-center gap-1 rounded-2xl border-2 p-3 pt-4 text-center transition ${
         selected ? 'border-primary bg-primary/5' : 'border-border bg-surface hover:border-outline'
       }`}
     >
@@ -69,17 +82,13 @@ function PackageTile({
         </span>
       ) : null}
       {trialDays ? (
-        <Badge tone="success" className="absolute -top-2.5 left-1/2 -translate-x-1/2 whitespace-nowrap">
+        <Badge tone="success" className="absolute -top-2.5 left-1/2 -translate-x-1/2 whitespace-nowrap text-[10px]">
           {t('premiumFreeTrialDays', { count: trialDays })}
         </Badge>
       ) : null}
-      <span className="mt-2 text-2xl font-extrabold text-content">{duration.value}</span>
+      <span className="text-2xl font-extrabold text-content">{duration.value}</span>
       <span className="text-[11px] font-bold uppercase tracking-wide text-muted">{durationLabel}</span>
-      {trialDays ? (
-        <span className="mt-1 text-xs font-semibold text-primary">{t('premiumFreeTrialThenPrice', { price })}</span>
-      ) : (
-        <span className="mt-1 text-sm font-bold text-content">{price}</span>
-      )}
+      <span className="mt-1 text-xs font-bold text-content">{price}</span>
     </button>
   );
 }
@@ -161,6 +170,7 @@ export function PremiumPage() {
 
   const onGuestSubmit = async (email: string) => {
     setGuestError(null);
+    track('billing', 'guest_checkout_submit', { source });
     try {
       await registerGuest.mutateAsync({ email });
       guestCreated.current = true;
@@ -170,6 +180,7 @@ export function PremiumPage() {
     } catch (caught) {
       const ui = authErrorFromUnknown(caught);
       if (ui.code === 'email_taken') {
+        track('billing', 'guest_checkout_error', { source, code: 'email_taken' });
         setGuestOpen(false);
         openSignInDialog({
           reason: 'purchase',
@@ -180,6 +191,7 @@ export function PremiumPage() {
         });
         return;
       }
+      track('billing', 'guest_checkout_error', { source, code: ui.code ?? 'unknown' });
       setGuestError(formatAuthErrorMessage(ui, t) || t('premiumGuestCheckoutError'));
     }
   };
@@ -188,6 +200,7 @@ export function PremiumPage() {
     setSetPasswordError(null);
     try {
       await setPasswordMutation.mutateAsync({ password });
+      track('billing', 'set_password_success', { source });
       setSetPasswordOpen(false);
       showNotice({
         title: t('premiumSetPasswordSuccessTitle'),
@@ -195,6 +208,7 @@ export function PremiumPage() {
       });
     } catch (caught) {
       const ui = authErrorFromUnknown(caught);
+      track('billing', 'set_password_error', { source });
       setSetPasswordError(formatAuthErrorMessage(ui, t));
     }
   };
@@ -255,7 +269,7 @@ export function PremiumPage() {
               </div>
             ) : packages.length > 0 ? (
               <>
-                <div className="flex w-full gap-2 pt-2">
+                <div className="flex w-full items-stretch gap-2 pt-2">
                   {packages.map((pkg) => (
                     <PackageTile
                       key={pkg.identifier}
@@ -268,7 +282,9 @@ export function PremiumPage() {
                 {isRevenueCatSandbox() ? <Badge tone="warning">{t('premiumSandboxBadge')}</Badge> : null}
                 <p className="text-xs text-muted">{t('premiumAutoRenewDisclaimer')}</p>
                 <Button size="lg" className="w-full" disabled={busy || !selectedPackage} onClick={onContinue}>
-                  {t('premiumContinueButton')}
+                  {selectedPackage && packageTrialDays(selectedPackage) != null
+                    ? t('premiumStartTrialButton')
+                    : t('premiumContinueButton')}
                 </Button>
               </>
             ) : (

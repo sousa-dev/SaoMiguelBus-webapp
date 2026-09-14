@@ -13,6 +13,8 @@ import { MobileTabBar } from '@/components/layout/MobileTabBar';
 import { AppInstallBanner, GetTheAppCard } from '@/components/AppInstall';
 import { AnalyticsLifecycle } from '@/components/consent/AnalyticsLifecycle';
 import { ConsentBanner } from '@/components/consent/ConsentBanner';
+import { AdBanner } from '@/features/ads/components/AdBanner';
+import { InfolinksScript } from '@/features/ads/components/InfolinksScript';
 import { SessionAdOrchestrator } from '@/features/ads/components/SessionAdOrchestrator';
 import { StoreChooserModal } from '@/features/ads/components/StoreChooserModal';
 import { useAuthBootstrap } from '@/features/account/hooks/useAuthBootstrap';
@@ -100,13 +102,15 @@ function SidebarLegalLinks() {
 
 function Brand() {
   return (
-    <div className="flex items-center gap-2.5 px-1">
-      <img src="/logo.png" alt="" className="h-9 w-9 rounded-xl" />
-      <div className="leading-tight">
-        <p className="text-[15px] font-extrabold text-content">São Miguel Bus</p>
-        <p className="text-xs text-muted">São Miguel Bus</p>
+    <NavLink to="/transit" className="flex min-w-0 items-center gap-2.5 px-1">
+      <img src="/logo.png" alt="" className="h-9 w-9 shrink-0 rounded-xl" />
+      <div className="min-w-0 leading-tight">
+        <p className="truncate text-sm font-extrabold text-content sm:text-[15px]">
+          São Miguel Bus
+        </p>
+        <p className="truncate text-xs text-muted">São Miguel Bus</p>
       </div>
-    </div>
+    </NavLink>
   );
 }
 
@@ -175,18 +179,34 @@ export function AppShell() {
           >
             <Menu size={22} />
           </button>
-          <div className="lg:hidden">
+          <div className="min-w-0 flex-1 lg:hidden">
             <Brand />
           </div>
           <HeaderActions />
         </header>
 
-        <main
-          key={location.pathname}
-          className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 pb-56 lg:px-8 lg:py-8 lg:pb-8"
-        >
-          <Outlet />
-        </main>
+        <div className="flex w-full flex-1">
+          {/* Experimental: fills the wide-desktop gutters either side of the centered content
+              column with a sidebar ad slot. Remove this pair of <aside> blocks to revert. */}
+          {canShowAds ? (
+            <aside className="hidden w-64 shrink-0 pt-6 2xl:block">
+              <AdBanner on="shell" slot="rail-left" placement="sidebar" />
+            </aside>
+          ) : null}
+
+          <main
+            key={location.pathname}
+            className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 pb-56 lg:px-8 lg:py-8 lg:pb-8"
+          >
+            <Outlet />
+          </main>
+
+          {canShowAds ? (
+            <aside className="hidden w-64 shrink-0 pt-6 2xl:block">
+              <AdBanner on="shell" slot="rail-right" placement="sidebar" />
+            </aside>
+          ) : null}
+        </div>
       </div>
 
       <MobileTabBar />
@@ -194,6 +214,7 @@ export function AppShell() {
       <StoreChooserModal />
       <ConsentBanner />
       <AnalyticsLifecycle />
+      <InfolinksScript />
       <NoticeDialogHost />
       <SignInDialogHost />
       <PremiumGateDialogHost />

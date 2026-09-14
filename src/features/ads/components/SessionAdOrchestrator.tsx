@@ -16,6 +16,7 @@ import {
 } from '@/features/ads/lib/fullscreen-ad-state';
 import { selectInternalCreative } from '@/features/ads/lib/internal-ads/select-creative';
 import type { InternalAdCreative } from '@/features/ads/lib/internal-ads/types';
+import { isAdsterraConfigured } from '@/features/ads/providers/config';
 import { useCanShowAds } from '@/features/premium/usePremium';
 import { resolveEnabledModules } from '@/config/island';
 import { useBootstrap } from '@/hooks/useBootstrap';
@@ -27,6 +28,9 @@ type Props = {
 /**
  * Once per browser session on `/hub` or `/transit`, and only after the user has
  * navigated in-app — opening the site never greets anyone with a fullscreen ad.
+ *
+ * There is no Adsterra fullscreen/interstitial unit, so once Adsterra is configured
+ * this orchestrator stays fully inactive — Adsterra is the only ad source, everywhere.
  */
 export function SessionAdOrchestrator({ bootstrapReady }: Props) {
   const canShowAds = useCanShowAds();
@@ -51,6 +55,7 @@ export function SessionAdOrchestrator({ bootstrapReady }: Props) {
   useEffect(() => {
     if (!bootstrapReady || attemptedRef.current) return;
     if (!canShowAds) return;
+    if (isAdsterraConfigured()) return;
 
     // The app-open ad belongs to in-session usage, not to the first screen of the
     // session: the initial load is `POP` and the index redirect is `REPLACE`, so

@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '@/features/account/auth-store';
 import { useEntitlementStore } from '@/features/premium/entitlement-store';
 import { closeRevenueCat } from '@/features/premium/lib/revenuecat-web';
+import { track } from '@/lib/analytics';
 import {
   deleteAccount,
   loginAccount,
@@ -43,6 +44,7 @@ export function useAuth() {
       }
     },
     onSettled: async () => {
+      track('app', 'sign_out', {});
       // On the web the RevenueCat identity is user-bound, so there is no anonymous premium to keep.
       useEntitlementStore.getState().clearEntitlement();
       closeRevenueCat();
@@ -53,6 +55,7 @@ export function useAuth() {
   const deleteAccountMutation = useMutation({
     mutationFn: deleteAccount,
     onSuccess: async () => {
+      track('app', 'account_delete', {});
       useEntitlementStore.getState().clearEntitlement();
       closeRevenueCat();
       useAuthStore.getState().clearSession();
