@@ -147,6 +147,19 @@ export function StopPicker({
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState(value);
+
+  /**
+   * The input owns its text, but the parent can replace the stop under it — a
+   * favourite, a recent search, a pinned route, a network switch that empties
+   * the form. Seeding `query` once left those filling the search while the box
+   * the rider is looking at still said something else.
+   */
+  const [lastValue, setLastValue] = useState(value);
+  if (lastValue !== value) {
+    setLastValue(value);
+    if (value !== query) setQuery(value);
+  }
+
   // Debounced so a match against 816 similarly-named stops does not run between
   // keystrokes.
   const debouncedQuery = useDebounced(query, 300);

@@ -12,6 +12,8 @@ vi.mock('@/lib/api', () => ({
   fetchTransitTripsLive: vi.fn(async () => ({ trips: [] })),
 }));
 
+import { PremiumGateDialogHost } from '@/features/premium/components/PremiumGateDialogHost';
+import { usePremiumGateDialogStore } from '@/features/premium/lib/premium-gate-dialog-store';
 import { JourneyTrackButton } from '@/features/transit/tracking/components/JourneyTrackButton';
 import { MAX_ACTIVE_TRACKS, useTrackingStore } from '@/features/transit/tracking/tracking-store';
 import { setPremiumForTests } from '@/features/premium/usePremium';
@@ -49,6 +51,7 @@ async function render() {
       <MemoryRouter initialEntries={['/transit']}>
         <JourneyTrackButton journey={journey} searchDay="weekday" />
         <Where />
+        <PremiumGateDialogHost />
       </MemoryRouter>
     </QueryClientProvider>,
   );
@@ -67,7 +70,12 @@ beforeEach(() => {
   useTrackingStore.getState().resetAll();
   useNoticeStore.setState({ queue: [] });
   setPremiumForTests(null);
+  usePremiumGateDialogStore.getState().close();
 });
+
+function gateDialog(): HTMLElement | null {
+  return document.body.querySelector('[role="dialog"]');
+}
 
 afterEach(async () => {
   await mounted?.unmount();
@@ -75,13 +83,35 @@ afterEach(async () => {
 });
 
 describe('JourneyTrackButton', () => {
-  it('sends a free user to the paywall instead of starting a track', async () => {
+  it('shows a free user the tracking explainer, then sends them to the paywall on Continue', async () => {
     const m = await render();
     await act(async () => {
       button('Track trip').click();
     });
     expect(useTrackingStore.getState().active).toHaveLength(0);
+    expect(m.container.querySelector('[data-testid="where"]')!.textContent).toBe('/transit');
+    expect(gateDialog()!.textContent).toContain('Track this bus');
+
+    const continueButton = Array.from(gateDialog()!.querySelectorAll('button')).find((b) => b.textContent === 'Continue')!;
+    await act(async () => {
+      continueButton.click();
+    });
+    expect(gateDialog()).toBeNull();
     expect(m.container.querySelector('[data-testid="where"]')!.textContent).toBe('/premium?source=track_start');
+  });
+
+  it('shows a free user the pin explainer with the pin source', async () => {
+    const m = await render();
+    await act(async () => {
+      button('Pin route').click();
+    });
+    expect(useTrackingStore.getState().pinned).toHaveLength(0);
+    expect(gateDialog()!.textContent).toContain('Pin this route');
+    const continueButton = Array.from(gateDialog()!.querySelectorAll('button')).find((b) => b.textContent === 'Continue')!;
+    await act(async () => {
+      continueButton.click();
+    });
+    expect(m.container.querySelector('[data-testid="where"]')!.textContent).toBe('/premium?source=track_pin');
   });
 
   it('starts and stops a track for a premium user; stopping is never gated', async () => {

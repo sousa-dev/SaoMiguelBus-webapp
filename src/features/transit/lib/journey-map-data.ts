@@ -200,3 +200,44 @@ export function isMappable(data: JourneyMapData): boolean {
 export function actionPins(data: JourneyMapData): JourneyMapPin[] {
   return data.pins.filter((pin) => pin.kind !== 'stop');
 }
+
+/**
+ * The step list, with the stops a bus merely passes folded away.
+ *
+ * A rider reads a journey as a handful of decisions — board here, change there,
+ * get off — but the stops between are still what tells them whether they have
+ * missed it. So consecutive intermediate stops collapse into one group they
+ * can open, rather than being dropped (no way to follow the ride) or listed
+ * flat (a handful of decisions lost among dozens of rows).
+ *
+ * Runs are batched in travel order, so a group always sits between the two
+ * actions it actually lies between. Mirrors the mobile app's
+ * `groupJourneySteps`.
+ */
+export type JourneyStepGroup =
+  | { kind: 'action'; pin: JourneyMapPin }
+  | { kind: 'stops'; id: string; legIndex: number; pins: JourneyMapPin[] };
+
+export function groupJourneySteps(pins: JourneyMapPin[]): JourneyStepGroup[] {
+  const groups: JourneyStepGroup[] = [];
+  let run: JourneyMapPin[] = [];
+
+  const flush = () => {
+    if (run.length > 0) {
+      groups.push({ kind: 'stops', id: `stops-${run[0].id}`, legIndex: run[0].legIndex, pins: run });
+      run = [];
+    }
+  };
+
+  for (const pin of pins) {
+    if (pin.kind === 'stop') {
+      run.push(pin);
+    } else {
+      flush();
+      groups.push({ kind: 'action', pin });
+    }
+  }
+  flush();
+
+  return groups;
+}

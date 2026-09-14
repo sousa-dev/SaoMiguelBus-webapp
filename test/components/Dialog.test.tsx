@@ -73,6 +73,21 @@ describe('Dialog', () => {
     expect(onClose).toHaveBeenCalledTimes(2);
   });
 
+  it('ignores Escape, the backdrop and hides the X when not dismissable', async () => {
+    const onClose = vi.fn();
+    mounted = await mount(
+      <Dialog open onClose={onClose} title="Hello" dismissable={false} closeLabel="Close">
+        <p>body</p>
+      </Dialog>,
+    );
+    expect(dialog()!.querySelector('button[aria-label="Close"]')).toBeNull();
+    await keydown('Escape');
+    await act(async () => {
+      (document.body.querySelector('[data-dialog-backdrop]') as HTMLElement).click();
+    });
+    expect(onClose).not.toHaveBeenCalled();
+  });
+
   it('moves focus into the dialog and restores it on close', async () => {
     const trigger = document.createElement('button');
     document.body.appendChild(trigger);

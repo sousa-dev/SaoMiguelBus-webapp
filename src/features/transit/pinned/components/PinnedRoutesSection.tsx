@@ -86,7 +86,7 @@ export function PinnedRoutesSection({ onSelect }: Props) {
               <button
                 type="button"
                 disabled={followingId !== null}
-                onClick={() => guardPremiumAction(() => void followPin(pin), 'track_start')}
+                onClick={() => guardPremiumAction(() => void followPin(pin), 'track_start', 'track')}
                 className="rounded-lg border border-primary px-2.5 py-1 text-xs font-semibold text-primary hover:bg-primary/10 disabled:opacity-60"
               >
                 {followingId === pin.id ? t('transitPinnedFollowSearching') : t('transitPinnedFollow')}

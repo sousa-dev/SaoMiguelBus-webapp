@@ -17,12 +17,15 @@ type DialogProps = {
   footer?: ReactNode;
   size?: 'sm' | 'md';
   closeLabel?: string;
+  /** When false, Escape, the backdrop and the X are disabled: the footer is the only way out. */
+  dismissable?: boolean;
 };
 
 /**
  * The one modal primitive: portal into `document.body`, `role="dialog"`, Escape and backdrop
  * close, scroll lock, focus moved in on open and restored on close. Sits above the consent
- * banner (z-1200) and the ad overlays (z-1300/1350).
+ * banner (z-1200) and the ad overlays (z-1300/1350). `dismissable={false}` turns it into a
+ * blocking dialog that only its own footer actions can close.
  */
 export function Dialog({
   open,
@@ -32,6 +35,7 @@ export function Dialog({
   footer,
   size = 'md',
   closeLabel = 'Close',
+  dismissable = true,
 }: DialogProps) {
   const titleId = useId();
   const panelRef = useRef<HTMLDivElement>(null);
@@ -44,7 +48,7 @@ export function Dialog({
     document.body.style.overflow = 'hidden';
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose();
+      if (event.key === 'Escape' && dismissable) onClose();
     };
     document.addEventListener('keydown', onKeyDown);
 
@@ -56,13 +60,13 @@ export function Dialog({
       document.body.style.overflow = previousOverflow;
       restoreFocusTo.current?.focus?.();
     };
-  }, [open, onClose]);
+  }, [open, onClose, dismissable]);
 
   if (!open || typeof document === 'undefined') return null;
 
   return createPortal(
     <div className="fixed inset-0 z-[1400] flex items-end justify-center p-4 sm:items-center">
-      <div data-dialog-backdrop className="absolute inset-0 bg-black/55" onClick={onClose} />
+      <div data-dialog-backdrop className="absolute inset-0 bg-black/55" onClick={dismissable ? onClose : undefined} />
       <div
         ref={panelRef}
         role="dialog"
@@ -80,14 +84,16 @@ export function Dialog({
         <div className="text-sm text-content">{children}</div>
         {footer ? <div className="mt-5 flex flex-wrap justify-end gap-2">{footer}</div> : null}
         {/* Rendered last on purpose: the first button in DOM order stays the primary action. */}
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label={closeLabel}
-          className="absolute right-3 top-3 rounded-lg p-1 text-muted hover:bg-surface-variant"
-        >
-          <X size={18} />
-        </button>
+        {dismissable ? (
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label={closeLabel}
+            className="absolute right-3 top-3 rounded-lg p-1 text-muted hover:bg-surface-variant"
+          >
+            <X size={18} />
+          </button>
+        ) : null}
       </div>
     </div>,
     document.body,

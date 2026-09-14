@@ -1,8 +1,14 @@
-import { MapContainer, TileLayer, CircleMarker, Polyline, Popup, useMap } from 'react-leaflet';
+import L from 'leaflet';
+import { MapContainer, TileLayer, CircleMarker, Marker, Polyline, Popup, useMap } from 'react-leaflet';
 import type { ReactNode } from 'react';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { staticIslandConfig } from '@/config/island';
+
+// Lucide's "locate-fixed" glyph, inlined: a Leaflet control is plain DOM, not
+// React, so this avoids mounting a second React root just for one icon.
+const LOCATE_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="2" x2="5" y1="12" y2="12"/><line x1="19" x2="22" y1="12" y2="12"/><line x1="12" x2="12" y1="2" y2="5"/><line x1="12" x2="12" y1="19" y2="22"/><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="3"/></svg>`;
 
 export interface MapPoint {
   id: string | number;
@@ -92,6 +98,63 @@ function FocusOn({ target }: { target: { lat: number; lng: number } | null }) {
   return null;
 }
 
+const userLocationIcon = L.divIcon({
+  className: 'user-location-icon',
+  html: '<span class="user-location-dot"></span>',
+  iconSize: [16, 16],
+  iconAnchor: [8, 8],
+});
+
+/**
+ * A Leaflet control (not a React tree — Leaflet controls are plain DOM) that
+ * either recentres on a known fix or asks the caller to get one, mirroring
+ * the mobile app's locate button: silent while a fix is already flowing in,
+ * a single click away from asking for one otherwise.
+ */
+function LocateControl({
+  userLocation,
+  onRequestLocation,
+  label,
+}: {
+  userLocation: { lat: number; lng: number } | null;
+  onRequestLocation?: () => void;
+  label: string;
+}) {
+  const map = useMap();
+  // The control's click handler reads this ref rather than closing over the
+  // props directly, so the control is created once (not re-added, which
+  // would flash it) while still seeing the latest fix / callback.
+  const latestRef = useRef({ userLocation, onRequestLocation });
+  latestRef.current = { userLocation, onRequestLocation };
+
+  useEffect(() => {
+    const control = new L.Control({ position: 'topleft' });
+    control.onAdd = () => {
+      const container = L.DomUtil.create('div', 'leaflet-bar locate-control');
+      const link = L.DomUtil.create('a', '', container) as HTMLAnchorElement;
+      link.href = '#';
+      link.title = label;
+      link.setAttribute('aria-label', label);
+      link.innerHTML = LOCATE_ICON_SVG;
+      L.DomEvent.on(link, 'click', L.DomEvent.stop).on(link, 'click', () => {
+        const { userLocation: current, onRequestLocation: request } = latestRef.current;
+        if (current) {
+          map.flyTo([current.lat, current.lng], Math.max(map.getZoom(), 15));
+        } else {
+          request?.();
+        }
+      });
+      return container;
+    };
+    control.addTo(map);
+    return () => {
+      control.remove();
+    };
+  }, [map, label]);
+
+  return null;
+}
+
 export function MapView({
   points = [],
   lines = [],
@@ -101,6 +164,11 @@ export function MapView({
   fit = true,
   interactive = true,
   focus = null,
+  userLocation = null,
+  onRequestLocation,
+  showLocateControl = false,
+  showZoomControl = true,
+  extraFitCoords = [],
 }: {
   points?: MapPoint[];
   lines?: MapLine[];
@@ -112,11 +180,25 @@ export function MapView({
   interactive?: boolean;
   /** Pan/zoom to this point on change (e.g. a selected journey step) — leave null for a static fit. */
   focus?: { lat: number; lng: number } | null;
+  /** The viewer's own position, when known — draws the blue dot. */
+  userLocation?: { lat: number; lng: number } | null;
+  /** No fix yet: clicking the (still-shown) locate control asks the caller for one. */
+  onRequestLocation?: () => void;
+  showLocateControl?: boolean;
+  /** Off for a small preview map, where zooming is not the point. */
+  showZoomControl?: boolean;
+  /**
+   * Extra points folded into the auto-fit bounds without being drawn — the
+   * user's dot, only when it is close enough to the route to be worth
+   * framing alongside it.
+   */
+  extraFitCoords?: [number, number][];
 }) {
+  const { t } = useTranslation();
   const fallbackCenter = center ?? staticIslandConfig.mapCenter;
   const fallbackZoom = zoom ?? 10;
   const view = fit
-    ? viewForCoords(collectCoords(points, lines), fallbackCenter, fallbackZoom)
+    ? viewForCoords([...collectCoords(points, lines), ...extraFitCoords], fallbackCenter, fallbackZoom)
     : { center: [fallbackCenter.lat, fallbackCenter.lng] as [number, number], zoom: fallbackZoom };
 
   return (
@@ -129,7 +211,7 @@ export function MapView({
       scrollWheelZoom={false}
       dragging={interactive}
       doubleClickZoom={interactive}
-      zoomControl={interactive}
+      zoomControl={interactive && showZoomControl}
       attributionControl={interactive}
       keyboard={interactive}
       touchZoom={interactive}
@@ -164,6 +246,21 @@ export function MapView({
           {p.popup ? <Popup>{p.popup}</Popup> : null}
         </CircleMarker>
       ))}
+      {userLocation ? (
+        <Marker
+          position={[userLocation.lat, userLocation.lng]}
+          icon={userLocationIcon}
+          interactive={false}
+          keyboard={false}
+        />
+      ) : null}
+      {showLocateControl && interactive ? (
+        <LocateControl
+          userLocation={userLocation}
+          onRequestLocation={onRequestLocation}
+          label={t('mapCenterOnLocation')}
+        />
+      ) : null}
       <FocusOn target={focus} />
       <KeepSized />
     </MapContainer>

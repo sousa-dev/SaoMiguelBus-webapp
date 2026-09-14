@@ -54,7 +54,7 @@ export function JourneyTrackButton({ journey, searchDay, showPin = true }: Props
     }
     guardPremiumAction(() => {
       if (!canStartMore || !startFromJourney(journey, searchDay)) capNotice();
-    }, 'track_start');
+    }, 'track_start', 'track');
   };
 
   const onPin = () => {
@@ -67,7 +67,7 @@ export function JourneyTrackButton({ journey, searchDay, showPin = true }: Props
       if (pinFromJourney(journey, searchDay) === 'cap') {
         showNotice({ title: t('transitPinCapTitle'), message: t('transitPinCapMessage') });
       }
-    }, 'track_pin');
+    }, 'track_pin', 'pin');
   };
 
   const showTrack = canTrackTrips;

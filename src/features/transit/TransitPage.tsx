@@ -29,10 +29,8 @@ import {
   ScheduleValidBadge,
   SchedulePreviewStrip,
 } from '@/features/transit/components/SchedulePreviewNotice';
-import {
-  FavoritesPanel,
-  RouteResultsToolbar,
-} from '@/features/transit/components/RouteResultsToolbar';
+import { RouteResultsToolbar } from '@/features/transit/components/RouteResultsToolbar';
+import { FavoriteSearchesButton } from '@/features/transit/components/FavoriteSearchesDialog';
 import { StopPicker } from '@/features/transit/components/StopPicker';
 import { useJourneySearch, useRouteWeather, useStops } from '@/features/transit/hooks';
 import { useResolvedTransitDataset } from '@/features/transit/schedule-hooks';
@@ -77,7 +75,6 @@ export function TransitPage() {
   const [searchEnabled, setSearchEnabled] = useState(
     Boolean(params.get('origin') && params.get('destination')),
   );
-  const [showFavorites, setShowFavorites] = useState(false);
   const [recentsOpen, setRecentsOpen] = useState(false);
   const [interstitialTrigger, setInterstitialTrigger] = useState(0);
   const lastInterstitialSearchRef = useRef(0);
@@ -158,11 +155,23 @@ export function TransitPage() {
     setInterstitialTrigger((n) => n + 1);
   }, [canShowAds, search.dataUpdatedAt, search.isFetched, search.isFetching, searchEnabled]);
 
-  const runSearch = () => {
-    if (!origin || !destination) return;
+  /**
+   * The one way a search starts — the Search button, a favourite, a pinned
+   * route, a recent. Callers that bring their own stops pass them in rather
+   * than setting state and hoping this reads it back: state has not flushed
+   * yet at the call, so the arguments are the only reliable source.
+   */
+  const runSearch = (nextOrigin = origin, nextDestination = destination) => {
+    if (!nextOrigin || !nextDestination) return;
+    const samePair = nextOrigin === origin && nextDestination === destination;
+    setOrigin(nextOrigin);
+    setDestination(nextDestination);
     setSearchEnabled(true);
-    setParams({ origin, destination }, { replace: true });
-    void search.refetch();
+    setParams({ origin: nextOrigin, destination: nextDestination }, { replace: true });
+    // A new pair is a new query key, which react-query fetches on its own;
+    // refetching here would re-run the search being replaced. Re-running the
+    // SAME pair is the only case that needs a nudge.
+    if (samePair) void search.refetch();
   };
 
   const swap = () => {
@@ -170,13 +179,11 @@ export function TransitPage() {
     setDestination(origin);
   };
 
+  /** A search picked from a saved list. Identical to pressing Search. */
   const apply = (o: string, d: string) => {
-    setOrigin(o);
-    setDestination(d);
-    setSearchEnabled(true);
-    setShowFavorites(false);
-    setParams({ origin: o, destination: d }, { replace: true });
-    // The visible effect of the tap happens up at the form, so go back to it.
+    runSearch(o, d);
+    // Pinned routes and recents sit away from the form, so show the rider the
+    // boxes their new origin and destination landed in.
     plannerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
@@ -302,7 +309,7 @@ export function TransitPage() {
                 <Button
                   icon={Search}
                   className="flex-1"
-                  onClick={runSearch}
+                  onClick={() => runSearch()}
                   disabled={!origin || !destination}
                 >
                   {t('searchButton', { defaultValue: 'Search' })}
@@ -316,6 +323,8 @@ export function TransitPage() {
                   {t('navBarRoutesLabel', { defaultValue: 'Directions' })}
                 </Button>
               </div>
+
+              <FavoriteSearchesButton onSelect={apply} />
             </div>
           </Card>
 
@@ -357,13 +366,7 @@ export function TransitPage() {
 
         {/* Results column */}
         <div className="flex flex-col gap-4">
-          <RouteResultsToolbar
-            origin={origin}
-            destination={destination}
-            expanded={showFavorites}
-            onToggleExpanded={() => setShowFavorites((v) => !v)}
-          />
-          {showFavorites ? <FavoritesPanel onSelect={apply} /> : null}
+          <RouteResultsToolbar origin={origin} destination={destination} />
 
           {showRouteWeather && routeWeather.data?.origin && routeWeather.data.destination ? (
             <RouteWeatherGrid

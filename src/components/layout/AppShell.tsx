@@ -17,6 +17,7 @@ import { SessionAdOrchestrator } from '@/features/ads/components/SessionAdOrches
 import { StoreChooserModal } from '@/features/ads/components/StoreChooserModal';
 import { useAuthBootstrap } from '@/features/account/hooks/useAuthBootstrap';
 import { SignInDialogHost } from '@/features/account/components/SignInDialogHost';
+import { PremiumGateDialogHost } from '@/features/premium/components/PremiumGateDialogHost';
 import { useEntitlementSync } from '@/features/premium/hooks/useEntitlementSync';
 import { useRevenueCatBootstrap } from '@/features/premium/hooks/useRevenueCatBootstrap';
 import { SETTINGS_PATH } from '@/features/premium/lib/paywall-route';
@@ -195,6 +196,7 @@ export function AppShell() {
       <AnalyticsLifecycle />
       <NoticeDialogHost />
       <SignInDialogHost />
+      <PremiumGateDialogHost />
       <HopOnHopOffSheetHost />
       {canShowAds ? <SessionAdOrchestrator bootstrapReady={bootstrapReady} /> : null}
     </div>

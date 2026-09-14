@@ -8,6 +8,7 @@ import { HomePage } from '@/features/hub/HomePage';
 import { TransitPage } from '@/features/transit/TransitPage';
 import { DirectionsPage } from '@/features/transit/DirectionsPage';
 import { TripDetailPage } from '@/features/transit/TripDetailPage';
+import { JourneyMapPage } from '@/features/transit/JourneyMapPage';
 import { StopDetailPage } from '@/features/transit/StopDetailPage';
 import { LinePage } from '@/features/transit/LinePage';
 import { NetworkPage } from '@/features/transit/NetworkPage';
@@ -81,6 +82,7 @@ const router = createBrowserRouter([
         ),
       },
       { path: 'transit/trip/:tripId', element: <TripDetailPage /> },
+      { path: 'transit/map', element: <JourneyMapPage /> },
       { path: 'transit/stop/:stopId', element: <StopDetailPage /> },
       { path: 'transit/line/:code', element: <LinePage /> },
       { path: 'transit/network', element: <NetworkPage /> },

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import {
@@ -6,6 +6,7 @@ import {
   ChevronDown,
   Clock,
   Footprints,
+  Map as MapIcon,
   ThumbsDown,
   ThumbsUp,
   TriangleAlert,
@@ -16,6 +17,9 @@ import { JourneyMap } from '@/features/transit/components/JourneyMap';
 import { JourneyTrackButton } from '@/features/transit/tracking/components/JourneyTrackButton';
 import { SchedulePreviewChip } from '@/features/transit/components/SchedulePreviewNotice';
 import { journeyRouteLabel } from '@/features/transit/lib/journey-fallback';
+import type { JourneyMapData } from '@/features/transit/lib/journey-map-data';
+import { formatWalkDistance, nearestStops } from '@/features/transit/lib/nearest-stop';
+import { useUserLocation } from '@/lib/hooks/useUserLocation';
 import { cn } from '@/lib/cn';
 import {
   displayRouteNumber,
@@ -185,6 +189,69 @@ function RideLegPanel({ leg, linkToDetail }: { leg: TransitRideLeg; linkToDetail
   );
 }
 
+/**
+ * The card's map preview, its locate control, and a "nearest boarding stop"
+ * line under it. Its own component (not inline in `JourneyCard`) so
+ * `useUserLocation` only runs while the map is mounted — the same reasoning
+ * that already gates the geometry fetch it sits next to.
+ */
+function JourneyMapPreview({ journey }: { journey: TransitJourney }) {
+  const { t, i18n } = useTranslation();
+  const [mapData, setMapData] = useState<JourneyMapData | null>(null);
+  const { coords: userCoords, request: requestLocation } = useUserLocation();
+
+  const nearest = useMemo(
+    () => (mapData && userCoords ? nearestStops(mapData.pins, userCoords) : null),
+    [mapData, userCoords],
+  );
+  const boarding = nearest?.boarding[0] ?? null;
+
+  return (
+    <div className="mt-3">
+      <div className="relative">
+        <JourneyMap
+          journey={journey}
+          onData={setMapData}
+          userLocation={userCoords}
+          onRequestLocation={requestLocation}
+          showLocateControl
+          // A launchpad, not a map to work in: locating yourself is worth a
+          // control here, zooming is what the full map is for.
+          showZoomControl={false}
+        />
+        {/* Above Leaflet's own controls, which `index.css` pins at z-index 8. */}
+        <Link
+          to={{ pathname: '/transit/map', search: `?journeyId=${encodeURIComponent(journey.id)}` }}
+          className="absolute bottom-2.5 right-2.5 z-10 inline-flex items-center gap-1.5 rounded-xl border border-border bg-surface px-2.5 py-1.5 text-xs font-bold text-primary shadow-md hover:bg-surface-variant"
+        >
+          <MapIcon size={13} />
+          {t('transitOpenMap')}
+        </Link>
+      </div>
+      {/* The stop the TIMES on this card are for comes first and is always
+          named as such. A different stop is only ever an extra line below it,
+          never a replacement — a rider who walks to the closer one on the
+          strength of a mislabelled line misses the bus they planned for. */}
+      {boarding ? (
+        <p className="mt-2 text-xs text-muted">
+          {t('transitBoardingStopWalk', {
+            name: boarding.pin.name,
+            distance: formatWalkDistance(boarding.metres, i18n.language),
+          })}
+        </p>
+      ) : null}
+      {nearest?.closer ? (
+        <p className="mt-1 text-xs text-info">
+          {t('transitCloserStopHint', {
+            name: nearest.closer.pin.name,
+            distance: formatWalkDistance(nearest.closer.metres, i18n.language),
+          })}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
 function JourneyTimeline({ journey }: { journey: TransitJourney }) {
   const { t } = useTranslation();
   const rides = journeyRideLegs(journey);
@@ -331,7 +398,7 @@ export function JourneyCard({ journey, searchDay }: { journey: TransitJourney; s
           {/* Mounted only here: mounting is what FETCHES the geometry, so a page
               of twenty results does not fire forty requests for maps nobody
               opened. */}
-          <JourneyMap journey={journey} className="mt-3" />
+          <JourneyMapPreview journey={journey} />
         </div>
       ) : null}
     </Card>
