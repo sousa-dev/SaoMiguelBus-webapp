@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MCP Server · São Miguel Bus</title>
+    <meta
+      name="description"
+      content="A public MCP server for São Miguel Bus is on the way. For now, use the free public REST API or the /ai quick start."
+    />
+    <link rel="canonical" href="https://saomiguelbus.com/mcp" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/logo.png" />
+    <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM instructions" />
+    <meta name="theme-color" content="#218732" />
+    <meta property="og:site_name" content="São Miguel Bus" />
+    <meta property="og:title" content="MCP Server · São Miguel Bus" />
+    <meta
+      property="og:description"
+      content="A public MCP server for São Miguel Bus is on the way. For now, use the free public REST API or the /ai quick start."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://saomiguelbus.com/mcp" />
+    <meta property="og:image" content="https://saomiguelbus.com/logo.png" />
+    <style>
+      :root {
+        color-scheme: light dark;
+        --primary: #218732;
+        --bg: #f5f6f6;
+        --surface: #ffffff;
+        --surface-variant: #f0f1f2;
+        --text: #1a1a1a;
+        --muted: #5b6270;
+        --border: #e2e5e6;
+        --code-bg: #0f1a12;
+        --code-text: #d9f2de;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0f1310;
+          --surface: #171c18;
+          --surface-variant: #1e241f;
+          --text: #f2f4f2;
+          --muted: #a2ada4;
+          --border: #2b332c;
+          --code-bg: #0a120b;
+          --code-text: #baf0c6;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font: 16px/1.6 -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
+          sans-serif;
+      }
+      a {
+        color: var(--primary);
+      }
+      @media (prefers-color-scheme: dark) {
+        a {
+          color: #6fd589;
+        }
+      }
+      a:focus-visible {
+        outline: 3px solid var(--primary);
+        outline-offset: 2px;
+      }
+      header.site {
+        border-bottom: 1px solid var(--border);
+        background: var(--surface);
+      }
+      .wrap {
+        max-width: 720px;
+        margin: 0 auto;
+        padding-inline: 1.25rem;
+      }
+      header.site .wrap {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        min-height: 64px;
+      }
+      header.site img {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        flex-shrink: 0;
+      }
+      header.site .brand {
+        font-weight: 800;
+        text-decoration: none;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.5rem 0;
+      }
+      main {
+        padding-block: 2.5rem 4rem;
+      }
+      .tag {
+        display: inline-block;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        color: #b45309;
+        background: #fef3c7;
+        border-radius: 999px;
+        padding: 0.25rem 0.65rem;
+        margin: 0 0 0.75rem;
+      }
+      @media (prefers-color-scheme: dark) {
+        .tag {
+          color: #fcd34d;
+          background: #3a2c0c;
+        }
+      }
+      h1 {
+        font-size: clamp(1.6rem, 4vw, 2.1rem);
+        margin: 0 0 0.75rem;
+        color: var(--primary);
+      }
+      @media (prefers-color-scheme: dark) {
+        h1 {
+          color: #6fd589;
+        }
+      }
+      p {
+        margin: 0 0 1rem;
+        max-width: 60ch;
+      }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1.1rem 1.25rem;
+        margin: 1.5rem 0;
+      }
+      .card h2 {
+        margin: 0 0 0.5rem;
+        font-size: 1.1rem;
+      }
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.88em;
+        background: var(--surface-variant);
+        border-radius: 4px;
+        padding: 0.12em 0.4em;
+        word-break: break-word;
+      }
+      pre {
+        background: var(--code-bg);
+        color: var(--code-text);
+        border-radius: 8px;
+        padding: 0.9rem 1rem;
+        overflow-x: auto;
+        margin: 0.5rem 0 0;
+        font-size: 0.85rem;
+      }
+      pre code {
+        background: none;
+        padding: 0;
+        color: inherit;
+      }
+      ul {
+        margin: 0 0 1rem;
+        padding-left: 1.25rem;
+      }
+      li {
+        margin-bottom: 0.4rem;
+      }
+      .cta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin: 1.5rem 0 0;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        padding: 0.6rem 1.1rem;
+        border-radius: 10px;
+        font-weight: 700;
+        text-decoration: none;
+        font-size: 0.92rem;
+      }
+      .btn-primary {
+        background: var(--primary);
+        color: #fff;
+      }
+      .btn-secondary {
+        background: var(--surface-variant);
+        color: var(--text);
+        border: 1px solid var(--border);
+      }
+      footer.site {
+        border-top: 1px solid var(--border);
+        background: var(--surface);
+      }
+      footer.site .wrap {
+        padding-block: 1.5rem;
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+      footer.site a {
+        color: inherit;
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site">
+      <div class="wrap">
+        <a class="brand" href="/">
+          <img src="/logo.png" alt="" />
+          <span>São Miguel Bus</span>
+        </a>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <p class="tag">For agent platforms</p>
+      <h1>MCP server</h1>
+      <p>
+        A public <a href="https://modelcontextprotocol.io/">MCP</a> (Model Context Protocol)
+        server for São Miguel Bus — so you can add it directly to Claude Code, Claude Desktop,
+        Cursor, and other MCP-aware tools is live at
+        <strong>https://api.saomiguelhub.com/mcp</strong>.
+      </p>
+
+      <div class="card">
+        <h2>Connect</h2>
+        <p>Use the streamable HTTP endpoint in your MCP client:</p>
+        <pre><code>claude mcp add --transport http saomiguelbus https://api.saomiguelhub.com/mcp</code></pre>
+        <p>It exposes live schedules, stop lookup, Mini Bus routes, live vehicles, and parish weather.</p>
+        <p>For the plain REST API and examples, see:</p>
+        <ul>
+          <li>
+            <a href="/ai">saomiguelbus.com/ai</a> — a quick start for AI assistants and
+            developers, with copy-pasteable example requests.
+          </li>
+          <li>
+            <a href="https://api.saomiguelhub.com/llms.txt">api.saomiguelhub.com/llms.txt</a> —
+            the full machine-readable reference for the public REST API.
+          </li>
+        </ul>
+        <p style="margin-bottom: 0">The same data is available without MCP:</p>
+        <pre><code>GET https://api.saomiguelhub.com/api/v3/ai/journeys?from=Ponta%20Delgada&amp;to=Furnas&amp;time=09:00</code></pre>
+      </div>
+
+      <div class="cta-row">
+        <a class="btn btn-primary" href="/ai">For AI assistants &amp; developers</a>
+        <a class="btn btn-secondary" href="/llms.txt">View llms.txt</a>
+      </div>
+    </main>
+
+    <footer class="site">
+      <div class="wrap">
+        <p>
+          <a href="/">São Miguel Bus</a> · <a href="/ai">/ai</a> · <a href="/llms.txt">llms.txt</a>
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

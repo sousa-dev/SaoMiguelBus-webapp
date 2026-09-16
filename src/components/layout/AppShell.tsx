@@ -96,6 +96,15 @@ function SidebarLegalLinks() {
       <a href={PRIVACY_PATH} className={linkClass}>
         {t('privacyPolicy')}
       </a>
+      <span className="text-muted/50" aria-hidden>
+        ·
+      </span>
+      {/* Plain anchor (not a router Link): forces a full page load to the
+          static /ai file, which the SPA router's `*` catch-all would
+          otherwise swallow. See public/ai/index.html. */}
+      <a href="/ai" className={linkClass}>
+        {t('developersAndAi')}
+      </a>
     </div>
   );
 }

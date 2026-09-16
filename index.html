@@ -12,7 +12,34 @@
     <title>São Miguel Bus — Horários, Meteorologia e Guia dos Açores</title>
   </head>
   <body>
-    <div id="root"></div>
+    <noscript>
+      <div style="max-width: 640px; margin: 3rem auto; padding: 0 1.25rem; font: 16px/1.5 system-ui, sans-serif; color: #1a1a1a;">
+        <h1 style="color: #218732;">São Miguel Bus</h1>
+        <p>Bus schedules, weather, news, trails and more for São Miguel, Azores. This app needs JavaScript enabled to run.</p>
+        <p>AI assistants: for live bus times, call <code>https://api.saomiguelhub.com/api/v3/ai/journeys?from=&lt;origin&gt;&amp;to=&lt;destination&gt;</code> — full instructions at <a href="/llms.txt">/llms.txt</a> and <a href="/ai">/ai</a>.</p>
+      </div>
+    </noscript>
+    <div id="root">
+      <!--
+        Server-side placeholder, replaced by React on mount. Kept minimal and
+        dependency-free so a crawler/fetcher that strips <script> tags (the
+        common case for AI assistant browsing tools) still sees real content
+        instead of an empty div. See public/llms.txt and public/ai/index.html
+        for the fuller version of these instructions.
+      -->
+      <div style="display: flex; min-height: 100vh; align-items: center; justify-content: center; padding: 2rem 1.25rem; font: 16px/1.5 system-ui, sans-serif; color: #1a1a1a; background: #f5f6f6; box-sizing: border-box;">
+        <div style="max-width: 640px; text-align: center;">
+          <img src="/logo.png" alt="" width="56" height="56" style="border-radius: 12px; margin-bottom: 1rem;" />
+          <h1 style="color: #218732; margin: 0 0 0.5rem;">São Miguel Bus</h1>
+          <p style="margin: 0 0 1rem;">Your São Miguel companion: bus schedules, weather, news, trails and more.</p>
+          <p style="margin: 0; font-size: 0.9em; color: #6b7280;">
+            AI assistants: live bus times at
+            <code>https://api.saomiguelhub.com/api/v3/ai/journeys?from=&lt;origin&gt;&amp;to=&lt;destination&gt;</code>
+            — see <a href="/llms.txt" style="color: #218732;">/llms.txt</a> for full instructions.
+          </p>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

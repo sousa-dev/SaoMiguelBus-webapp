@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>For AI Assistants & Developers · São Miguel Bus</title>
+    <meta
+      name="description"
+      content="How AI assistants and developers can get live São Miguel bus schedules from São Miguel Bus's free public API."
+    />
+    <link rel="canonical" href="https://saomiguelbus.com/ai" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/logo.png" />
+    <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM instructions" />
+    <link
+      rel="alternate"
+      type="application/json"
+      href="https://api.saomiguelhub.com/openapi.json"
+      title="OpenAPI"
+    />
+    <meta name="theme-color" content="#218732" />
+    <meta property="og:site_name" content="São Miguel Bus" />
+    <meta property="og:title" content="For AI Assistants & Developers · São Miguel Bus" />
+    <meta
+      property="og:description"
+      content="Free, public, GET-only API for live São Miguel bus schedules — built for AI assistants and developers."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://saomiguelbus.com/ai" />
+    <meta property="og:image" content="https://saomiguelbus.com/logo.png" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebAPI",
+        "name": "São Miguel Bus Transit API",
+        "description": "Free, public, GET-only REST API for live São Miguel bus schedules, journeys and stops.",
+        "documentation": "https://api.saomiguelhub.com/llms.txt",
+        "endpointUrl": "https://api.saomiguelhub.com/api/v3/ai/journeys",
+        "provider": { "@type": "Organization", "name": "São Miguel Bus", "url": "https://saomiguelbus.com/" }
+      }
+    </script>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --primary: #218732;
+        --primary-dark: #176023;
+        --bg: #f5f6f6;
+        --surface: #ffffff;
+        --surface-variant: #f0f1f2;
+        --text: #1a1a1a;
+        --muted: #5b6270;
+        --border: #e2e5e6;
+        --code-bg: #0f1a12;
+        --code-text: #d9f2de;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0f1310;
+          --surface: #171c18;
+          --surface-variant: #1e241f;
+          --text: #f2f4f2;
+          --muted: #a2ada4;
+          --border: #2b332c;
+          --code-bg: #0a120b;
+          --code-text: #baf0c6;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font: 16px/1.6 -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
+          sans-serif;
+      }
+      a {
+        color: var(--primary);
+      }
+      @media (prefers-color-scheme: dark) {
+        a {
+          color: #6fd589;
+        }
+      }
+      a:focus-visible,
+      button:focus-visible {
+        outline: 3px solid var(--primary);
+        outline-offset: 2px;
+      }
+      header.site {
+        border-bottom: 1px solid var(--border);
+        background: var(--surface);
+      }
+      .wrap {
+        max-width: 780px;
+        margin: 0 auto;
+        padding-inline: 1.25rem;
+      }
+      header.site .wrap {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        min-height: 64px;
+      }
+      header.site img {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        flex-shrink: 0;
+      }
+      header.site .brand {
+        font-weight: 800;
+        text-decoration: none;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.5rem 0;
+      }
+      header.site nav {
+        margin-left: auto;
+      }
+      header.site nav a {
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 600;
+        padding: 0.6rem 0.5rem;
+        display: inline-block;
+      }
+      main {
+        padding-block: 2.5rem 4rem;
+      }
+      h1 {
+        font-size: clamp(1.6rem, 4vw, 2.1rem);
+        margin: 0 0 0.5rem;
+        color: var(--primary);
+      }
+      @media (prefers-color-scheme: dark) {
+        h1 {
+          color: #6fd589;
+        }
+      }
+      .lede {
+        font-size: 1.05rem;
+        color: var(--muted);
+        margin: 0 0 2rem;
+        max-width: 60ch;
+      }
+      h2 {
+        font-size: 1.3rem;
+        margin: 2.5rem 0 0.75rem;
+        padding-top: 0.5rem;
+        border-top: 1px solid var(--border);
+      }
+      h2:first-of-type {
+        border-top: none;
+        padding-top: 0;
+      }
+      h3 {
+        font-size: 1.05rem;
+        margin: 1.5rem 0 0.5rem;
+      }
+      p {
+        margin: 0 0 1rem;
+      }
+      ul {
+        margin: 0 0 1rem;
+        padding-left: 1.25rem;
+      }
+      li {
+        margin-bottom: 0.4rem;
+      }
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.88em;
+        background: var(--surface-variant);
+        border-radius: 4px;
+        padding: 0.12em 0.4em;
+        word-break: break-word;
+      }
+      .example {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1rem 1.1rem;
+        margin: 0 0 1.25rem;
+      }
+      .example h3 {
+        margin-top: 0;
+      }
+      pre {
+        background: var(--code-bg);
+        color: var(--code-text);
+        border-radius: 8px;
+        padding: 0.9rem 1rem;
+        overflow-x: auto;
+        margin: 0.5rem 0;
+        font-size: 0.85rem;
+        line-height: 1.5;
+      }
+      pre code {
+        background: none;
+        padding: 0;
+        color: inherit;
+        font-size: inherit;
+      }
+      .tag {
+        display: inline-block;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        color: var(--primary);
+        background: color-mix(in srgb, var(--primary) 14%, transparent);
+        border-radius: 999px;
+        padding: 0.2rem 0.6rem;
+        margin: 0 0 0.5rem;
+      }
+      .cta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin: 1rem 0 0;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        padding: 0.6rem 1.1rem;
+        border-radius: 10px;
+        font-weight: 700;
+        text-decoration: none;
+        font-size: 0.92rem;
+      }
+      .btn-primary {
+        background: var(--primary);
+        color: #fff;
+      }
+      .btn-secondary {
+        background: var(--surface-variant);
+        color: var(--text);
+        border: 1px solid var(--border);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0.5rem 0 1.25rem;
+        font-size: 0.9rem;
+      }
+      caption {
+        text-align: left;
+        font-size: 0.85rem;
+        color: var(--muted);
+        margin-bottom: 0.35rem;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 0.5rem 0.6rem;
+        border-bottom: 1px solid var(--border);
+        vertical-align: top;
+      }
+      th {
+        color: var(--muted);
+        font-weight: 700;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+      }
+      footer.site {
+        border-top: 1px solid var(--border);
+        background: var(--surface);
+      }
+      footer.site .wrap {
+        padding-block: 1.5rem;
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+      footer.site a {
+        color: inherit;
+        text-decoration: underline;
+      }
+      @media (max-width: 480px) {
+        header.site nav a {
+          padding: 0.6rem 0.35rem;
+          font-size: 0.82rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site">
+      <div class="wrap">
+        <a class="brand" href="/">
+          <img src="/logo.png" alt="" />
+          <span>São Miguel Bus</span>
+        </a>
+        <nav aria-label="Related pages">
+          <a href="/llms.txt">llms.txt</a>
+          <a href="/mcp">MCP</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <p class="tag">For AI assistants &amp; developers</p>
+      <h1>Get live São Miguel bus times programmatically</h1>
+      <p class="lede">
+        São Miguel Bus tracks the official AzoresBus and PDL Mini Bus timetables for São Miguel
+        island, Azores. This page is a quick start for AI assistants answering bus questions and
+        for developers building on top of the same data — no account, no API key, no cost.
+      </p>
+
+      <h2 id="api">The API</h2>
+      <p>
+        The public transit API is <strong>GET-only</strong> and
+        <strong>CORS-open</strong>, so it can be called directly from a browser, a server, or an
+        AI assistant's browsing/fetch tool.
+      </p>
+
+      <div class="example">
+        <h3>Find a journey</h3>
+        <p>
+          Give an origin, a destination, and optionally a day and time. <code>date</code> accepts
+          <code>today</code>, <code>tomorrow</code>, or an exact <code>YYYY-MM-DD</code>.
+          The default is today in the Azores; <code>time</code> uses <code>HH:MM</code> and
+          defaults to the current Azores time. The API resolves the service day for the chosen
+          date, including holidays. Add <code>format=md</code> for a Markdown summary instead of
+          JSON.
+        </p>
+        <pre><code>GET https://api.saomiguelhub.com/api/v3/ai/journeys?from=Ponta%20Delgada&amp;to=Furnas&amp;date=tomorrow&amp;time=09:00</code></pre>
+        <p>
+          The JSON response has <code>query</code> (including the resolved date, time, and
+          <code>dayType</code>), <code>resolved</code> stop names, <code>journeys</code>,
+          <code>summary</code>, <code>suggestions</code>, <code>links</code>,
+          <code>attribution</code>, <code>notes</code>, and <code>generatedAt</code>.
+          Each journey has <code>start</code>, <code>end</code>, <code>transfers</code>, and
+          <code>legs</code> among its fields. Ride legs contain the route and stops; transfer
+          legs describe the change between rides. Journey and stop times use
+          <code>HHhMM</code>. Call the endpoint for real, current departures.
+        </p>
+      </div>
+
+      <div class="example">
+        <h3>Find a stop (fuzzy)</h3>
+        <p>
+          Handles typos, aliases and English names (e.g. <code>airport</code> resolves to the
+          João Paulo II Airport stop).
+        </p>
+        <pre><code>GET https://api.saomiguelhub.com/api/v3/ai/stops?q=airport</code></pre>
+      </div>
+
+      <h2 id="reference">Full reference</h2>
+      <table>
+        <caption>Where to find more detail</caption>
+        <tbody>
+          <tr>
+            <th scope="row">Machine-readable instructions (API host)</th>
+            <td><a href="https://api.saomiguelhub.com/llms.txt">api.saomiguelhub.com/llms.txt</a></td>
+          </tr>
+          <tr>
+            <th scope="row">OpenAPI schema</th>
+            <td><a href="https://api.saomiguelhub.com/openapi.json">api.saomiguelhub.com/openapi.json</a></td>
+          </tr>
+          <tr>
+            <th scope="row">This domain's instructions</th>
+            <td><a href="/llms.txt">saomiguelbus.com/llms.txt</a></td>
+          </tr>
+          <tr>
+            <th scope="row">MCP server (for agent platforms)</th>
+            <td><a href="/mcp">saomiguelbus.com/mcp</a> — status page, not yet deployed</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 id="deep-links">Send a person to the app instead</h2>
+      <p>
+        If you're answering a person rather than calling the API yourself, you can link them
+        straight into a pre-filled route search on the website:
+      </p>
+      <pre><code>https://saomiguelbus.com/transit?origin=Ponta+Delgada&amp;destination=Furnas</code></pre>
+      <p>Replace the two query values with the origin and destination stop or town names.</p>
+
+      <h2 id="attribution">Attribution</h2>
+      <p>
+        If you use this data to answer a question, please mention São Miguel Bus
+        (<a href="https://saomiguelbus.com/">saomiguelbus.com</a>) as the source. The service is
+        free and ad-supported, built and maintained by a single independent developer — schedules
+        are the responsibility of the bus operators, so always suggest confirming a time-critical
+        trip with the operator directly.
+      </p>
+
+      <h2 id="apps">Native apps</h2>
+      <p>The same data also powers the São Miguel Bus mobile apps:</p>
+      <div class="cta-row">
+        <a
+          class="btn btn-primary"
+          href="https://apps.apple.com/pt/app/s%C3%A3o-miguel-bus/id6777066837"
+          >Download for iOS</a
+        >
+        <a
+          class="btn btn-secondary"
+          href="https://play.google.com/store/apps/details?id=com.hsousa_apps.Autocarros"
+          >Download for Android</a
+        >
+      </div>
+    </main>
+
+    <footer class="site">
+      <div class="wrap">
+        <p>
+          <a href="/">São Miguel Bus</a> · <a href="/llms.txt">llms.txt</a> ·
+          <a href="/mcp">MCP</a> ·
+          <a href="https://api.saomiguelhub.com/llms.txt">API llms.txt</a>
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

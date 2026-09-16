@@ -55,6 +55,23 @@ export const SITE = {
   } satisfies LocalizedText,
 } as const;
 
+/**
+ * AI / agent discoverability config (see AGENTS.md § "AI assistants & MCP").
+ * Shared by the React app (footer link) and the Vite build plugin (head
+ * links, JSON-LD, robots.txt comment) so the API host and endpoint paths are
+ * defined exactly once. The static files under `public/` (`llms.txt`,
+ * `ai/index.html`, `mcp/index.html`) are copied as-is by Vite with no build
+ * step, so they cannot import this — keep any URL there in sync by hand.
+ */
+export const AI_DISCOVERY = {
+  /** Public REST API host used by AI assistants for live bus data. */
+  apiBaseUrl: 'https://api.saomiguelhub.com',
+  /** Static "for AI assistants & developers" quick-start page on this domain. */
+  aiPagePath: '/ai',
+  /** Static MCP instructions placeholder page on this domain. */
+  mcpPagePath: '/mcp',
+} as const;
+
 /** Home page metadata (path `/`). */
 export const HOME_SEO = {
   title: {

@@ -59,6 +59,25 @@ docker run -p 8080:80 smb-webapp
   `vite-plugin-seo.ts`, which prerenders per-module HTML + `sitemap.xml` + `robots.txt`).
 - Maps use `react-leaflet` with OpenStreetMap tiles (`src/components/MapView.tsx`).
 
+### AI / agent discoverability
+
+So that AI assistants (ChatGPT, Claude, Perplexity, …) find and use the public transit API
+instead of guessing, this app ships static, dependency-free pages the SPA router never sees
+(nginx serves them as real files before the `try_files … /index.html` fallback — see
+`nginx.conf` and `src/App.tsx`'s `*` catch-all):
+
+- `public/llms.txt` — short instructions for this domain. Keep in sync by hand with the API
+  repo's `agent_docs/docs/ai-quickstart.md` and `https://api.saomiguelhub.com/llms.txt`
+  whenever an endpoint shape or URL changes.
+- `public/ai/index.html` — human/agent-readable quick start at `/ai`, linked from the sidebar
+  footer (`AppShell.tsx`, i18n key `developersAndAi`).
+- `public/mcp/index.html` — static setup page for the live MCP server at
+  `https://api.saomiguelhub.com/mcp`; keep its snippets aligned with the API repo.
+- Shared AI endpoint/path constants live in `AI_DISCOVERY` in `src/lib/seo-config.ts`, used by
+  `vite-plugin-seo.ts` for head `<link rel="alternate">` tags, the home page's `WebAPI` JSON-LD
+  node and `sitemap.xml`/`robots.txt` generation. The `public/` files above are copied as-is
+  (no build step), so their URLs must be kept in sync with `AI_DISCOVERY` by hand.
+
 ### Legacy PWA (`legacy/`)
 
 Static vanilla-JS PWA (no build step). Only touch it for historical reference.

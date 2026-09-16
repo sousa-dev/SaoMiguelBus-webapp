@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import type { Plugin } from 'vite';
 
-import { HOME_SEO, MINIBUS_LINE_SEO, MODULE_SEO, SITE } from './src/lib/seo-config';
+import { AI_DISCOVERY, HOME_SEO, MINIBUS_LINE_SEO, MODULE_SEO, SITE } from './src/lib/seo-config';
 
 interface SeoOptions {
   siteUrl: string;
@@ -44,6 +44,10 @@ function headBlock(opts: {
     `<meta name="twitter:title" content="${esc(opts.title)}" />`,
     `<meta name="twitter:description" content="${esc(opts.description)}" />`,
     `<meta name="twitter:image" content="${opts.image}" />`,
+    // AI assistants & crawlers: machine-readable instructions and API schema.
+    // See public/llms.txt, public/ai/index.html and AGENTS.md.
+    `<link rel="alternate" type="text/plain" href="/llms.txt" title="LLM instructions" />`,
+    `<link rel="alternate" type="application/json" href="${AI_DISCOVERY.apiBaseUrl}/openapi.json" title="OpenAPI" />`,
   ];
   if (opts.jsonLd) {
     const jsonLd = Array.isArray(opts.jsonLd)
@@ -83,13 +87,37 @@ export function seoPrerender(opts: SeoOptions): Plugin {
       const template = fs.readFileSync(indexPath, 'utf8');
 
       // Home (root index.html).
-      const homeJsonLd = {
-        '@context': 'https://schema.org',
-        '@type': 'WebSite',
-        name: SITE.name,
-        url: `${siteUrl}/`,
-        inLanguage: 'pt',
-      };
+      // `@graph` of the site (with a SearchAction so assistants can deep-link a
+      // route search) plus a WebAPI node pointing at the public transit API, so
+      // AI assistants and crawlers that only read JSON-LD still find the live
+      // data endpoint. See public/llms.txt / public/ai/index.html for the
+      // human/agent-readable version of the same instructions.
+      const homeJsonLd = [
+        {
+          '@type': 'WebSite',
+          name: SITE.name,
+          url: `${siteUrl}/`,
+          inLanguage: 'pt',
+          potentialAction: {
+            '@type': 'SearchAction',
+            target: `${siteUrl}/transit?origin={origin}&destination={destination}`,
+            'query-input': ['required name=origin', 'required name=destination'],
+          },
+        },
+        {
+          '@type': 'WebAPI',
+          name: `${SITE.name} Transit API`,
+          description:
+            'Free, public, GET-only REST API for live São Miguel bus schedules, journeys and stops — built for AI assistants and developers.',
+          documentation: `${AI_DISCOVERY.apiBaseUrl}/llms.txt`,
+          endpointUrl: `${AI_DISCOVERY.apiBaseUrl}/api/v3/ai/journeys`,
+          provider: {
+            '@type': 'Organization',
+            name: SITE.name,
+            url: `${siteUrl}/`,
+          },
+        },
+      ];
       fs.writeFileSync(
         indexPath,
         renderPage(template, {
@@ -184,6 +212,10 @@ export function seoPrerender(opts: SeoOptions): Plugin {
         `${siteUrl}/`,
         ...MODULE_SEO.map((m) => `${siteUrl}${m.path}`),
         ...MINIBUS_LINE_SEO.map((l) => `${siteUrl}/minibus/${l.slug}`),
+        // Static AI/agent discoverability pages (public/, no React route).
+        `${siteUrl}${AI_DISCOVERY.aiPagePath}`,
+        `${siteUrl}${AI_DISCOVERY.mcpPagePath}`,
+        `${siteUrl}/llms.txt`,
       ];
       for (const mod of MODULE_SEO) {
         if (mod.subdomain) {
@@ -202,11 +234,37 @@ ${urls
 `;
       fs.writeFileSync(path.join(root, 'sitemap.xml'), sitemap);
 
-      // robots.txt
-      fs.writeFileSync(
-        path.join(root, 'robots.txt'),
-        `User-agent: *\nAllow: /\n\nSitemap: ${siteUrl}/sitemap.xml\n`,
-      );
+      // robots.txt — explicit allowlist for known AI assistant / crawler user
+      // agents (in addition to the default `*` allow-all) so operators who run
+      // a more restrictive default policy still see these permitted by name.
+      // See public/llms.txt for the machine-readable instructions these bots
+      // should follow once they fetch a page.
+      const aiUserAgents = [
+        'GPTBot',
+        'ChatGPT-User',
+        'OAI-SearchBot',
+        'ClaudeBot',
+        'Claude-User',
+        'Claude-SearchBot',
+        'anthropic-ai',
+        'PerplexityBot',
+        'Perplexity-User',
+        'Google-Extended',
+        'Bingbot',
+        'CCBot',
+      ];
+      const robots = [
+        'User-agent: *',
+        'Allow: /',
+        '',
+        `# AI assistants: read ${siteUrl}/llms.txt for what this site is and`,
+        '# how to fetch live bus times from the public API.',
+        ...aiUserAgents.flatMap((ua) => ['', `User-agent: ${ua}`, 'Allow: /']),
+        '',
+        `Sitemap: ${siteUrl}/sitemap.xml`,
+        '',
+      ].join('\n');
+      fs.writeFileSync(path.join(root, 'robots.txt'), robots);
     },
   };
 }
